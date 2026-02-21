@@ -21,7 +21,7 @@ import type { ListingCardProps } from "@/types/shop"
 
 export const revalidate = 86400
 
-const SITE_URL = "https://clubfittingdirectory.com"
+import { SITE_URL } from "@/lib/constants"
 
 /* ── Slug ↔ DB value mapping ── */
 const SLUG_TO_TYPE: Record<string, string> = {

@@ -23,7 +23,7 @@ import type { Shop } from "@/types/shop"
 
 export const revalidate = 86400 // Regenerate once every 24 hours
 
-const SITE_URL  = "https://clubfittingdirectory.com"
+import { SITE_URL } from "@/lib/constants"
 
 /* ── generateStaticParams: tell Next.js which slugs to pre-build ── */
 export async function generateStaticParams() {
@@ -288,13 +288,9 @@ export default async function ListingPage({
                 )}
 
                 {/* Website button */}
-                {shop.website && (
+                {shop.website && safeWebsiteUrl(shop.website) && (
                   <a
-                    href={
-                      shop.website.startsWith("http")
-                        ? shop.website
-                        : `https://${shop.website}`
-                    }
+                    href={safeWebsiteUrl(shop.website)!}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={[
@@ -560,6 +556,17 @@ function AccessibilitySection({
 /* ─────────────────────────────────────────────────────────
    HELPERS
    ───────────────────────────────────────────────────────── */
+
+/** Validate a website URL — only allow http/https, return null if unsafe */
+function safeWebsiteUrl(raw: string): string | null {
+  try {
+    const url = new URL(raw.startsWith("http") ? raw : `https://${raw}`)
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null
+    return url.href
+  } catch {
+    return null
+  }
+}
 
 /** Parse services from array or pipe-delimited string */
 function parseServices(shop: Shop): string[] {

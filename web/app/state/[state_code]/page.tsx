@@ -20,7 +20,7 @@ import type { ListingCardProps } from "@/types/shop"
 
 export const revalidate = 86400
 
-const SITE_URL = "https://clubfittingdirectory.com"
+import { SITE_URL } from "@/lib/constants"
 
 /* ── generateStaticParams — pre-build a page for every state ── */
 export async function generateStaticParams() {

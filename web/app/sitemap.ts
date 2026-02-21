@@ -4,6 +4,7 @@ import {
   getAllStateCodes,
   getAllShopTypes,
 } from "@/lib/supabase/queries/shops"
+import { SITE_URL } from "@/lib/constants"
 
 /* ─────────────────────────────────────────────────────────
    SITEMAP
@@ -20,8 +21,6 @@ import {
      - Indexes: weekly (new listings may be added)
      - Listings: monthly (data changes occasionally)
    ───────────────────────────────────────────────────────── */
-
-const SITE_URL = "https://clubfittingdirectory.com"
 
 /* Slug ↔ DB value — must match /app/category/[type]/page.tsx */
 const TYPE_TO_SLUG: Record<string, string> = {

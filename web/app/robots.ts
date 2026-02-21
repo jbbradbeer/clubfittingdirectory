@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { SITE_URL } from "@/lib/constants"
 
 /* ─────────────────────────────────────────────────────────
    ROBOTS.TXT
@@ -12,8 +13,6 @@ import type { MetadataRoute } from "next"
 
    ⚠️  Update SITE_URL before launch if the domain changes.
    ───────────────────────────────────────────────────────── */
-
-const SITE_URL = "https://clubfittingdirectory.com"
 
 export default function robots(): MetadataRoute.Robots {
   return {

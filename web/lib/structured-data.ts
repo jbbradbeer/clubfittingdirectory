@@ -1,6 +1,5 @@
 import type { Shop } from "@/types/shop"
-
-const SITE_URL = "https://clubfittingdirectory.com"
+import { SITE_URL } from "@/lib/constants"
 
 /* ─────────────────────────────────────────────────────────
    JSON-LD STRUCTURED DATA

@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { Button } from "@/components/ui/Button"
 
 /* ─────────────────────────────────────────────────────────
    FOOTER
@@ -84,40 +83,21 @@ export function Footer() {
               and the game&apos;s finer details. Read by members and competitors.
             </p>
 
-            {/* Email input + subscribe button (non-functional stub) */}
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col sm:flex-row gap-2"
-              aria-label="Newsletter signup"
+            <a
+              href={NEWSLETTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={[
+                "inline-flex items-center justify-center gap-2",
+                "w-full px-5 py-2.5",
+                "bg-[var(--color-brass)] text-[var(--color-charcoal)]",
+                "font-[family-name:var(--font-body)] text-sm font-semibold",
+                "rounded-sm",
+                "hover:bg-[var(--color-brass-light)] transition-colors",
+              ].join(" ")}
             >
-              <label htmlFor="footer-email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="footer-email"
-                type="email"
-                placeholder="your@email.com"
-                autoComplete="email"
-                className={[
-                  "flex-1 min-w-0",
-                  "px-4 py-2.5 text-sm",
-                  "bg-[var(--color-green-mid)]",
-                  "border border-[color-mix(in_srgb,var(--color-brass)_30%,transparent)]",
-                  "rounded-sm",
-                  "text-[var(--color-ivory)] placeholder:text-[color-mix(in_srgb,var(--color-ivory-warm)_50%,transparent)]",
-                  "font-[family-name:var(--font-body)]",
-                  "focus:outline-2 focus:outline-[var(--color-brass)] focus:outline-offset-0",
-                  "transition-colors",
-                ].join(" ")}
-              />
-              <Button variant="primary" size="md" type="submit">
-                Subscribe
-              </Button>
-            </form>
-
-            <p className="text-[10px] text-[color-mix(in_srgb,var(--color-ivory-warm)_50%,transparent)] font-[family-name:var(--font-body)]">
-              No spam. Unsubscribe at any time.
-            </p>
+              Read The Tuxedo Collective ↗
+            </a>
           </div>
 
         </div>

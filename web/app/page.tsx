@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { SITE_URL } from "@/lib/constants"
 import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { NewsletterCTA } from "@/components/layout/NewsletterCTA"
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   description:
     "Find independent golf club fitting shops near you. Browse over 1,000 fitters, simulators, and retailers across all 50 states — curated by The Tuxedo Collective.",
   alternates: {
-    canonical: "https://clubfittingdirectory.com",
+    canonical: SITE_URL,
   },
 }
 
@@ -45,7 +46,7 @@ export default async function HomePage() {
     getDirectoryStats().catch(() => ({ total: 0, states: 0, fitters: 0 })),
   ])
 
-  const totalListings = stats.total || 1200
+  const totalListings = stats.total ?? 0
 
   return (
     <div className="flex flex-col">
