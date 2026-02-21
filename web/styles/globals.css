@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────
+   BRAND COLOUR TOKENS
+   ───────────────────────────────────────────────────────── */
+:root {
+  /* Greens */
+  --color-green-deep:  #1C2E1C;
+  --color-green-mid:   #2D4A2D;
+  --color-green-light: #3D6B3D;
+
+  /* Ivory */
+  --color-ivory:       #F5F0E8;
+  --color-ivory-warm:  #EDE6D6;
+
+  /* Brass */
+  --color-brass:       #B8960C;
+  --color-brass-light: #D4AF37;
+
+  /* Light surfaces */
+  --color-cream-bg:    #FAF7F2;
+  --color-charcoal:    #1A1A1A;
+
+  /* Font stacks (populated by layout.tsx via next/font) */
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body:    "Lora", Georgia, serif;
+  --font-mono:    "JetBrains Mono", "Courier New", monospace;
+}
+
+/* ─────────────────────────────────────────────────────────
+   BASE RESET & DOCUMENT
+   ───────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-green-deep);
+  color: var(--color-ivory);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  min-height: 100vh;
+
+  /* Grain texture overlay via pseudo-element */
+  position: relative;
+}
+
+/* ─────────────────────────────────────────────────────────
+   GRAIN TEXTURE OVERLAY
+   Applied as a fixed pseudo-element covering the viewport.
+   Uses an SVG noise filter baked into a data URI so there
+   are zero external image dependencies.
+   ───────────────────────────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+
+  /* SVG feTurbulence noise baked into a data URI */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+
+  opacity: 0.028;   /* very subtle — aged paper feel, not distracting */
+  mix-blend-mode: overlay;
+}
+
+/* ─────────────────────────────────────────────────────────
+   TYPOGRAPHY DEFAULTS
+   ───────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  color: var(--color-ivory);
+  font-weight: 700;
+}
+
+p {
+  font-family: var(--font-body);
+  color: var(--color-ivory-warm);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Monospace elements — phone numbers, stats, codes */
+code, kbd, samp, pre,
+[data-mono] {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  letter-spacing: 0.02em;
+}
+
+/* Brass underline for display links */
+.link-brass {
+  color: var(--color-brass);
+  text-underline-offset: 3px;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-brass) 40%, transparent);
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+.link-brass:hover {
+  color: var(--color-brass-light);
+  text-decoration-color: var(--color-brass-light);
+}
+
+/* ─────────────────────────────────────────────────────────
+   TEXT SELECTION
+   ───────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--color-brass);
+  color: var(--color-charcoal);
+}
+::-moz-selection {
+  background-color: var(--color-brass);
+  color: var(--color-charcoal);
+}
+
+/* ─────────────────────────────────────────────────────────
+   CUSTOM SCROLLBAR  (Chromium + Firefox)
+   ───────────────────────────────────────────────────────── */
+
+/* Chromium */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-green-deep);
+  border-left: 1px solid color-mix(in srgb, var(--color-green-light) 30%, transparent);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brass);
+  border-radius: 4px;
+  border: 2px solid var(--color-green-deep);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brass-light);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brass) var(--color-green-deep);
+}
+
+/* ─────────────────────────────────────────────────────────
+   UTILITY: BRASS DECORATIVE RULE
+   ───────────────────────────────────────────────────────── */
+.brass-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-brass) 20%,
+    var(--color-brass) 80%,
+    transparent
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   LIGHT SECTION OVERRIDE
+   Sections with a cream background (e.g. marketing blocks)
+   get dark text automatically.
+   ───────────────────────────────────────────────────────── */
+.section-light {
+  background-color: var(--color-cream-bg);
+  color: var(--color-charcoal);
+}
+.section-light h1,
+.section-light h2,
+.section-light h3,
+.section-light h4,
+.section-light h5,
+.section-light h6 {
+  color: var(--color-charcoal);
+}
+.section-light p {
+  color: color-mix(in srgb, var(--color-charcoal) 75%, transparent);
+}
+
+/* ─────────────────────────────────────────────────────────
+   FOCUS STYLES (accessibility)
+   ───────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-brass);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

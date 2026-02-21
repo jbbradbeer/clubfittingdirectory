@@ -1,0 +1,22 @@
+# Next.js build output — never commit this
+.next/
+out/
+
+# Node modules — restored by npm install
+node_modules/
+
+# Environment variables — keep these secret
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Mac system files
+.DS_Store
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Vercel
+.vercel

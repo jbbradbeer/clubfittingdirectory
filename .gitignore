@@ -1,0 +1,49 @@
+# Dependencies — installed automatically, no need to track
+node_modules/
+.pnp
+.pnp.js
+
+# Build output — generated at deploy time
+.next/
+out/
+build/
+dist/
+
+# Environment variables — contains secrets, NEVER commit these
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+dist/
+*.egg
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
