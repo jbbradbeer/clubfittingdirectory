@@ -178,25 +178,25 @@ export function DirectoryClient({ states, typeCounts }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-green-deep)]">
+    <div className="min-h-screen bg-[var(--color-off-white)]">
 
       {/* ── Page header ── */}
-      <div className="border-b border-[color-mix(in_srgb,var(--color-brass)_20%,transparent)] bg-[var(--color-green-deep)]">
+      <div className="border-b border-[var(--color-gray-light)] bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-8">
-          <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-brass)] mb-2">
+          <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-green-deep)] mb-2">
             Club Fitting Directory
           </p>
-          <h1 className="font-[family-name:var(--font-display)] text-4xl font-bold text-[var(--color-ivory)]">
+          <h1 className="font-[family-name:var(--font-display)] text-4xl font-normal text-[var(--color-black)]">
             Find Your Fitter
           </h1>
-          <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-ivory-warm)] mt-1">
+          <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)] mt-1">
             Search 1,200+ independent golf club fitting shops across all 50 states
           </p>
         </div>
       </div>
 
       {/* ── Search bar (full width, above sidebar+content) ── */}
-      <div className="border-b border-[color-mix(in_srgb,var(--color-brass)_15%,transparent)] bg-[color-mix(in_srgb,var(--color-green-mid)_60%,var(--color-green-deep))]">
+      <div className="border-b border-[var(--color-gray-light)] bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <SearchBar
             value={filters.q ?? ""}
@@ -207,18 +207,18 @@ export function DirectoryClient({ states, typeCounts }: Props) {
           <button
             onClick={() => setDrawerOpen(true)}
             className={[
-              "lg:hidden shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-sm",
+              "lg:hidden shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-md",
               "border font-[family-name:var(--font-body)] text-sm transition-colors",
               activeFilterCount > 0
-                ? "border-[var(--color-brass)] text-[var(--color-brass)] bg-[color-mix(in_srgb,var(--color-brass)_8%,transparent)]"
-                : "border-[color-mix(in_srgb,var(--color-ivory)_20%,transparent)] text-[var(--color-ivory-warm)]",
+                ? "border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-[#1B43320A]"
+                : "border-[var(--color-gray-light)] text-[var(--color-gray)]",
             ].join(" ")}
             aria-label="Open filters"
           >
             <SlidersHorizontal size={16} />
             Filters
             {activeFilterCount > 0 && (
-              <span className="font-[family-name:var(--font-mono)] text-xs bg-[var(--color-brass)] text-[var(--color-charcoal)] rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="font-[family-name:var(--font-body)] text-xs bg-[var(--color-green-deep)] text-white rounded-full w-4 h-4 flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -230,7 +230,7 @@ export function DirectoryClient({ states, typeCounts }: Props) {
       <div className="max-w-[1400px] mx-auto flex">
 
         {/* Sticky left sidebar — desktop only */}
-        <aside className="hidden lg:block w-[280px] shrink-0 border-r border-[color-mix(in_srgb,var(--color-brass)_15%,transparent)]">
+        <aside className="hidden lg:block w-[280px] shrink-0 border-r border-[var(--color-gray-light)]">
           <div className="sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <FilterSidebar {...sidebarProps} />
           </div>
@@ -268,21 +268,21 @@ export function DirectoryClient({ states, typeCounts }: Props) {
           aria-modal="true"
           className={[
             "fixed inset-y-0 left-0 z-50 w-[300px] lg:hidden",
-            "bg-[var(--color-green-deep)]",
-            "border-r border-[var(--color-brass)]",
+            "bg-white",
+            "border-r border-[var(--color-gray-light)]",
             "overflow-y-auto",
             "transition-transform duration-300 ease-in-out",
             drawerOpen ? "translate-x-0" : "-translate-x-full",
           ].join(" ")}
         >
           {/* Drawer header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-[var(--color-green-deep)] border-b border-[color-mix(in_srgb,var(--color-brass)_25%,transparent)]">
-            <span className="font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-ivory)]">
+          <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-white border-b border-[var(--color-gray-light)]">
+            <span className="font-[family-name:var(--font-body)] text-lg font-semibold text-[var(--color-black)]">
               Filters
             </span>
             <button
               onClick={() => setDrawerOpen(false)}
-              className="p-1.5 text-[var(--color-ivory-warm)] hover:text-[var(--color-brass)] transition-colors"
+              className="p-1.5 text-[var(--color-gray)] hover:text-[var(--color-green-deep)] transition-colors"
               aria-label="Close filters"
             >
               <X size={20} />

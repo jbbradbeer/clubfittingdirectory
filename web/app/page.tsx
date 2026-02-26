@@ -2,7 +2,6 @@ import Link from "next/link"
 import { SITE_URL } from "@/lib/constants"
 import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
-import { NewsletterCTA } from "@/components/layout/NewsletterCTA"
 import {
   getTopRatedShops,
   getAllStatesWithShops,
@@ -35,10 +34,9 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 3600 // Regenerate every hour
+export const revalidate = 3600
 
 export default async function HomePage() {
-  /* Fetch all data in parallel — faster than sequential awaits */
   const [topShops, stateData, typeCounts, stats] = await Promise.all([
     getTopRatedShops(6).catch(() => []),
     getAllStatesWithShops().catch(() => []),
@@ -50,154 +48,72 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* ── 1. HERO ── */}
       <HeroSection total={totalListings} />
-
-      {/* ── 2. STATS BAR ── */}
-      <StatsBar stats={stats} />
-
-      {/* ── 3. TOP RATED FITTERS ── */}
-      {topShops.length > 0 && (
-        <TopRatedSection shops={topShops} />
-      )}
-
-      {/* ── 4. BROWSE BY CATEGORY ── */}
+      {topShops.length > 0 && <TopRatedSection shops={topShops} />}
       <CategorySection typeCounts={typeCounts} />
-
-      {/* ── 5. BROWSE BY STATE ── */}
       <StateGridSection states={stateData} />
-
-      {/* ── 6. NEWSLETTER CTA ── */}
-      <section className="bg-[var(--color-green-mid)] py-4">
-        <NewsletterCTA variant="hero" />
-      </section>
     </div>
   )
 }
 
 /* ─────────────────────────────────────────────────────────
-   1. HERO SECTION
+   1. HERO — deep green bg, white text, centered search bar
    ───────────────────────────────────────────────────────── */
 function HeroSection({ total }: { total: number }) {
   return (
-    <section className="relative min-h-svh flex flex-col items-center justify-center overflow-hidden bg-[var(--color-green-deep)] px-4 sm:px-6 py-24">
-
-      {/* Decorative watermark: "EST. 2024" */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none select-none absolute inset-0 flex items-center justify-center"
-      >
-        <span
-          className="font-[family-name:var(--font-display)] font-black leading-none tracking-widest opacity-30 rotate-[-8deg] whitespace-nowrap"
-          style={{
-            fontSize: "clamp(6rem,22vw,16rem)",
-            color: "var(--color-green-mid)",
-          }}
-        >
-          EST. 2024
-        </span>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
-
-        {/* Eyebrow */}
-        <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.35em] uppercase text-[var(--color-brass)]">
-          A Tuxedo Collective Directory
-        </p>
-
-        {/* Headline */}
+    <section className="relative flex flex-col items-center justify-center overflow-hidden bg-[var(--color-green-deep)] px-4 sm:px-6 py-24 sm:py-32">
+      <div className="relative z-10 max-w-3xl mx-auto text-center space-y-8">
         <h1
-          className="font-[family-name:var(--font-display)] font-black text-[var(--color-ivory)] leading-[1.05]"
-          style={{ fontSize: "clamp(2.75rem,8vw,5.5rem)" }}
+          className="font-[family-name:var(--font-display)] font-normal text-white leading-[1.1]"
+          style={{ fontSize: "clamp(2.75rem,8vw,5rem)" }}
         >
           Find Your Fitter.
-          <br />
-          <span className="text-[var(--color-brass)]">The Definitive Directory</span>
-          <br />
-          of Golf&rsquo;s Finest{" "}
-          <em className="not-italic text-[var(--color-ivory-warm)]">
-            Club Fitting Studios.
-          </em>
         </h1>
 
-        {/* Subtext */}
-        <p className="font-[family-name:var(--font-body)] text-lg sm:text-xl text-[var(--color-ivory-warm)] max-w-2xl mx-auto leading-relaxed">
-          {total.toLocaleString()}+ vetted fitters, clubmakers, and golf
+        <p className="font-[family-name:var(--font-body)] text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          {total.toLocaleString()}+ independent fitters, clubmakers, and golf
           retailers across all 50 states.
         </p>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-          <Button variant="primary" size="lg" asChild>
-            <Link href="/shops">Search the Directory</Link>
-          </Button>
-          <Button variant="outline" size="lg" asChild>
-            <Link href="/states">Browse by State</Link>
-          </Button>
-        </div>
-
-        {/* Brass rule separator */}
-        <div className="flex items-center gap-4 pt-4 max-w-xs mx-auto" aria-hidden="true">
-          <span className="flex-1 brass-rule" />
-          <span className="w-1 h-1 rounded-full bg-[var(--color-brass)]" />
-          <span className="flex-1 brass-rule" />
-        </div>
-
-        {/* Inline newsletter prompt */}
-        <div className="pt-2">
-          <NewsletterCTA variant="hero" />
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ─────────────────────────────────────────────────────────
-   2. STATS BAR
-   ───────────────────────────────────────────────────────── */
-function StatsBar({
-  stats,
-}: {
-  stats: { total: number; states: number; fitters: number }
-}) {
-  const items = [
-    { number: `${(stats.total || 1200).toLocaleString()}+`, label: "Listings" },
-    { number: "All 50",                                      label: "States" },
-    { number: "6",                                           label: "Shop Categories" },
-    { number: "Free",                                        label: "To Search" },
-  ]
-
-  return (
-    <section className="bg-[var(--color-green-deep)] border-y border-[color-mix(in_srgb,var(--color-brass)_25%,transparent)]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <dl className="grid grid-cols-2 md:grid-cols-4 gap-0">
-          {items.map((item, i) => (
-            <div
-              key={item.label}
-              className={[
-                "flex flex-col items-center justify-center py-6 px-4 text-center",
-                i < items.length - 1
-                  ? "border-r border-[color-mix(in_srgb,var(--color-brass)_20%,transparent)]"
-                  : "",
-              ].join(" ")}
+        {/* Search bar CTA */}
+        <div className="max-w-lg mx-auto w-full">
+          <Link
+            href="/directory"
+            className="flex items-center gap-3 w-full bg-white/10 border border-white/20 rounded-md px-5 py-4 text-left hover:bg-white/15 transition-colors group"
+          >
+            <svg
+              width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              className="text-gray-300 shrink-0" aria-hidden="true"
             >
-              <dt className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-[var(--color-brass)] leading-none mb-1">
-                {item.number}
-              </dt>
-              <dd className="font-[family-name:var(--font-body)] text-xs text-[var(--color-ivory-warm)] tracking-[0.15em] uppercase">
-                {item.label}
-              </dd>
-            </div>
-          ))}
-        </dl>
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <span className="font-[family-name:var(--font-body)] text-gray-300 text-sm">
+              Search fitters, cities, or shops...
+            </span>
+          </Link>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/directory" className="!text-white !border-white/40 hover:!bg-white/10">
+              Search the Directory
+            </Link>
+          </Button>
+          <Button variant="ghost" size="lg" asChild>
+            <Link href="/states" className="!text-gray-300 hover:!text-white">
+              Browse by State
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   )
 }
 
 /* ─────────────────────────────────────────────────────────
-   3. TOP RATED FITTERS
+   2. TOP RATED — off-white bg, white cards
    ───────────────────────────────────────────────────────── */
 async function TopRatedSection({
   shops,
@@ -205,33 +121,29 @@ async function TopRatedSection({
   shops: Awaited<ReturnType<typeof getTopRatedShops>>
 }) {
   return (
-    <section className="bg-[var(--color-green-deep)] py-20 px-4 sm:px-6">
+    <section className="bg-[var(--color-off-white)] py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section header */}
         <div className="flex items-end justify-between mb-10 gap-4">
           <div>
-            <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-brass)] mb-2">
-              Editor&rsquo;s Selection
+            <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-green-deep)] mb-2">
+              Top Rated
             </p>
-            <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold text-[var(--color-ivory)]">
-              Top Rated Fitters
+            <h2 className="font-[family-name:var(--font-display)] text-4xl font-normal text-[var(--color-black)]">
+              Highest Rated Fitters
             </h2>
-            <p className="font-[family-name:var(--font-body)] text-[var(--color-ivory-warm)] mt-2 text-sm">
+            <p className="font-[family-name:var(--font-body)] text-[var(--color-gray)] mt-2 text-sm">
               The highest-rated club fitting studios in the directory
             </p>
           </div>
           <Link
-            href="/shops"
-            className="shrink-0 font-[family-name:var(--font-body)] text-sm text-[var(--color-brass)] hover:text-[var(--color-brass-light)] transition-colors whitespace-nowrap group"
+            href="/directory"
+            className="shrink-0 font-[family-name:var(--font-body)] text-sm text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors whitespace-nowrap group"
           >
             View All{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-0.5" aria-hidden="true">
-              →
-            </span>
+            <span className="inline-block transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
           </Link>
         </div>
 
-        {/* 3-column grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {shops.map((shop) => (
             <ListingCard
@@ -261,62 +173,26 @@ async function TopRatedSection({
 }
 
 /* ─────────────────────────────────────────────────────────
-   4. BROWSE BY CATEGORY
+   3. CATEGORIES — white cards, gray borders, green icons
    ───────────────────────────────────────────────────────── */
-
-const CATEGORIES: {
-  type: string
-  label: string
-  icon: ReactNode
-  href: string
-}[] = [
-  {
-    type: "Clubfitter",
-    label: "Club Fitters",
-    icon: <Club size={28} strokeWidth={1.5} />,
-    href: "/category/clubfitter",
-  },
-  {
-    type: "Retailer",
-    label: "Retailers",
-    icon: <ShoppingBag size={28} strokeWidth={1.5} />,
-    href: "/category/retailer",
-  },
-  {
-    type: "Simulator",
-    label: "Simulators",
-    icon: <Monitor size={28} strokeWidth={1.5} />,
-    href: "/category/simulator",
-  },
-  {
-    type: "Instruction",
-    label: "Instruction",
-    icon: <GraduationCap size={28} strokeWidth={1.5} />,
-    href: "/category/instruction",
-  },
-  {
-    type: "Driving Range",
-    label: "Driving Ranges",
-    icon: <Target size={28} strokeWidth={1.5} />,
-    href: "/category/driving-range",
-  },
-  {
-    type: "Golf Course / Pro Shop",
-    label: "Pro Shops",
-    icon: <Flag size={28} strokeWidth={1.5} />,
-    href: "/category/pro-shop",
-  },
+const CATEGORIES: { type: string; label: string; icon: ReactNode; href: string }[] = [
+  { type: "Clubfitter", label: "Club Fitters", icon: <Club size={28} strokeWidth={1.5} />, href: "/category/club-fitters" },
+  { type: "Retailer", label: "Retailers", icon: <ShoppingBag size={28} strokeWidth={1.5} />, href: "/category/golf-retailers" },
+  { type: "Simulator", label: "Simulators", icon: <Monitor size={28} strokeWidth={1.5} />, href: "/category/simulators" },
+  { type: "Instruction", label: "Instruction", icon: <GraduationCap size={28} strokeWidth={1.5} />, href: "/category/instruction" },
+  { type: "Driving Range", label: "Driving Ranges", icon: <Target size={28} strokeWidth={1.5} />, href: "/category/driving-ranges" },
+  { type: "Golf Course / Pro Shop", label: "Pro Shops", icon: <Flag size={28} strokeWidth={1.5} />, href: "/category/golf-courses" },
 ]
 
 function CategorySection({ typeCounts }: { typeCounts: Record<string, number> }) {
   return (
-    <section className="bg-[var(--color-green-mid)] py-20 px-4 sm:px-6">
+    <section className="bg-white py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
-          <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-brass)] mb-2">
+          <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-green-deep)] mb-2">
             Browse the Directory
           </p>
-          <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold text-[var(--color-ivory)]">
+          <h2 className="font-[family-name:var(--font-display)] text-4xl font-normal text-[var(--color-black)]">
             By Category
           </h2>
         </div>
@@ -328,26 +204,14 @@ function CategorySection({ typeCounts }: { typeCounts: Record<string, number> })
               <Link
                 key={cat.type}
                 href={cat.href}
-                className={[
-                  "group flex flex-col gap-3 p-6",
-                  "bg-[var(--color-green-deep)]",
-                  "border border-[color-mix(in_srgb,var(--color-brass)_18%,transparent)]",
-                  "rounded-sm",
-                  "hover:border-[color-mix(in_srgb,var(--color-brass)_55%,transparent)]",
-                  "hover:bg-[color-mix(in_srgb,var(--color-green-mid)_60%,var(--color-green-deep))]",
-                  "transition-all duration-200",
-                  "shadow-[0_2px_8px_color-mix(in_srgb,#000_20%,transparent)]",
-                  "hover:-translate-y-0.5 hover:shadow-[0_6px_20px_color-mix(in_srgb,#000_30%,transparent)]",
-                ].join(" ")}
+                className="group flex flex-col gap-3 p-6 bg-white border border-[var(--color-gray-light)] rounded-md hover:border-[var(--color-green-deep)] transition-colors duration-200"
               >
-                <span className="text-[var(--color-brass)] group-hover:text-[var(--color-brass-light)] transition-colors">
-                  {cat.icon}
-                </span>
+                <span className="text-[var(--color-green-deep)]">{cat.icon}</span>
                 <div>
-                  <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-ivory)] leading-tight mb-1">
+                  <h3 className="font-[family-name:var(--font-display)] text-lg font-normal text-[var(--color-black)] leading-tight mb-1">
                     {cat.label}
                   </h3>
-                  <p className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-ivory-warm)]">
+                  <p className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)] tabular-nums">
                     {count > 0 ? `${count.toLocaleString()} listings` : "Listings"}
                   </p>
                 </div>
@@ -361,7 +225,7 @@ function CategorySection({ typeCounts }: { typeCounts: Record<string, number> })
 }
 
 /* ─────────────────────────────────────────────────────────
-   5. BROWSE BY STATE
+   4. STATES — white tiles, green highlights
    ───────────────────────────────────────────────────────── */
 function StateGridSection({
   states,
@@ -369,25 +233,23 @@ function StateGridSection({
   states: { state_code: string; state: string; count: number }[]
 }) {
   return (
-    <section className="bg-[var(--color-green-deep)] py-20 px-4 sm:px-6">
+    <section className="bg-[var(--color-off-white)] py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-end justify-between mb-10 gap-4">
           <div>
-            <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-brass)] mb-2">
+            <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-green-deep)] mb-2">
               Browse the Directory
             </p>
-            <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold text-[var(--color-ivory)]">
+            <h2 className="font-[family-name:var(--font-display)] text-4xl font-normal text-[var(--color-black)]">
               By State
             </h2>
           </div>
           <Link
             href="/states"
-            className="shrink-0 font-[family-name:var(--font-body)] text-sm text-[var(--color-brass)] hover:text-[var(--color-brass-light)] transition-colors whitespace-nowrap group"
+            className="shrink-0 font-[family-name:var(--font-body)] text-sm text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors whitespace-nowrap group"
           >
             All States{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-0.5" aria-hidden="true">
-              →
-            </span>
+            <span className="inline-block transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
           </Link>
         </div>
 
@@ -398,30 +260,24 @@ function StateGridSection({
               return (
                 <Link
                   key={s.state_code}
-                  href={`/states/${s.state_code.toLowerCase()}`}
+                  href={`/state/${s.state_code.toLowerCase()}`}
                   title={`${s.state} — ${s.count} listings`}
                   className={[
-                    "flex flex-col items-center justify-center gap-0.5",
-                    "py-3 px-2 rounded-sm text-center",
-                    "border transition-all duration-150",
+                    "flex flex-col items-center justify-center gap-0.5 py-3 px-2 rounded-md text-center",
+                    "border transition-colors duration-150 group",
                     isHighlighted
-                      ? "border-[color-mix(in_srgb,var(--color-brass)_50%,transparent)] bg-[color-mix(in_srgb,var(--color-brass)_6%,transparent)]"
-                      : "border-[color-mix(in_srgb,var(--color-ivory)_10%,transparent)] bg-[var(--color-green-mid)]",
-                    "hover:border-[var(--color-brass)] hover:bg-[color-mix(in_srgb,var(--color-brass)_10%,transparent)]",
-                    "group",
+                      ? "border-[var(--color-green-deep)] bg-[#1B43320A]"
+                      : "border-[var(--color-gray-light)] bg-white",
+                    "hover:border-[var(--color-green-deep)] hover:bg-[#1B43320A]",
                   ].join(" ")}
                 >
-                  <span
-                    className={[
-                      "font-[family-name:var(--font-mono)] text-sm font-bold tracking-wide transition-colors",
-                      isHighlighted
-                        ? "text-[var(--color-brass)]"
-                        : "text-[var(--color-ivory)] group-hover:text-[var(--color-brass)]",
-                    ].join(" ")}
-                  >
+                  <span className={[
+                    "font-[family-name:var(--font-body)] text-sm font-semibold tracking-wide transition-colors tabular-nums",
+                    isHighlighted ? "text-[var(--color-green-deep)]" : "text-[var(--color-black)] group-hover:text-[var(--color-green-deep)]",
+                  ].join(" ")}>
                     {s.state_code}
                   </span>
-                  <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-ivory-warm)] tabular-nums">
+                  <span className="font-[family-name:var(--font-body)] text-[9px] text-[var(--color-gray)] tabular-nums">
                     {s.count}
                   </span>
                 </Link>
@@ -429,7 +285,7 @@ function StateGridSection({
             })}
           </div>
         ) : (
-          <p className="font-[family-name:var(--font-body)] text-[var(--color-ivory-warm)] text-sm">
+          <p className="font-[family-name:var(--font-body)] text-[var(--color-gray)] text-sm">
             State listings will appear once shop data has been loaded into the database.
           </p>
         )}

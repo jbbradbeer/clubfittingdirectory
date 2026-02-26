@@ -2,31 +2,27 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/Button"
 
 /* ─────────────────────────────────────────────────────────
    HEADER
    Fixed top navigation bar with:
-   • Left  : "Club Fitting Directory" logotype (Playfair, brass)
+   • Left  : "Club Fitting Directory" logotype (Instrument Serif, black)
    • Center: nav links — Directory, Browse by State, Browse by Category
-   • Right : "The Tuxedo Collective ↗" + brass Subscribe button
-   • Mobile: hamburger → full-screen dark green slide-in drawer
-   • Scroll: subtle backdrop-blur + deeper shadow
+   • Mobile: hamburger → full-screen white slide-in drawer
+   • Scroll: subtle shadow
    ───────────────────────────────────────────────────────── */
 
 const NAV_LINKS = [
-  { label: "Directory",            href: "/shops" },
+  { label: "Directory",            href: "/directory" },
   { label: "Browse by State",      href: "/states" },
-  { label: "Browse by Category",   href: "/categories" },
+  { label: "Browse by Category",   href: "/category/club-fitters" },
 ]
-
-const NEWSLETTER_URL = "https://thetuxedocollective.com"
 
 export function Header() {
   const [menuOpen, setMenuOpen]       = useState(false)
   const [scrolled,  setScrolled]      = useState(false)
 
-  /* Detect scroll to apply blur + shadow */
+  /* Detect scroll to apply shadow */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
     window.addEventListener("scroll", onScroll, { passive: true })
@@ -44,12 +40,10 @@ export function Header() {
       <header
         className={[
           "fixed top-0 inset-x-0 z-50",
-          "bg-[var(--color-green-deep)]",
-          "border-b border-[var(--color-brass)]",
+          "bg-white",
+          "border-b border-[var(--color-gray-light)]",
           "transition-shadow duration-300",
-          scrolled
-            ? "shadow-[0_2px_24px_color-mix(in_srgb,#000_50%,transparent)] backdrop-blur-sm"
-            : "",
+          scrolled ? "shadow-sm" : "",
         ].join(" ")}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,7 +52,7 @@ export function Header() {
             {/* ── Logotype ── */}
             <Link
               href="/"
-              className="shrink-0 font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-brass)] tracking-tight hover:text-[var(--color-brass-light)] transition-colors"
+              className="shrink-0 font-[family-name:var(--font-display)] text-lg font-normal text-[var(--color-black)] tracking-tight hover:text-[var(--color-green-deep)] transition-colors"
             >
               Club Fitting Directory
             </Link>
@@ -72,42 +66,18 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="font-[family-name:var(--font-body)] text-sm text-[var(--color-ivory-warm)] tracking-wide hover:text-[var(--color-ivory)] transition-colors relative group"
+                  className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)] tracking-wide hover:text-[var(--color-green-deep)] transition-colors relative group"
                 >
                   {link.label}
                   {/* Underline animation */}
-                  <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[var(--color-brass)] transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[var(--color-green-deep)] transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}
             </nav>
 
-            {/* ── Right side: newsletter link + subscribe ── */}
-            <div className="hidden md:flex items-center gap-4">
-              <a
-                href={NEWSLETTER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-[family-name:var(--font-body)] text-sm text-[var(--color-ivory-warm)] hover:text-[var(--color-ivory)] transition-colors tracking-wide"
-              >
-                The Tuxedo Collective{" "}
-                <span aria-hidden="true" className="text-[var(--color-brass)]">
-                  ↗
-                </span>
-              </a>
-              <Button variant="primary" size="sm" asChild>
-                <a
-                  href={NEWSLETTER_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Subscribe
-                </a>
-              </Button>
-            </div>
-
             {/* ── Mobile hamburger ── */}
             <button
-              className="md:hidden p-2 rounded-sm text-[var(--color-ivory)] hover:text-[var(--color-brass)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-brass)]"
+              className="md:hidden p-2 rounded-md text-[var(--color-black)] hover:text-[var(--color-green-deep)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-green-deep)]"
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
@@ -124,7 +94,7 @@ export function Header() {
         aria-hidden={!menuOpen}
         className={[
           "fixed inset-0 z-40 md:hidden",
-          "bg-[var(--color-green-deep)]",
+          "bg-white",
           "flex flex-col",
           "transition-all duration-300 ease-in-out",
           menuOpen
@@ -133,7 +103,7 @@ export function Header() {
         ].join(" ")}
       >
         {/* Spacer for fixed header */}
-        <div className="h-16 shrink-0 border-b border-[var(--color-brass)]" />
+        <div className="h-16 shrink-0 border-b border-[var(--color-gray-light)]" />
 
         <nav
           className="flex-1 flex flex-col items-center justify-center gap-8 px-6"
@@ -144,38 +114,11 @@ export function Header() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-[family-name:var(--font-display)] text-3xl font-semibold text-[var(--color-ivory)] hover:text-[var(--color-brass)] transition-colors tracking-wide"
+              className="font-[family-name:var(--font-display)] text-3xl font-normal text-[var(--color-black)] hover:text-[var(--color-green-deep)] transition-colors tracking-wide"
             >
               {link.label}
             </Link>
           ))}
-
-          {/* Brass divider */}
-          <span className="brass-rule w-32 my-2" aria-hidden="true" />
-
-          <a
-            href={NEWSLETTER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-[family-name:var(--font-body)] text-lg text-[var(--color-ivory-warm)] hover:text-[var(--color-brass-light)] transition-colors"
-            onClick={() => setMenuOpen(false)}
-          >
-            The Tuxedo Collective ↗
-          </a>
-
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => setMenuOpen(false)}
-          >
-            <a
-              href={NEWSLETTER_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Subscribe to the Newsletter
-            </a>
-          </Button>
         </nav>
       </div>
 

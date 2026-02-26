@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Playfair_Display, Lora, JetBrains_Mono } from "next/font/google"
+import { Instrument_Serif, Inter } from "next/font/google"
 import "../styles/globals.css"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
@@ -9,26 +9,18 @@ import { Footer } from "@/components/layout/Footer"
    Loaded via next/font so they are self-hosted (fast + no
    external network requests at runtime).
    ───────────────────────────────────────────────────────── */
-const playfairDisplay = Playfair_Display({
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "900"],
+  weight: ["400"],
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 })
 
-const lora = Lora({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-body",
-  display: "swap",
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-mono",
   display: "swap",
 })
 
@@ -70,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfairDisplay.variable} ${lora.variable} ${jetbrainsMono.variable}`}
+      className={`${instrumentSerif.variable} ${inter.variable}`}
     >
       <body className="min-h-screen flex flex-col antialiased">
         <Header />

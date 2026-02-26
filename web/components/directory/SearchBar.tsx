@@ -45,7 +45,7 @@ export function SearchBar({ value, onChange, className = "" }: SearchBarProps) {
     <div className={`relative ${className}`}>
       {/* Search icon */}
       <span
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-brass)] pointer-events-none"
+        className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-gray)] pointer-events-none"
         aria-hidden="true"
       >
         <Search size={17} strokeWidth={1.8} />
@@ -61,13 +61,13 @@ export function SearchBar({ value, onChange, className = "" }: SearchBarProps) {
         className={[
           "w-full",
           "pl-11 pr-10 py-3",
-          "bg-[var(--color-green-mid)]",
-          "border border-[color-mix(in_srgb,var(--color-brass)_25%,transparent)]",
-          "rounded-sm",
-          "font-[family-name:var(--font-display)] text-[var(--color-ivory)] text-sm",
-          "placeholder:font-[family-name:var(--font-display)] placeholder:text-[color-mix(in_srgb,var(--color-ivory-warm)_40%,transparent)] placeholder:italic",
-          "focus:outline-2 focus:outline-[var(--color-brass)] focus:outline-offset-0",
-          "focus:border-[var(--color-brass)]",
+          "bg-white",
+          "border border-[var(--color-gray-light)]",
+          "rounded-md",
+          "font-[family-name:var(--font-body)] text-[var(--color-black)] text-sm",
+          "placeholder:text-[var(--color-gray)] placeholder:italic",
+          "focus:outline-2 focus:outline-[var(--color-green-deep)] focus:outline-offset-0",
+          "focus:border-[var(--color-green-deep)]",
           "transition-colors duration-150",
           /* Remove browser default search cancel button */
           "[&::-webkit-search-cancel-button]:appearance-none",
@@ -79,7 +79,7 @@ export function SearchBar({ value, onChange, className = "" }: SearchBarProps) {
       {draft && (
         <button
           onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[var(--color-ivory-warm)] hover:text-[var(--color-brass)] transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[var(--color-gray)] hover:text-[var(--color-green-deep)] transition-colors"
           aria-label="Clear search"
           type="button"
         >

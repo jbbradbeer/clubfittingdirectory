@@ -2,16 +2,15 @@ import { type ReactNode } from "react"
 
 /* ─────────────────────────────────────────────────────────
    BADGE
-   Small pill labels used for shop_type, services, and
-   verification status throughout the directory.
+   Small pill labels for shop types, services, and status.
 
    Variants:
-   • default  — ivory text, green border (neutral tags)
-   • brass    — brass text + border (premium / highlight)
-   • verified — small brass checkmark + "Verified" label
+   • default   — green outlined pill
+   • highlight — solid green fill, white text (highlight)
+   • verified  — green checkmark + "Verified" label
    ───────────────────────────────────────────────────────── */
 
-type BadgeVariant = "default" | "brass" | "verified"
+type BadgeVariant = "default" | "highlight" | "verified"
 
 interface BadgeProps {
   children?: ReactNode
@@ -29,11 +28,11 @@ export function Badge({
 
   const variants: Record<BadgeVariant, string> = {
     default:
-      "border border-[color-mix(in_srgb,var(--color-ivory)_30%,transparent)] text-[var(--color-ivory-warm)] bg-[color-mix(in_srgb,var(--color-green-light)_20%,transparent)]",
-    brass:
-      "border border-[var(--color-brass)] text-[var(--color-brass)] bg-[color-mix(in_srgb,var(--color-brass)_8%,transparent)]",
+      "border border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-transparent",
+    highlight:
+      "border border-[var(--color-green-deep)] text-white bg-[var(--color-green-deep)]",
     verified:
-      "border border-[var(--color-brass)] text-[var(--color-brass)] bg-[color-mix(in_srgb,var(--color-brass)_8%,transparent)]",
+      "border border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-[#1B43320A]",
   }
 
   if (variant === "verified") {
@@ -52,7 +51,6 @@ export function Badge({
   )
 }
 
-/* Small inline brass checkmark SVG */
 function CheckmarkIcon() {
   return (
     <svg
@@ -64,7 +62,7 @@ function CheckmarkIcon() {
     >
       <path
         d="M1.5 5L4 7.5L8.5 2.5"
-        stroke="var(--color-brass)"
+        stroke="var(--color-green-deep)"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"

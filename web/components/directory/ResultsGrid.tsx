@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 /* ─────────────────────────────────────────────────────────
    RESULTS GRID
    Sort bar, 2-column listing grid, pagination, empty state.
-   All editorial in tone — not a SaaS table.
+   White cards on off-white background. Clean editorial style.
    ───────────────────────────────────────────────────────── */
 
 interface ResultsGridProps {
@@ -56,10 +56,10 @@ export function ResultsGrid({
   if (error) {
     return (
       <div className="py-20 text-center space-y-3">
-        <p className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-ivory)]">
+        <p className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-black)]">
           Something went wrong.
         </p>
-        <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-ivory-warm)]">
+        <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)]">
           Could not load listings. Please try again.
         </p>
       </div>
@@ -132,14 +132,14 @@ function SortBar({
   onSort: (sort: DirectoryFilters["sort"]) => void
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 pb-4 border-b border-[color-mix(in_srgb,var(--color-brass)_15%,transparent)]">
+    <div className="flex items-center justify-between gap-4 pb-4 border-b border-[var(--color-gray-light)]">
       {/* Result count */}
-      <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-ivory-warm)]">
+      <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)]">
         {total === null ? (
-          <span className="inline-block w-20 h-4 rounded bg-[var(--color-green-mid)] animate-pulse" />
+          <span className="inline-block w-20 h-4 rounded bg-[var(--color-gray-light)] animate-pulse" />
         ) : (
           <>
-            <span className="font-[family-name:var(--font-mono)] text-[var(--color-ivory)] tabular-nums">
+            <span className="font-[family-name:var(--font-body)] text-[var(--color-black)] tabular-nums font-medium">
               {total.toLocaleString()}
             </span>{" "}
             {total === 1 ? "result" : "results"}
@@ -151,7 +151,7 @@ function SortBar({
       <div className="flex items-center gap-2 shrink-0">
         <label
           htmlFor="sort-select"
-          className="font-[family-name:var(--font-body)] text-xs text-[var(--color-ivory-warm)] hidden sm:inline"
+          className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)] hidden sm:inline"
         >
           Sort:
         </label>
@@ -162,11 +162,11 @@ function SortBar({
             onChange={(e) => onSort(e.target.value as DirectoryFilters["sort"])}
             className={[
               "appearance-none pl-3 pr-7 py-1.5",
-              "bg-[var(--color-green-mid)]",
-              "border border-[color-mix(in_srgb,var(--color-brass)_30%,transparent)]",
-              "rounded-sm",
-              "font-[family-name:var(--font-body)] text-xs text-[var(--color-ivory)]",
-              "focus:outline-none focus:border-[var(--color-brass)]",
+              "bg-white",
+              "border border-[var(--color-gray-light)]",
+              "rounded-md",
+              "font-[family-name:var(--font-body)] text-xs text-[var(--color-black)]",
+              "focus:outline-none focus:border-[var(--color-green-deep)]",
               "cursor-pointer transition-colors",
             ].join(" ")}
           >
@@ -177,7 +177,7 @@ function SortBar({
             ))}
           </select>
           {/* Custom chevron */}
-          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-brass)]">
+          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-gray)]">
             <ChevronRight size={12} className="rotate-90" />
           </span>
         </div>
@@ -190,25 +190,16 @@ function SortBar({
 function EmptyState() {
   return (
     <div className="py-24 flex flex-col items-center text-center max-w-md mx-auto">
-      {/* Decorative brass rule */}
-      <div className="flex items-center gap-3 mb-8 w-full max-w-xs" aria-hidden="true">
-        <span className="flex-1 h-px bg-[color-mix(in_srgb,var(--color-brass)_30%,transparent)]" />
-        <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-brass)] tracking-widest">
-          ✦
-        </span>
-        <span className="flex-1 h-px bg-[color-mix(in_srgb,var(--color-brass)_30%,transparent)]" />
-      </div>
-
-      <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-ivory)] mb-3">
-        No fitters found.
+      <h2 className="font-[family-name:var(--font-display)] text-3xl font-normal text-[var(--color-black)] mb-3">
+        No fitters found in this area — yet.
       </h2>
-      <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-ivory-warm)] leading-relaxed mb-8">
+      <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)] leading-relaxed mb-8">
         Your current filters returned no results. Try widening your search —
         remove a state filter, lower the minimum rating, or browse all listings.
       </p>
       <Link
         href="/directory"
-        className="font-[family-name:var(--font-body)] text-sm text-[var(--color-brass)] hover:text-[var(--color-brass-light)] transition-colors underline underline-offset-4 decoration-[color-mix(in_srgb,var(--color-brass)_40%,transparent)]"
+        className="font-[family-name:var(--font-body)] text-sm text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors underline underline-offset-4 decoration-[var(--color-gray-light)]"
       >
         Browse all listings →
       </Link>
@@ -219,22 +210,22 @@ function EmptyState() {
 /* ── Skeleton loading card ── */
 function SkeletonCard() {
   return (
-    <div className="rounded-sm bg-[var(--color-green-mid)] border border-[color-mix(in_srgb,var(--color-brass)_10%,transparent)] p-5 space-y-3 animate-pulse">
+    <div className="rounded-md bg-white border border-[var(--color-gray-light)] p-5 space-y-3 animate-pulse">
       <div className="flex justify-between">
-        <div className="h-3 w-20 rounded bg-[var(--color-green-light)]" />
-        <div className="h-5 w-16 rounded-full bg-[var(--color-green-light)]" />
+        <div className="h-3 w-20 rounded bg-[var(--color-gray-light)]" />
+        <div className="h-5 w-16 rounded-full bg-[var(--color-gray-light)]" />
       </div>
-      <div className="h-6 w-3/4 rounded bg-[var(--color-green-light)]" />
-      <div className="h-3 w-1/3 rounded bg-[var(--color-green-light)]" />
-      <div className="h-3 w-1/2 rounded bg-[var(--color-green-light)]" />
+      <div className="h-6 w-3/4 rounded bg-[var(--color-gray-light)]" />
+      <div className="h-3 w-1/3 rounded bg-[var(--color-gray-light)]" />
+      <div className="h-3 w-1/2 rounded bg-[var(--color-gray-light)]" />
       <div className="flex gap-2">
-        <div className="h-5 w-16 rounded-full bg-[var(--color-green-light)]" />
-        <div className="h-5 w-20 rounded-full bg-[var(--color-green-light)]" />
-        <div className="h-5 w-14 rounded-full bg-[var(--color-green-light)]" />
+        <div className="h-5 w-16 rounded-full bg-[var(--color-gray-light)]" />
+        <div className="h-5 w-20 rounded-full bg-[var(--color-gray-light)]" />
+        <div className="h-5 w-14 rounded-full bg-[var(--color-gray-light)]" />
       </div>
-      <div className="flex justify-between pt-2 border-t border-[color-mix(in_srgb,var(--color-brass)_8%,transparent)]">
-        <div className="h-3 w-28 rounded bg-[var(--color-green-light)]" />
-        <div className="h-3 w-20 rounded bg-[var(--color-green-light)]" />
+      <div className="flex justify-between pt-2 border-t border-[var(--color-gray-light)]">
+        <div className="h-3 w-28 rounded bg-[var(--color-gray-light)]" />
+        <div className="h-3 w-20 rounded bg-[var(--color-gray-light)]" />
       </div>
     </div>
   )
@@ -268,27 +259,27 @@ function Pagination({
 
   const btnBase = [
     "min-w-[36px] h-9 px-2 flex items-center justify-center",
-    "rounded-sm border text-sm",
-    "font-[family-name:var(--font-mono)] tabular-nums",
+    "rounded-md border text-sm",
+    "font-[family-name:var(--font-body)] tabular-nums",
     "transition-all duration-150",
   ].join(" ")
 
   const activeBtn = [
-    "bg-[var(--color-brass)] border-[var(--color-brass)]",
-    "text-[var(--color-charcoal)] font-bold",
+    "bg-[var(--color-green-deep)] border-[var(--color-green-deep)]",
+    "text-white font-medium",
   ].join(" ")
 
   const inactiveBtn = [
-    "bg-transparent border-[color-mix(in_srgb,var(--color-ivory)_15%,transparent)]",
-    "text-[var(--color-ivory-warm)]",
-    "hover:border-[var(--color-brass)] hover:text-[var(--color-brass)]",
+    "bg-transparent border-[var(--color-gray-light)]",
+    "text-[var(--color-gray)]",
+    "hover:border-[var(--color-green-deep)] hover:text-[var(--color-green-deep)]",
   ].join(" ")
 
   const navBtn = [
-    "bg-transparent border-[color-mix(in_srgb,var(--color-ivory)_15%,transparent)]",
-    "text-[var(--color-ivory-warm)]",
-    "hover:border-[var(--color-brass)] hover:text-[var(--color-brass)]",
-    "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[color-mix(in_srgb,var(--color-ivory)_15%,transparent)] disabled:hover:text-[var(--color-ivory-warm)]",
+    "bg-transparent border-[var(--color-gray-light)]",
+    "text-[var(--color-gray)]",
+    "hover:border-[var(--color-green-deep)] hover:text-[var(--color-green-deep)]",
+    "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[var(--color-gray-light)] disabled:hover:text-[var(--color-gray)]",
   ].join(" ")
 
   return (
@@ -311,7 +302,7 @@ function Pagination({
         p === "…" ? (
           <span
             key={`ellipsis-${i}`}
-            className="min-w-[36px] h-9 flex items-center justify-center font-[family-name:var(--font-mono)] text-sm text-[color-mix(in_srgb,var(--color-ivory-warm)_40%,transparent)]"
+            className="min-w-[36px] h-9 flex items-center justify-center font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)]"
           >
             …
           </span>

@@ -7,8 +7,8 @@ import type { ListingCardProps } from "@/types/shop"
 /* ─────────────────────────────────────────────────────────
    LISTING CARD
    The primary display unit for every shop in the directory.
-   Designed to feel like a magazine listing — not a database
-   row. Editorial, legible, and distinctive.
+   White card, gray border, green left border on hover.
+   Clean, editorial, text-first layout.
    ───────────────────────────────────────────────────────── */
 
 export function ListingCard({
@@ -45,20 +45,14 @@ export function ListingCard({
       interactive
       className="group relative overflow-hidden flex flex-col"
     >
-      {/* ── Left edge: 3px vertical brass accent bar ── */}
-      <span
-        className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--color-brass)] opacity-70 group-hover:opacity-100 transition-opacity duration-200"
-        aria-hidden="true"
-      />
-
       {/* ── Top badges row ── */}
-      <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-0 pl-7">
-        {/* Fitting callout — most important signal, shown first */}
+      <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-0">
+        {/* Fitting callout */}
         {offers_fitting ? (
-          <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-brass)] tracking-wide">
-            <span aria-hidden="true">✦</span> Fitting Available
+          <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] tracking-wide">
+            Fitting Available
             {fitting_environment ? (
-              <span className="text-[var(--color-ivory-warm)] font-normal">
+              <span className="text-[var(--color-gray)] font-normal">
                 {" "}({fitting_environment})
               </span>
             ) : null}
@@ -77,20 +71,20 @@ export function ListingCard({
       </div>
 
       {/* ── Main content ── */}
-      <div className="flex-1 px-5 pt-3 pb-4 pl-7 space-y-2.5">
+      <div className="flex-1 px-5 pt-3 pb-4 space-y-2.5">
 
         {/* Headline: listing name */}
-        <h3 className="font-[family-name:var(--font-display)] text-xl font-bold leading-tight">
+        <h3 className="font-[family-name:var(--font-display)] text-xl font-normal leading-tight">
           <Link
             href={`/listing/${slug}`}
-            className="text-[var(--color-ivory)] group-hover:text-[var(--color-brass-light)] transition-colors duration-200 decoration-[var(--color-brass)] underline-offset-3 group-hover:underline"
+            className="text-[var(--color-black)] group-hover:text-[var(--color-green-deep)] transition-colors duration-200 underline-offset-3 group-hover:underline decoration-[var(--color-green-deep)]"
           >
             {name}
           </Link>
         </h3>
 
         {/* Subheadline: location */}
-        <p className="font-[family-name:var(--font-body)] text-sm italic text-[var(--color-ivory-warm)]">
+        <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)]">
           {city}, {state}
         </p>
 
@@ -98,11 +92,11 @@ export function ListingCard({
         {rating !== null && rating > 0 ? (
           <div className="flex items-center gap-2.5 flex-wrap">
             <RatingStars rating={rating} size="sm" />
-            <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-brass)] tabular-nums">
+            <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] tabular-nums">
               {rating.toFixed(1)}
             </span>
             {rating_tier && (
-              <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-ivory-warm)]">
+              <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)]">
                 · {rating_tier}
               </span>
             )}
@@ -118,7 +112,7 @@ export function ListingCard({
               </Badge>
             ))}
             {extraCount > 0 && (
-              <span className="inline-flex items-center text-[10px] text-[var(--color-ivory-warm)] font-[family-name:var(--font-body)] px-1">
+              <span className="inline-flex items-center text-[10px] text-[var(--color-gray)] font-[family-name:var(--font-body)] px-1">
                 +{extraCount} more
               </span>
             )}
@@ -127,11 +121,11 @@ export function ListingCard({
       </div>
 
       {/* ── Footer: phone left, website right ── */}
-      <CardFooter className="pl-7 flex items-center justify-between gap-4">
+      <CardFooter className="flex items-center justify-between gap-4">
         {phone ? (
           <a
             href={`tel:${phone.replace(/\D/g, "")}`}
-            className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-ivory-warm)] hover:text-[var(--color-ivory)] transition-colors tracking-wide"
+            className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)] hover:text-[var(--color-black)] transition-colors tracking-wide tabular-nums"
             aria-label={`Call ${name}`}
           >
             {phone}
@@ -145,7 +139,7 @@ export function ListingCard({
             href={website.startsWith("http") ? website : `https://${website}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-[family-name:var(--font-body)] text-xs text-[var(--color-brass)] hover:text-[var(--color-brass-light)] transition-colors group/link"
+            className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors group/link"
           >
             Visit Website{" "}
             <span

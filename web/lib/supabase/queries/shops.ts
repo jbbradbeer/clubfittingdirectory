@@ -68,7 +68,12 @@ export async function getShopBySlug(slug: string): Promise<Shop | null> {
     .eq("status", "active")
     .single()
 
-  if (error) return null
+  if (error) {
+    // PGRST116 = "no rows returned" — genuine 404, return null
+    if (error.code === "PGRST116") return null
+    // Any other error is a real database problem — throw it
+    throw error
+  }
   return data as Shop
 }
 
@@ -137,7 +142,7 @@ export async function getDirectoryStats(): Promise<{
     .select("state_code, shop_type")
     .eq("status", "active")
 
-  if (error) return { total: 0, states: 0, fitters: 0 }
+  if (error) throw error
 
   const rows = data ?? []
   const states  = new Set(rows.map((r: { state_code: string }) => r.state_code)).size
@@ -279,7 +284,7 @@ export async function getShopTypeCounts(): Promise<Record<string, number>> {
     .select("shop_type")
     .eq("status", "active")
 
-  if (error) return {}
+  if (error) throw error
 
   const counts: Record<string, number> = {}
   for (const row of data ?? []) {
@@ -306,7 +311,7 @@ export async function getNearbyShops(
     .order("rating", { ascending: false, nullsFirst: false })
     .limit(limit)
 
-  if (error) return []
+  if (error) throw error
   return (data as unknown as Shop[]) ?? []
 }
 
@@ -324,7 +329,7 @@ export async function getShopsForStatePage(
     .order("rating",      { ascending: false, nullsFirst: false })
     .limit(1000)
 
-  if (error) return { shops: [], cityCount: 0 }
+  if (error) throw error
   const shops     = (data as unknown as Shop[]) ?? []
   const cityCount = new Set(shops.map((s) => s.city)).size
   return { shops, cityCount }
@@ -338,7 +343,7 @@ export async function getAllStateCodes(): Promise<string[]> {
     .select("state_code")
     .eq("status", "active")
 
-  if (error) return []
+  if (error) throw error
   const codes = [...new Set((data ?? []).map((r: { state_code: string }) => r.state_code))]
   return codes.filter((c): c is string => Boolean(c))
 }
@@ -357,7 +362,7 @@ export async function getShopsForCategoryPage(
     .order("rating",      { ascending: false, nullsFirst: false })
     .limit(1000)
 
-  if (error) return { shops: [], stateBreakdown: [] }
+  if (error) throw error
   const shops = (data as unknown as Shop[]) ?? []
 
   // Tally by state
@@ -383,7 +388,7 @@ export async function getAllShopTypes(): Promise<string[]> {
     .select("shop_type")
     .eq("status", "active")
 
-  if (error) return []
+  if (error) throw error
   const types = [...new Set((data ?? []).map((r: { shop_type: string | null }) => r.shop_type ?? ""))]
   return types.filter((t): t is string => Boolean(t))
 }

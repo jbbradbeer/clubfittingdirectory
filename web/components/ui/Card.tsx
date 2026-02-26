@@ -2,36 +2,27 @@ import { type HTMLAttributes, forwardRef } from "react"
 
 /* ─────────────────────────────────────────────────────────
    CARD
-   Base container component used for shop listings, stat
-   blocks, and any boxed content.
-
-   Styling:
-   • Dark green mid background  (--color-green-mid)
-   • 1px brass border at 20 % opacity  (subtle, not garish)
-   • Gentle box-shadow for depth
-   • Hover: lifts 2px + brass border brightens
+   Base container for shop listings and boxed content.
+   White background, light gray border, no shadow.
+   Hover: subtle green left border accent.
    ───────────────────────────────────────────────────────── */
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  /** Remove the default hover lift effect (e.g. for static info panels) */
   interactive?: boolean
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ interactive = true, className = "", children, ...props }, ref) => {
     const base = [
-      "rounded-sm",
-      "bg-[var(--color-green-mid)]",
-      "border border-[color-mix(in_srgb,var(--color-brass)_20%,transparent)]",
-      "shadow-[0_2px_12px_color-mix(in_srgb,#000_30%,transparent)]",
+      "rounded-md",
+      "bg-white",
+      "border border-[var(--color-gray-light)]",
     ].join(" ")
 
     const hoverClasses = interactive
       ? [
           "transition-all duration-200 ease-out",
-          "hover:-translate-y-0.5",
-          "hover:border-[color-mix(in_srgb,var(--color-brass)_45%,transparent)]",
-          "hover:shadow-[0_6px_24px_color-mix(in_srgb,#000_40%,transparent)]",
+          "hover:border-l-[3px] hover:border-l-[var(--color-green-deep)]",
         ].join(" ")
       : ""
 
@@ -82,7 +73,7 @@ export function CardFooter({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`px-5 pt-3 pb-5 border-t border-[color-mix(in_srgb,var(--color-brass)_15%,transparent)] ${className}`}
+      className={`px-5 pt-3 pb-5 border-t border-[var(--color-gray-light)] ${className}`}
       {...props}
     >
       {children}
