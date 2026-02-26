@@ -85,4 +85,6 @@ export interface ListingCardProps {
   website: string | null
   verified: boolean
   slug: string
+  /** Distance in km — shown as a badge when the user uses "Near Me" */
+  distance_km?: number
 }

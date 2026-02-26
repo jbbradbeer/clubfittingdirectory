@@ -2,12 +2,24 @@
 
 import { useState, useEffect, useCallback, useTransition } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
-import { getListings } from "@/lib/supabase/queries/listings"
-import type { DirectoryFilters, DirectoryResult } from "@/lib/supabase/queries/listings"
+import dynamic from "next/dynamic"
+import { getListings, getNearMeListings } from "@/lib/supabase/queries/listings"
+import type { DirectoryFilters, DirectoryResult, NearMeShop } from "@/lib/supabase/queries/listings"
 import { FilterSidebar } from "./FilterSidebar"
 import { SearchBar } from "./SearchBar"
 import { ResultsGrid } from "./ResultsGrid"
-import { SlidersHorizontal, X } from "lucide-react"
+import { ListingCard } from "./ListingCard"
+import { SlidersHorizontal, X, LocateFixed, List, Map as MapIcon } from "lucide-react"
+
+/* Dynamic import — MapView uses Leaflet which requires the browser window object */
+const MapView = dynamic(() => import("./MapView"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full rounded-md border border-[var(--color-gray-light)] bg-[var(--color-off-white)] animate-pulse"
+      style={{ height: "calc(100vh - 200px)", minHeight: 400 }}
+    />
+  ),
+})
 
 /* ─────────────────────────────────────────────────────────
    DIRECTORY CLIENT
@@ -82,6 +94,15 @@ export function DirectoryClient({ states, typeCounts }: Props) {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [, startTransition]         = useTransition()
 
+  /* View mode: list grid vs map */
+  const [viewMode, setViewMode] = useState<"list" | "map">("list")
+
+  /* Near Me state */
+  const [nearMeLoading,  setNearMeLoading]  = useState(false)
+  const [nearMeShops,    setNearMeShops]    = useState<NearMeShop[] | null>(null)
+  const [nearMeLocation, setNearMeLocation] = useState<[number, number] | null>(null)
+  const [nearMeError,    setNearMeError]    = useState<string | null>(null)
+
   /* Filter state initialised from URL */
   const [filters, setFilters] = useState<DirectoryFilters>(() =>
     paramsToFilters(searchParams),
@@ -97,18 +118,23 @@ export function DirectoryClient({ states, typeCounts }: Props) {
     setFilters(paramsToFilters(searchParams))
   }, [searchParams])
 
-  /* ── Fetch results whenever filters change ── */
+  /* ── Fetch results whenever filters or view mode changes ── */
   useEffect(() => {
     let cancelled = false
     setLoading(true)
     setError(null)
 
-    getListings(filters)
+    // In map mode: fetch more shops so all pins show at once (no pagination on map)
+    const effectiveFilters = viewMode === "map"
+      ? { ...filters, perPage: 500 }
+      : filters
+
+    getListings(effectiveFilters)
       .then((data) => { if (!cancelled) { setResult(data); setLoading(false) } })
       .catch((err)  => { if (!cancelled) { setError(String(err)); setLoading(false) } })
 
     return () => { cancelled = true }
-  }, [filters])
+  }, [filters, viewMode])
 
   /* ── Push filter changes to URL ── */
   const applyFilters = useCallback(
@@ -121,14 +147,22 @@ export function DirectoryClient({ states, typeCounts }: Props) {
     [router, pathname],
   )
 
-  /* Merge a partial change and push */
+  /* Clear Near Me state helper */
+  const clearNearMe = useCallback(() => {
+    setNearMeShops(null)
+    setNearMeLocation(null)
+    setNearMeError(null)
+  }, [])
+
+  /* Merge a partial change and push — also clears Near Me */
   const updateFilter = useCallback(
     (partial: Partial<DirectoryFilters>) => {
+      clearNearMe()
       const next = { ...filters, ...partial, page: 1 }
       setFilters(next)
       applyFilters(next)
     },
-    [filters, applyFilters],
+    [filters, applyFilters, clearNearMe],
   )
 
   const setPage = useCallback(
@@ -144,10 +178,42 @@ export function DirectoryClient({ states, typeCounts }: Props) {
   )
 
   const clearAll = useCallback(() => {
+    clearNearMe()
     const next: DirectoryFilters = { sort: "rating", page: 1 }
     setFilters(next)
     router.push(pathname, { scroll: false })
-  }, [router, pathname])
+  }, [router, pathname, clearNearMe])
+
+  /* ── Near Me handler ── */
+  const handleNearMe = useCallback(() => {
+    if (!navigator.geolocation) {
+      setNearMeError("Your browser does not support location services.")
+      return
+    }
+    setNearMeLoading(true)
+    setNearMeError(null)
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords
+        try {
+          const shops = await getNearMeListings(lat, lng)
+          setNearMeShops(shops)
+          setNearMeLocation([lat, lng])
+          setViewMode("map")
+        } catch {
+          setNearMeError("Could not fetch nearby shops. Please try again.")
+        } finally {
+          setNearMeLoading(false)
+        }
+      },
+      () => {
+        setNearMeError("Location access denied. Please allow location in your browser.")
+        setNearMeLoading(false)
+      },
+      { timeout: 10000, maximumAge: 60000 },
+    )
+  }, [])
 
   /* Prevent body scroll when drawer is open */
   useEffect(() => {
@@ -195,7 +261,7 @@ export function DirectoryClient({ states, typeCounts }: Props) {
         </div>
       </div>
 
-      {/* ── Search bar (full width, above sidebar+content) ── */}
+      {/* ── Search bar + controls ── */}
       <div className="border-b border-[var(--color-gray-light)] bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <SearchBar
@@ -203,6 +269,60 @@ export function DirectoryClient({ states, typeCounts }: Props) {
             onChange={(q) => updateFilter({ q: q || undefined })}
             className="flex-1"
           />
+
+          {/* Near Me button */}
+          <button
+            onClick={handleNearMe}
+            disabled={nearMeLoading}
+            title="Find fitters near your current location"
+            className={[
+              "shrink-0 flex items-center gap-1.5 px-3 py-2.5 rounded-md",
+              "border font-[family-name:var(--font-body)] text-sm transition-colors",
+              nearMeShops
+                ? "border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-[#1B43320A]"
+                : "border-[var(--color-gray-light)] text-[var(--color-gray)] hover:border-[var(--color-green-deep)] hover:text-[var(--color-green-deep)]",
+              nearMeLoading ? "opacity-60 cursor-not-allowed" : "",
+            ].join(" ")}
+            aria-label="Find fitters near me"
+          >
+            <LocateFixed size={15} className={nearMeLoading ? "animate-pulse" : ""} />
+            <span className="hidden sm:inline">
+              {nearMeLoading ? "Locating…" : nearMeShops ? "Near Me ✓" : "Near Me"}
+            </span>
+          </button>
+
+          {/* List / Map toggle */}
+          <div className="shrink-0 flex rounded-md border border-[var(--color-gray-light)] overflow-hidden">
+            <button
+              onClick={() => setViewMode("list")}
+              aria-pressed={viewMode === "list"}
+              title="List view"
+              className={[
+                "flex items-center gap-1.5 px-3 py-2.5 font-[family-name:var(--font-body)] text-sm transition-colors",
+                viewMode === "list"
+                  ? "bg-[var(--color-green-deep)] text-white"
+                  : "bg-white text-[var(--color-gray)] hover:bg-[var(--color-off-white)]",
+              ].join(" ")}
+            >
+              <List size={14} />
+              <span className="hidden sm:inline">List</span>
+            </button>
+            <button
+              onClick={() => setViewMode("map")}
+              aria-pressed={viewMode === "map"}
+              title="Map view"
+              className={[
+                "flex items-center gap-1.5 px-3 py-2.5 font-[family-name:var(--font-body)] text-sm transition-colors border-l border-[var(--color-gray-light)]",
+                viewMode === "map"
+                  ? "bg-[var(--color-green-deep)] text-white"
+                  : "bg-white text-[var(--color-gray)] hover:bg-[var(--color-off-white)]",
+              ].join(" ")}
+            >
+              <MapIcon size={14} />
+              <span className="hidden sm:inline">Map</span>
+            </button>
+          </div>
+
           {/* Mobile: Filter toggle button */}
           <button
             onClick={() => setDrawerOpen(true)}
@@ -224,6 +344,13 @@ export function DirectoryClient({ states, typeCounts }: Props) {
             )}
           </button>
         </div>
+
+        {/* Near Me error message */}
+        {nearMeError && (
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-3">
+            <p className="font-[family-name:var(--font-body)] text-xs text-red-600">{nearMeError}</p>
+          </div>
+        )}
       </div>
 
       {/* ── Main layout: sidebar + results ── */}
@@ -238,14 +365,67 @@ export function DirectoryClient({ states, typeCounts }: Props) {
 
         {/* Results area */}
         <main className="flex-1 min-w-0 px-4 sm:px-6 py-6">
-          <ResultsGrid
-            result={result}
-            loading={loading}
-            error={error}
-            filters={filters}
-            onSort={(sort) => updateFilter({ sort })}
-            onPage={setPage}
-          />
+          {viewMode === "map" ? (
+            /* ── Map view ── */
+            <div className="relative">
+              {nearMeShops && (
+                <div className="flex items-center justify-between mb-4">
+                  <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)]">
+                    <span className="text-[var(--color-black)] font-medium">{nearMeShops.length}</span> fitters near you
+                  </p>
+                  <button
+                    onClick={() => { clearNearMe(); setViewMode("list") }}
+                    className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors"
+                  >
+                    Clear Near Me ✕
+                  </button>
+                </div>
+              )}
+              <MapView
+                shops={result?.shops ?? []}
+                nearMeShops={nearMeShops ?? undefined}
+                userLocation={nearMeLocation ?? undefined}
+                isNearMe={!!nearMeShops}
+              />
+              {/* Below the map: compact card list for Near Me results */}
+              {nearMeShops && nearMeShops.length > 0 && (
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {nearMeShops.slice(0, 12).map((shop) => (
+                    <ListingCard
+                      key={shop.id}
+                      name={shop.name}
+                      shop_type={shop.shop_type}
+                      primary_service={shop.primary_service}
+                      city={shop.city}
+                      state={shop.state}
+                      state_code={shop.state_code}
+                      rating={shop.rating}
+                      rating_tier={shop.rating_tier}
+                      services={shop.services}
+                      services_array={shop.services_array ?? []}
+                      offers_fitting={shop.offers_fitting}
+                      fitting_environment={shop.fitting_environment}
+                      phone={shop.phone}
+                      website={shop.website}
+                      verified={shop.verified}
+                      slug={shop.slug}
+                      distance_km={shop.distance_km}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* ── List view ── */
+            <ResultsGrid
+              result={result}
+              loading={loading}
+              error={error}
+              filters={filters}
+              onSort={(sort) => updateFilter({ sort })}
+              onPage={setPage}
+            />
+          )}
         </main>
       </div>
 

@@ -28,6 +28,7 @@ export function ListingCard({
   website,
   verified,
   slug,
+  distance_km,
 }: ListingCardProps) {
   /* Parse services — prefer the array, fall back to pipe-split string */
   const serviceList: string[] =
@@ -88,20 +89,29 @@ export function ListingCard({
           {city}, {state}
         </p>
 
-        {/* Rating row */}
-        {rating !== null && rating > 0 ? (
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <RatingStars rating={rating} size="sm" />
-            <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] tabular-nums">
-              {rating.toFixed(1)}
-            </span>
-            {rating_tier && (
-              <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)]">
-                · {rating_tier}
+        {/* Rating + distance row */}
+        <div className="flex items-center gap-2.5 flex-wrap">
+          {rating !== null && rating > 0 ? (
+            <>
+              <RatingStars rating={rating} size="sm" />
+              <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] tabular-nums">
+                {rating.toFixed(1)}
               </span>
-            )}
-          </div>
-        ) : null}
+              {rating_tier && (
+                <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)]">
+                  · {rating_tier}
+                </span>
+              )}
+            </>
+          ) : null}
+          {distance_km !== undefined && (
+            <span className="inline-flex items-center font-[family-name:var(--font-body)] text-[10px] font-medium text-[var(--color-green-deep)] bg-[#1B43320A] border border-[#1B433230] rounded px-1.5 py-0.5 tabular-nums">
+              📍 {distance_km < 1
+                ? `${(distance_km * 1000).toFixed(0)} m`
+                : `${distance_km.toFixed(1)} km`}
+            </span>
+          )}
+        </div>
 
         {/* Services pills */}
         {visibleServices.length > 0 && (

@@ -105,3 +105,29 @@ export async function getListings(
     totalPages,
   }
 }
+
+/* ─────────────────────────────────────────────────────────
+   NEAR ME — Proximity search using PostGIS RPC
+   Returns shops sorted by distance from a lat/lng point.
+   ───────────────────────────────────────────────────────── */
+
+export interface NearMeShop extends Shop {
+  distance_km: number
+}
+
+export async function getNearMeListings(
+  lat: number,
+  lng: number,
+  radiusKm = 80,
+  limit = 50,
+): Promise<NearMeShop[]> {
+  const supabase = createClient()
+  const { data, error } = await supabase.rpc("search_shops_near", {
+    lat,
+    lng,
+    radius_km: radiusKm,
+    p_limit:   limit,
+  })
+  if (error) throw error
+  return (data ?? []) as NearMeShop[]
+}
