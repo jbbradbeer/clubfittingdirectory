@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { getAllStateCodes, getShopsForStatePage, getAllStatesWithShops } from "@/lib/supabase/queries/shops"
+import { getAllStateCodes, getShopsForStatePage, getAllStatesWithShops, toCitySlug } from "@/lib/supabase/queries/shops"
 import { StateListings } from "@/components/state/StateFilterChips"
 import type { ListingCardProps } from "@/types/shop"
 
@@ -52,6 +52,15 @@ export default async function StatePage({ params }: { params: Promise<{ state_co
   const { state } = stateInfo
   const shopTypes = [...new Set(shops.map((s) => s.shop_type).filter(Boolean) as string[])].sort()
 
+  // Build city list with counts for the Browse by City section
+  const cityCountMap: Record<string, number> = {}
+  for (const s of shops) {
+    if (s.city) cityCountMap[s.city] = (cityCountMap[s.city] ?? 0) + 1
+  }
+  const cities = Object.entries(cityCountMap)
+    .map(([city, count]) => ({ city, count, slug: toCitySlug(city, upper) }))
+    .sort((a, b) => b.count - a.count || a.city.localeCompare(b.city))
+
   const cardProps: ListingCardProps[] = shops.map((s) => ({
     name: s.name, shop_type: s.shop_type, primary_service: s.primary_service,
     city: s.city, state: s.state, state_code: s.state_code, rating: s.rating,
@@ -90,6 +99,33 @@ export default async function StatePage({ params }: { params: Promise<{ state_co
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <StateListings shops={cardProps} shopTypes={shopTypes} />
       </main>
+
+      {/* ── Browse by City ── */}
+      {cities.length > 1 && (
+        <section className="border-t border-[var(--color-gray-light)] py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-normal text-[var(--color-black)] mb-6">
+              Browse by City in {state}
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+              {cities.map(({ city, count, slug }) => (
+                <Link
+                  key={slug}
+                  href={`/city/${slug}`}
+                  className="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-md border border-[var(--color-gray-light)] bg-white hover:border-[var(--color-green-deep)] hover:bg-[#1B43320A] transition-colors duration-150 group"
+                >
+                  <span className="font-[family-name:var(--font-body)] text-sm text-[var(--color-black)] group-hover:text-[var(--color-green-deep)] transition-colors truncate">
+                    {city}
+                  </span>
+                  <span className="font-[family-name:var(--font-body)] text-[10px] text-[var(--color-gray)] tabular-nums shrink-0">
+                    {count}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="border-t border-[var(--color-gray-light)] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">

@@ -392,3 +392,76 @@ export async function getAllShopTypes(): Promise<string[]> {
   const types = [...new Set((data ?? []).map((r: { shop_type: string | null }) => r.shop_type ?? ""))]
   return types.filter((t): t is string => Boolean(t))
 }
+
+/* ─────────────────────────────────────────────────────────
+   CITY PAGES — SEO city-level landing pages
+   ───────────────────────────────────────────────────────── */
+
+/** Converts a city name + state code into a URL-safe slug.
+ *  e.g. "San Francisco", "CA" → "san-francisco-ca"
+ *       "St. Louis", "MO"    → "st-louis-mo"
+ */
+export function toCitySlug(city: string, stateCode: string): string {
+  const cityPart = city
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+  return `${cityPart}-${stateCode.toLowerCase()}`
+}
+
+/* ── All city slugs (for generateStaticParams on city page) ── */
+export async function getAllCitySlugs(): Promise<{ citySlug: string }[]> {
+  const supabase = createStaticClient()
+  const { data, error } = await supabase
+    .from("shops")
+    .select("city, state_code")
+    .eq("status", "active")
+
+  if (error) throw error
+
+  const seen = new Set<string>()
+  const result: { citySlug: string }[] = []
+  for (const row of (data ?? []) as { city: string; state_code: string }[]) {
+    if (!row.city || !row.state_code) continue
+    const slug = toCitySlug(row.city, row.state_code)
+    if (!seen.has(slug)) {
+      seen.add(slug)
+      result.push({ citySlug: slug })
+    }
+  }
+  return result
+}
+
+/* ── All shops for a city page, derived from state query ── */
+export async function getShopsForCityPage(
+  citySlug: string,
+): Promise<{ shops: Shop[]; city: string; state: string; stateCode: string } | null> {
+  // State code is always the final hyphen-segment (2 letters)
+  const parts     = citySlug.split("-")
+  const stateCode = parts[parts.length - 1].toUpperCase()
+
+  const supabase = createStaticClient()
+  const { data, error } = await supabase
+    .from("shops")
+    .select(CARD_FIELDS)
+    .eq("status", "active")
+    .eq("state_code", stateCode)
+    .order("is_featured", { ascending: false })
+    .order("rating",      { ascending: false, nullsFirst: false })
+    .limit(1000)
+
+  if (error) throw error
+  const stateShops = (data as unknown as Shop[]) ?? []
+
+  // Find the city whose slug matches
+  const matchedCity = stateShops.find(
+    (s) => s.city && toCitySlug(s.city, stateCode) === citySlug,
+  )?.city ?? null
+
+  if (!matchedCity) return null
+
+  const shops     = stateShops.filter((s) => s.city === matchedCity)
+  const firstShop = stateShops[0]
+
+  return { shops, city: matchedCity, state: firstShop.state, stateCode }
+}

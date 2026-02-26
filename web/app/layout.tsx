@@ -39,9 +39,18 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Club Fitting Directory",
     locale: "en_US",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Club Fitting Directory — Find Independent Golf Fitters Across the US",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,

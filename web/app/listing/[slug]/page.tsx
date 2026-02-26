@@ -5,6 +5,7 @@ import {
   getShopBySlug,
   getAllShopSlugs,
   getNearbyShops,
+  toCitySlug,
 } from "@/lib/supabase/queries/shops"
 import { buildLocalBusinessSchema, buildBreadcrumbSchema } from "@/lib/structured-data"
 import { Badge } from "@/components/ui/Badge"
@@ -91,9 +92,16 @@ export default async function ListingPage({
             <ol className="flex flex-wrap items-center gap-1.5 font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)]">
               <BreadcrumbItem href="/" label="Home" />
               <BreadcrumbSep />
-              <BreadcrumbItem href={`/states/${shop.state_code.toLowerCase()}`} label={shop.state} />
-              <BreadcrumbSep />
-              <BreadcrumbItem href={`/directory?state=${shop.state_code}`} label={shop.shop_type ?? "Listings"} />
+              <BreadcrumbItem href={`/state/${shop.state_code.toLowerCase()}`} label={shop.state} />
+              {shop.city && (
+                <>
+                  <BreadcrumbSep />
+                  <BreadcrumbItem
+                    href={`/city/${toCitySlug(shop.city, shop.state_code)}`}
+                    label={shop.city}
+                  />
+                </>
+              )}
               <BreadcrumbSep />
               <li className="text-[var(--color-black)] truncate max-w-[200px]" aria-current="page">{shop.name}</li>
             </ol>
@@ -231,7 +239,7 @@ export default async function ListingPage({
                   <p className="font-[family-name:var(--font-body)] text-[10px] tracking-[0.3em] uppercase text-[var(--color-green-deep)] mb-1.5">More in {shop.state}</p>
                   <h2 className="font-[family-name:var(--font-display)] text-3xl font-normal text-[var(--color-black)]">More Fitters in {shop.state}</h2>
                 </div>
-                <Link href={`/states/${shop.state_code.toLowerCase()}`}
+                <Link href={`/state/${shop.state_code.toLowerCase()}`}
                   className="shrink-0 font-[family-name:var(--font-body)] text-sm text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors whitespace-nowrap group">
                   View all in {shop.state_code}{" "}
                   <span className="inline-block transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>

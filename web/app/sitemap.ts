@@ -3,6 +3,7 @@ import {
   getAllShopSlugs,
   getAllStateCodes,
   getAllShopTypes,
+  getAllCitySlugs,
 } from "@/lib/supabase/queries/shops"
 import { SITE_URL } from "@/lib/constants"
 
@@ -34,10 +35,11 @@ const TYPE_TO_SLUG: Record<string, string> = {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Fetch all dynamic routes in parallel */
-  const [slugs, stateCodes, shopTypes] = await Promise.all([
+  const [slugs, stateCodes, shopTypes, citySlugs] = await Promise.all([
     getAllShopSlugs().catch(() => [] as { slug: string }[]),
     getAllStateCodes().catch(() => [] as string[]),
     getAllShopTypes().catch(() => [] as string[]),
+    getAllCitySlugs().catch(() => [] as { citySlug: string }[]),
   ])
 
   const now = new Date()
@@ -82,6 +84,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority:        0.9,
     }))
 
+  /* ── City pages (/city/austin-tx, …) ── */
+  const cityRoutes: MetadataRoute.Sitemap = citySlugs.map(({ citySlug }) => ({
+    url:             `${SITE_URL}/city/${citySlug}`,
+    lastModified:    now,
+    changeFrequency: "weekly" as const,
+    priority:        0.7,
+  }))
+
   /* ── Individual listing pages (/listing/[slug]) ── */
   const listingRoutes: MetadataRoute.Sitemap = slugs.map(({ slug }) => ({
     url:             `${SITE_URL}/listing/${slug}`,
@@ -94,6 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticRoutes,
     ...stateRoutes,
     ...categoryRoutes,
+    ...cityRoutes,
     ...listingRoutes,
   ]
 }
