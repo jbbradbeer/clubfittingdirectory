@@ -72,30 +72,23 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* ── Column 3: Newsletter signup ── */}
+          {/* ── Column 3: About the directory ── */}
           <div className="space-y-4">
             <h3 className="font-[family-name:var(--font-body)] text-xs font-semibold text-white uppercase tracking-widest">
-              Stay in the Loop
+              About the Directory
             </h3>
             <p className="font-[family-name:var(--font-body)] text-sm text-gray-400 leading-relaxed">
-              Get updates when new fitters are added near you.
+              New fitters and retailers added regularly. Built for golfers who take equipment seriously.
             </p>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="flex gap-2"
+            <a
+              href={TUXEDO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-[family-name:var(--font-body)] text-[var(--color-green-deep)] hover:text-white transition-colors"
             >
-              <input
-                type="email"
-                placeholder="you@email.com"
-                className="flex-1 min-w-0 rounded-md border border-[#333] bg-[#111] px-3 py-2 text-sm text-white placeholder:text-gray-500 font-[family-name:var(--font-body)] focus:outline-none focus:border-[var(--color-green-deep)] transition-colors"
-              />
-              <button
-                type="submit"
-                className="shrink-0 rounded-md bg-[var(--color-green-deep)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-green-hover)] transition-colors font-[family-name:var(--font-body)] cursor-pointer"
-              >
-                Subscribe
-              </button>
-            </form>
+              Visit The Tuxedo Collective
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
 
         </div>

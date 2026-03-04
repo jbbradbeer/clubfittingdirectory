@@ -347,8 +347,14 @@ export function DirectoryClient({ states, typeCounts }: Props) {
 
         {/* Near Me error message */}
         {nearMeError && (
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-3">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-3 flex items-center gap-3">
             <p className="font-[family-name:var(--font-body)] text-xs text-red-600">{nearMeError}</p>
+            <button
+              onClick={handleNearMe}
+              className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] underline hover:no-underline transition-all cursor-pointer"
+            >
+              Try again
+            </button>
           </div>
         )}
       </div>

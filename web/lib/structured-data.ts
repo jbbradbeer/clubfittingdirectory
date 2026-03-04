@@ -122,10 +122,21 @@ export function buildLocalBusinessSchema(shop: Shop): Record<string, unknown> {
   return schema
 }
 
-/** BreadcrumbList schema for the breadcrumb nav */
+/** Build the city slug used in /city/[citySlug] URLs */
+function toCitySlug(city: string, stateCode: string): string {
+  const cityPart = city
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+  return `${cityPart}-${stateCode.toLowerCase()}`
+}
+
+/** BreadcrumbList schema for the breadcrumb nav — matches the visible breadcrumb on the page */
 export function buildBreadcrumbSchema(
   shop: Shop,
 ): Record<string, unknown> {
+  const citySlug = toCitySlug(shop.city, shop.state_code)
+
   return {
     "@context": "https://schema.org",
     "@type":    "BreadcrumbList",
@@ -140,13 +151,13 @@ export function buildBreadcrumbSchema(
         "@type":    "ListItem",
         position:   2,
         name:       shop.state,
-        item:       `${SITE_URL}/states/${shop.state_code.toLowerCase()}`,
+        item:       `${SITE_URL}/state/${shop.state_code.toLowerCase()}`,
       },
       {
         "@type":    "ListItem",
         position:   3,
-        name:       shop.shop_type ?? "Listings",
-        item:       `${SITE_URL}/directory?state=${shop.state_code}`,
+        name:       shop.city,
+        item:       `${SITE_URL}/city/${citySlug}`,
       },
       {
         "@type":    "ListItem",
