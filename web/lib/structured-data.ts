@@ -26,10 +26,15 @@ function schemaType(shopType: string | null): string {
 
 /**
  * Convert Outscraper working_hours JSON to schema.org openingHours strings.
- * Input format: { "Monday": "9 AM–5 PM", "Tuesday": "9 AM–5 PM", ... }
+ * A day's value is usually a string ("9 AM–5 PM") but can also be an array of
+ * strings for split hours (["9 AM–1 PM", "2 PM–6 PM"]) — or, in bad data,
+ * something else entirely. We coerce defensively so a single odd shop can
+ * never crash the page.
  * Output: ["Mo 09:00-17:00", "Tu 09:00-17:00", ...]
  */
-function parseOpeningHours(hours: Record<string, string> | null): string[] {
+function parseOpeningHours(
+  hours: Record<string, string | string[]> | null,
+): string[] {
   if (!hours) return []
 
   const dayMap: Record<string, string> = {
@@ -37,31 +42,37 @@ function parseOpeningHours(hours: Record<string, string> | null): string[] {
     friday: "Fr", saturday: "Sa", sunday: "Su",
   }
 
+  const toTime = (raw: string): string | null => {
+    const match = raw.match(/(\d+)(?::(\d+))?\s*(AM|PM)/i)
+    if (!match) return null
+    let h = parseInt(match[1], 10)
+    const m = match[2] ? parseInt(match[2], 10) : 0
+    const period = match[3].toUpperCase()
+    if (period === "PM" && h !== 12) h += 12
+    if (period === "AM" && h === 12) h = 0
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`
+  }
+
   const results: string[] = []
 
-  for (const [day, range] of Object.entries(hours)) {
-    const dayKey = day.toLowerCase().trim()
-    const abbr   = dayMap[dayKey]
-    if (!abbr || !range || range.toLowerCase().includes("closed")) continue
+  for (const [day, rawValue] of Object.entries(hours)) {
+    const abbr = dayMap[day.toLowerCase().trim()]
+    if (!abbr) continue
 
-    // Parse "9 AM–5 PM" or "9:00 AM–5:00 PM"
-    const parts = range.split(/[–\-]/).map((s) => s.trim())
-    if (parts.length !== 2) continue
+    // A day can hold one range (string) or several (array). Ignore anything else.
+    const ranges = Array.isArray(rawValue) ? rawValue : [rawValue]
 
-    const toTime = (raw: string): string | null => {
-      const match = raw.match(/(\d+)(?::(\d+))?\s*(AM|PM)/i)
-      if (!match) return null
-      let h = parseInt(match[1], 10)
-      const m = match[2] ? parseInt(match[2], 10) : 0
-      const period = match[3].toUpperCase()
-      if (period === "PM" && h !== 12) h += 12
-      if (period === "AM" && h === 12) h = 0
-      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`
+    for (const range of ranges) {
+      if (typeof range !== "string" || range.toLowerCase().includes("closed")) continue
+
+      // Parse "9 AM–5 PM" or "9:00 AM–5:00 PM"
+      const parts = range.split(/[–\-]/).map((s) => s.trim())
+      if (parts.length !== 2) continue
+
+      const open  = toTime(parts[0])
+      const close = toTime(parts[1])
+      if (open && close) results.push(`${abbr} ${open}-${close}`)
     }
-
-    const open  = toTime(parts[0])
-    const close = toTime(parts[1])
-    if (open && close) results.push(`${abbr} ${open}-${close}`)
   }
 
   return results

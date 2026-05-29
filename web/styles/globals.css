@@ -1,62 +1,127 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 /* ─────────────────────────────────────────────────────────
-   DESIGN TOKENS — The Tuxedo Collective
+   DESIGN TOKENS — Club Fitting Directory
+   Brand: forest green + gold on clean white/airy neutrals.
+   shadcn semantic tokens are mapped to the brand below.
    ───────────────────────────────────────────────────────── */
 :root {
-  /* ── Greens (brand) ── */
+  /* ── Brand greens ── */
   --color-forest:       #18402e;
   --color-forest-dark:  #0f2c1f;
   --color-forest-light: #2f6347;
-  --color-forest-deep:  #0c2017;   /* near-black forest — dark sections/footer */
+  --color-forest-deep:  #0c2017;
 
-  /* ── Soft tints (pills, hover fills) ── */
-  --color-forest-tint:  #e7efe9;   /* soft green */
-  --color-gold-tint:    #f6edd9;   /* soft gold */
+  /* ── Soft tints ── */
+  --color-forest-tint:  #e7efe9;
+  --color-gold-tint:    #f6edd9;
 
-  /* ── Neutrals (clean, airy) ── */
-  --color-cream:      #f6f5f1;     /* light alternating-section bg */
+  /* ── Neutrals ── */
+  --color-cream:      #f6f5f1;
   --color-cream-dark: #eceae3;
-  --color-ivory:      #ffffff;     /* primary page background */
+  --color-ivory:      #ffffff;
   --color-white:      #ffffff;
-  --color-paper:      #ffffff;     /* cards */
+  --color-paper:      #ffffff;
 
-  /* ── Gold accent ── */
+  /* ── Gold ── */
   --color-gold:      #c2a05a;
   --color-gold-dark: #a3823f;
-  --color-gold-ink:  #8a6a30;      /* darker gold for small text */
+  --color-gold-ink:  #8a6a30;
 
   /* ── Text ── */
-  --color-charcoal:       #1c1f1a; /* near-black ink */
+  --color-charcoal:       #1c1f1a;
   --color-charcoal-light: #5f6259;
   --color-ink:            #1c1f1a;
 
   /* ── Lines ── */
   --color-border:         #e6e4dd;
-  --color-line:           #ededea; /* hairline rule */
+  --color-line:           #ededea;
 
-  /* ── Font stacks (populated by layout.tsx via next/font) ── */
+  /* ── Fonts (next/font injects the family vars) ── */
   --font-display: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
   --font-body:    "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --font-sans:    var(--font-body);
+
+  /* ── shadcn semantic tokens → brand ── */
+  --background:            #ffffff;
+  --foreground:            #1c1f1a;
+  --card:                  #ffffff;
+  --card-foreground:       #1c1f1a;
+  --popover:               #ffffff;
+  --popover-foreground:    #1c1f1a;
+  --primary:               #18402e;
+  --primary-foreground:    #ffffff;
+  --secondary:             #f6f5f1;
+  --secondary-foreground:  #18402e;
+  --muted:                 #f6f5f1;
+  --muted-foreground:      #5f6259;
+  --accent:                #f6edd9;
+  --accent-foreground:     #8a6a30;
+  --destructive:           oklch(0.577 0.245 27.325);
+  --border:                #e6e4dd;
+  --input:                 #e6e4dd;
+  --ring:                  #18402e;
+  --radius:                0.75rem;
+
+  /* charts / sidebar (kept for shadcn components) */
+  --chart-1: #18402e; --chart-2: #2f6347; --chart-3: #c2a05a; --chart-4: #a3823f; --chart-5: #5f6259;
+  --sidebar: #ffffff; --sidebar-foreground: #1c1f1a; --sidebar-primary: #18402e;
+  --sidebar-primary-foreground: #ffffff; --sidebar-accent: #f6f5f1; --sidebar-accent-foreground: #18402e;
+  --sidebar-border: #e6e4dd; --sidebar-ring: #18402e;
+}
+
+@theme inline {
+  --font-sans:       var(--font-body);
+  --font-heading:    var(--font-display);
+
+  --color-background:           var(--background);
+  --color-foreground:           var(--foreground);
+  --color-card:                 var(--card);
+  --color-card-foreground:      var(--card-foreground);
+  --color-popover:              var(--popover);
+  --color-popover-foreground:   var(--popover-foreground);
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-secondary:            var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:                var(--muted);
+  --color-muted-foreground:     var(--muted-foreground);
+  --color-accent:               var(--accent);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-destructive:          var(--destructive);
+  --color-border:               var(--border);
+  --color-input:                var(--input);
+  --color-ring:                 var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.35);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────
-   BASE RESET & DOCUMENT
+   BASE DOCUMENT
    ───────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background-color: var(--color-ivory);
-  color: var(--color-charcoal);
   font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.6;
@@ -67,7 +132,7 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────
-   TYPOGRAPHY DEFAULTS
+   TYPOGRAPHY
    ───────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
@@ -78,9 +143,6 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
-p { font-family: var(--font-body); }
-
-/* ── Font helpers ── */
 .font-display { font-family: var(--font-display); }
 .font-body    { font-family: var(--font-body); }
 
@@ -93,13 +155,20 @@ p { font-family: var(--font-body); }
   text-wrap: balance;
 }
 
-/* Hairline rule */
-.rule {
-  border: none;
-  border-top: 1px solid var(--color-line);
+/* Uppercase eyebrow */
+.section-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
 }
 
-/* Soft card shadows (clean, airy depth) */
+/* Hairline rule */
+.rule { border: none; border-top: 1px solid var(--color-line); }
+
+/* Soft card shadows */
 .shadow-card {
   box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 1px 3px rgba(16, 24, 20, 0.06);
 }
@@ -107,120 +176,100 @@ p { font-family: var(--font-body); }
   box-shadow: 0 18px 42px -22px rgba(16, 24, 20, 0.38);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* ─────────────────────────────────────────────────────────
+   HERO ATMOSPHERE
+   Layered depth: a soft forest/gold aura, faint topographic
+   contour lines (course-map motif), and a fine grain overlay.
+   ───────────────────────────────────────────────────────── */
+.hero-surface {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 90% at 50% -10%, var(--color-forest-tint) 0%, transparent 55%),
+    radial-gradient(80% 60% at 85% 110%, var(--color-gold-tint) 0%, transparent 50%),
+    var(--color-ivory);
 }
 
-/* ── Link styles ── */
+/* Contour-line motif — evokes fairway/course topography */
+.hero-contours {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.5;
+  background-image:
+    repeating-radial-gradient(
+      circle at 78% 18%,
+      transparent 0,
+      transparent 38px,
+      rgba(24, 64, 46, 0.05) 39px,
+      rgba(24, 64, 46, 0.05) 40px
+    ),
+    repeating-radial-gradient(
+      circle at 14% 92%,
+      transparent 0,
+      transparent 46px,
+      rgba(194, 160, 90, 0.06) 47px,
+      rgba(194, 160, 90, 0.06) 48px
+    );
+  mask-image: radial-gradient(70% 70% at 50% 40%, #000 30%, transparent 100%);
+}
+
+/* Fine grain — adds tactile, print-like texture */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Decorative gold hairline used under eyebrows / between sections */
+.gold-rule {
+  display: inline-block;
+  width: 2.5rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+  border-radius: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   LINKS
+   ───────────────────────────────────────────────────────── */
+a { color: inherit; text-decoration: none; }
 .link-gold {
-  color: var(--color-gold);
+  color: var(--color-gold-ink);
   text-underline-offset: 3px;
   text-decoration: underline;
   text-decoration-color: var(--color-cream-dark);
   transition: color 0.2s, text-decoration-color 0.2s;
 }
-.link-gold:hover {
-  color: var(--color-gold-dark);
-  text-decoration-color: var(--color-gold);
-}
+.link-gold:hover { color: var(--color-gold-dark); text-decoration-color: var(--color-gold); }
 
 /* ─────────────────────────────────────────────────────────
-   TEXT SELECTION
+   SELECTION & SCROLLBAR
    ───────────────────────────────────────────────────────── */
-::selection {
-  background-color: var(--color-forest);
-  color: #ffffff;
-}
-::-moz-selection {
-  background-color: var(--color-forest);
-  color: #ffffff;
-}
-
-/* ─────────────────────────────────────────────────────────
-   CUSTOM SCROLLBAR
-   ───────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::selection { background-color: var(--color-forest); color: #ffffff; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--color-cream); }
-::-webkit-scrollbar-thumb {
-  background: var(--color-forest);
-  border-radius: 4px;
-  border: 2px solid var(--color-cream);
-}
+::-webkit-scrollbar-thumb { background: var(--color-forest); border-radius: 5px; border: 3px solid var(--color-cream); }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-forest-dark); }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-forest) var(--color-cream);
-}
-
 /* ─────────────────────────────────────────────────────────
-   FOCUS STYLES (accessibility)
-   ───────────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-/* ─────────────────────────────────────────────────────────
-   SECTION LABEL (uppercase eyebrow)
-   ───────────────────────────────────────────────────────── */
-.section-label {
-  font-family: var(--font-body);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-gold-ink);
-}
-
-/* Eyebrow with a leading gold rule (editorial) */
-.section-label.with-rule {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.section-label.with-rule::before {
-  content: "";
-  width: 2rem;
-  height: 1px;
-  background: var(--color-gold);
-}
-
-/* ─────────────────────────────────────────────────────────
-   PAPER GRAIN TEXTURE
-   ───────────────────────────────────────────────────────── */
-.bg-grain {
-  position: relative;
-}
-.bg-grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ─────────────────────────────────────────────────────────
-   FADE-IN ANIMATION
+   MOTION
    ───────────────────────────────────────────────────────── */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
-}
-
+.animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
 .stagger-children > * { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; }
 .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 70ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 140ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 210ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 280ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 350ms; }

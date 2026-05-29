@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import "@/styles/globals.css"
 import { SITE_URL, SITE_NAME } from "@/lib/constants"
+import { cn } from "@/lib/utils"
 
 /* ─────────────────────────────────────────────────────────
    FONTS — self-hosted via next/font (no external requests)
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
    ───────────────────────────────────────────────────────── */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${hanken.variable}`}>
+    <html lang="en" className={cn(bricolage.variable, hanken.variable, "font-sans")}>
       <body className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-1">{children}</main>

@@ -1,54 +1,53 @@
 import Link from "next/link"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost"
-type ButtonSize = "sm" | "md" | "lg"
+export const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 font-semibold rounded-full transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-forest)]/40 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+  {
+    variants: {
+      variant: {
+        primary:
+          "bg-[var(--color-forest)] text-white hover:bg-[var(--color-forest-dark)]",
+        secondary:
+          "bg-[var(--color-gold)] text-[var(--color-forest-deep)] hover:bg-[var(--color-gold-dark)]",
+        outline:
+          "border border-[var(--color-border)] text-[var(--color-forest)] hover:bg-[var(--color-cream)]",
+        ghost:
+          "text-[var(--color-forest)] hover:bg-[var(--color-cream)]",
+      },
+      size: {
+        sm: "h-9 px-4 text-sm",
+        md: "h-11 px-6 text-sm",
+        lg: "h-[3.25rem] px-8 text-base",
+      },
+    },
+    defaultVariants: { variant: "primary", size: "md" },
+  },
+)
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant
-  size?: ButtonSize
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   href?: string
   external?: boolean
 }
 
-const variantStyles: Record<ButtonVariant, string> = {
-  primary:
-    "bg-[var(--color-forest)] text-[var(--color-paper)] hover:bg-[var(--color-forest-dark)] border border-transparent",
-  secondary:
-    "bg-[var(--color-gold)] text-[var(--color-forest-deep)] hover:bg-[var(--color-gold-dark)] border border-transparent",
-  outline:
-    "bg-transparent text-[var(--color-forest)] border border-[var(--color-forest)]/35 hover:border-[var(--color-forest)] hover:bg-[var(--color-forest)] hover:text-[var(--color-paper)]",
-  ghost:
-    "bg-transparent text-[var(--color-forest)] hover:bg-[var(--color-cream)] border border-transparent",
-}
-
-const sizeStyles: Record<ButtonSize, string> = {
-  sm: "px-5 py-2 text-xs tracking-[0.08em]",
-  md: "px-7 py-3 text-sm tracking-[0.05em]",
-  lg: "px-9 py-4 text-sm tracking-[0.08em]",
-}
-
 export function Button({
-  variant = "primary",
-  size = "md",
+  variant,
+  size,
   href,
   external,
-  className = "",
+  className,
   children,
   ...props
 }: ButtonProps) {
-  const base =
-    "inline-flex items-center justify-center font-[var(--font-body)] font-semibold rounded-full transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-[var(--color-gold)] focus-visible:outline-offset-2"
-  const classes = `${base} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`
+  const classes = cn(buttonVariants({ variant, size }), className)
 
   if (href) {
     if (external) {
       return (
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={classes}
-        >
+        <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
           {children}
         </a>
       )

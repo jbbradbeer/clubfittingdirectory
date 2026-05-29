@@ -154,8 +154,18 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   return (
     <div>
       {/* Top bar: search + controls */}
-      <div className="bg-white border-b border-[var(--color-cream-dark)] py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="hero-surface grain border-b border-[var(--color-border)]">
+        <div className="hero-contours" aria-hidden="true" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-5 max-w-2xl">
+            <p className="section-label mb-2 inline-flex items-center gap-3">
+              <span className="gold-rule" />
+              Find a Fitter
+            </p>
+            <h1 className="display text-[clamp(1.8rem,3.6vw,2.6rem)] text-[var(--color-charcoal)]">
+              Search the directory
+            </h1>
+          </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="flex-1">
               <SearchBar value={query} onChange={setQuery} onSubmit={handleSearchSubmit} />
@@ -165,7 +175,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
               {nearMeActive ? (
                 <button
                   onClick={clearNearMe}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold bg-[var(--color-gold)] text-white rounded-lg hover:bg-[var(--color-gold-dark)] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold bg-[var(--color-gold)] text-[var(--color-forest-deep)] rounded-full hover:bg-[var(--color-gold-dark)] transition-colors cursor-pointer"
                 >
                   <MapPin size={14} />
                   Near Me
@@ -175,7 +185,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
                 <button
                   onClick={handleNearMe}
                   disabled={nearMeLoading}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-lg hover:bg-[var(--color-cream)] transition-colors cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold border border-[var(--color-border)] bg-white text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer disabled:opacity-50"
                 >
                   <Locate size={14} />
                   {nearMeLoading ? "Locating..." : "Near Me"}
@@ -224,7 +234,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
               {/* Mobile filter toggle */}
               <button
                 onClick={() => setFiltersOpen(!filtersOpen)}
-                className="lg:hidden inline-flex items-center gap-1.5 px-3 py-2.5 text-sm font-semibold border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
+                className="lg:hidden inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold border border-[var(--color-border)] bg-white rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
               >
                 Filters
                 {activeFilterCount > 0 && (

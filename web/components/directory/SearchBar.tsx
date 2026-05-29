@@ -27,12 +27,12 @@ export function SearchBar({ value, onChange, onSubmit }: SearchBarProps) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Search by name or city..."
-          className="w-full pl-9 pr-3 py-2.5 bg-white border border-[var(--color-border)] rounded-lg text-sm text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:border-[var(--color-gold)] focus:ring-2 focus:ring-[var(--color-gold)]/20 transition-all"
+          className="w-full pl-10 pr-4 py-2.5 bg-white border border-[var(--color-border)] shadow-card rounded-full text-sm text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:border-[var(--color-forest)] focus:ring-2 focus:ring-[var(--color-forest)]/15 transition-all"
         />
       </div>
       <button
         type="submit"
-        className="px-5 py-2.5 bg-[var(--color-forest)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
+        className="px-6 py-2.5 bg-[var(--color-forest)] text-white text-sm font-semibold rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
       >
         Search
       </button>

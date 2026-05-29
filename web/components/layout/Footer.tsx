@@ -21,7 +21,7 @@ const POPULAR_STATES = [
 
 export function Footer() {
   return (
-    <footer className="bg-[var(--color-forest-deep)] text-white/80">
+    <footer className="relative grain bg-[var(--color-forest-deep)] text-white/80">
       {/* Gold accent line */}
       <div className="h-px bg-[var(--color-gold)]" />
 

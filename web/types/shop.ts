@@ -42,8 +42,9 @@ export interface Shop {
   fitting_environment: string | null
   public_fitting: boolean
 
-  // Hours
-  working_hours: Record<string, string> | null
+  // Hours — a day's value is usually a string ("9 AM–5 PM") but can be an
+  // array of strings for split hours (e.g. ["9 AM–1 PM", "2 PM–6 PM"]).
+  working_hours: Record<string, string | string[]> | null
   open_on_weekends: boolean | null
 
   // Meta

@@ -4,7 +4,7 @@ import {
   getShopsForCityPage,
   getAllCitySlugs,
 } from "@/lib/supabase/queries/shops"
-import { Breadcrumb } from "@/components/ui/Breadcrumb"
+import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
@@ -66,33 +66,20 @@ export default async function CityPage({ params }: PageProps) {
       />
 
       {/* Hero */}
-      <section className="bg-[var(--color-cream)] bg-grain py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <Breadcrumb
-            items={[
-              { label: "Home", href: "/" },
-              { label: state, href: `/state/${stateCode.toLowerCase()}` },
-              { label: city },
-            ]}
-          />
-          <div className="mt-6">
-            <p className="section-label mb-2">Club Fitting Directory</p>
-            <h1
-              className="text-3xl md:text-5xl font-normal text-[var(--color-charcoal)]"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Golf Club Fitters in {city}, {stateCode}
-            </h1>
-            <p className="mt-3 text-[var(--color-charcoal-light)] text-lg">
-              {shops.length} {shops.length === 1 ? "listing" : "listings"} —{" "}
-              {Object.entries(typeMap)
-                .map(([type, count]) => `${count} ${type.toLowerCase()}${count > 1 ? "s" : ""}`)
-                .join(", ")}
-              .
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        breadcrumb={[
+          { label: "Home", href: "/" },
+          { label: state, href: `/state/${stateCode.toLowerCase()}` },
+          { label: city },
+        ]}
+        eyebrow="Club Fitting Directory"
+        title={`Golf Club Fitters in ${city}, ${stateCode}`}
+        subtitle={`${shops.length} ${shops.length === 1 ? "listing" : "listings"} — ${Object.entries(
+          typeMap,
+        )
+          .map(([type, count]) => `${count} ${type.toLowerCase()}${count > 1 ? "s" : ""}`)
+          .join(", ")}.`}
+      />
 
       {/* Listings */}
       <section className="bg-[var(--color-ivory)] py-12">

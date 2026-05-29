@@ -294,6 +294,37 @@ export async function getShopTypeCounts(): Promise<Record<string, number>> {
   return counts
 }
 
+/* ── Lightweight type-ahead search (homepage hero, header) ── */
+export interface SearchSuggestion {
+  slug: string
+  name: string
+  city: string | null
+  state_code: string | null
+  shop_type: string | null
+  rating: number | null
+}
+
+export async function searchShops(
+  q: string,
+  limit = 6,
+): Promise<SearchSuggestion[]> {
+  const term = q.trim()
+  if (term.length < 2) return []
+
+  const supabase = createStaticClient()
+  const { data, error } = await supabase
+    .from("shops")
+    .select("slug, name, city, state_code, shop_type, rating")
+    .eq("status", "active")
+    .or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+    .order("is_featured", { ascending: false })
+    .order("rating", { ascending: false, nullsFirst: false })
+    .limit(limit)
+
+  if (error) throw error
+  return (data as SearchSuggestion[]) ?? []
+}
+
 /* ── Nearby shops in same state, excluding current slug ── */
 export async function getNearbyShops(
   stateCode: string,

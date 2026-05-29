@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Mail, Store, Pencil } from "lucide-react"
-import { Breadcrumb } from "@/components/ui/Breadcrumb"
+import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 
@@ -34,29 +34,12 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-[var(--color-cream)] bg-grain py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <Breadcrumb
-            items={[
-              { label: "Home", href: "/" },
-              { label: "Contact" },
-            ]}
-          />
-          <div className="mt-6 max-w-3xl">
-            <p className="section-label mb-2">Contact</p>
-            <h1
-              className="text-3xl md:text-5xl font-normal text-[var(--color-charcoal)]"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Get in Touch
-            </h1>
-            <p className="mt-4 text-lg text-[var(--color-charcoal-light)] leading-relaxed">
-              Whether you run a fitting shop, found something to fix, or just have a
-              question — we read every message and aim to reply within a few days.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Contact" }]}
+        eyebrow="Contact"
+        title="Get in Touch"
+        subtitle="Whether you run a fitting shop, found something to fix, or just have a question — we read every message and aim to reply within a few days."
+      />
 
       {/* Email card + reasons */}
       <section className="bg-[var(--color-ivory)] py-16">
@@ -64,12 +47,12 @@ export default function ContactPage() {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Email card */}
             <div className="lg:w-96 shrink-0">
-              <div className="bg-[var(--color-forest)] text-white rounded-lg p-8">
+              <div className="bg-[var(--color-forest)] text-white rounded-2xl p-8 shadow-card">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/10 mb-5">
                   <Mail size={22} />
                 </div>
                 <h2
-                  className="text-xl font-semibold mb-2"
+                  className="text-xl font-bold mb-2"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   Email Us
@@ -79,7 +62,7 @@ export default function ContactPage() {
                 </p>
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
-                  className="block w-full text-center py-3 bg-[var(--color-gold)] text-white font-semibold text-sm rounded hover:bg-[var(--color-gold-dark)] transition-colors"
+                  className="block w-full text-center py-3 bg-[var(--color-gold)] text-[var(--color-forest-deep)] font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors"
                 >
                   {CONTACT_EMAIL}
                 </a>
@@ -97,9 +80,9 @@ export default function ContactPage() {
                 {REASONS.map((reason) => (
                   <div
                     key={reason.title}
-                    className="flex items-start gap-4 bg-white border border-[var(--color-border)] rounded-lg p-5"
+                    className="flex items-start gap-4 bg-white border border-[var(--color-border)] rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-shadow duration-300"
                   >
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-cream)] text-[var(--color-forest)] shrink-0">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-forest-tint)] text-[var(--color-forest)] shrink-0">
                       {reason.icon}
                     </div>
                     <div>

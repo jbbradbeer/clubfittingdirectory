@@ -82,8 +82,9 @@ export default async function ListingPage({ params }: PageProps) {
       />
 
       {/* Breadcrumb + Header */}
-      <section className="bg-[var(--color-cream)] bg-grain py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className="hero-surface grain border-b border-[var(--color-border)]">
+        <div className="hero-contours" aria-hidden="true" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Breadcrumb
             items={[
               { label: "Home", href: "/" },
@@ -95,14 +96,17 @@ export default async function ListingPage({ params }: PageProps) {
 
           <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div>
-              <h1
-                className="text-3xl md:text-4xl font-normal text-[var(--color-charcoal)]"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
+              {shop.shop_type && (
+                <p className="section-label mb-3 inline-flex items-center gap-3">
+                  <span className="gold-rule" />
+                  {shop.shop_type}
+                </p>
+              )}
+              <h1 className="display text-[clamp(2.1rem,4.5vw,3.1rem)] text-[var(--color-charcoal)]">
                 {shop.name}
               </h1>
 
-              <p className="mt-2 flex items-center gap-1.5 text-[var(--color-charcoal-light)]">
+              <p className="mt-3 flex items-center gap-1.5 text-[var(--color-charcoal-light)]">
                 <MapPin size={16} className="text-[var(--color-gold)]" />
                 {[shop.street, shop.city, `${shop.state_code} ${shop.postal_code ?? ""}`]
                   .filter(Boolean)
@@ -115,7 +119,6 @@ export default async function ListingPage({ params }: PageProps) {
                 )}
                 <div className="flex flex-wrap gap-2">
                   {shop.verified && <Badge variant="verified">Verified</Badge>}
-                  {shop.shop_type && <Badge>{shop.shop_type}</Badge>}
                   {shop.is_featured && <Badge variant="gold">Featured</Badge>}
                 </div>
               </div>
@@ -176,7 +179,7 @@ export default async function ListingPage({ params }: PageProps) {
                   >
                     Club Fitting Details
                   </h2>
-                  <div className="bg-white border border-[var(--color-border)] rounded-lg p-5 space-y-3">
+                  <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5 space-y-3">
                     <div className="flex items-center gap-2">
                       <Wrench size={16} className="text-[var(--color-gold)]" />
                       <span className="text-sm font-medium">Club Fitting Available</span>
@@ -208,7 +211,7 @@ export default async function ListingPage({ params }: PageProps) {
                   >
                     About
                   </h2>
-                  <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+                  <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5">
                     <dl className="space-y-3">
                       {aboutEntries.map(({ key, value }) => (
                         <div key={key}>
@@ -231,7 +234,7 @@ export default async function ListingPage({ params }: PageProps) {
                 >
                   Location
                 </h2>
-                <div className="bg-white border border-[var(--color-border)] rounded-lg p-5">
+                <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5">
                   {shop.latitude != null && shop.longitude != null && (
                     <div className="mb-4">
                       <ListingMap
@@ -264,9 +267,9 @@ export default async function ListingPage({ params }: PageProps) {
             {/* Right: sidebar */}
             <aside className="lg:w-80 shrink-0 space-y-6">
               {/* Contact card */}
-              <div className="bg-[var(--color-forest)] text-white rounded-lg p-6">
+              <div className="bg-[var(--color-forest)] text-white rounded-2xl shadow-card p-6">
                 <h3
-                  className="text-lg font-semibold mb-4"
+                  className="text-lg font-bold mb-4"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   Contact
@@ -308,7 +311,7 @@ export default async function ListingPage({ params }: PageProps) {
                   {shop.phone && (
                     <a
                       href={`tel:${shop.phone}`}
-                      className="block w-full text-center py-2.5 bg-white text-[var(--color-forest)] font-semibold text-sm rounded hover:bg-[var(--color-cream)] transition-colors"
+                      className="block w-full text-center py-2.5 bg-white text-[var(--color-forest)] font-semibold text-sm rounded-full hover:bg-[var(--color-cream)] transition-colors"
                     >
                       Call Now
                     </a>
@@ -318,7 +321,7 @@ export default async function ListingPage({ params }: PageProps) {
                       href={shop.website.startsWith("http") ? shop.website : `https://${shop.website}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block w-full text-center py-2.5 bg-[var(--color-gold)] text-white font-semibold text-sm rounded hover:bg-[var(--color-gold-dark)] transition-colors"
+                      className="block w-full text-center py-2.5 bg-[var(--color-gold)] text-[var(--color-forest-deep)] font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors"
                     >
                       Visit Website
                     </a>
@@ -328,9 +331,9 @@ export default async function ListingPage({ params }: PageProps) {
 
               {/* Hours card */}
               {shop.working_hours && Object.keys(shop.working_hours).length > 0 && (
-                <div className="bg-white border border-[var(--color-border)] rounded-lg p-6">
+                <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
                   <h3
-                    className="text-lg font-semibold text-[var(--color-charcoal)] mb-4 flex items-center gap-2"
+                    className="text-lg font-bold text-[var(--color-charcoal)] mb-4 flex items-center gap-2"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
                     <Clock size={18} className="text-[var(--color-gold)]" />
@@ -338,7 +341,10 @@ export default async function ListingPage({ params }: PageProps) {
                   </h3>
                   <dl className="space-y-2">
                     {DAY_ORDER.map((day) => {
-                      const hours = shop.working_hours?.[day] ?? "Closed"
+                      const rawHours = shop.working_hours?.[day]
+                      const hours = Array.isArray(rawHours)
+                        ? rawHours.join(", ")
+                        : rawHours ?? "Closed"
                       const isToday = day === todayName
                       return (
                         <div

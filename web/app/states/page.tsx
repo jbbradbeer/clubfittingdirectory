@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { getAllStatesWithShops } from "@/lib/supabase/queries/shops"
-import { SectionHeader } from "@/components/ui/SectionHeader"
+import { PageHeader } from "@/components/layout/PageHeader"
 import { SITE_NAME } from "@/lib/constants"
 
 export const metadata: Metadata = {
@@ -16,15 +16,12 @@ export default async function StatesPage() {
 
   return (
     <>
-      <section className="bg-[var(--color-cream)] bg-grain py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <SectionHeader
-            eyebrow="The Club Fitting Directory"
-            title="Browse by State"
-            subtitle="Find independent club fitters and golf retailers in every corner of the country."
-          />
-        </div>
-      </section>
+      <PageHeader
+        align="center"
+        eyebrow="The Club Fitting Directory"
+        title="Browse by State"
+        subtitle="Find independent club fitters and golf retailers in every corner of the country."
+      />
 
       <section className="bg-[var(--color-ivory)] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +30,7 @@ export default async function StatesPage() {
               <Link
                 key={s.state_code}
                 href={`/state/${s.state_code.toLowerCase()}`}
-                className="flex items-center justify-between p-4 bg-white border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] transition-all group"
+                className="flex items-center justify-between p-4 bg-white border border-[var(--color-border)] rounded-xl shadow-card hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] hover:-translate-y-0.5 transition-all duration-300 group"
               >
                 <div>
                   <span className="block text-sm font-semibold">{s.state}</span>

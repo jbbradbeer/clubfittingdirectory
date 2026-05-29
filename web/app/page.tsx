@@ -4,6 +4,7 @@ import { getTopRatedShops, getAllStatesWithShops, getShopTypeCounts, getDirector
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
+import { HeroSearch } from "@/components/home/HeroSearch"
 import { SITE_NAME } from "@/lib/constants"
 
 export const revalidate = 3600
@@ -41,46 +42,83 @@ export default async function HomePage() {
       {/* ═══════════════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════════════ */}
-      <section className="bg-[var(--color-ivory)] border-b border-[var(--color-border)]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
-          <p className="section-label mb-5">The Club Fitting Directory</p>
-          <h1 className="display text-[clamp(2.5rem,7vw,5rem)] text-[var(--color-charcoal)]">
-            Find your perfect club fitter.
+      <section className="hero-surface grain border-b border-[var(--color-border)]">
+        <div className="hero-contours" aria-hidden="true" />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
+          <p className="section-label mb-5 inline-flex items-center gap-3 animate-fade-in-up">
+            <span className="gold-rule" />
+            The Club Fitting Directory
+            <span className="gold-rule rotate-180" />
+          </p>
+
+          <h1
+            className="display text-[clamp(2.6rem,7.5vw,5.25rem)] text-[var(--color-charcoal)] animate-fade-in-up"
+            style={{ animationDelay: "60ms" }}
+          >
+            Find your{" "}
+            <span className="relative whitespace-nowrap text-[var(--color-forest)]">
+              perfect fit
+              <svg
+                className="absolute -bottom-2 left-0 w-full"
+                height="10"
+                viewBox="0 0 200 10"
+                fill="none"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 7C45 3 120 2 198 6"
+                  stroke="var(--color-gold)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            .
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-[var(--color-charcoal-light)] leading-relaxed">
+
+          <p
+            className="mt-7 max-w-2xl mx-auto text-lg md:text-xl text-[var(--color-charcoal-light)] leading-relaxed animate-fade-in-up"
+            style={{ animationDelay: "120ms" }}
+          >
             Search {stats.total.toLocaleString()}+ independent golf club fitters,
             retailers, and simulators across all 50 states.
           </p>
 
-          {/* Search */}
-          <form
-            action="/directory"
-            method="GET"
-            className="mt-10 flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto"
+          {/* Live search */}
+          <div
+            className="mt-10 animate-fade-in-up"
+            style={{ animationDelay: "180ms" }}
           >
-            <div className="relative flex-1">
-              <Search
-                size={20}
-                className="absolute left-5 top-1/2 -translate-y-1/2 text-[var(--color-charcoal-light)]"
-              />
-              <input
-                type="text"
-                name="q"
-                placeholder="City or shop name..."
-                className="w-full pl-12 pr-5 py-4 bg-[var(--color-paper)] border border-[var(--color-border)] shadow-card rounded-full text-base text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:border-[var(--color-forest)] focus:ring-2 focus:ring-[var(--color-forest)]/15 transition-all"
-              />
-            </div>
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center gap-2 px-9 py-4 bg-[var(--color-forest)] text-white text-base font-semibold rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
-            >
-              <Search size={18} />
-              Search
-            </button>
-          </form>
+            <HeroSearch />
+          </div>
+
+          {/* Quick links */}
+          <div
+            className="mt-6 flex items-center justify-center gap-2 flex-wrap text-sm animate-fade-in-up"
+            style={{ animationDelay: "240ms" }}
+          >
+            <span className="text-[var(--color-charcoal-light)]">Popular:</span>
+            {[
+              { label: "Near me", href: "/directory?near=1" },
+              { label: "Club fitters", href: "/category/club-fitters" },
+              { label: "Simulators", href: "/category/golf-simulators" },
+            ].map((c) => (
+              <Link
+                key={c.href}
+                href={c.href}
+                className="px-3.5 py-1.5 rounded-full border border-[var(--color-border)] bg-white/70 text-[var(--color-charcoal)] font-medium hover:border-[var(--color-forest)] hover:text-[var(--color-forest)] transition-colors"
+              >
+                {c.label}
+              </Link>
+            ))}
+          </div>
 
           {/* Trust line */}
-          <div className="mt-7 flex items-center justify-center gap-x-3 gap-y-2 flex-wrap text-sm text-[var(--color-charcoal-light)]">
+          <div
+            className="mt-9 flex items-center justify-center gap-x-3 gap-y-2 flex-wrap text-sm text-[var(--color-charcoal-light)] animate-fade-in-up"
+            style={{ animationDelay: "300ms" }}
+          >
             <span>
               <strong className="text-[var(--color-charcoal)] font-semibold">{stats.total.toLocaleString()}</strong> Fitters
             </span>
