@@ -1,124 +1,130 @@
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
 import Link from "next/link"
-import { getAllStateCodes, getShopsForStatePage, getAllStatesWithShops, toCitySlug } from "@/lib/supabase/queries/shops"
-import { StateListings } from "@/components/state/StateFilterChips"
-import type { ListingCardProps } from "@/types/shop"
+import { notFound } from "next/navigation"
+import {
+  getShopsForStatePage,
+  getAllStateCodes,
+  getAllStatesWithShops,
+  toCitySlug,
+} from "@/lib/supabase/queries/shops"
+import { Breadcrumb } from "@/components/ui/Breadcrumb"
+import { SectionHeader } from "@/components/ui/SectionHeader"
+import { ListingCard } from "@/components/directory/ListingCard"
+import { Button } from "@/components/ui/Button"
+import { SITE_NAME, SITE_URL } from "@/lib/constants"
 
-/* ─────────────────────────────────────────────────────────
-   /state/[state_code] — State index page
-   Off-white bg, green accent on state name.
-   ───────────────────────────────────────────────────────── */
+interface PageProps {
+  params: Promise<{ state_code: string }>
+}
 
 export const revalidate = 86400
 
-import { SITE_URL } from "@/lib/constants"
-
 export async function generateStaticParams() {
   const codes = await getAllStateCodes().catch(() => [])
-  return codes.map((state_code) => ({ state_code: state_code.toLowerCase() }))
+  return codes.map((code) => ({ state_code: code.toLowerCase() }))
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ state_code: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { state_code } = await params
-  const upper = state_code.toUpperCase()
-  const allStates = await getAllStatesWithShops().catch(() => [])
-  const stateInfo = allStates.find((s) => s.state_code === upper)
-  if (!stateInfo) return { title: "State Not Found" }
-
-  const { state, count } = stateInfo
-  const description = `Browse ${count} golf club fitters, retailers, and simulators in ${state}. Find club fitting, lessons, and custom club building near you.`
+  const code = state_code.toUpperCase()
+  const states = await getAllStatesWithShops().catch(() => [])
+  const stateInfo = states.find((s) => s.state_code === code)
+  const stateName = stateInfo?.state ?? code
 
   return {
-    title: `Golf Club Fitters in ${state} — Club Fitting Directory`,
-    description,
+    title: `Golf Club Fitters in ${stateName}`,
+    description: `Find ${stateInfo?.count ?? ""} independent golf club fitters, retailers, and pro shops in ${stateName}. Browse by city, filter by type, and find your perfect fit.`,
     alternates: { canonical: `${SITE_URL}/state/${state_code}` },
-    openGraph: { title: `Golf Club Fitters in ${state}`, description, type: "website", url: `${SITE_URL}/state/${state_code}`, siteName: "Club Fitting Directory" },
   }
 }
 
-export default async function StatePage({ params }: { params: Promise<{ state_code: string }> }) {
+export default async function StatePage({ params }: PageProps) {
   const { state_code } = await params
-  const upper = state_code.toUpperCase()
+  const code = state_code.toUpperCase()
 
-  const [{ shops, cityCount }, allStates] = await Promise.all([
-    getShopsForStatePage(upper).catch(() => ({ shops: [], cityCount: 0 })),
+  const [result, states] = await Promise.all([
+    getShopsForStatePage(code).catch(() => null),
     getAllStatesWithShops().catch(() => []),
   ])
 
-  const stateInfo = allStates.find((s) => s.state_code === upper)
-  if (!stateInfo || shops.length === 0) notFound()
+  if (!result || result.shops.length === 0) notFound()
 
-  const { state } = stateInfo
-  const shopTypes = [...new Set(shops.map((s) => s.shop_type).filter(Boolean) as string[])].sort()
+  const { shops, cityCount } = result
+  const stateInfo = states.find((s) => s.state_code === code)
+  const stateName = stateInfo?.state ?? code
 
-  // Build city list with counts for the Browse by City section
-  const cityCountMap: Record<string, number> = {}
-  for (const s of shops) {
-    if (s.city) cityCountMap[s.city] = (cityCountMap[s.city] ?? 0) + 1
+  /* Build city breakdown */
+  const cityMap: Record<string, { count: number; slug: string }> = {}
+  for (const shop of shops) {
+    if (!cityMap[shop.city]) {
+      cityMap[shop.city] = { count: 0, slug: toCitySlug(shop.city, code) }
+    }
+    cityMap[shop.city].count++
   }
-  const cities = Object.entries(cityCountMap)
-    .map(([city, count]) => ({ city, count, slug: toCitySlug(city, upper) }))
-    .sort((a, b) => b.count - a.count || a.city.localeCompare(b.city))
+  const cities = Object.entries(cityMap)
+    .map(([name, { count, slug }]) => ({ name, count, slug }))
+    .sort((a, b) => b.count - a.count)
 
-  const cardProps: ListingCardProps[] = shops.map((s) => ({
-    name: s.name, shop_type: s.shop_type, primary_service: s.primary_service,
-    city: s.city, state: s.state, state_code: s.state_code, rating: s.rating,
-    rating_tier: s.rating_tier, services: s.services, services_array: s.services_array ?? [],
-    offers_fitting: s.offers_fitting, fitting_environment: s.fitting_environment,
-    phone: s.phone, website: s.website, verified: s.verified, slug: s.slug,
-  }))
+  /* Shop type breakdown */
+  const typeMap: Record<string, number> = {}
+  for (const shop of shops) {
+    const t = shop.shop_type ?? "Other"
+    typeMap[t] = (typeMap[t] ?? 0) + 1
+  }
+
+  const otherStates = states.filter((s) => s.state_code !== code).slice(0, 10)
 
   return (
-    <div className="min-h-screen bg-[var(--color-off-white)]">
-      <nav aria-label="Breadcrumb" className="border-b border-[var(--color-gray-light)] bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
-          <ol className="flex flex-wrap items-center gap-1.5 font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)]">
-            <li><Link href="/" className="hover:text-[var(--color-green-deep)] transition-colors">Home</Link></li>
-            <li aria-hidden="true" className="text-[var(--color-gray-light)]">/</li>
-            <li><Link href="/states" className="hover:text-[var(--color-green-deep)] transition-colors">States</Link></li>
-            <li aria-hidden="true" className="text-[var(--color-gray-light)]">/</li>
-            <li className="text-[var(--color-black)]" aria-current="page">{state}</li>
-          </ol>
+    <>
+      {/* Hero */}
+      <section className="bg-[var(--color-cream)] bg-grain py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "States", href: "/states" },
+              { label: stateName },
+            ]}
+          />
+          <div className="mt-6">
+            <p className="section-label mb-2">Club Fitting Directory</p>
+            <h1
+              className="text-3xl md:text-5xl font-normal text-[var(--color-charcoal)]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Golf Club Fitters in {stateName}
+            </h1>
+            <p className="mt-3 text-[var(--color-charcoal-light)] text-lg">
+              {shops.length} fitters across {cityCount} cities — including{" "}
+              {Object.entries(typeMap)
+                .slice(0, 3)
+                .map(([type, count]) => `${count} ${type.toLowerCase()}s`)
+                .join(", ")}
+              .
+            </p>
+          </div>
         </div>
-      </nav>
+      </section>
 
-      <header className="border-b border-[var(--color-gray-light)] bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-green-deep)] mb-3">Club Fitting Directory</p>
-          <h1 className="font-[family-name:var(--font-display)] text-4xl sm:text-5xl font-normal text-[var(--color-black)] leading-tight mb-4">
-            Golf Club Fitters in <span className="text-[var(--color-green-deep)]">{state}</span>
-          </h1>
-          <p className="font-[family-name:var(--font-body)] text-lg text-[var(--color-gray)]">
-            <span className="text-[var(--color-black)] tabular-nums font-medium">{shops.length.toLocaleString()}</span>{" "}listings across{" "}
-            <span className="text-[var(--color-black)] tabular-nums font-medium">{cityCount}</span>{" "}{cityCount === 1 ? "city" : "cities"} in {state}
-          </p>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <StateListings shops={cardProps} shopTypes={shopTypes} />
-      </main>
-
-      {/* ── Browse by City ── */}
+      {/* Cities */}
       {cities.length > 1 && (
-        <section className="border-t border-[var(--color-gray-light)] py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 className="font-[family-name:var(--font-display)] text-2xl font-normal text-[var(--color-black)] mb-6">
-              Browse by City in {state}
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-              {cities.map(({ city, count, slug }) => (
+        <section className="bg-[var(--color-ivory)] py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeader
+              eyebrow="Browse by City"
+              title={`Cities in ${stateName}`}
+              centered={false}
+            />
+            <div className="mt-6 flex flex-wrap gap-2">
+              {cities.map((city) => (
                 <Link
-                  key={slug}
-                  href={`/city/${slug}`}
-                  className="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-md border border-[var(--color-gray-light)] bg-white hover:border-[var(--color-green-deep)] hover:bg-[#1B43320A] transition-colors duration-150 group"
+                  key={city.slug}
+                  href={`/city/${city.slug}`}
+                  className="px-4 py-2 bg-white border border-[var(--color-border)] rounded-full text-sm hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] transition-all"
                 >
-                  <span className="font-[family-name:var(--font-body)] text-sm text-[var(--color-black)] group-hover:text-[var(--color-green-deep)] transition-colors truncate">
-                    {city}
-                  </span>
-                  <span className="font-[family-name:var(--font-body)] text-[10px] text-[var(--color-gray)] tabular-nums shrink-0">
-                    {count}
+                  {city.name}
+                  <span className="ml-1.5 text-[var(--color-charcoal-light)]">
+                    {city.count}
                   </span>
                 </Link>
               ))}
@@ -127,36 +133,49 @@ export default async function StatePage({ params }: { params: Promise<{ state_co
         </section>
       )}
 
-      <section className="border-t border-[var(--color-gray-light)] py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-normal text-[var(--color-black)] mb-6">Browse Other States</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-2">
-            {allStates.map((s) => (
-              <Link key={s.state_code} href={`/state/${s.state_code.toLowerCase()}`} title={s.state}
-                className={[
-                  "flex flex-col items-center gap-0.5 py-2.5 px-1 rounded-md text-center border transition-colors duration-150 group",
-                  s.state_code === upper
-                    ? "border-[var(--color-green-deep)] bg-[#1B43320A] cursor-default"
-                    : "border-[var(--color-gray-light)] bg-white hover:border-[var(--color-green-deep)] hover:bg-[#1B43320A]",
-                ].join(" ")}
-                aria-current={s.state_code === upper ? "page" : undefined}>
-                <span className={[
-                  "font-[family-name:var(--font-body)] text-xs font-semibold tracking-wide transition-colors tabular-nums",
-                  s.state_code === upper ? "text-[var(--color-green-deep)]" : "text-[var(--color-black)] group-hover:text-[var(--color-green-deep)]",
-                ].join(" ")}>{s.state_code}</span>
-                <span className="font-[family-name:var(--font-body)] text-[9px] text-[var(--color-gray)] tabular-nums">{s.count}</span>
-              </Link>
+      {/* Listings */}
+      <section className="bg-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow={`${shops.length} Listings`}
+            title={`All Fitters in ${stateName}`}
+            centered={false}
+          />
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {shops.map((shop) => (
+              <ListingCard key={shop.slug} {...shop} />
             ))}
           </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
-        <Link href="/directory" className="inline-flex items-center gap-1.5 font-[family-name:var(--font-body)] text-sm text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors group">
-          <span className="inline-block transition-transform group-hover:-translate-x-0.5" aria-hidden="true">←</span>
-          Back to Directory
-        </Link>
-      </div>
-    </div>
+      {/* Browse Other States */}
+      {otherStates.length > 0 && (
+        <section className="bg-[var(--color-cream)] bg-grain py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <SectionHeader
+              eyebrow="Explore More"
+              title="Browse Other States"
+            />
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
+              {otherStates.map((s) => (
+                <Link
+                  key={s.state_code}
+                  href={`/state/${s.state_code.toLowerCase()}`}
+                  className="px-4 py-2 bg-white border border-[var(--color-border)] rounded-full text-sm hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] transition-all"
+                >
+                  {s.state}
+                </Link>
+              ))}
+            </div>
+            <div className="mt-6 text-center">
+              <Button href="/states" variant="outline" size="sm">
+                View All States
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   )
 }

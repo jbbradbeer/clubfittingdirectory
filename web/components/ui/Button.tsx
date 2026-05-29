@@ -1,98 +1,68 @@
-import { type ButtonHTMLAttributes, type AnchorHTMLAttributes, forwardRef, Children, cloneElement, isValidElement } from "react"
+import Link from "next/link"
 
-/* ─────────────────────────────────────────────────────────
-   BUTTON
-   Primary CTA component.
+type ButtonVariant = "primary" | "secondary" | "outline" | "ghost"
+type ButtonSize = "sm" | "md" | "lg"
 
-   Variants:
-   • primary  — solid deep green background, white text
-   • outline  — green border + text, transparent background
-   • ghost    — black text only, green hover
-   ───────────────────────────────────────────────────────── */
-
-type ButtonVariant = "primary" | "outline" | "ghost"
-type ButtonSize    = "sm" | "md" | "lg"
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   size?: ButtonSize
-  asChild?: boolean
+  href?: string
+  external?: boolean
 }
 
-const sizeClasses: Record<ButtonSize, string> = {
-  sm: "px-4 py-1.5 text-xs",
-  md: "px-6 py-2.5 text-sm",
-  lg: "px-8 py-3.5 text-base",
+const variantStyles: Record<ButtonVariant, string> = {
+  primary:
+    "bg-[var(--color-forest)] text-[var(--color-paper)] hover:bg-[var(--color-forest-dark)] border border-transparent",
+  secondary:
+    "bg-[var(--color-gold)] text-[var(--color-forest-deep)] hover:bg-[var(--color-gold-dark)] border border-transparent",
+  outline:
+    "bg-transparent text-[var(--color-forest)] border border-[var(--color-forest)]/35 hover:border-[var(--color-forest)] hover:bg-[var(--color-forest)] hover:text-[var(--color-paper)]",
+  ghost:
+    "bg-transparent text-[var(--color-forest)] hover:bg-[var(--color-cream)] border border-transparent",
 }
 
-const variantClasses: Record<ButtonVariant, string> = {
-  primary: [
-    "bg-[var(--color-green-deep)] text-white",
-    "border border-[var(--color-green-deep)]",
-    "hover:bg-[var(--color-green-hover)] hover:border-[var(--color-green-hover)]",
-    "font-semibold",
-  ].join(" "),
-
-  outline: [
-    "bg-transparent text-[var(--color-green-deep)]",
-    "border border-[var(--color-green-deep)]",
-    "hover:bg-[#1B43320A]",
-    "hover:border-[var(--color-green-hover)] hover:text-[var(--color-green-hover)]",
-    "font-medium",
-  ].join(" "),
-
-  ghost: [
-    "bg-transparent text-[var(--color-black)] border border-transparent",
-    "hover:text-[var(--color-green-deep)]",
-    "font-medium",
-  ].join(" "),
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: "px-5 py-2 text-xs tracking-[0.08em]",
+  md: "px-7 py-3 text-sm tracking-[0.05em]",
+  lg: "px-9 py-4 text-sm tracking-[0.08em]",
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      variant = "primary",
-      size = "md",
-      className = "",
-      asChild = false,
-      children,
-      ...props
-    },
-    ref,
-  ) => {
-    const combinedClass = [
-      "inline-flex items-center justify-center gap-2",
-      "rounded-md",
-      "font-[family-name:var(--font-body)]",
-      "tracking-wide",
-      "transition-colors duration-200 ease-out",
-      "cursor-pointer",
-      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-green-deep)]",
-      "disabled:opacity-50 disabled:cursor-not-allowed",
-      sizeClasses[size],
-      variantClasses[variant],
-      className,
-    ].join(" ")
+export function Button({
+  variant = "primary",
+  size = "md",
+  href,
+  external,
+  className = "",
+  children,
+  ...props
+}: ButtonProps) {
+  const base =
+    "inline-flex items-center justify-center font-[var(--font-body)] font-semibold rounded-full transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-[var(--color-gold)] focus-visible:outline-offset-2"
+  const classes = `${base} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`
 
-    if (asChild) {
-      const child = Children.only(children)
-      if (isValidElement<AnchorHTMLAttributes<HTMLAnchorElement>>(child)) {
-        return cloneElement(child, {
-          className: [child.props.className ?? "", combinedClass].filter(Boolean).join(" "),
-        })
-      }
+  if (href) {
+    if (external) {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={classes}
+        >
+          {children}
+        </a>
+      )
     }
-
     return (
-      <button
-        ref={ref}
-        className={combinedClass}
-        {...props}
-      >
+      <Link href={href} className={classes}>
         {children}
-      </button>
+      </Link>
     )
-  },
-)
+  }
 
-Button.displayName = "Button"
+  return (
+    <button className={classes} {...props}>
+      {children}
+    </button>
+  )
+}

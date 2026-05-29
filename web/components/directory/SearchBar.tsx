@@ -1,91 +1,41 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
-import { Search, X } from "lucide-react"
-
-/* ─────────────────────────────────────────────────────────
-   SEARCH BAR
-   Debounced text input — waits 300ms after the user stops
-   typing before calling onChange. This prevents a Supabase
-   query on every single keystroke.
-   ───────────────────────────────────────────────────────── */
+import { Search } from "lucide-react"
 
 interface SearchBarProps {
   value: string
   onChange: (value: string) => void
-  className?: string
+  onSubmit: () => void
 }
 
-export function SearchBar({ value, onChange, className = "" }: SearchBarProps) {
-  /* Local draft — shown instantly; parent notified after debounce */
-  const [draft, setDraft] = useState(value)
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  /* Sync if parent resets the value (e.g. Clear All) */
-  useEffect(() => {
-    setDraft(value)
-  }, [value])
-
-  const handleChange = (raw: string) => {
-    setDraft(raw)
-    if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => onChange(raw), 300)
-  }
-
-  const handleClear = () => {
-    setDraft("")
-    if (timerRef.current) clearTimeout(timerRef.current)
-    onChange("")
-  }
-
-  /* Cleanup on unmount */
-  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
-
+export function SearchBar({ value, onChange, onSubmit }: SearchBarProps) {
   return (
-    <div className={`relative ${className}`}>
-      {/* Search icon */}
-      <span
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-gray)] pointer-events-none"
-        aria-hidden="true"
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSubmit()
+      }}
+      className="flex items-stretch gap-2"
+    >
+      <div className="relative flex-1">
+        <Search
+          size={16}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-charcoal-light)]"
+        />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Search by name or city..."
+          className="w-full pl-9 pr-3 py-2.5 bg-white border border-[var(--color-border)] rounded-lg text-sm text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:border-[var(--color-gold)] focus:ring-2 focus:ring-[var(--color-gold)]/20 transition-all"
+        />
+      </div>
+      <button
+        type="submit"
+        className="px-5 py-2.5 bg-[var(--color-forest)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
       >
-        <Search size={17} strokeWidth={1.8} />
-      </span>
-
-      <input
-        type="search"
-        value={draft}
-        onChange={(e) => handleChange(e.target.value)}
-        placeholder="Search fitters, cities, or shops..."
-        autoComplete="off"
-        spellCheck={false}
-        className={[
-          "w-full",
-          "pl-11 pr-10 py-3",
-          "bg-white",
-          "border border-[var(--color-gray-light)]",
-          "rounded-md",
-          "font-[family-name:var(--font-body)] text-[var(--color-black)] text-sm",
-          "placeholder:text-[var(--color-gray)] placeholder:italic",
-          "focus:outline-2 focus:outline-[var(--color-green-deep)] focus:outline-offset-0",
-          "focus:border-[var(--color-green-deep)]",
-          "transition-colors duration-150",
-          /* Remove browser default search cancel button */
-          "[&::-webkit-search-cancel-button]:appearance-none",
-        ].join(" ")}
-        aria-label="Search the directory"
-      />
-
-      {/* Custom clear button */}
-      {draft && (
-        <button
-          onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[var(--color-gray)] hover:text-[var(--color-green-deep)] transition-colors"
-          aria-label="Clear search"
-          type="button"
-        >
-          <X size={15} />
-        </button>
-      )}
-    </div>
+        Search
+      </button>
+    </form>
   )
 }

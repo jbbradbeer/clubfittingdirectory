@@ -1,100 +1,65 @@
-/* ─────────────────────────────────────────────────────────
-   RATING STARS
-   Renders a row of green star SVGs representing a 0–5
-   rating. Each star can be: filled, half-filled, or empty.
-   ───────────────────────────────────────────────────────── */
-
-type StarSize = "sm" | "md" | "lg"
-
 interface RatingStarsProps {
-  rating: number
-  size?: StarSize
-  showLabel?: boolean
-  className?: string
+  rating: number | null
+  reviews?: number | null
+  showNumeric?: boolean
+  size?: "sm" | "md"
 }
 
-const sizeMap: Record<StarSize, number> = {
-  sm: 12,
-  md: 16,
-  lg: 20,
-}
+export function RatingStars({ rating, reviews, showNumeric = true, size = "md" }: RatingStarsProps) {
+  if (!rating) return null
 
-export function RatingStars({
-  rating,
-  size = "md",
-  showLabel = false,
-  className = "",
-}: RatingStarsProps) {
-  const px = sizeMap[size]
-  const clamped = Math.max(0, Math.min(5, rating))
-  const stars = Array.from({ length: 5 }, (_, i) => {
-    const fill = Math.min(1, Math.max(0, clamped - i))
-    if (fill >= 0.75) return "full"
-    if (fill >= 0.25) return "half"
-    return "empty"
-  })
+  const starSize = size === "sm" ? 14 : 18
+  const fullStars = Math.floor(rating)
+  const hasHalf = rating - fullStars >= 0.25 && rating - fullStars < 0.75
+  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0)
 
   return (
-    <span
-      className={`inline-flex items-center gap-0.5 ${className}`}
-      aria-label={`Rating: ${clamped.toFixed(1)} out of 5 stars`}
-    >
-      {stars.map((type, i) => (
-        <StarIcon key={i} type={type} size={px} />
-      ))}
-      {showLabel && (
-        <span
-          className="ml-1.5 text-[var(--color-green-deep)] font-[family-name:var(--font-body)] text-xs font-medium tabular-nums"
-          aria-hidden="true"
-        >
-          {clamped.toFixed(1)}
+    <div className="inline-flex items-center gap-1.5">
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: fullStars }).map((_, i) => (
+          <Star key={`full-${i}`} size={starSize} fill="var(--color-gold)" />
+        ))}
+        {hasHalf && <StarHalf key="half" size={starSize} />}
+        {Array.from({ length: emptyStars }).map((_, i) => (
+          <Star key={`empty-${i}`} size={starSize} fill="none" />
+        ))}
+      </div>
+      {showNumeric && (
+        <span className={`font-semibold text-[var(--color-charcoal)] ${size === "sm" ? "text-xs" : "text-sm"}`}>
+          {rating.toFixed(1)}
         </span>
       )}
-    </span>
+      {reviews != null && reviews > 0 && (
+        <span className={`text-[var(--color-charcoal-light)] ${size === "sm" ? "text-xs" : "text-sm"}`}>
+          ({reviews.toLocaleString()})
+        </span>
+      )}
+    </div>
   )
 }
 
-function StarIcon({
-  type,
-  size,
-}: {
-  type: "full" | "half" | "empty"
-  size: number
-}) {
-  const id = `half-${Math.random().toString(36).slice(2, 7)}`
-
+function Star({ size, fill }: { size: number; fill: string }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      {type === "half" && (
-        <defs>
-          <linearGradient id={id} x1="0" x2="1" y1="0" y2="0">
-            <stop offset="50%" stopColor="var(--color-green-deep)" />
-            <stop offset="50%" stopColor="transparent" />
-          </linearGradient>
-        </defs>
-      )}
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="var(--color-gold)" strokeWidth={1.5}>
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
+  )
+}
 
+function StarHalf({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" stroke="var(--color-gold)" strokeWidth={1.5} fill="none">
+      <defs>
+        <clipPath id="halfClip">
+          <rect x="0" y="0" width="12" height="24" />
+        </clipPath>
+      </defs>
       <path
-        d="M10 1.5L12.39 7.26L18.51 7.76L14 11.65L15.47 17.64L10 14.4L4.53 17.64L6 11.65L1.49 7.76L7.61 7.26L10 1.5Z"
-        fill={
-          type === "full"
-            ? "var(--color-green-deep)"
-            : type === "half"
-              ? `url(#${id})`
-              : "none"
-        }
-        stroke="var(--color-green-deep)"
-        strokeWidth={type === "empty" ? "1.2" : "0"}
-        strokeLinejoin="round"
-        opacity={type === "empty" ? 0.35 : 1}
+        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+        fill="var(--color-gold)"
+        clipPath="url(#halfClip)"
       />
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   )
 }

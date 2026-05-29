@@ -1,84 +1,54 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { getAllStatesWithShops } from "@/lib/supabase/queries/shops"
+import { SectionHeader } from "@/components/ui/SectionHeader"
+import { SITE_NAME } from "@/lib/constants"
 
-/* ─────────────────────────────────────────────────────────
-   /states — All States Index
-   Off-white background, white tiles, green highlights.
-   ───────────────────────────────────────────────────────── */
+export const metadata: Metadata = {
+  title: "Browse by State",
+  description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with over 1,000 independent shop listings.`,
+}
 
 export const revalidate = 86400
 
-export const metadata: Metadata = {
-  title: "Browse Club Fitters by State",
-  description:
-    "Find golf club fitting shops in your state. Browse the full directory by location — all 50 states covered.",
-  alternates: { canonical: "https://clubfittingdirectory.com/states" },
-}
-
-export default async function StatesIndexPage() {
+export default async function StatesPage() {
   const states = await getAllStatesWithShops().catch(() => [])
 
   return (
-    <div className="min-h-screen bg-[var(--color-off-white)] px-4 sm:px-6 py-16">
-      <div className="max-w-5xl mx-auto">
-
-        <div className="mb-12">
-          <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.35em] uppercase text-[var(--color-green-deep)] mb-3">
-            Club Fitting Directory
-          </p>
-          <h1 className="font-[family-name:var(--font-display)] text-4xl sm:text-5xl font-normal text-[var(--color-black)] leading-tight mb-4">
-            Browse by State
-          </h1>
-          <p className="font-[family-name:var(--font-body)] text-[var(--color-gray)] text-lg max-w-xl">
-            {states.length > 0
-              ? `${states.length} states with club fitting listings. Select yours below.`
-              : "Select a state to browse local club fitting shops."}
-          </p>
+    <>
+      <section className="bg-[var(--color-cream)] bg-grain py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <SectionHeader
+            eyebrow="The Club Fitting Directory"
+            title="Browse by State"
+            subtitle="Find independent club fitters and golf retailers in every corner of the country."
+          />
         </div>
+      </section>
 
-        {states.length > 0 ? (
+      <section className="bg-[var(--color-ivory)] py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {states.map((s) => {
-              const isLarge = s.count >= 40
-              return (
-                <Link
-                  key={s.state_code}
-                  href={`/state/${s.state_code.toLowerCase()}`}
-                  className={[
-                    "group flex flex-col gap-1 p-4 rounded-md border transition-colors duration-150",
-                    isLarge ? "border-[var(--color-green-deep)] bg-[#1B43320A]" : "border-[var(--color-gray-light)] bg-white",
-                    "hover:border-[var(--color-green-deep)] hover:bg-[#1B43320A]",
-                  ].join(" ")}
-                >
-                  <span className={[
-                    "font-[family-name:var(--font-body)] text-sm font-semibold tracking-wide transition-colors tabular-nums",
-                    isLarge ? "text-[var(--color-green-deep)]" : "text-[var(--color-black)] group-hover:text-[var(--color-green-deep)]",
-                  ].join(" ")}>
+            {states.map((s) => (
+              <Link
+                key={s.state_code}
+                href={`/state/${s.state_code.toLowerCase()}`}
+                className="flex items-center justify-between p-4 bg-white border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] transition-all group"
+              >
+                <div>
+                  <span className="block text-sm font-semibold">{s.state}</span>
+                  <span className="block text-xs text-[var(--color-charcoal-light)] group-hover:text-white/70 mt-0.5">
                     {s.state_code}
                   </span>
-                  <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)] leading-tight truncate">{s.state}</span>
-                  <span className="font-[family-name:var(--font-body)] text-[9px] text-[var(--color-gray)] tabular-nums">
-                    {s.count.toLocaleString()} listing{s.count !== 1 ? "s" : ""}
-                  </span>
-                </Link>
-              )
-            })}
+                </div>
+                <span className="text-xs font-bold text-[var(--color-gold)] group-hover:text-white/80">
+                  {s.count}
+                </span>
+              </Link>
+            ))}
           </div>
-        ) : (
-          <p className="font-[family-name:var(--font-body)] text-[var(--color-gray)]">
-            State listings will appear once shop data has been loaded into the database.
-          </p>
-        )}
-
-        <div className="mt-12">
-          <Link href="/directory"
-            className="inline-flex items-center gap-1.5 font-[family-name:var(--font-body)] text-sm text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors group">
-            <span className="inline-block transition-transform group-hover:-translate-x-0.5" aria-hidden="true">←</span>
-            Back to Directory
-          </Link>
         </div>
-      </div>
-    </div>
+      </section>
+    </>
   )
 }

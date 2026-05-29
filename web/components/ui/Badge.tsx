@@ -1,72 +1,31 @@
-import { type ReactNode } from "react"
+import { CheckCircle } from "lucide-react"
 
-/* ─────────────────────────────────────────────────────────
-   BADGE
-   Small pill labels for shop types, services, and status.
-
-   Variants:
-   • default   — green outlined pill
-   • highlight — solid green fill, white text (highlight)
-   • verified  — green checkmark + "Verified" label
-   ───────────────────────────────────────────────────────── */
-
-type BadgeVariant = "default" | "highlight" | "verified"
+type BadgeVariant = "default" | "gold" | "verified" | "forest"
 
 interface BadgeProps {
-  children?: ReactNode
   variant?: BadgeVariant
+  children: React.ReactNode
   className?: string
 }
 
-export function Badge({
-  children,
-  variant = "default",
-  className = "",
-}: BadgeProps) {
-  const base =
-    "inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-xs font-medium tracking-wide whitespace-nowrap transition-colors"
-
-  const variants: Record<BadgeVariant, string> = {
-    default:
-      "border border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-transparent",
-    highlight:
-      "border border-[var(--color-green-deep)] text-white bg-[var(--color-green-deep)]",
-    verified:
-      "border border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-[#1B43320A]",
-  }
-
-  if (variant === "verified") {
-    return (
-      <span className={`${base} ${variants.verified} ${className}`}>
-        <CheckmarkIcon />
-        Verified
-      </span>
-    )
-  }
-
-  return (
-    <span className={`${base} ${variants[variant]} ${className}`}>
-      {children}
-    </span>
-  )
+const variantStyles: Record<BadgeVariant, string> = {
+  default:
+    "bg-[var(--color-cream)] text-[var(--color-charcoal-light)]",
+  gold:
+    "bg-[var(--color-gold-tint)] text-[var(--color-gold-ink)]",
+  verified:
+    "bg-[var(--color-forest-tint)] text-[var(--color-forest)]",
+  forest:
+    "bg-[var(--color-forest)] text-white",
 }
 
-function CheckmarkIcon() {
+export function Badge({ variant = "default", children, className = "" }: BadgeProps) {
   return (
-    <svg
-      width="10"
-      height="10"
-      viewBox="0 0 10 10"
-      fill="none"
-      aria-hidden="true"
+    <span
+      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full ${variantStyles[variant]} ${className}`}
     >
-      <path
-        d="M1.5 5L4 7.5L8.5 2.5"
-        stroke="var(--color-green-deep)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      {variant === "verified" && <CheckCircle size={12} />}
+      {children}
+    </span>
   )
 }

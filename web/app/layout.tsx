@@ -1,23 +1,23 @@
 import type { Metadata } from "next"
-import { Instrument_Serif, Inter } from "next/font/google"
-import "../styles/globals.css"
+import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
+import "@/styles/globals.css"
+import { SITE_URL, SITE_NAME } from "@/lib/constants"
 
 /* ─────────────────────────────────────────────────────────
-   GOOGLE FONTS
-   Loaded via next/font so they are self-hosted (fast + no
-   external network requests at runtime).
+   FONTS — self-hosted via next/font (no external requests)
+   Bricolage Grotesque: bold, characterful display sans
+   Hanken Grotesk: crisp, legible grotesque (body)
    ───────────────────────────────────────────────────────── */
-const instrumentSerif = Instrument_Serif({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 })
 
-const inter = Inter({
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
@@ -25,32 +25,25 @@ const inter = Inter({
 })
 
 /* ─────────────────────────────────────────────────────────
-   SITE-WIDE DEFAULT METADATA
+   GLOBAL METADATA
    ───────────────────────────────────────────────────────── */
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Club Fitting Directory — Independent Golf Fitters Across the US",
-    template: "%s | Club Fitting Directory",
+    template: `%s | ${SITE_NAME}`,
+    default: `${SITE_NAME} — Independent Golf Fitters Across the US`,
   },
   description:
     "Find independent golf club fitting shops near you. Browse over 1,000 fitters, simulators, and retailers across all 50 states — curated by The Tuxedo Collective.",
-  metadataBase: new URL("https://clubfittingdirectory.com"),
   openGraph: {
     type: "website",
-    siteName: "Club Fitting Directory",
     locale: "en_US",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Club Fitting Directory — Find Independent Golf Fitters Across the US",
-      },
-    ],
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -60,20 +53,11 @@ export const metadata: Metadata = {
 
 /* ─────────────────────────────────────────────────────────
    ROOT LAYOUT
-   Wraps every page. Applies font CSS variables to <html>
-   so they cascade everywhere.
    ───────────────────────────────────────────────────────── */
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${instrumentSerif.variable} ${inter.variable}`}
-    >
-      <body className="min-h-screen flex flex-col antialiased">
+    <html lang="en" className={`${bricolage.variable} ${hanken.variable}`}>
+      <body className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -1,45 +1,43 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import { getAllStatesWithShops, getShopTypeCounts } from "@/lib/supabase/queries/shops"
+import { getAllStatesWithShops, getAllShopTypes } from "@/lib/supabase/queries/shops"
 import { DirectoryClient } from "@/components/directory/DirectoryClient"
-
-/* ─────────────────────────────────────────────────────────
-   /directory — Server Component shell
-   ───────────────────────────────────────────────────────── */
+import { SITE_NAME } from "@/lib/constants"
 
 export const metadata: Metadata = {
-  title: "Find a Club Fitter Near You",
-  description:
-    "Search 1,200+ independent golf club fitting shops, simulators, and retailers across all 50 states. Filter by state, shop type, fitting availability, and rating.",
+  title: "Find a Fitter",
+  description: `Search and filter ${SITE_NAME}'s comprehensive directory of independent golf club fitters, retailers, simulators, and pro shops across the United States.`,
 }
 
 export default async function DirectoryPage() {
-  const [states, typeCounts] = await Promise.all([
+  const [stateOptions, shopTypeOptions] = await Promise.all([
     getAllStatesWithShops().catch(() => []),
-    getShopTypeCounts().catch(() => ({})),
+    getAllShopTypes().catch(() => []),
   ])
 
   return (
-    <Suspense fallback={<DirectoryLoadingShell />}>
-      <DirectoryClient states={states} typeCounts={typeCounts} />
+    <Suspense fallback={<DirectoryLoading />}>
+      <DirectoryClient
+        stateOptions={stateOptions}
+        shopTypeOptions={shopTypeOptions}
+      />
     </Suspense>
   )
 }
 
-function DirectoryLoadingShell() {
+function DirectoryLoading() {
   return (
-    <div className="min-h-screen bg-[var(--color-off-white)] animate-pulse">
-      <div className="border-b border-[var(--color-gray-light)] bg-white py-8 px-6">
-        <div className="max-w-[1400px] mx-auto space-y-2">
-          <div className="h-3 w-32 rounded bg-[var(--color-gray-light)]" />
-          <div className="h-9 w-56 rounded bg-[var(--color-gray-light)]" />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="h-12 bg-[var(--color-cream)] rounded-lg animate-pulse mb-8" />
+      <div className="flex gap-8">
+        <div className="hidden lg:block w-56 shrink-0 space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-10 bg-[var(--color-cream)] rounded animate-pulse" />
+          ))}
         </div>
-      </div>
-      <div className="max-w-[1400px] mx-auto flex gap-6 p-6">
-        <div className="hidden lg:block w-[280px] h-[600px] rounded-md bg-white border border-[var(--color-gray-light)] shrink-0" />
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-40 rounded-md bg-white border border-[var(--color-gray-light)]" />
+            <div key={i} className="h-56 bg-[var(--color-cream)] border border-[var(--color-border)] rounded-lg animate-pulse" />
           ))}
         </div>
       </div>

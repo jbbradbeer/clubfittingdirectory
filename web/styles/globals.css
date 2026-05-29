@@ -1,20 +1,43 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────
-   DESIGN TOKENS
+   DESIGN TOKENS — The Tuxedo Collective
    ───────────────────────────────────────────────────────── */
 :root {
-  --color-green-deep:  #1B4332;
-  --color-green-hover: #163828;
-  --color-white:       #FFFFFF;
-  --color-off-white:   #F8F8F8;
-  --color-black:       #0A0A0A;
-  --color-gray:        #6B7280;
-  --color-gray-light:  #E0E0E0;
+  /* ── Greens (brand) ── */
+  --color-forest:       #18402e;
+  --color-forest-dark:  #0f2c1f;
+  --color-forest-light: #2f6347;
+  --color-forest-deep:  #0c2017;   /* near-black forest — dark sections/footer */
 
-  /* Font stacks (populated by layout.tsx via next/font) */
-  --font-display: "Instrument Serif", Georgia, serif;
-  --font-body:    "Inter", system-ui, sans-serif;
+  /* ── Soft tints (pills, hover fills) ── */
+  --color-forest-tint:  #e7efe9;   /* soft green */
+  --color-gold-tint:    #f6edd9;   /* soft gold */
+
+  /* ── Neutrals (clean, airy) ── */
+  --color-cream:      #f6f5f1;     /* light alternating-section bg */
+  --color-cream-dark: #eceae3;
+  --color-ivory:      #ffffff;     /* primary page background */
+  --color-white:      #ffffff;
+  --color-paper:      #ffffff;     /* cards */
+
+  /* ── Gold accent ── */
+  --color-gold:      #c2a05a;
+  --color-gold-dark: #a3823f;
+  --color-gold-ink:  #8a6a30;      /* darker gold for small text */
+
+  /* ── Text ── */
+  --color-charcoal:       #1c1f1a; /* near-black ink */
+  --color-charcoal-light: #5f6259;
+  --color-ink:            #1c1f1a;
+
+  /* ── Lines ── */
+  --color-border:         #e6e4dd;
+  --color-line:           #ededea; /* hairline rule */
+
+  /* ── Font stacks (populated by layout.tsx via next/font) ── */
+  --font-display: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+  --font-body:    "Hanken Grotesk", system-ui, -apple-system, sans-serif;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -32,12 +55,15 @@ html {
 }
 
 body {
-  background-color: var(--color-off-white);
-  color: var(--color-black);
+  background-color: var(--color-ivory);
+  color: var(--color-charcoal);
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.6;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -45,14 +71,40 @@ body {
    ───────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  line-height: 1.2;
-  color: var(--color-black);
-  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-charcoal);
+  font-weight: 700;
+  text-wrap: balance;
 }
 
-p {
-  font-family: var(--font-body);
-  color: var(--color-black);
+p { font-family: var(--font-body); }
+
+/* ── Font helpers ── */
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+
+/* Oversized display — bold sans, tight leading */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* Hairline rule */
+.rule {
+  border: none;
+  border-top: 1px solid var(--color-line);
+}
+
+/* Soft card shadows (clean, airy depth) */
+.shadow-card {
+  box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 1px 3px rgba(16, 24, 20, 0.06);
+}
+.shadow-card-hover {
+  box-shadow: 0 18px 42px -22px rgba(16, 24, 20, 0.38);
 }
 
 a {
@@ -60,63 +112,115 @@ a {
   text-decoration: none;
 }
 
-/* Green underline link */
-.link-green {
-  color: var(--color-green-deep);
+/* ── Link styles ── */
+.link-gold {
+  color: var(--color-gold);
   text-underline-offset: 3px;
   text-decoration: underline;
-  text-decoration-color: var(--color-gray-light);
+  text-decoration-color: var(--color-cream-dark);
   transition: color 0.2s, text-decoration-color 0.2s;
 }
-.link-green:hover {
-  color: var(--color-green-hover);
-  text-decoration-color: var(--color-green-deep);
+.link-gold:hover {
+  color: var(--color-gold-dark);
+  text-decoration-color: var(--color-gold);
 }
 
 /* ─────────────────────────────────────────────────────────
    TEXT SELECTION
    ───────────────────────────────────────────────────────── */
 ::selection {
-  background-color: var(--color-green-deep);
-  color: #FFFFFF;
+  background-color: var(--color-forest);
+  color: #ffffff;
 }
 ::-moz-selection {
-  background-color: var(--color-green-deep);
-  color: #FFFFFF;
+  background-color: var(--color-forest);
+  color: #ffffff;
 }
 
 /* ─────────────────────────────────────────────────────────
-   CUSTOM SCROLLBAR  (Chromium + Firefox)
+   CUSTOM SCROLLBAR
    ───────────────────────────────────────────────────────── */
-
-/* Chromium */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-off-white);
-}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-cream); }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-green-deep);
+  background: var(--color-forest);
   border-radius: 4px;
-  border: 2px solid var(--color-off-white);
+  border: 2px solid var(--color-cream);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-green-hover);
-}
+::-webkit-scrollbar-thumb:hover { background: var(--color-forest-dark); }
 
-/* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-green-deep) var(--color-off-white);
+  scrollbar-color: var(--color-forest) var(--color-cream);
 }
 
 /* ─────────────────────────────────────────────────────────
    FOCUS STYLES (accessibility)
    ───────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--color-green-deep);
+  outline: 2px solid var(--color-gold);
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+/* ─────────────────────────────────────────────────────────
+   SECTION LABEL (uppercase eyebrow)
+   ───────────────────────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+
+/* Eyebrow with a leading gold rule (editorial) */
+.section-label.with-rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-label.with-rule::before {
+  content: "";
+  width: 2rem;
+  height: 1px;
+  background: var(--color-gold);
+}
+
+/* ─────────────────────────────────────────────────────────
+   PAPER GRAIN TEXTURE
+   ───────────────────────────────────────────────────────── */
+.bg-grain {
+  position: relative;
+}
+.bg-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─────────────────────────────────────────────────────────
+   FADE-IN ANIMATION
+   ───────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.stagger-children > * { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; }
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }

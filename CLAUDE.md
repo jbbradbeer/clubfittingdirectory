@@ -1,4 +1,6 @@
-# CLAUDE.md — BTG Golf Club Fitting Directory
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 This file tells Claude how to work with you on this project. It is automatically read at the start of every conversation.
 
@@ -148,7 +150,7 @@ BTG Clubfitting directory/
 - One task per subagent for focused execution
 
 ### 3. Self-Improvement Loop
-- After ANY correction from the user: update memory files with the pattern
+- After ANY correction from the user: update `tasks/lessons.md` with the pattern
 - Write rules for yourself that prevent the same mistake
 - Ruthlessly iterate on these lessons until mistake rate drops
 - Review lessons at session start for relevant project
@@ -180,7 +182,7 @@ BTG Clubfitting directory/
 3. **Track Progress**: Mark items complete as you go
 4. **Explain Changes**: High-level summary at each step
 5. **Document Results**: Add review section to `tasks/todo.md`
-6. **Capture Lessons**: Update memory files after corrections
+6. **Capture Lessons**: Update `tasks/lessons.md` after corrections
 
 ---
 

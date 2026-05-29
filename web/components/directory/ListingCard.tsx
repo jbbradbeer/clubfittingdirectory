@@ -1,166 +1,130 @@
 import Link from "next/link"
-import { Card, CardFooter } from "@/components/ui/Card"
-import { Badge } from "@/components/ui/Badge"
+import { MapPin, Wrench } from "lucide-react"
 import { RatingStars } from "@/components/ui/RatingStars"
 import type { ListingCardProps } from "@/types/shop"
-
-/* ─────────────────────────────────────────────────────────
-   LISTING CARD
-   The primary display unit for every shop in the directory.
-   White card, gray border, green left border on hover.
-   Clean, editorial, text-first layout.
-   ───────────────────────────────────────────────────────── */
 
 export function ListingCard({
   name,
   shop_type,
-  primary_service,
   city,
-  state,
   state_code,
   rating,
   rating_tier,
-  services,
   services_array,
   offers_fitting,
   fitting_environment,
-  phone,
-  website,
   verified,
   slug,
+  is_featured,
   distance_km,
-}: ListingCardProps) {
-  /* Parse services — prefer the array, fall back to pipe-split string */
-  const serviceList: string[] =
-    services_array?.length
-      ? services_array
-      : services
-        ? services.split("|").map((s) => s.trim()).filter(Boolean)
-        : []
-
-  const visibleServices = serviceList.slice(0, 4)
-  const extraCount      = Math.max(0, serviceList.length - 4)
+}: ListingCardProps & { reviews?: number | null; is_featured?: boolean }) {
+  const monogram = name?.trim()?.charAt(0)?.toUpperCase() || "•"
 
   return (
-    <Card
-      interactive
-      className="group relative overflow-hidden flex flex-col"
+    <Link
+      href={`/listing/${slug}`}
+      className="group flex flex-col bg-[var(--color-paper)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
     >
-      {/* ── Top badges row ── */}
-      <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-0">
-        {/* Fitting callout */}
-        {offers_fitting ? (
-          <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] tracking-wide">
-            Fitting Available
-            {fitting_environment ? (
-              <span className="text-[var(--color-gray)] font-normal">
-                {" "}({fitting_environment})
-              </span>
-            ) : null}
-          </span>
-        ) : (
-          <span />
-        )}
+      {/* ── Branded cover (photo-less) ── */}
+      <div className="relative aspect-[16/10] bg-gradient-to-br from-[var(--color-forest-light)] via-[var(--color-forest)] to-[var(--color-forest-deep)] flex items-center justify-center overflow-hidden">
+        {/* decorative ring */}
+        <div className="absolute -right-8 -top-10 w-36 h-36 rounded-full border border-white/10" />
+        <div className="absolute -right-2 -bottom-12 w-40 h-40 rounded-full border border-white/10" />
+        <span
+          className="text-white/95 text-6xl leading-none"
+          style={{ fontFamily: "var(--font-display)", fontWeight: 800 }}
+        >
+          {monogram}
+        </span>
 
-        {/* Right side: shop_type + verified */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          {verified && <Badge variant="verified" />}
-          {shop_type && (
-            <Badge variant="default">{shop_type}</Badge>
+        {/* tier pills (top-left) */}
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+          {is_featured && (
+            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-[var(--color-gold)] text-[var(--color-forest-deep)]">
+              Featured
+            </span>
           )}
-        </div>
-      </div>
-
-      {/* ── Main content ── */}
-      <div className="flex-1 px-5 pt-3 pb-4 space-y-2.5">
-
-        {/* Headline: listing name */}
-        <h3 className="font-[family-name:var(--font-display)] text-xl font-normal leading-tight">
-          <Link
-            href={`/listing/${slug}`}
-            className="text-[var(--color-black)] group-hover:text-[var(--color-green-deep)] transition-colors duration-200 underline-offset-3 group-hover:underline decoration-[var(--color-green-deep)]"
-          >
-            {name}
-          </Link>
-        </h3>
-
-        {/* Subheadline: location */}
-        <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)]">
-          {city}, {state}
-        </p>
-
-        {/* Rating + distance row */}
-        <div className="flex items-center gap-2.5 flex-wrap">
-          {rating !== null && rating > 0 ? (
-            <>
-              <RatingStars rating={rating} size="sm" />
-              <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] tabular-nums">
-                {rating.toFixed(1)}
-              </span>
-              {rating_tier && (
-                <span className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)]">
-                  · {rating_tier}
-                </span>
-              )}
-            </>
-          ) : null}
-          {distance_km !== undefined && (
-            <span className="inline-flex items-center font-[family-name:var(--font-body)] text-[10px] font-medium text-[var(--color-green-deep)] bg-[#1B43320A] border border-[#1B433230] rounded px-1.5 py-0.5 tabular-nums">
-              📍 {distance_km < 1
-                ? `${(distance_km * 1000).toFixed(0)} m`
-                : `${distance_km.toFixed(1)} km`}
+          {!is_featured && rating_tier === "Top Rated" && (
+            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-white/90 text-[var(--color-forest)]">
+              Top Rated
+            </span>
+          )}
+          {verified && (
+            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-white/15 text-white backdrop-blur-sm">
+              Verified
             </span>
           )}
         </div>
 
-        {/* Services pills */}
-        {visibleServices.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-0.5">
-            {visibleServices.map((svc) => (
-              <Badge key={svc} variant="default" className="text-[10px] px-2 py-px">
-                {svc}
-              </Badge>
-            ))}
-            {extraCount > 0 && (
-              <span className="inline-flex items-center text-[10px] text-[var(--color-gray)] font-[family-name:var(--font-body)] px-1">
-                +{extraCount} more
-              </span>
-            )}
+        {/* distance pill (top-right) */}
+        {distance_km != null && (
+          <div className="absolute top-3 right-3">
+            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-white/90 text-[var(--color-forest)]">
+              {distance_km < 1 ? "< 1 km" : `${Math.round(distance_km)} km`}
+            </span>
           </div>
         )}
       </div>
 
-      {/* ── Footer: phone left, website right ── */}
-      <CardFooter className="flex items-center justify-between gap-4">
-        {phone ? (
-          <a
-            href={`tel:${phone.replace(/\D/g, "")}`}
-            className="font-[family-name:var(--font-body)] text-xs text-[var(--color-gray)] hover:text-[var(--color-black)] transition-colors tracking-wide tabular-nums"
-            aria-label={`Call ${name}`}
-          >
-            {phone}
-          </a>
-        ) : (
-          <span />
+      {/* ── Body ── */}
+      <div className="flex flex-col flex-1 p-5">
+        {shop_type && (
+          <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-gold-ink)]">
+            {shop_type}
+          </span>
+        )}
+        <h3
+          className="mt-1.5 text-lg font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {name}
+        </h3>
+
+        <div className="mt-2 flex items-center gap-1.5 text-sm text-[var(--color-charcoal-light)]">
+          <MapPin size={14} className="text-[var(--color-gold)] shrink-0" />
+          {city}, {state_code}
+        </div>
+
+        {rating && (
+          <div className="mt-2.5">
+            <RatingStars rating={rating} size="sm" />
+          </div>
         )}
 
-        {website ? (
-          <a
-            href={website.startsWith("http") ? website : `https://${website}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors group/link"
-          >
-            Visit Website{" "}
-            <span
-              className="inline-block transition-transform duration-150 group-hover/link:translate-x-0.5"
-              aria-hidden="true"
-            >
-              →
+        {offers_fitting && (
+          <div className="mt-2.5 flex items-center gap-1.5 text-sm text-[var(--color-charcoal)]">
+            <Wrench size={14} className="text-[var(--color-forest)] shrink-0" />
+            <span>
+              Club fitting
+              {fitting_environment ? ` · ${fitting_environment}` : ""}
             </span>
-          </a>
-        ) : null}
-      </CardFooter>
-    </Card>
+          </div>
+        )}
+
+        {services_array && services_array.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-[var(--color-line)] flex flex-wrap gap-1.5">
+            {services_array.slice(0, 3).map((service) => (
+              <span
+                key={service}
+                className="text-xs px-2.5 py-1 bg-[var(--color-cream)] text-[var(--color-charcoal-light)] rounded-full"
+              >
+                {service}
+              </span>
+            ))}
+            {services_array.length > 3 && (
+              <span className="text-xs px-2.5 py-1 text-[var(--color-charcoal-light)]">
+                +{services_array.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* CTA hint pinned to bottom */}
+        <div className="mt-auto pt-4 flex items-center gap-1 text-sm font-semibold text-[var(--color-forest)] group-hover:gap-2 transition-all">
+          View details
+          <span aria-hidden="true">&rarr;</span>
+        </div>
+      </div>
+    </Link>
   )
 }

@@ -1,486 +1,324 @@
 "use client"
 
-import { useState, useEffect, useCallback, useTransition } from "react"
-import { useRouter, useSearchParams, usePathname } from "next/navigation"
-import dynamic from "next/dynamic"
+import { useState, useEffect, useCallback } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { MapPin, List, Map, Locate, X } from "lucide-react"
 import { getListings, getNearMeListings } from "@/lib/supabase/queries/listings"
-import type { DirectoryFilters, DirectoryResult, NearMeShop } from "@/lib/supabase/queries/listings"
-import { FilterSidebar } from "./FilterSidebar"
+import type { Shop } from "@/types/shop"
+import type { NearMeShop } from "@/lib/supabase/queries/listings"
 import { SearchBar } from "./SearchBar"
+import { FilterSidebar } from "./FilterSidebar"
 import { ResultsGrid } from "./ResultsGrid"
-import { ListingCard } from "./ListingCard"
-import { SlidersHorizontal, X, LocateFixed, List, Map as MapIcon } from "lucide-react"
+import { MapView } from "./MapView"
 
-/* Dynamic import — MapView uses Leaflet which requires the browser window object */
-const MapView = dynamic(() => import("./MapView"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full rounded-md border border-[var(--color-gray-light)] bg-[var(--color-off-white)] animate-pulse"
-      style={{ height: "calc(100vh - 200px)", minHeight: 400 }}
-    />
-  ),
-})
-
-/* ─────────────────────────────────────────────────────────
-   DIRECTORY CLIENT
-   Owns all interactive state for the /directory page:
-   • URL params ↔ filter state (fully synced)
-   • Supabase data fetching (client-side, reactive)
-   • Mobile filter drawer open/close
-   ───────────────────────────────────────────────────────── */
-
-interface Props {
-  states: { state_code: string; state: string; count: number }[]
-  typeCounts: Record<string, number>
+interface DirectoryClientProps {
+  stateOptions: { state_code: string; state: string; count: number }[]
+  shopTypeOptions: string[]
 }
 
-const SHOP_TYPES = [
-  "Clubfitter",
-  "Retailer",
-  "Simulator",
-  "Instruction",
-  "Driving Range",
-  "Golf Course / Pro Shop",
-]
+type ViewMode = "grid" | "map"
 
-const PRIMARY_SERVICES = [
-  "Club Fitting",
-  "Golf Retail",
-  "Golf Instruction",
-  "Golf Simulator",
-  "Club Repair",
-  "Custom Club Building",
-  "Driving Range",
-]
-
-/* Parse URL params into a DirectoryFilters object */
-function paramsToFilters(params: URLSearchParams): DirectoryFilters {
-  const shopTypes = params.getAll("type")
-  const services  = params.getAll("svc")
-  return {
-    q:          params.get("q") ?? undefined,
-    state:      params.get("state") ?? undefined,
-    shopTypes:  shopTypes.length  ? shopTypes  : undefined,
-    services:   services.length   ? services   : undefined,
-    fitting:    params.get("fitting") === "true" ? true : undefined,
-    fittingEnv: params.get("env") ?? undefined,
-    minRating:  params.get("rating") ? Number(params.get("rating")) : undefined,
-    sort:       (params.get("sort") as DirectoryFilters["sort"]) ?? "rating",
-    page:       params.get("page") ? Number(params.get("page")) : 1,
-  }
-}
-
-/* Serialize filters back into URL search params */
-function filtersToParams(filters: DirectoryFilters): URLSearchParams {
-  const p = new URLSearchParams()
-  if (filters.q)          p.set("q",       filters.q)
-  if (filters.state)      p.set("state",   filters.state)
-  filters.shopTypes?.forEach((t) => p.append("type", t))
-  filters.services?.forEach((s)  => p.append("svc",  s))
-  if (filters.fitting)    p.set("fitting", "true")
-  if (filters.fittingEnv) p.set("env",     filters.fittingEnv)
-  if (filters.minRating)  p.set("rating",  String(filters.minRating))
-  if (filters.sort && filters.sort !== "rating") p.set("sort", filters.sort)
-  if (filters.page && filters.page > 1)          p.set("page", String(filters.page))
-  return p
-}
-
-export function DirectoryClient({ states, typeCounts }: Props) {
-  const router     = useRouter()
-  const pathname   = usePathname()
+export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClientProps) {
+  const router = useRouter()
   const searchParams = useSearchParams()
 
-  /* Mobile filter drawer */
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [, startTransition]         = useTransition()
-
-  /* View mode: list grid vs map */
-  const [viewMode, setViewMode] = useState<"list" | "map">("list")
-
-  /* Near Me state */
-  const [nearMeLoading,  setNearMeLoading]  = useState(false)
-  const [nearMeShops,    setNearMeShops]    = useState<NearMeShop[] | null>(null)
-  const [nearMeLocation, setNearMeLocation] = useState<[number, number] | null>(null)
-  const [nearMeError,    setNearMeError]    = useState<string | null>(null)
-
-  /* Filter state initialised from URL */
-  const [filters, setFilters] = useState<DirectoryFilters>(() =>
-    paramsToFilters(searchParams),
+  /* ── State from URL params ── */
+  const [query, setQuery] = useState(searchParams.get("q") ?? "")
+  const [selectedState, setSelectedState] = useState(searchParams.get("state") ?? "")
+  const [selectedShopTypes, setSelectedShopTypes] = useState<string[]>(
+    searchParams.get("types")?.split(",").filter(Boolean) ?? [],
   )
+  const [fittingOnly, setFittingOnly] = useState(searchParams.get("fitting") === "true")
+  const [minRating, setMinRating] = useState(parseFloat(searchParams.get("rating") ?? "0"))
+  const [sort, setSort] = useState<"rating" | "name">(
+    (searchParams.get("sort") as "rating" | "name") ?? "rating",
+  )
+  const [page, setPage] = useState(parseInt(searchParams.get("page") ?? "1", 10))
+  const [viewMode, setViewMode] = useState<ViewMode>("grid")
 
-  /* Results state */
-  const [result, setResult]     = useState<DirectoryResult | null>(null)
-  const [loading, setLoading]   = useState(true)
-  const [error,   setError]     = useState<string | null>(null)
+  /* ── Results ── */
+  const [shops, setShops] = useState<Shop[]>([])
+  const [total, setTotal] = useState(0)
+  const [totalPages, setTotalPages] = useState(1)
+  const [loading, setLoading] = useState(true)
 
-  /* ── Sync URL → filters when params change externally ── */
-  useEffect(() => {
-    setFilters(paramsToFilters(searchParams))
-  }, [searchParams])
+  /* ── Near Me ── */
+  const [nearMeActive, setNearMeActive] = useState(false)
+  const [nearMeShops, setNearMeShops] = useState<NearMeShop[]>([])
+  const [nearMeLoading, setNearMeLoading] = useState(false)
+  const [nearMeError, setNearMeError] = useState<string | null>(null)
 
-  /* ── Fetch results whenever filters or view mode changes ── */
-  useEffect(() => {
-    let cancelled = false
+  /* ── Mobile filter drawer ── */
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
+  /* ── Sync URL params ── */
+  const syncUrl = useCallback(() => {
+    const params = new URLSearchParams()
+    if (query) params.set("q", query)
+    if (selectedState) params.set("state", selectedState)
+    if (selectedShopTypes.length) params.set("types", selectedShopTypes.join(","))
+    if (fittingOnly) params.set("fitting", "true")
+    if (minRating > 0) params.set("rating", String(minRating))
+    if (sort !== "rating") params.set("sort", sort)
+    if (page > 1) params.set("page", String(page))
+    const qs = params.toString()
+    router.replace(`/directory${qs ? `?${qs}` : ""}`, { scroll: false })
+  }, [query, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, router])
+
+  /* ── Fetch results ── */
+  const fetchResults = useCallback(async () => {
+    if (nearMeActive) return
     setLoading(true)
-    setError(null)
-
-    // In map mode: fetch more shops so all pins show at once (no pagination on map)
-    const effectiveFilters = viewMode === "map"
-      ? { ...filters, perPage: 500 }
-      : filters
-
-    getListings(effectiveFilters)
-      .then((data) => { if (!cancelled) { setResult(data); setLoading(false) } })
-      .catch((err)  => { if (!cancelled) { setError(String(err)); setLoading(false) } })
-
-    return () => { cancelled = true }
-  }, [filters, viewMode])
-
-  /* ── Push filter changes to URL ── */
-  const applyFilters = useCallback(
-    (next: DirectoryFilters) => {
-      const params = filtersToParams({ ...next, page: 1 })
-      startTransition(() => {
-        router.push(`${pathname}?${params.toString()}`, { scroll: false })
+    try {
+      const result = await getListings({
+        q: query || undefined,
+        state: selectedState || undefined,
+        shopTypes: selectedShopTypes.length ? selectedShopTypes : undefined,
+        fitting: fittingOnly || undefined,
+        minRating: minRating > 0 ? minRating : undefined,
+        sort,
+        page,
+        perPage: 24,
       })
-    },
-    [router, pathname],
-  )
+      setShops(result.shops)
+      setTotal(result.total)
+      setTotalPages(result.totalPages)
+    } catch {
+      setShops([])
+      setTotal(0)
+      setTotalPages(1)
+    } finally {
+      setLoading(false)
+    }
+  }, [query, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, nearMeActive])
 
-  /* Clear Near Me state helper */
-  const clearNearMe = useCallback(() => {
-    setNearMeShops(null)
-    setNearMeLocation(null)
-    setNearMeError(null)
-  }, [])
-
-  /* Merge a partial change and push — also clears Near Me */
-  const updateFilter = useCallback(
-    (partial: Partial<DirectoryFilters>) => {
-      clearNearMe()
-      const next = { ...filters, ...partial, page: 1 }
-      setFilters(next)
-      applyFilters(next)
-    },
-    [filters, applyFilters, clearNearMe],
-  )
-
-  const setPage = useCallback(
-    (page: number) => {
-      const next = { ...filters, page }
-      setFilters(next)
-      const params = filtersToParams(next)
-      startTransition(() => {
-        router.push(`${pathname}?${params.toString()}`, { scroll: true })
-      })
-    },
-    [filters, router, pathname],
-  )
-
-  const clearAll = useCallback(() => {
-    clearNearMe()
-    const next: DirectoryFilters = { sort: "rating", page: 1 }
-    setFilters(next)
-    router.push(pathname, { scroll: false })
-  }, [router, pathname, clearNearMe])
+  useEffect(() => {
+    fetchResults()
+    syncUrl()
+  }, [fetchResults, syncUrl])
 
   /* ── Near Me handler ── */
-  const handleNearMe = useCallback(() => {
+  const handleNearMe = async () => {
     if (!navigator.geolocation) {
-      setNearMeError("Your browser does not support location services.")
+      setNearMeError("Geolocation is not supported by your browser.")
       return
     }
     setNearMeLoading(true)
     setNearMeError(null)
-
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        const { latitude: lat, longitude: lng } = pos.coords
         try {
-          const shops = await getNearMeListings(lat, lng)
-          setNearMeShops(shops)
-          setNearMeLocation([lat, lng])
-          setViewMode("map")
+          const result = await getNearMeListings(pos.coords.latitude, pos.coords.longitude, 80, 50)
+          setNearMeShops(result)
+          setNearMeActive(true)
         } catch {
-          setNearMeError("Could not fetch nearby shops. Please try again.")
+          setNearMeError("Could not find shops near you. Try again.")
         } finally {
           setNearMeLoading(false)
         }
       },
       () => {
-        setNearMeError("Location access denied. Please allow location in your browser.")
+        setNearMeError("Location access denied. Please enable location services.")
         setNearMeLoading(false)
       },
-      { timeout: 10000, maximumAge: 60000 },
     )
-  }, [])
-
-  /* Prevent body scroll when drawer is open */
-  useEffect(() => {
-    document.body.style.overflow = drawerOpen ? "hidden" : ""
-    return () => { document.body.style.overflow = "" }
-  }, [drawerOpen])
-
-  /* Count active filters (for badge on mobile button) */
-  const activeFilterCount = [
-    filters.q,
-    filters.state,
-    ...(filters.shopTypes ?? []),
-    ...(filters.services  ?? []),
-    filters.fitting,
-    filters.minRating && filters.minRating > 0 ? true : undefined,
-  ].filter(Boolean).length
-
-  /* ── Shared sidebar props ── */
-  const sidebarProps = {
-    filters,
-    updateFilter,
-    clearAll,
-    states,
-    typeCounts,
-    shopTypes: SHOP_TYPES,
-    primaryServices: PRIMARY_SERVICES,
-    activeFilterCount,
   }
 
+  const clearNearMe = () => {
+    setNearMeActive(false)
+    setNearMeShops([])
+    fetchResults()
+  }
+
+  /* ── Filter helpers ── */
+  const activeFilterCount =
+    (selectedState ? 1 : 0) +
+    selectedShopTypes.length +
+    (fittingOnly ? 1 : 0) +
+    (minRating > 0 ? 1 : 0)
+
+  const resetFilters = () => {
+    setSelectedState("")
+    setSelectedShopTypes([])
+    setFittingOnly(false)
+    setMinRating(0)
+    setPage(1)
+  }
+
+  const handleSearchSubmit = () => {
+    setPage(1)
+  }
+
+  const displayShops = nearMeActive ? (nearMeShops as unknown as Shop[]) : shops
+
   return (
-    <div className="min-h-screen bg-[var(--color-off-white)]">
-
-      {/* ── Page header ── */}
-      <div className="border-b border-[var(--color-gray-light)] bg-white">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-8">
-          <p className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] uppercase text-[var(--color-green-deep)] mb-2">
-            Club Fitting Directory
-          </p>
-          <h1 className="font-[family-name:var(--font-display)] text-4xl font-normal text-[var(--color-black)]">
-            Find Your Fitter
-          </h1>
-          <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)] mt-1">
-            Search 1,200+ independent golf club fitting shops across all 50 states
-          </p>
-        </div>
-      </div>
-
-      {/* ── Search bar + controls ── */}
-      <div className="border-b border-[var(--color-gray-light)] bg-white">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
-          <SearchBar
-            value={filters.q ?? ""}
-            onChange={(q) => updateFilter({ q: q || undefined })}
-            className="flex-1"
-          />
-
-          {/* Near Me button */}
-          <button
-            onClick={handleNearMe}
-            disabled={nearMeLoading}
-            title="Find fitters near your current location"
-            className={[
-              "shrink-0 flex items-center gap-1.5 px-3 py-2.5 rounded-md",
-              "border font-[family-name:var(--font-body)] text-sm transition-colors",
-              nearMeShops
-                ? "border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-[#1B43320A]"
-                : "border-[var(--color-gray-light)] text-[var(--color-gray)] hover:border-[var(--color-green-deep)] hover:text-[var(--color-green-deep)]",
-              nearMeLoading ? "opacity-60 cursor-not-allowed" : "",
-            ].join(" ")}
-            aria-label="Find fitters near me"
-          >
-            <LocateFixed size={15} className={nearMeLoading ? "animate-pulse" : ""} />
-            <span className="hidden sm:inline">
-              {nearMeLoading ? "Locating…" : nearMeShops ? "Near Me ✓" : "Near Me"}
-            </span>
-          </button>
-
-          {/* List / Map toggle */}
-          <div className="shrink-0 flex rounded-md border border-[var(--color-gray-light)] overflow-hidden">
-            <button
-              onClick={() => setViewMode("list")}
-              aria-pressed={viewMode === "list"}
-              title="List view"
-              className={[
-                "flex items-center gap-1.5 px-3 py-2.5 font-[family-name:var(--font-body)] text-sm transition-colors",
-                viewMode === "list"
-                  ? "bg-[var(--color-green-deep)] text-white"
-                  : "bg-white text-[var(--color-gray)] hover:bg-[var(--color-off-white)]",
-              ].join(" ")}
-            >
-              <List size={14} />
-              <span className="hidden sm:inline">List</span>
-            </button>
-            <button
-              onClick={() => setViewMode("map")}
-              aria-pressed={viewMode === "map"}
-              title="Map view"
-              className={[
-                "flex items-center gap-1.5 px-3 py-2.5 font-[family-name:var(--font-body)] text-sm transition-colors border-l border-[var(--color-gray-light)]",
-                viewMode === "map"
-                  ? "bg-[var(--color-green-deep)] text-white"
-                  : "bg-white text-[var(--color-gray)] hover:bg-[var(--color-off-white)]",
-              ].join(" ")}
-            >
-              <MapIcon size={14} />
-              <span className="hidden sm:inline">Map</span>
-            </button>
-          </div>
-
-          {/* Mobile: Filter toggle button */}
-          <button
-            onClick={() => setDrawerOpen(true)}
-            className={[
-              "lg:hidden shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-md",
-              "border font-[family-name:var(--font-body)] text-sm transition-colors",
-              activeFilterCount > 0
-                ? "border-[var(--color-green-deep)] text-[var(--color-green-deep)] bg-[#1B43320A]"
-                : "border-[var(--color-gray-light)] text-[var(--color-gray)]",
-            ].join(" ")}
-            aria-label="Open filters"
-          >
-            <SlidersHorizontal size={16} />
-            Filters
-            {activeFilterCount > 0 && (
-              <span className="font-[family-name:var(--font-body)] text-xs bg-[var(--color-green-deep)] text-white rounded-full w-4 h-4 flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-        </div>
-
-        {/* Near Me error message */}
-        {nearMeError && (
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pb-3 flex items-center gap-3">
-            <p className="font-[family-name:var(--font-body)] text-xs text-red-600">{nearMeError}</p>
-            <button
-              onClick={handleNearMe}
-              className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] underline hover:no-underline transition-all cursor-pointer"
-            >
-              Try again
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* ── Main layout: sidebar + results ── */}
-      <div className="max-w-[1400px] mx-auto flex">
-
-        {/* Sticky left sidebar — desktop only */}
-        <aside className="hidden lg:block w-[280px] shrink-0 border-r border-[var(--color-gray-light)]">
-          <div className="sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <FilterSidebar {...sidebarProps} />
-          </div>
-        </aside>
-
-        {/* Results area */}
-        <main className="flex-1 min-w-0 px-4 sm:px-6 py-6">
-          {viewMode === "map" ? (
-            /* ── Map view ── */
-            <div className="relative">
-              {nearMeShops && (
-                <div className="flex items-center justify-between mb-4">
-                  <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-gray)]">
-                    <span className="text-[var(--color-black)] font-medium">{nearMeShops.length}</span> fitters near you
-                  </p>
-                  <button
-                    onClick={() => { clearNearMe(); setViewMode("list") }}
-                    className="font-[family-name:var(--font-body)] text-xs text-[var(--color-green-deep)] hover:text-[var(--color-green-hover)] transition-colors"
-                  >
-                    Clear Near Me ✕
-                  </button>
-                </div>
-              )}
-              <MapView
-                shops={result?.shops ?? []}
-                nearMeShops={nearMeShops ?? undefined}
-                userLocation={nearMeLocation ?? undefined}
-                isNearMe={!!nearMeShops}
-              />
-              {/* Below the map: compact card list for Near Me results */}
-              {nearMeShops && nearMeShops.length > 0 && (
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {nearMeShops.slice(0, 12).map((shop) => (
-                    <ListingCard
-                      key={shop.id}
-                      name={shop.name}
-                      shop_type={shop.shop_type}
-                      primary_service={shop.primary_service}
-                      city={shop.city}
-                      state={shop.state}
-                      state_code={shop.state_code}
-                      rating={shop.rating}
-                      rating_tier={shop.rating_tier}
-                      services={shop.services}
-                      services_array={shop.services_array ?? []}
-                      offers_fitting={shop.offers_fitting}
-                      fitting_environment={shop.fitting_environment}
-                      phone={shop.phone}
-                      website={shop.website}
-                      verified={shop.verified}
-                      slug={shop.slug}
-                      distance_km={shop.distance_km}
-                    />
-                  ))}
-                </div>
-              )}
+    <div>
+      {/* Top bar: search + controls */}
+      <div className="bg-white border-b border-[var(--color-cream-dark)] py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="flex-1">
+              <SearchBar value={query} onChange={setQuery} onSubmit={handleSearchSubmit} />
             </div>
-          ) : (
-            /* ── List view ── */
-            <ResultsGrid
-              result={result}
-              loading={loading}
-              error={error}
-              filters={filters}
-              onSort={(sort) => updateFilter({ sort })}
-              onPage={setPage}
-            />
-          )}
-        </main>
-      </div>
+            <div className="flex items-center gap-2">
+              {/* Near Me */}
+              {nearMeActive ? (
+                <button
+                  onClick={clearNearMe}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold bg-[var(--color-gold)] text-white rounded-lg hover:bg-[var(--color-gold-dark)] transition-colors cursor-pointer"
+                >
+                  <MapPin size={14} />
+                  Near Me
+                  <X size={14} />
+                </button>
+              ) : (
+                <button
+                  onClick={handleNearMe}
+                  disabled={nearMeLoading}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-lg hover:bg-[var(--color-cream)] transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  <Locate size={14} />
+                  {nearMeLoading ? "Locating..." : "Near Me"}
+                </button>
+              )}
 
-      {/* ── Mobile filter drawer overlay ── */}
-      <>
-        {/* Backdrop */}
-        <div
-          aria-hidden="true"
-          onClick={() => setDrawerOpen(false)}
-          className={[
-            "fixed inset-0 z-40 bg-black/60 lg:hidden transition-opacity duration-300",
-            drawerOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
-          ].join(" ")}
-        />
+              {/* View toggle */}
+              <div className="flex items-center border border-[var(--color-border)] rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-2.5 transition-colors cursor-pointer ${
+                    viewMode === "grid"
+                      ? "bg-[var(--color-forest)] text-white"
+                      : "text-[var(--color-charcoal-light)] hover:bg-[var(--color-cream)]"
+                  }`}
+                  aria-label="Grid view"
+                >
+                  <List size={16} />
+                </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={`p-2.5 transition-colors cursor-pointer ${
+                    viewMode === "map"
+                      ? "bg-[var(--color-forest)] text-white"
+                      : "text-[var(--color-charcoal-light)] hover:bg-[var(--color-cream)]"
+                  }`}
+                  aria-label="Map view"
+                >
+                  <Map size={16} />
+                </button>
+              </div>
 
-        {/* Drawer panel */}
-        <div
-          role="dialog"
-          aria-label="Filter options"
-          aria-modal="true"
-          className={[
-            "fixed inset-y-0 left-0 z-50 w-[300px] lg:hidden",
-            "bg-white",
-            "border-r border-[var(--color-gray-light)]",
-            "overflow-y-auto",
-            "transition-transform duration-300 ease-in-out",
-            drawerOpen ? "translate-x-0" : "-translate-x-full",
-          ].join(" ")}
-        >
-          {/* Drawer header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-white border-b border-[var(--color-gray-light)]">
-            <span className="font-[family-name:var(--font-body)] text-lg font-semibold text-[var(--color-black)]">
-              Filters
-            </span>
-            <button
-              onClick={() => setDrawerOpen(false)}
-              className="p-1.5 text-[var(--color-gray)] hover:text-[var(--color-green-deep)] transition-colors"
-              aria-label="Close filters"
-            >
-              <X size={20} />
-            </button>
+              {/* Sort */}
+              <select
+                value={sort}
+                onChange={(e) => {
+                  setSort(e.target.value as "rating" | "name")
+                  setPage(1)
+                }}
+                className="hidden sm:block px-3 py-2.5 text-sm border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-charcoal)] focus:outline-none focus:border-[var(--color-gold)] cursor-pointer"
+              >
+                <option value="rating">Top Rated</option>
+                <option value="name">Alphabetical</option>
+              </select>
+
+              {/* Mobile filter toggle */}
+              <button
+                onClick={() => setFiltersOpen(!filtersOpen)}
+                className="lg:hidden inline-flex items-center gap-1.5 px-3 py-2.5 text-sm font-semibold border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
+              >
+                Filters
+                {activeFilterCount > 0 && (
+                  <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-[var(--color-gold)] text-white rounded-full">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
 
-          <FilterSidebar {...sidebarProps} onApply={() => setDrawerOpen(false)} />
+          {nearMeError && (
+            <div className="mt-3 flex items-center gap-2 text-sm text-red-600">
+              <span>{nearMeError}</span>
+              <button
+                onClick={handleNearMe}
+                className="text-xs font-semibold underline cursor-pointer"
+              >
+                Try again
+              </button>
+            </div>
+          )}
         </div>
-      </>
+      </div>
+
+      {/* Main content: sidebar + results */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex gap-8">
+          {/* Desktop sidebar */}
+          <div className="hidden lg:block w-56 shrink-0">
+            <FilterSidebar
+              stateOptions={stateOptions}
+              shopTypeOptions={shopTypeOptions}
+              selectedState={selectedState}
+              selectedShopTypes={selectedShopTypes}
+              fittingOnly={fittingOnly}
+              minRating={minRating}
+              onStateChange={(s) => { setSelectedState(s); setPage(1) }}
+              onShopTypesChange={(t) => { setSelectedShopTypes(t); setPage(1) }}
+              onFittingChange={(f) => { setFittingOnly(f); setPage(1) }}
+              onRatingChange={(r) => { setMinRating(r); setPage(1) }}
+              onReset={resetFilters}
+              activeFilterCount={activeFilterCount}
+            />
+          </div>
+
+          {/* Results area */}
+          <div className="flex-1 min-w-0">
+            {viewMode === "grid" ? (
+              <ResultsGrid
+                shops={displayShops}
+                total={nearMeActive ? nearMeShops.length : total}
+                page={nearMeActive ? 1 : page}
+                totalPages={nearMeActive ? 1 : totalPages}
+                onPageChange={setPage}
+                loading={loading && !nearMeActive}
+              />
+            ) : (
+              <MapView shops={displayShops} />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile filter drawer */}
+      {filtersOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setFiltersOpen(false)} />
+          <div className="absolute right-0 top-0 bottom-0 w-80 bg-white p-6 overflow-y-auto shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+                Filters
+              </h2>
+              <button onClick={() => setFiltersOpen(false)} className="p-1 cursor-pointer">
+                <X size={20} />
+              </button>
+            </div>
+            <FilterSidebar
+              stateOptions={stateOptions}
+              shopTypeOptions={shopTypeOptions}
+              selectedState={selectedState}
+              selectedShopTypes={selectedShopTypes}
+              fittingOnly={fittingOnly}
+              minRating={minRating}
+              onStateChange={(s) => { setSelectedState(s); setPage(1) }}
+              onShopTypesChange={(t) => { setSelectedShopTypes(t); setPage(1) }}
+              onFittingChange={(f) => { setFittingOnly(f); setPage(1) }}
+              onRatingChange={(r) => { setMinRating(r); setPage(1) }}
+              onReset={resetFilters}
+              activeFilterCount={activeFilterCount}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
-
-/* Export filter/service constants so other components can import them */
-export { SHOP_TYPES, PRIMARY_SERVICES }
