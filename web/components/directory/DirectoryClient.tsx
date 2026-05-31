@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { MapPin, List, Map, Locate, X } from "lucide-react"
 import { getListings, getNearMeListings } from "@/lib/supabase/queries/listings"
@@ -52,6 +52,11 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   /* ── Mobile filter drawer ── */
   const [filtersOpen, setFiltersOpen] = useState(false)
 
+  /* Sequence counter: each fetch gets a number; only the latest one is allowed
+     to write its results. Prevents a slow earlier request from overwriting the
+     correct newer one when filters change quickly. */
+  const fetchSeq = useRef(0)
+
   /* ── Sync URL params ── */
   const syncUrl = useCallback(() => {
     const params = new URLSearchParams()
@@ -69,6 +74,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   /* ── Fetch results ── */
   const fetchResults = useCallback(async () => {
     if (nearMeActive) return
+    const seq = ++fetchSeq.current
     setLoading(true)
     setLoadError(false)
     try {
@@ -82,10 +88,12 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
         page,
         perPage: 24,
       })
+      if (seq !== fetchSeq.current) return // a newer request superseded this one
       setShops(result.shops)
       setTotal(result.total)
       setTotalPages(result.totalPages)
     } catch (e) {
+      if (seq !== fetchSeq.current) return // ignore errors from stale requests
       // Surface the failure (Vercel logs) AND show a real error state, so a
       // broken connection is never disguised as "No results found".
       console.error("[directory] getListings failed:", e)
@@ -94,7 +102,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
       setTotalPages(1)
       setLoadError(true)
     } finally {
-      setLoading(false)
+      if (seq === fetchSeq.current) setLoading(false)
     }
   }, [query, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, nearMeActive])
 
@@ -102,6 +110,28 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     fetchResults()
     syncUrl()
   }, [fetchResults, syncUrl])
+
+  /* ── Keep the controls in sync when the URL changes from OUTSIDE this
+     component (browser Back/Forward, or an external link with query params).
+     Each setter only updates when the value actually differs, so our own
+     syncUrl() router.replace() can't trigger a feedback loop. ── */
+  useEffect(() => {
+    const urlTypes = searchParams.get("types")?.split(",").filter(Boolean) ?? []
+    setQuery((prev) => (prev !== (searchParams.get("q") ?? "") ? (searchParams.get("q") ?? "") : prev))
+    setSelectedState((prev) => (prev !== (searchParams.get("state") ?? "") ? (searchParams.get("state") ?? "") : prev))
+    setSelectedShopTypes((prev) => (prev.join(",") !== urlTypes.join(",") ? urlTypes : prev))
+    setFittingOnly((prev) => (prev !== (searchParams.get("fitting") === "true") ? searchParams.get("fitting") === "true" : prev))
+    setMinRating((prev) => (prev !== parseFloat(searchParams.get("rating") ?? "0") ? parseFloat(searchParams.get("rating") ?? "0") : prev))
+    setSort((prev) => (prev !== ((searchParams.get("sort") as "rating" | "name") ?? "rating") ? ((searchParams.get("sort") as "rating" | "name") ?? "rating") : prev))
+    setPage((prev) => (prev !== parseInt(searchParams.get("page") ?? "1", 10) ? parseInt(searchParams.get("page") ?? "1", 10) : prev))
+  }, [searchParams])
+
+  /* ── Auto-trigger Near Me when the page is opened via /directory?near=1
+     (e.g. the homepage "Near me" quick link). Runs once on mount. ── */
+  useEffect(() => {
+    if (searchParams.get("near") === "1") handleNearMe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   /* ── Near Me handler ── */
   const handleNearMe = async () => {

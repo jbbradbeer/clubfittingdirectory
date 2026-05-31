@@ -15,16 +15,19 @@ config. Findings below, grouped by severity. Plan organized into phases.
       honest copy (no numbers) when stats unavailable (`hasStats` guard).
 - [x] H4. Search error state → `DirectoryClient` now tracks `loadError`, logs the failure, and shows a
       distinct "Couldn't load listings — Try again" state in `ResultsGrid` (vs "No results found").
-- [ ] H5. Async race in `DirectoryClient`: overlapping `getListings` fetches, last-to-resolve wins
-      → stale results can clobber correct ones. Add sequence guard / AbortController.
-- [ ] H6. Homepage "Near me" link `/directory?near=1` does nothing (param never read).
+- [x] H5. Async race in `DirectoryClient` → added `fetchSeq` ref; only the latest request writes
+      results / clears loading. Stale responses are ignored. (Phase 2)
+- [x] H6. Homepage "Near me" link `/directory?near=1` → `DirectoryClient` now reads `near=1` on mount
+      and auto-triggers `handleNearMe()`. (Phase 2)
 
 ### Medium — correctness & SEO
-- [ ] M1. `getShopBySlug` uses `.single()` → 500 if two active rows share a slug. Use `.maybeSingle()`.
+- [x] M1. `getShopBySlug` `.single()` → replaced with `.order(rating).limit(1)` + `data?.[0] ?? null`:
+      never 500s on duplicate slugs, returns null for no rows. (Phase 2)
 - [ ] M2. City page breadcrumb JSON-LD is wrong (reuses shop schema → broken level-4 link).
 - [ ] M3. Sitemap lists category URLs that 404 when a shop_type has zero active shops.
 - [ ] M4. `aggregateRating` emitted without `reviewCount` → Google flags invalid structured data.
-- [ ] M5. URL/state desync: filters init from URL only at mount → browser Back/Forward leaves UI stale.
+- [x] M5. URL/state desync → `DirectoryClient` now re-syncs controls from `searchParams` (guarded
+      functional setState, no feedback loop) so Back/Forward updates the UI. (Phase 2)
 - [ ] M6. ESLint broken (no flat config) → `npm run lint` errors, zero coverage.
 - [ ] M7. Leaflet `new L.Icon` at module top level (SSR-fragile) + lat/lng `0` truthiness drop +
       no "no mappable results" empty state.
@@ -49,7 +52,13 @@ config. Findings below, grouped by severity. Plan organized into phases.
 - [x] Phase 1 — Resilience & visibility (H1–H4): DONE. Env guard, logging on all data fetches,
       visible search error+retry, fake stats removed. Typecheck passes; homepage/listing/directory
       verified HTTP 200 locally with real data (homepage now shows real 1,000 count, not fake 1,049).
-- [ ] Phase 2 — Correctness (H5, H6, M1, M5): fetch race, Near-me link, maybeSingle, URL sync.
+- [x] Phase 2 — Correctness (H5, H6, M1, M5): DONE. Fetch race guard, Near-me link, limit(1) slug
+      lookup, Back/Forward URL sync. BONUS (surfaced by Phase 1 logging — build threw 2,001
+      "Dynamic server usage" errors): switched the public read-only queries in shops.ts from the
+      cookie-based `createClient` to the cookie-free `createStaticClient`. App has no auth, so cookies
+      were never needed; this makes /listing, /city, /state, /category pages truly STATIC (● not ƒ) —
+      faster + better SEO — and clears the build errors. Typecheck + build pass; `next start` serves
+      listing/home/directory/city/state all HTTP 200.
 - [ ] Phase 3 — SEO correctness (M2, M3, M4): breadcrumb, sitemap 404s, aggregateRating.
 - [ ] Phase 4 — Robustness & polish (M6, M7, L1–L8): lint config, map safety, a11y, dedupe, CSP.
 

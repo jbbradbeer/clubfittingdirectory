@@ -1,4 +1,4 @@
-import { createClient, createStaticClient } from "@/lib/supabase/server"
+import { createStaticClient } from "@/lib/supabase/server"
 import type { Shop, ShopFilters } from "@/types/shop"
 
 /* Strip characters that have structural meaning inside a PostgREST
@@ -20,7 +20,7 @@ const CARD_FIELDS = [
 
 /* ── All active shops with optional filters ── */
 export async function getShops(filters: ShopFilters = {}): Promise<Shop[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
 
   let query = supabase
     .from("shops")
@@ -54,7 +54,7 @@ export async function getShops(filters: ShopFilters = {}): Promise<Shop[]> {
 
 /* ── Top-rated shops for the homepage ── */
 export async function getTopRatedShops(limit = 6): Promise<Shop[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data, error } = await supabase
     .from("shops")
     .select(CARD_FIELDS)
@@ -70,26 +70,26 @@ export async function getTopRatedShops(limit = 6): Promise<Shop[]> {
 
 /* ── Single shop by slug ── */
 export async function getShopBySlug(slug: string): Promise<Shop | null> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
+  // Use limit(1) instead of .single(): .single() throws (→ 500) if two active
+  // rows ever share a slug. This selects the top match, returns null for "no
+  // rows", and never crashes on an accidental duplicate.
   const { data, error } = await supabase
     .from("shops")
     .select("*")
     .eq("slug", slug)
     .eq("status", "active")
-    .single()
+    .order("rating", { ascending: false, nullsFirst: false })
+    .limit(1)
 
-  if (error) {
-    // PGRST116 = "no rows returned" — genuine 404, return null
-    if (error.code === "PGRST116") return null
-    // Any other error is a real database problem — throw it
-    throw error
-  }
-  return data as Shop
+  // A real database error still throws; "no rows" is just an empty array → null.
+  if (error) throw error
+  return (data?.[0] as Shop) ?? null
 }
 
 /* ── Shops in a given state ── */
 export async function getShopsByState(stateCode: string): Promise<Shop[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data, error } = await supabase
     .from("shops")
     .select(CARD_FIELDS)
@@ -193,7 +193,7 @@ export async function getListings(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   clientOverride?: any,
 ): Promise<DirectoryResult> {
-  const supabase = clientOverride ?? (await createClient())
+  const supabase = clientOverride ?? createStaticClient()
   const page    = Math.max(1, filters.page    ?? 1)
   const perPage = Math.max(1, filters.perPage ?? 24)
   const from    = (page - 1) * perPage
@@ -343,7 +343,7 @@ export async function getNearbyShops(
   excludeSlug: string,
   limit = 3,
 ): Promise<Shop[]> {
-  const supabase = await createClient()
+  const supabase = createStaticClient()
   const { data, error } = await supabase
     .from("shops")
     .select(CARD_FIELDS)
