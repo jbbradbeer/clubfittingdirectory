@@ -1,6 +1,14 @@
 import { createClient, createStaticClient } from "@/lib/supabase/server"
 import type { Shop, ShopFilters } from "@/types/shop"
 
+/* Strip characters that have structural meaning inside a PostgREST
+   `.or()` / `.ilike` filter string (commas separate clauses, parens
+   group them, % and \ are LIKE wildcards/escapes). This prevents a
+   visitor's search text from breaking or altering the query. */
+function sanitizeSearchTerm(input: string): string {
+  return input.replace(/[,()%\\*]/g, " ").trim()
+}
+
 const CARD_FIELDS = [
   "id", "slug", "name", "shop_type", "primary_service",
   "city", "state", "state_code", "phone", "website",
@@ -23,8 +31,10 @@ export async function getShops(filters: ShopFilters = {}): Promise<Shop[]> {
   if (filters.shopType)     query = query.eq("shop_type", filters.shopType)
   if (filters.offersFitting !== undefined)
                             query = query.eq("offers_fitting", filters.offersFitting)
-  if (filters.search)
-    query = query.or(`name.ilike.%${filters.search}%,city.ilike.%${filters.search}%`)
+  if (filters.search) {
+    const term = sanitizeSearchTerm(filters.search)
+    if (term) query = query.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+  }
 
   if (filters.sort === "name")
     query = query.order("name", { ascending: true })
@@ -207,8 +217,8 @@ export async function getListings(
     let qq = q as any
 
     if (filters.q) {
-      const term = filters.q.trim()
-      qq = qq.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+      const term = sanitizeSearchTerm(filters.q)
+      if (term) qq = qq.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
     }
     if (filters.state) {
       qq = qq.eq("state_code", filters.state)
@@ -219,9 +229,11 @@ export async function getListings(
     if (filters.services && filters.services.length > 0) {
       // Match any service string — OR across each service term
       const orClauses = filters.services
+        .map((s) => sanitizeSearchTerm(s))
+        .filter(Boolean)
         .map((s) => `services.ilike.%${s}%`)
         .join(",")
-      qq = qq.or(orClauses)
+      if (orClauses) qq = qq.or(orClauses)
     }
     if (filters.fitting === true) {
       qq = qq.eq("offers_fitting", true)
@@ -308,7 +320,7 @@ export async function searchShops(
   q: string,
   limit = 6,
 ): Promise<SearchSuggestion[]> {
-  const term = q.trim()
+  const term = sanitizeSearchTerm(q)
   if (term.length < 2) return []
 
   const supabase = createStaticClient()
