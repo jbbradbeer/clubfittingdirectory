@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { SITE_URL } from "@/lib/constants"
+import { logQueryError } from "@/lib/utils"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -22,13 +23,13 @@ interface PageProps {
 export const revalidate = 86400
 
 export async function generateStaticParams() {
-  const slugs = await getAllShopSlugs().catch(() => [])
+  const slugs = await getAllShopSlugs().catch((e) => logQueryError("listing generateStaticParams getAllShopSlugs", e, []))
   return slugs
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const shop = await getShopBySlug(slug).catch(() => null)
+  const shop = await getShopBySlug(slug).catch((e) => logQueryError("listing generateMetadata getShopBySlug", e, null))
   if (!shop) return { title: "Fitter Not Found" }
 
   return {
@@ -49,10 +50,10 @@ function getTodayName(): string {
 
 export default async function ListingPage({ params }: PageProps) {
   const { slug } = await params
-  const shop = await getShopBySlug(slug).catch(() => null)
+  const shop = await getShopBySlug(slug).catch((e) => logQueryError("listing getShopBySlug", e, null))
   if (!shop) notFound()
 
-  const nearby = await getNearbyShops(shop.state_code, shop.slug, 3).catch(() => [])
+  const nearby = await getNearbyShops(shop.state_code, shop.slug, 3).catch((e) => logQueryError("listing getNearbyShops", e, []))
 
   const localBusinessSchema = buildLocalBusinessSchema(shop)
   const breadcrumbSchema = buildBreadcrumbSchema(shop)

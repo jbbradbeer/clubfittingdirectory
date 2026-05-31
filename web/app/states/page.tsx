@@ -3,6 +3,7 @@ import Link from "next/link"
 import { getAllStatesWithShops } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SITE_NAME } from "@/lib/constants"
+import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Browse by State",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 86400
 
 export default async function StatesPage() {
-  const states = await getAllStatesWithShops().catch(() => [])
+  const states = await getAllStatesWithShops().catch((e) => logQueryError("states getAllStatesWithShops", e, []))
 
   return (
     <>

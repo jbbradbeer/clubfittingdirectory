@@ -6,6 +6,7 @@ import {
 } from "@/lib/supabase/queries/shops"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { SITE_URL } from "@/lib/constants"
+import { logQueryError } from "@/lib/utils"
 
 /* ─────────────────────────────────────────────────────────
    SITEMAP
@@ -26,9 +27,9 @@ import { SITE_URL } from "@/lib/constants"
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Fetch all dynamic routes in parallel */
   const [slugs, stateCodes, citySlugs] = await Promise.all([
-    getAllShopSlugs().catch(() => [] as { slug: string }[]),
-    getAllStateCodes().catch(() => [] as string[]),
-    getAllCitySlugs().catch(() => [] as { citySlug: string }[]),
+    getAllShopSlugs().catch((e) => logQueryError("sitemap getAllShopSlugs", e, [] as { slug: string }[])),
+    getAllStateCodes().catch((e) => logQueryError("sitemap getAllStateCodes", e, [] as string[])),
+    getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string }[])),
   ])
 
   const now = new Date()

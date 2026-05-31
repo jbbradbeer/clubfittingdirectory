@@ -41,6 +41,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   const [total, setTotal] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
 
   /* ── Near Me ── */
   const [nearMeActive, setNearMeActive] = useState(false)
@@ -69,6 +70,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   const fetchResults = useCallback(async () => {
     if (nearMeActive) return
     setLoading(true)
+    setLoadError(false)
     try {
       const result = await getListings({
         q: query || undefined,
@@ -83,10 +85,14 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
       setShops(result.shops)
       setTotal(result.total)
       setTotalPages(result.totalPages)
-    } catch {
+    } catch (e) {
+      // Surface the failure (Vercel logs) AND show a real error state, so a
+      // broken connection is never disguised as "No results found".
+      console.error("[directory] getListings failed:", e)
       setShops([])
       setTotal(0)
       setTotalPages(1)
+      setLoadError(true)
     } finally {
       setLoading(false)
     }
@@ -291,6 +297,8 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
                 totalPages={nearMeActive ? 1 : totalPages}
                 onPageChange={setPage}
                 loading={loading && !nearMeActive}
+                error={loadError && !nearMeActive}
+                onRetry={fetchResults}
               />
             ) : (
               <MapView shops={displayShops} />

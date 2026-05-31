@@ -10,6 +10,7 @@ import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
 import { buildBreadcrumbSchema } from "@/lib/structured-data"
+import { logQueryError } from "@/lib/utils"
 
 interface PageProps {
   params: Promise<{ citySlug: string }>
@@ -18,13 +19,13 @@ interface PageProps {
 export const revalidate = 86400
 
 export async function generateStaticParams() {
-  const slugs = await getAllCitySlugs().catch(() => [])
+  const slugs = await getAllCitySlugs().catch((e) => logQueryError("city generateStaticParams getAllCitySlugs", e, []))
   return slugs
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { citySlug } = await params
-  const result = await getShopsForCityPage(citySlug).catch(() => null)
+  const result = await getShopsForCityPage(citySlug).catch((e) => logQueryError("city generateMetadata getShopsForCityPage", e, null))
   if (!result) return { title: "City Not Found" }
 
   const { city, state, shops } = result
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CityPage({ params }: PageProps) {
   const { citySlug } = await params
-  const result = await getShopsForCityPage(citySlug).catch(() => null)
+  const result = await getShopsForCityPage(citySlug).catch((e) => logQueryError("city getShopsForCityPage", e, null))
 
   if (!result) notFound()
 

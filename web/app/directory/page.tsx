@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import { getAllStatesWithShops, getAllShopTypes } from "@/lib/supabase/queries/shops"
 import { DirectoryClient } from "@/components/directory/DirectoryClient"
 import { SITE_NAME } from "@/lib/constants"
+import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Find a Fitter",
@@ -11,8 +12,8 @@ export const metadata: Metadata = {
 
 export default async function DirectoryPage() {
   const [stateOptions, shopTypeOptions] = await Promise.all([
-    getAllStatesWithShops().catch(() => []),
-    getAllShopTypes().catch(() => []),
+    getAllStatesWithShops().catch((e) => logQueryError("directory getAllStatesWithShops", e, [])),
+    getAllShopTypes().catch((e) => logQueryError("directory getAllShopTypes", e, [])),
   ])
 
   return (

@@ -8,6 +8,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
+import { logQueryError } from "@/lib/utils"
 
 interface PageProps {
   params: Promise<{ type: string }>
@@ -37,7 +38,7 @@ export default async function CategoryPage({ params }: PageProps) {
   const shopType = slugToShopType(slug)
   if (!shopType) notFound()
 
-  const result = await getShopsForCategoryPage(shopType.dbType).catch(() => null)
+  const result = await getShopsForCategoryPage(shopType.dbType).catch((e) => logQueryError("category getShopsForCategoryPage", e, null))
   if (!result || result.shops.length === 0) notFound()
 
   const { shops, stateBreakdown } = result

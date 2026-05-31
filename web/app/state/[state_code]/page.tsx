@@ -12,6 +12,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
+import { logQueryError } from "@/lib/utils"
 
 interface PageProps {
   params: Promise<{ state_code: string }>
@@ -20,14 +21,14 @@ interface PageProps {
 export const revalidate = 86400
 
 export async function generateStaticParams() {
-  const codes = await getAllStateCodes().catch(() => [])
+  const codes = await getAllStateCodes().catch((e) => logQueryError("state generateStaticParams getAllStateCodes", e, []))
   return codes.map((code) => ({ state_code: code.toLowerCase() }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { state_code } = await params
   const code = state_code.toUpperCase()
-  const states = await getAllStatesWithShops().catch(() => [])
+  const states = await getAllStatesWithShops().catch((e) => logQueryError("state generateMetadata getAllStatesWithShops", e, []))
   const stateInfo = states.find((s) => s.state_code === code)
   const stateName = stateInfo?.state ?? code
 
@@ -43,8 +44,8 @@ export default async function StatePage({ params }: PageProps) {
   const code = state_code.toUpperCase()
 
   const [result, states] = await Promise.all([
-    getShopsForStatePage(code).catch(() => null),
-    getAllStatesWithShops().catch(() => []),
+    getShopsForStatePage(code).catch((e) => logQueryError("state getShopsForStatePage", e, null)),
+    getAllStatesWithShops().catch((e) => logQueryError("state getAllStatesWithShops", e, [])),
   ])
 
   if (!result || result.shops.length === 0) notFound()

@@ -47,3 +47,9 @@ yarn-error.log*
 # TypeScript build info
 *.tsbuildinfo
 next-env.d.ts
+
+# Old pre-rebuild project backup (superseded by git history; not part of the app)
+Club fitting directory claude */
+
+# Local editor/launch config (not needed in the repo)
+.claude/launch.json

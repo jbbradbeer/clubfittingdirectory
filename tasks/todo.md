@@ -1,91 +1,57 @@
-# Homepage Refresh — shadcn UI rebuild (Phase: Homepage)
+# Codebase Bug Audit & Remediation Plan (2026-05-31)
 
-**Goal:** Refresh the homepage. Keep the forest/gold editorial brand + Bricolage/Hanken
-fonts, but meaningfully elevate the visuals and add a richer interaction. Build on the
-shadcn foundation already in place (cn(), cva, tokens).
+Context: Live site was down because Supabase env vars were missing on Vercel (now fixed
+by adding them + redeploy). Audit run afterward across data layer, pages, components, and
+config. Findings below, grouped by severity. Plan organized into phases.
 
-## Plan
+## Findings
 
-- [ ] 1. Add `searchShops(q, limit)` query — lightweight, returns name/city/state/slug/type/rating
-- [ ] 2. Add `/api/search` route handler — JSON suggestions for type-ahead
-- [ ] 3. Build `HeroSearch` client component — accessible search-as-you-type (debounced),
-      keyboard nav, brand-styled popover; Enter → /directory?q=, select → /listing/[slug]
-- [ ] 4. Add hero atmosphere CSS utilities to globals.css (soft aura gradient, contour lines, grain)
-- [ ] 5. Rewrite homepage HERO section — atmospheric bg, refined display type, HeroSearch, stat band
-- [ ] 6. Refine section rhythm/polish across the rest of the homepage (labels, dividers, hover)
-- [ ] 7. Verify: dev server compiles, homepage renders 200, manual visual check, lint
+### Critical / High — resilience & visibility (this is the class of bug that caused today's outage)
+- [x] H1. No env-var guard → ADDED `web/lib/supabase/env.ts` (validates + throws loudly at build/import);
+      `client.ts`/`server.ts` now use it instead of `process.env...!`.
+- [x] H2. Silent error swallowing → ADDED `logQueryError()` in `lib/utils.ts`; routed every page-level
+      `.catch` (page, listing, state, category, city, directory, states, sitemap, api/search) through it.
+- [x] H3. Homepage fake-stats fallback → removed; falls back to 0 + logs, and hero/trust line render
+      honest copy (no numbers) when stats unavailable (`hasStats` guard).
+- [x] H4. Search error state → `DirectoryClient` now tracks `loadError`, logs the failure, and shows a
+      distinct "Couldn't load listings — Try again" state in `ResultsGrid` (vs "No results found").
+- [ ] H5. Async race in `DirectoryClient`: overlapping `getListings` fetches, last-to-resolve wins
+      → stale results can clobber correct ones. Add sequence guard / AbortController.
+- [ ] H6. Homepage "Near me" link `/directory?near=1` does nothing (param never read).
 
-## Phase: Carry design language to all pages
+### Medium — correctness & SEO
+- [ ] M1. `getShopBySlug` uses `.single()` → 500 if two active rows share a slug. Use `.maybeSingle()`.
+- [ ] M2. City page breadcrumb JSON-LD is wrong (reuses shop schema → broken level-4 link).
+- [ ] M3. Sitemap lists category URLs that 404 when a shop_type has zero active shops.
+- [ ] M4. `aggregateRating` emitted without `reviewCount` → Google flags invalid structured data.
+- [ ] M5. URL/state desync: filters init from URL only at mount → browser Back/Forward leaves UI stale.
+- [ ] M6. ESLint broken (no flat config) → `npm run lint` errors, zero coverage.
+- [ ] M7. Leaflet `new L.Icon` at module top level (SSR-fragile) + lat/lng `0` truthiness drop +
+      no "no mappable results" empty state.
 
-- [ ] A. Build shared `PageHeader` component (atmospheric inner-page hero: gold-rule eyebrow,
-      display title, subtitle, breadcrumb, optional actions slot) — the consistency anchor
-- [ ] B. about → PageHeader + refine pillar/CTA cards to rounded-2xl shadow-card
-- [ ] C. contact → PageHeader + refine cards
-- [ ] D. states → PageHeader (centered) + refine state cards
-- [ ] E. state/[state_code] → PageHeader + refine chips
-- [ ] F. category/[type] → PageHeader + refine
-- [ ] G. city/[citySlug] → PageHeader + refine
-- [ ] H. listing/[slug] → atmospheric hero + gold eyebrow + align cards to brand
-- [ ] I. directory → atmospheric header strip + align control styling
-- [ ] J. Footer → subtle texture for cohesion (light touch)
-- [ ] K. Verify all routes 200, lint clean
+### Low — polish / robustness
+- [ ] L1. `HeroSearch`: abort not run on cleanup; `res.ok` not checked before `res.json()`.
+- [ ] L2. `as unknown as Shop` cast hides that `CARD_FIELDS` omits many required Shop fields.
+- [ ] L3. Duplicate SVG `clipPath id="halfClip"` in `RatingStars` (invalid dup DOM ids).
+- [ ] L4. Accessibility: sort `<select>` + filter controls lack associated labels / aria-label.
+- [ ] L5. Duplicated `CARD_FIELDS`/`sanitizeSearchTerm`/`DirectoryFilters` across shops.ts & listings.ts.
+- [ ] L6. CSP dead/permissive config: unused `frame-src` Google + `fonts.gstatic.com`; broad `img-src https:`.
+- [ ] L7. "Open today" computed at build w/ `revalidate=86400` → can be up to a day stale.
+- [ ] L8. City slug collisions (e.g. "St. Louis" vs "St Louis") can merge listings.
+
+### Verified OK (no action)
+- TypeScript typecheck passes (0 errors). Dynamic `params` correctly awaited everywhere.
+- Internal state links consistent (`/state/xx` singular). Maps DO load (img-src https: wildcard).
+- `sanitizeSearchTerm` properly mitigates ilike injection. Pagination range correct.
+
+## Plan (phased)
+
+- [x] Phase 1 — Resilience & visibility (H1–H4): DONE. Env guard, logging on all data fetches,
+      visible search error+retry, fake stats removed. Typecheck passes; homepage/listing/directory
+      verified HTTP 200 locally with real data (homepage now shows real 1,000 count, not fake 1,049).
+- [ ] Phase 2 — Correctness (H5, H6, M1, M5): fetch race, Near-me link, maybeSingle, URL sync.
+- [ ] Phase 3 — SEO correctness (M2, M3, M4): breadcrumb, sitemap 404s, aggregateRating.
+- [ ] Phase 4 — Robustness & polish (M6, M7, L1–L8): lint config, map safety, a11y, dedupe, CSP.
 
 ## Review
-
-**Homepage (done):** atmospheric hero (forest/gold aura + course contours + grain),
-display headline with hand-drawn gold underline, staggered fade-in, live type-ahead
-search (`HeroSearch` → `/api/search` → `searchShops`), "Popular" quick links.
-
-**Site-wide rollout (done):** built shared `components/layout/PageHeader.tsx` — the
-atmospheric hero used by about, contact, states (centered), state, category, city.
-Listing + directory got matching custom atmospheric headers (gold-rule eyebrow,
-display title). Cards aligned to brand (rounded-2xl + shadow-card). SearchBar +
-directory controls → pill shape. Footer got subtle grain.
-
-**New CSS utilities** (globals.css): `.hero-surface`, `.hero-contours`, `.grain`,
-`.gold-rule`. Note: `.hero-surface` intentionally has NO overflow:hidden so the
-hero search dropdown isn't clipped; contours self-contain via `.hero-contours`
-(inset:0 + overflow:hidden) and the fade mask.
-
-**Verified:** `tsc --noEmit` clean; all route types return 200 (home, directory,
-directory?q=, states, state/tx, category, city, about, contact, listing). Live
-search returns real Supabase data.
-
-**Not done / next candidates:** migrate remaining ui primitives (Badge, Card,
-Breadcrumb, RatingStars, SectionHeader) to cva/shadcn pattern; not-found/error/loading
-pages; optionally add type-ahead to the header search too.
-
----
-
-# Launch Fixes — Data Connection, Categories & Search (2026-05-31)
-
-## Phase 0 — Get data flowing (config) — user action
-- [x] Diagnosed: Supabase env vars missing in Vercel → empty homepage + search
-- [x] Gave user exact NEXT_PUBLIC_SUPABASE_URL + ANON_KEY to add in Vercel + redeploy
-
-## Phase 1 — Fix category taxonomy bug (code)
-- [ ] Create web/lib/shop-types.ts — single source of truth (dbType <-> slug <-> label)
-      Real DB values: Clubfitter, Retailer, Simulator, Golf Course / Pro Shop,
-      Instruction, Driving Range
-- [ ] Homepage app/page.tsx — use shared taxonomy so all 6 category circles show
-- [ ] app/category/[type]/page.tsx — use shared taxonomy (fixes broken/404 categories)
-- [ ] app/sitemap.ts — use shared taxonomy (stops emitting category URLs that 404)
-
-## Phase 2 — Strengthen search
-- [ ] Broaden search to match state name too (name + city + state) in all 3 search paths
-
-## Phase 3 — Verify
-- [x] Clean production build passes — all 6 category pages generate
-- [x] Spot-check queries: all 6 categories return shops; "Texas" state search works
-
-## Review (2026-05-31)
-- Root cause of "no functionality" was Phase 0: Supabase env vars absent in Vercel.
-  Features already existed; they were starved of data. User adding vars + redeploying.
-- New file `web/lib/shop-types.ts` is the single source of truth (dbType/slug/label).
-  Homepage, category page, and sitemap all consume it — previously each had a DIFFERENT
-  wrong mapping, so 5/6 homepage circles vanished and the sitemap emitted 404 category URLs.
-- Real DB shop_type values: Clubfitter, Retailer, Simulator, Golf Course / Pro Shop,
-  Instruction, Driving Range.
-- Search now matches state name too (name + city + state) in shops.ts (getShops,
-  applyFilters, searchShops) and listings.ts (getListings).
-- Also added the missing search sanitizer to listings.ts (only shops.ts had it before).
+(to be filled in after implementation)

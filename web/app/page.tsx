@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { HeroSearch } from "@/components/home/HeroSearch"
 import { SITE_NAME } from "@/lib/constants"
+import { logQueryError } from "@/lib/utils"
 
 export const revalidate = 3600
 
@@ -28,11 +29,15 @@ const STEPS = [
 
 export default async function HomePage() {
   const [topShops, states, typeCounts, stats] = await Promise.all([
-    getTopRatedShops(6).catch(() => []),
-    getAllStatesWithShops().catch(() => []),
-    getShopTypeCounts().catch(() => ({} as Record<string, number>)),
-    getDirectoryStats().catch(() => ({ total: 1049, states: 50, fitters: 400 })),
+    getTopRatedShops(6).catch((e) => logQueryError("homepage getTopRatedShops", e, [])),
+    getAllStatesWithShops().catch((e) => logQueryError("homepage getAllStatesWithShops", e, [])),
+    getShopTypeCounts().catch((e) => logQueryError("homepage getShopTypeCounts", e, {} as Record<string, number>)),
+    // No fabricated fallback: if stats can't load we show honest copy (see below)
+    // rather than invented numbers that won't match reality.
+    getDirectoryStats().catch((e) => logQueryError("homepage getDirectoryStats", e, { total: 0, states: 0, fitters: 0 })),
   ])
+
+  const hasStats = stats.total > 0
 
   const categories = SHOP_TYPES
     .map((t) => ({
@@ -87,7 +92,7 @@ export default async function HomePage() {
             className="mt-7 max-w-2xl mx-auto text-lg md:text-xl text-[var(--color-charcoal-light)] leading-relaxed animate-fade-in-up"
             style={{ animationDelay: "120ms" }}
           >
-            Search {stats.total.toLocaleString()}+ independent golf club fitters,
+            Search {hasStats ? `${stats.total.toLocaleString()}+ ` : ""}independent golf club fitters,
             retailers, and simulators across all 50 states.
           </p>
 
@@ -125,14 +130,18 @@ export default async function HomePage() {
             className="mt-9 flex items-center justify-center gap-x-3 gap-y-2 flex-wrap text-sm text-[var(--color-charcoal-light)] animate-fade-in-up"
             style={{ animationDelay: "300ms" }}
           >
-            <span>
-              <strong className="text-[var(--color-charcoal)] font-semibold">{stats.total.toLocaleString()}</strong> Fitters
-            </span>
-            <span className="text-[var(--color-border)]">•</span>
-            <span>
-              <strong className="text-[var(--color-charcoal)] font-semibold">{stats.states}</strong> States
-            </span>
-            <span className="text-[var(--color-border)]">•</span>
+            {hasStats && (
+              <>
+                <span>
+                  <strong className="text-[var(--color-charcoal)] font-semibold">{stats.total.toLocaleString()}</strong> Fitters
+                </span>
+                <span className="text-[var(--color-border)]">•</span>
+                <span>
+                  <strong className="text-[var(--color-charcoal)] font-semibold">{stats.states}</strong> States
+                </span>
+                <span className="text-[var(--color-border)]">•</span>
+              </>
+            )}
             <span>Curated &amp; Independent</span>
           </div>
         </div>

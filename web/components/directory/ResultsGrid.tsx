@@ -10,6 +10,8 @@ interface ResultsGridProps {
   totalPages: number
   onPageChange: (page: number) => void
   loading?: boolean
+  error?: boolean
+  onRetry?: () => void
 }
 
 export function ResultsGrid({
@@ -19,6 +21,8 @@ export function ResultsGrid({
   totalPages,
   onPageChange,
   loading,
+  error,
+  onRetry,
 }: ResultsGridProps) {
   if (loading) {
     return (
@@ -29,6 +33,30 @@ export function ResultsGrid({
             className="h-56 bg-[var(--color-cream)] border border-[var(--color-border)] rounded-lg animate-pulse"
           />
         ))}
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="py-16 text-center">
+        <p
+          className="text-2xl text-[var(--color-charcoal)]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          Couldn&apos;t load listings
+        </p>
+        <p className="mt-2 text-sm text-[var(--color-charcoal-light)]">
+          Something went wrong reaching the directory. Please try again.
+        </p>
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="mt-5 inline-flex items-center px-5 py-2.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
+          >
+            Try again
+          </button>
+        )}
       </div>
     )
   }

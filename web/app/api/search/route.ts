@@ -16,7 +16,10 @@ export async function GET(request: Request) {
       { suggestions },
       { headers: { "Cache-Control": "public, max-age=30, stale-while-revalidate=120" } },
     )
-  } catch {
+  } catch (e) {
+    // Log so a broken search backend is visible in Vercel logs, but still
+    // return an empty list (200) so the type-ahead UI degrades gracefully.
+    console.error("[api/search] searchShops failed:", e)
     return NextResponse.json({ suggestions: [] }, { status: 200 })
   }
 }
