@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next"
 import {
   getAllShopSlugs,
   getAllStateCodes,
-  getAllShopTypes,
   getAllCitySlugs,
 } from "@/lib/supabase/queries/shops"
+import { SHOP_TYPES } from "@/lib/shop-types"
 import { SITE_URL } from "@/lib/constants"
 
 /* ─────────────────────────────────────────────────────────
@@ -23,22 +23,11 @@ import { SITE_URL } from "@/lib/constants"
      - Listings: monthly (data changes occasionally)
    ───────────────────────────────────────────────────────── */
 
-/* Slug ↔ DB value — must match /app/category/[type]/page.tsx */
-const TYPE_TO_SLUG: Record<string, string> = {
-  "Clubfitter":            "club-fitters",
-  "Retailer":              "golf-retailers",
-  "Golf Course / Pro Shop": "golf-courses",
-  "Simulator":             "simulators",
-  "Instruction":           "instruction",
-  "Driving Range":         "driving-ranges",
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Fetch all dynamic routes in parallel */
-  const [slugs, stateCodes, shopTypes, citySlugs] = await Promise.all([
+  const [slugs, stateCodes, citySlugs] = await Promise.all([
     getAllShopSlugs().catch(() => [] as { slug: string }[]),
     getAllStateCodes().catch(() => [] as string[]),
-    getAllShopTypes().catch(() => [] as string[]),
     getAllCitySlugs().catch(() => [] as { citySlug: string }[]),
   ])
 
@@ -87,14 +76,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   /* ── Category pages (/category/club-fitters, …) ── */
-  const categoryRoutes: MetadataRoute.Sitemap = shopTypes
-    .filter((t) => TYPE_TO_SLUG[t])
-    .map((t) => ({
-      url:             `${SITE_URL}/category/${TYPE_TO_SLUG[t]}`,
-      lastModified:    now,
-      changeFrequency: "weekly" as const,
-      priority:        0.9,
-    }))
+  const categoryRoutes: MetadataRoute.Sitemap = SHOP_TYPES.map((t) => ({
+    url:             `${SITE_URL}/category/${t.slug}`,
+    lastModified:    now,
+    changeFrequency: "weekly" as const,
+    priority:        0.9,
+  }))
 
   /* ── City pages (/city/austin-tx, …) ── */
   const cityRoutes: MetadataRoute.Sitemap = citySlugs.map(({ citySlug }) => ({

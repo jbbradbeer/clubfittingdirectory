@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { getShopsForCategoryPage, getAllShopTypes } from "@/lib/supabase/queries/shops"
+import { getShopsForCategoryPage } from "@/lib/supabase/queries/shops"
+import { SHOP_TYPES, slugToShopType } from "@/lib/shop-types"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
@@ -12,44 +13,18 @@ interface PageProps {
   params: Promise<{ type: string }>
 }
 
-/* Map URL slugs to actual shop_type values in the database */
-const SLUG_TO_TYPE: Record<string, string> = {
-  "club-fitters":    "Clubfitter",
-  "golf-retailers":  "Golf Retailer",
-  "pro-shops":       "Pro Shop",
-  "golf-simulators": "Golf Simulator",
-  "golf-warehouses": "Golf Warehouse",
-  other:             "Other",
-}
-
-const TYPE_TO_LABEL: Record<string, string> = {
-  Clubfitter:       "Club Fitters",
-  "Golf Retailer":  "Golf Retailers",
-  "Pro Shop":       "Pro Shops",
-  "Golf Simulator": "Golf Simulators",
-  "Golf Warehouse": "Golf Warehouses",
-  Other:            "Other",
-}
-
 export const revalidate = 86400
 
 export async function generateStaticParams() {
-  const types = await getAllShopTypes().catch(() => [])
-  const reverseMap: Record<string, string> = {}
-  for (const [slug, type] of Object.entries(SLUG_TO_TYPE)) {
-    reverseMap[type] = slug
-  }
-  return types
-    .map((t) => ({ type: reverseMap[t] }))
-    .filter((p) => p.type)
+  return SHOP_TYPES.map((t) => ({ type: t.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { type: slug } = await params
-  const shopType = SLUG_TO_TYPE[slug]
+  const shopType = slugToShopType(slug)
   if (!shopType) return { title: "Category Not Found" }
 
-  const label = TYPE_TO_LABEL[shopType] ?? shopType
+  const label = shopType.label
   return {
     title: `${label} Directory`,
     description: `Browse all ${label.toLowerCase()} in our directory. Find ratings, services, contact info, and more.`,
@@ -59,14 +34,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CategoryPage({ params }: PageProps) {
   const { type: slug } = await params
-  const shopType = SLUG_TO_TYPE[slug]
+  const shopType = slugToShopType(slug)
   if (!shopType) notFound()
 
-  const result = await getShopsForCategoryPage(shopType).catch(() => null)
+  const result = await getShopsForCategoryPage(shopType.dbType).catch(() => null)
   if (!result || result.shops.length === 0) notFound()
 
   const { shops, stateBreakdown } = result
-  const label = TYPE_TO_LABEL[shopType] ?? shopType
+  const label = shopType.label
 
   return (
     <>

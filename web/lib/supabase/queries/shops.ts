@@ -33,7 +33,7 @@ export async function getShops(filters: ShopFilters = {}): Promise<Shop[]> {
                             query = query.eq("offers_fitting", filters.offersFitting)
   if (filters.search) {
     const term = sanitizeSearchTerm(filters.search)
-    if (term) query = query.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+    if (term) query = query.or(`name.ilike.%${term}%,city.ilike.%${term}%,state.ilike.%${term}%`)
   }
 
   if (filters.sort === "name")
@@ -218,7 +218,7 @@ export async function getListings(
 
     if (filters.q) {
       const term = sanitizeSearchTerm(filters.q)
-      if (term) qq = qq.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+      if (term) qq = qq.or(`name.ilike.%${term}%,city.ilike.%${term}%,state.ilike.%${term}%`)
     }
     if (filters.state) {
       qq = qq.eq("state_code", filters.state)
@@ -328,7 +328,7 @@ export async function searchShops(
     .from("shops")
     .select("slug, name, city, state_code, shop_type, rating")
     .eq("status", "active")
-    .or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+    .or(`name.ilike.%${term}%,city.ilike.%${term}%,state.ilike.%${term}%`)
     .order("is_featured", { ascending: false })
     .order("rating", { ascending: false, nullsFirst: false })
     .limit(limit)

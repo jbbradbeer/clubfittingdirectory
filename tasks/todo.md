@@ -54,3 +54,38 @@ search returns real Supabase data.
 **Not done / next candidates:** migrate remaining ui primitives (Badge, Card,
 Breadcrumb, RatingStars, SectionHeader) to cva/shadcn pattern; not-found/error/loading
 pages; optionally add type-ahead to the header search too.
+
+---
+
+# Launch Fixes — Data Connection, Categories & Search (2026-05-31)
+
+## Phase 0 — Get data flowing (config) — user action
+- [x] Diagnosed: Supabase env vars missing in Vercel → empty homepage + search
+- [x] Gave user exact NEXT_PUBLIC_SUPABASE_URL + ANON_KEY to add in Vercel + redeploy
+
+## Phase 1 — Fix category taxonomy bug (code)
+- [ ] Create web/lib/shop-types.ts — single source of truth (dbType <-> slug <-> label)
+      Real DB values: Clubfitter, Retailer, Simulator, Golf Course / Pro Shop,
+      Instruction, Driving Range
+- [ ] Homepage app/page.tsx — use shared taxonomy so all 6 category circles show
+- [ ] app/category/[type]/page.tsx — use shared taxonomy (fixes broken/404 categories)
+- [ ] app/sitemap.ts — use shared taxonomy (stops emitting category URLs that 404)
+
+## Phase 2 — Strengthen search
+- [ ] Broaden search to match state name too (name + city + state) in all 3 search paths
+
+## Phase 3 — Verify
+- [x] Clean production build passes — all 6 category pages generate
+- [x] Spot-check queries: all 6 categories return shops; "Texas" state search works
+
+## Review (2026-05-31)
+- Root cause of "no functionality" was Phase 0: Supabase env vars absent in Vercel.
+  Features already existed; they were starved of data. User adding vars + redeploying.
+- New file `web/lib/shop-types.ts` is the single source of truth (dbType/slug/label).
+  Homepage, category page, and sitemap all consume it — previously each had a DIFFERENT
+  wrong mapping, so 5/6 homepage circles vanished and the sitemap emitted 404 category URLs.
+- Real DB shop_type values: Clubfitter, Retailer, Simulator, Golf Course / Pro Shop,
+  Instruction, Driving Range.
+- Search now matches state name too (name + city + state) in shops.ts (getShops,
+  applyFilters, searchShops) and listings.ts (getListings).
+- Also added the missing search sanitizer to listings.ts (only shops.ts had it before).

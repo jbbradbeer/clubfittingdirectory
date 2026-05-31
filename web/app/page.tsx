@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { Search, Star, MapPin, Store, Wrench, ShoppingBag, Target, Warehouse, Users } from "lucide-react"
+import { Search, Star, MapPin, Store, Wrench, ShoppingBag, Target, GraduationCap, Flag } from "lucide-react"
 import { getTopRatedShops, getAllStatesWithShops, getShopTypeCounts, getDirectoryStats } from "@/lib/supabase/queries/shops"
+import { SHOP_TYPES } from "@/lib/shop-types"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
@@ -9,14 +10,14 @@ import { SITE_NAME } from "@/lib/constants"
 
 export const revalidate = 3600
 
-/* ─── Category metadata ─── */
-const CATEGORY_META: Record<string, { icon: React.ReactNode; label: string; slug: string }> = {
-  Clubfitter:       { icon: <Wrench size={24} />,       label: "Club Fitters",      slug: "club-fitters" },
-  "Golf Retailer":  { icon: <ShoppingBag size={24} />,  label: "Golf Retailers",    slug: "golf-retailers" },
-  "Pro Shop":       { icon: <Store size={24} />,        label: "Pro Shops",         slug: "pro-shops" },
-  "Golf Simulator": { icon: <Target size={24} />,       label: "Golf Simulators",   slug: "golf-simulators" },
-  "Golf Warehouse": { icon: <Warehouse size={24} />,    label: "Golf Warehouses",   slug: "golf-warehouses" },
-  "Other":          { icon: <Users size={24} />,        label: "Other",             slug: "other" },
+/* ─── Icon per category, keyed by slug (labels/slugs come from SHOP_TYPES) ─── */
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  "club-fitters":    <Wrench size={24} />,
+  "golf-retailers":  <ShoppingBag size={24} />,
+  "golf-simulators": <Target size={24} />,
+  "pro-shops":       <Store size={24} />,
+  "instruction":     <GraduationCap size={24} />,
+  "driving-ranges":  <Flag size={24} />,
 }
 
 const STEPS = [
@@ -33,8 +34,13 @@ export default async function HomePage() {
     getDirectoryStats().catch(() => ({ total: 1049, states: 50, fitters: 400 })),
   ])
 
-  const categories = Object.entries(CATEGORY_META)
-    .map(([type, meta]) => ({ ...meta, count: typeCounts[type] ?? 0 }))
+  const categories = SHOP_TYPES
+    .map((t) => ({
+      slug: t.slug,
+      label: t.label,
+      icon: CATEGORY_ICONS[t.slug],
+      count: typeCounts[t.dbType] ?? 0,
+    }))
     .filter((c) => c.count > 0)
 
   return (

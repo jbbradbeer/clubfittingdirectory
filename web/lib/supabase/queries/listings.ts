@@ -38,6 +38,13 @@ export interface DirectoryResult {
   totalPages: number
 }
 
+/* Strip characters with structural meaning in a PostgREST filter string
+   so a visitor's search text can't break or alter the query. Mirrors the
+   helper in shops.ts. */
+function sanitizeSearchTerm(input: string): string {
+  return input.replace(/[,()%\\*]/g, " ").trim()
+}
+
 export async function getListings(
   filters: DirectoryFilters = {},
 ): Promise<DirectoryResult> {
@@ -50,14 +57,18 @@ export async function getListings(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const applyFilters = (q: any) => {
     if (filters.q) {
-      const term = filters.q.trim()
-      q = q.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+      const term = sanitizeSearchTerm(filters.q)
+      if (term) q = q.or(`name.ilike.%${term}%,city.ilike.%${term}%,state.ilike.%${term}%`)
     }
     if (filters.state)                            q = q.eq("state_code", filters.state)
     if (filters.shopTypes?.length)                q = q.in("shop_type", filters.shopTypes)
     if (filters.services?.length) {
-      const orClauses = filters.services.map((s) => `services.ilike.%${s}%`).join(",")
-      q = q.or(orClauses)
+      const orClauses = filters.services
+        .map((s) => sanitizeSearchTerm(s))
+        .filter(Boolean)
+        .map((s) => `services.ilike.%${s}%`)
+        .join(",")
+      if (orClauses) q = q.or(orClauses)
     }
     if (filters.fitting === true)                 q = q.eq("offers_fitting", true)
     if (filters.fittingEnv)                       q = q.eq("fitting_environment", filters.fittingEnv)
