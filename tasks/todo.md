@@ -23,9 +23,12 @@ config. Findings below, grouped by severity. Plan organized into phases.
 ### Medium — correctness & SEO
 - [x] M1. `getShopBySlug` `.single()` → replaced with `.order(rating).limit(1)` + `data?.[0] ?? null`:
       never 500s on duplicate slugs, returns null for no rows. (Phase 2)
-- [ ] M2. City page breadcrumb JSON-LD is wrong (reuses shop schema → broken level-4 link).
-- [ ] M3. Sitemap lists category URLs that 404 when a shop_type has zero active shops.
-- [ ] M4. `aggregateRating` emitted without `reviewCount` → Google flags invalid structured data.
+- [x] M2. City breadcrumb → added `buildCityBreadcrumbSchema()` (Home > State > City, 3 levels);
+      city page uses it instead of the shop schema. Verified: clean 3-level JSON-LD, no /listing link. (Phase 3)
+- [x] M3. Sitemap category 404s → sitemap now fetches `getShopTypeCounts()` and only emits categories
+      with count > 0. Verified via /sitemap.xml. (Phase 3)
+- [x] M4. `aggregateRating` → now emitted only when BOTH rating > 0 AND reviews > 0, and always
+      includes `reviewCount`. Verified valid JSON-LD on a real listing. (Phase 3)
 - [x] M5. URL/state desync → `DirectoryClient` now re-syncs controls from `searchParams` (guarded
       functional setState, no feedback loop) so Back/Forward updates the UI. (Phase 2)
 - [ ] M6. ESLint broken (no flat config) → `npm run lint` errors, zero coverage.
@@ -59,7 +62,12 @@ config. Findings below, grouped by severity. Plan organized into phases.
       were never needed; this makes /listing, /city, /state, /category pages truly STATIC (● not ƒ) —
       faster + better SEO — and clears the build errors. Typecheck + build pass; `next start` serves
       listing/home/directory/city/state all HTTP 200.
-- [ ] Phase 3 — SEO correctness (M2, M3, M4): breadcrumb, sitemap 404s, aggregateRating.
+- [x] Phase 3 — SEO correctness (M2, M3, M4): DONE. City breadcrumb schema, sitemap excludes empty
+      categories, valid aggregateRating. Typecheck + build pass (0 errors, 1,723 pages); JSON-LD and
+      sitemap output verified against the production server.
+      NOTE (not a code bug, for the owner): SITE_URL / canonical URLs point to
+      https://clubfittingdirectory.com but that domain wasn't resolving in testing — confirm the
+      custom domain is connected in Vercel + DNS, else Google is pointed at a dead host.
 - [ ] Phase 4 — Robustness & polish (M6, M7, L1–L8): lint config, map safety, a11y, dedupe, CSP.
 
 ## Review

@@ -3,6 +3,7 @@ import {
   getAllShopSlugs,
   getAllStateCodes,
   getAllCitySlugs,
+  getShopTypeCounts,
 } from "@/lib/supabase/queries/shops"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { SITE_URL } from "@/lib/constants"
@@ -26,10 +27,11 @@ import { logQueryError } from "@/lib/utils"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Fetch all dynamic routes in parallel */
-  const [slugs, stateCodes, citySlugs] = await Promise.all([
+  const [slugs, stateCodes, citySlugs, typeCounts] = await Promise.all([
     getAllShopSlugs().catch((e) => logQueryError("sitemap getAllShopSlugs", e, [] as { slug: string }[])),
     getAllStateCodes().catch((e) => logQueryError("sitemap getAllStateCodes", e, [] as string[])),
     getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string }[])),
+    getShopTypeCounts().catch((e) => logQueryError("sitemap getShopTypeCounts", e, {} as Record<string, number>)),
   ])
 
   const now = new Date()
@@ -76,13 +78,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.9,
   }))
 
-  /* ── Category pages (/category/club-fitters, …) ── */
-  const categoryRoutes: MetadataRoute.Sitemap = SHOP_TYPES.map((t) => ({
-    url:             `${SITE_URL}/category/${t.slug}`,
-    lastModified:    now,
-    changeFrequency: "weekly" as const,
-    priority:        0.9,
-  }))
+  /* ── Category pages (/category/club-fitters, …) ──
+     Only include categories that actually have active shops. A category page
+     with zero shops calls notFound() (404), so listing it here would put a
+     dead URL in the sitemap — which hurts SEO. ── */
+  const categoryRoutes: MetadataRoute.Sitemap = SHOP_TYPES
+    .filter((t) => (typeCounts[t.dbType] ?? 0) > 0)
+    .map((t) => ({
+      url:             `${SITE_URL}/category/${t.slug}`,
+      lastModified:    now,
+      changeFrequency: "weekly" as const,
+      priority:        0.9,
+    }))
 
   /* ── City pages (/city/austin-tx, …) ── */
   const cityRoutes: MetadataRoute.Sitemap = citySlugs.map(({ citySlug }) => ({

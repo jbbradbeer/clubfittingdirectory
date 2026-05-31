@@ -115,14 +115,16 @@ export function buildLocalBusinessSchema(shop: Shop): Record<string, unknown> {
   // Maps link
   if (shop.location_link) schema.hasMap = shop.location_link
 
-  // Aggregate rating
-  if (shop.rating && shop.rating > 0) {
+  // Aggregate rating — only emit when we have BOTH a rating and a review count.
+  // Google flags an AggregateRating with no reviewCount/ratingCount as invalid
+  // structured data, so a rating with zero reviews must be omitted entirely.
+  if (shop.rating && shop.rating > 0 && shop.reviews && shop.reviews > 0) {
     schema.aggregateRating = {
       "@type":       "AggregateRating",
       ratingValue:   shop.rating,
+      reviewCount:   shop.reviews,
       bestRating:    5,
       worstRating:   1,
-      ...(shop.reviews && shop.reviews > 0 ? { reviewCount: shop.reviews } : {}),
     }
   }
 
@@ -175,6 +177,44 @@ export function buildBreadcrumbSchema(
         position:   4,
         name:       shop.name,
         item:       `${SITE_URL}/listing/${shop.slug}`,
+      },
+    ],
+  }
+}
+
+/**
+ * BreadcrumbList schema for a CITY page: Home > State > City.
+ * Matches the visible 3-level breadcrumb on /city/[citySlug]. (Do not reuse the
+ * shop breadcrumb here — that adds a bogus 4th "listing" level pointing at a URL
+ * built from the city slug, which doesn't exist.)
+ */
+export function buildCityBreadcrumbSchema(
+  city: string,
+  state: string,
+  stateCode: string,
+  citySlug: string,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type":    "ListItem",
+        position:   1,
+        name:       "Home",
+        item:       SITE_URL,
+      },
+      {
+        "@type":    "ListItem",
+        position:   2,
+        name:       state,
+        item:       `${SITE_URL}/state/${stateCode.toLowerCase()}`,
+      },
+      {
+        "@type":    "ListItem",
+        position:   3,
+        name:       city,
+        item:       `${SITE_URL}/city/${citySlug}`,
       },
     ],
   }

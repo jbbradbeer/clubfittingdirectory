@@ -9,7 +9,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
-import { buildBreadcrumbSchema } from "@/lib/structured-data"
+import { buildCityBreadcrumbSchema } from "@/lib/structured-data"
 import { logQueryError } from "@/lib/utils"
 
 interface PageProps {
@@ -51,13 +51,7 @@ export default async function CityPage({ params }: PageProps) {
     typeMap[t] = (typeMap[t] ?? 0) + 1
   }
 
-  const breadcrumbSchema = buildBreadcrumbSchema({
-    name: city,
-    city,
-    state,
-    state_code: stateCode,
-    slug: citySlug,
-  } as never)
+  const breadcrumbSchema = buildCityBreadcrumbSchema(city, state, stateCode, citySlug)
 
   return (
     <>
