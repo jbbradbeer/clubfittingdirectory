@@ -27,9 +27,12 @@ is now live.
       Organization JSON-LD on homepage; ItemList JSON-LD on state/city/category pages; canonicals
       added to homepage, /directory, /states; /directory title strengthened. SITE_DESCRIPTION added
       to constants. Verified: tsc + build pass (0 errors), JSON-LD validates on all page types.
-- [ ] Batch B — Social sharing previews: og-image is referenced but MISSING (broken previews on
-      every share). Add dynamic opengraph-image.tsx (root + per listing/state/city) via ImageResponse;
-      per-listing openGraph metadata; favicon (app/icon.png) + apple-icon.
+- [x] Batch B — Social sharing previews: DONE (deploying). Added shared renderOgImage() helper
+      (lib/og-image.tsx, brand forest/gold card) + dynamic opengraph-image.tsx at root, listing,
+      state, city, category (each with route-specific title/eyebrow). Per-listing openGraph metadata.
+      Generated favicon via app/icon.tsx (CF monogram). Removed dead /og-image.png ref from layout.
+      Verified: tsc + build pass (0 errors); OG routes render valid 1200x630 PNGs (HTTP 200);
+      og:image + icon meta tags emitted correctly.
 - [ ] Batch C — Content depth & sitemap accuracy: thin city/state/category pages → add templated
       intro copy + FAQPage schema; sitemap lastModified should use each shop's real updated_at, not
       build time.

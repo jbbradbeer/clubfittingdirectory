@@ -32,12 +32,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const shop = await getShopBySlug(slug).catch((e) => logQueryError("listing generateMetadata getShopBySlug", e, null))
   if (!shop) return { title: "Fitter Not Found" }
 
+  const title = `${shop.name} — ${shop.city}, ${shop.state_code}`
+  const description = `${shop.name} is a ${shop.shop_type ?? "golf shop"} in ${shop.city}, ${shop.state}. ${
+    shop.offers_fitting ? "Club fitting available. " : ""
+  }${shop.rating ? `Rated ${shop.rating}/5.` : ""}`
+
   return {
-    title: `${shop.name} — ${shop.city}, ${shop.state_code}`,
-    description: `${shop.name} is a ${shop.shop_type ?? "golf shop"} in ${shop.city}, ${shop.state}. ${
-      shop.offers_fitting ? "Club fitting available. " : ""
-    }${shop.rating ? `Rated ${shop.rating}/5.` : ""}`,
+    title,
+    description,
     alternates: { canonical: `${SITE_URL}/listing/${slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/listing/${slug}`,
+      type: "website",
+    },
   }
 }
 

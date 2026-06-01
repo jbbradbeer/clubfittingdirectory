@@ -41,7 +41,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: SITE_NAME,
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: SITE_NAME }],
+    // OG images are provided by app/opengraph-image.tsx (site default) and the
+    // per-route opengraph-image.tsx files — Next injects them automatically.
   },
   twitter: {
     card: "summary_large_image",
