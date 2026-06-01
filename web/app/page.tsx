@@ -6,8 +6,14 @@ import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { HeroSearch } from "@/components/home/HeroSearch"
-import { SITE_NAME } from "@/lib/constants"
+import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
+import { buildWebSiteSchema, buildOrganizationSchema } from "@/lib/structured-data"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  alternates: { canonical: SITE_URL },
+}
 
 export const revalidate = 3600
 
@@ -50,6 +56,16 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* JSON-LD: WebSite (sitelinks search box) + Organization (brand) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildWebSiteSchema()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrganizationSchema()) }}
+      />
+
       {/* ═══════════════════════════════════════════════════
           HERO
           ═══════════════════════════════════════════════════ */}

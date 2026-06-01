@@ -9,7 +9,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
-import { buildCityBreadcrumbSchema } from "@/lib/structured-data"
+import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured-data"
 import { logQueryError } from "@/lib/utils"
 
 interface PageProps {
@@ -52,12 +52,17 @@ export default async function CityPage({ params }: PageProps) {
   }
 
   const breadcrumbSchema = buildCityBreadcrumbSchema(city, state, stateCode, citySlug)
+  const itemListSchema = buildItemListSchema(shops, `Golf Club Fitters in ${city}, ${stateCode}`)
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
 
       {/* Hero */}

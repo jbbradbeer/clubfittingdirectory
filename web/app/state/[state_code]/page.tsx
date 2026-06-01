@@ -13,6 +13,7 @@ import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
+import { buildItemListSchema } from "@/lib/structured-data"
 
 interface PageProps {
   params: Promise<{ state_code: string }>
@@ -75,8 +76,14 @@ export default async function StatePage({ params }: PageProps) {
 
   const otherStates = states.filter((s) => s.state_code !== code).slice(0, 10)
 
+  const itemListSchema = buildItemListSchema(shops, `Golf Club Fitters in ${stateName}`)
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
       {/* Hero */}
       <PageHeader
         breadcrumb={[

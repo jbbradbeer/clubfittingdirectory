@@ -2,12 +2,13 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { getAllStatesWithShops } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { SITE_NAME } from "@/lib/constants"
+import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Browse by State",
   description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with over 1,000 independent shop listings.`,
+  alternates: { canonical: `${SITE_URL}/states` },
 }
 
 export const revalidate = 86400

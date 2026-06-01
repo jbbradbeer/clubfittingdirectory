@@ -9,6 +9,7 @@ import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
+import { buildItemListSchema } from "@/lib/structured-data"
 
 interface PageProps {
   params: Promise<{ type: string }>
@@ -44,8 +45,14 @@ export default async function CategoryPage({ params }: PageProps) {
   const { shops, stateBreakdown } = result
   const label = shopType.label
 
+  const itemListSchema = buildItemListSchema(shops, `${label} Directory`)
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: label }]}

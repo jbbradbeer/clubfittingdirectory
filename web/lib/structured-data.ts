@@ -1,5 +1,5 @@
 import type { Shop } from "@/types/shop"
-import { SITE_URL } from "@/lib/constants"
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants"
 
 /* ─────────────────────────────────────────────────────────
    JSON-LD STRUCTURED DATA
@@ -217,5 +217,65 @@ export function buildCityBreadcrumbSchema(
         item:       `${SITE_URL}/city/${citySlug}`,
       },
     ],
+  }
+}
+
+/**
+ * ItemList schema for a COLLECTION page (state / city / category). Tells Google
+ * the page is an ordered list of N businesses, each linking to its listing —
+ * eligibility for richer results on these high-value local pages.
+ */
+export function buildItemListSchema(
+  shops: Pick<Shop, "name" | "slug">[],
+  listName: string,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "ItemList",
+    name:        listName,
+    numberOfItems: shops.length,
+    itemListElement: shops.map((shop, i) => ({
+      "@type":   "ListItem",
+      position:  i + 1,
+      url:       `${SITE_URL}/listing/${shop.slug}`,
+      name:      shop.name,
+    })),
+  }
+}
+
+/**
+ * WebSite schema with a SearchAction — enables the Google "sitelinks search box"
+ * (a search field inside your search result that queries the directory directly).
+ */
+export function buildWebSiteSchema(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "WebSite",
+    name:        SITE_NAME,
+    url:         SITE_URL,
+    description: SITE_DESCRIPTION,
+    potentialAction: {
+      "@type":     "SearchAction",
+      target:      {
+        "@type":       "EntryPoint",
+        urlTemplate:   `${SITE_URL}/directory?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  }
+}
+
+/**
+ * Organization schema — brand identity for Google (name, logo, social links).
+ * Helps with brand recognition and knowledge-panel signals.
+ */
+export function buildOrganizationSchema(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "Organization",
+    name:        SITE_NAME,
+    url:         SITE_URL,
+    logo:        `${SITE_URL}/icon.png`,
+    description: SITE_DESCRIPTION,
   }
 }

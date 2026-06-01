@@ -2,12 +2,13 @@ import type { Metadata } from "next"
 import { Suspense } from "react"
 import { getAllStatesWithShops, getAllShopTypes } from "@/lib/supabase/queries/shops"
 import { DirectoryClient } from "@/components/directory/DirectoryClient"
-import { SITE_NAME } from "@/lib/constants"
+import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "Find a Fitter",
+  title: "Search Golf Club Fitters & Retailers — All 50 States",
   description: `Search and filter ${SITE_NAME}'s comprehensive directory of independent golf club fitters, retailers, simulators, and pro shops across the United States.`,
+  alternates: { canonical: `${SITE_URL}/directory` },
 }
 
 export default async function DirectoryPage() {
