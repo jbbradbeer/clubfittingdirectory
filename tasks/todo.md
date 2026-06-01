@@ -33,9 +33,13 @@ is now live.
       Generated favicon via app/icon.tsx (CF monogram). Removed dead /og-image.png ref from layout.
       Verified: tsc + build pass (0 errors); OG routes render valid 1200x630 PNGs (HTTP 200);
       og:image + icon meta tags emitted correctly.
-- [ ] Batch C — Content depth & sitemap accuracy: thin city/state/category pages → add templated
-      intro copy + FAQPage schema; sitemap lastModified should use each shop's real updated_at, not
-      build time.
+- [x] Batch C — Content depth & sitemap accuracy: DONE (deploying). Added lib/seo-content.ts
+      (location/category-specific intro copy + FAQs) and components/seo/FaqSection.tsx (visible FAQ +
+      matching FAQPage JSON-LD from one source). Wired intro + FAQ into state/city/category pages.
+      Sitemap: getAllShopSlugs() now returns updated_at; listing lastmod uses real per-shop dates
+      (currently all 2026-05-28 since shops were migrated together — but no longer churns per rebuild).
+      Verified: tsc + build pass (0 errors, 1,725 routes); FAQPage schema (4 Q) + intro + visible FAQ
+      on all 3 collection types; sitemap lastmod = real data date.
 
 ## Owner action items (not code)
 - [ ] Vercel domain: both apex (clubfittingdirectory.com) and www currently serve 200 with no

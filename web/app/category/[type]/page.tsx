@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
+import { FaqSection } from "@/components/seo/FaqSection"
+import { categoryIntro, categoryFaqs } from "@/lib/seo-content"
 
 interface PageProps {
   params: Promise<{ type: string }>
@@ -61,6 +63,15 @@ export default async function CategoryPage({ params }: PageProps) {
         subtitle={`${shops.length} listings across ${stateBreakdown.length} states.`}
       />
 
+      {/* Intro copy */}
+      <section className="bg-white pt-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
+            {categoryIntro(label, shops.length, stateBreakdown.length)}
+          </p>
+        </div>
+      </section>
+
       {/* State breakdown */}
       {stateBreakdown.length > 1 && (
         <section className="bg-[var(--color-ivory)] py-10">
@@ -111,6 +122,8 @@ export default async function CategoryPage({ params }: PageProps) {
           </Button>
         </div>
       </section>
+
+      <FaqSection items={categoryFaqs(label)} heading={`${label} — FAQ`} />
     </>
   )
 }

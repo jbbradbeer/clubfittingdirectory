@@ -10,6 +10,8 @@ import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
 import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured-data"
+import { FaqSection } from "@/components/seo/FaqSection"
+import { cityIntro, cityFaqs } from "@/lib/seo-content"
 import { logQueryError } from "@/lib/utils"
 
 interface PageProps {
@@ -81,6 +83,15 @@ export default async function CityPage({ params }: PageProps) {
           .join(", ")}.`}
       />
 
+      {/* Intro copy */}
+      <section className="bg-white pt-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
+            {cityIntro(city, state, shops.length)}
+          </p>
+        </div>
+      </section>
+
       {/* Listings */}
       <section className="bg-[var(--color-ivory)] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,6 +116,8 @@ export default async function CityPage({ params }: PageProps) {
           </Button>
         </div>
       </section>
+
+      <FaqSection items={cityFaqs(city, state)} heading={`Club fitting in ${city} — FAQ`} />
     </>
   )
 }

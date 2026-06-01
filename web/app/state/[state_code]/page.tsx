@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/Button"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
+import { FaqSection } from "@/components/seo/FaqSection"
+import { stateIntro, stateFaqs } from "@/lib/seo-content"
 
 interface PageProps {
   params: Promise<{ state_code: string }>
@@ -101,6 +103,15 @@ export default async function StatePage({ params }: PageProps) {
           .join(", ")}.`}
       />
 
+      {/* Intro copy */}
+      <section className="bg-white pt-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
+            {stateIntro(stateName, shops.length, cityCount)}
+          </p>
+        </div>
+      </section>
+
       {/* Cities */}
       {cities.length > 1 && (
         <section className="bg-[var(--color-ivory)] py-12">
@@ -171,6 +182,8 @@ export default async function StatePage({ params }: PageProps) {
           </div>
         </section>
       )}
+
+      <FaqSection items={stateFaqs(stateName)} heading={`Club fitting in ${stateName} — FAQ`} />
     </>
   )
 }

@@ -28,7 +28,7 @@ import { logQueryError } from "@/lib/utils"
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Fetch all dynamic routes in parallel */
   const [slugs, stateCodes, citySlugs, typeCounts] = await Promise.all([
-    getAllShopSlugs().catch((e) => logQueryError("sitemap getAllShopSlugs", e, [] as { slug: string }[])),
+    getAllShopSlugs().catch((e) => logQueryError("sitemap getAllShopSlugs", e, [] as { slug: string; updated_at: string }[])),
     getAllStateCodes().catch((e) => logQueryError("sitemap getAllStateCodes", e, [] as string[])),
     getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string }[])),
     getShopTypeCounts().catch((e) => logQueryError("sitemap getShopTypeCounts", e, {} as Record<string, number>)),
@@ -99,10 +99,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.7,
   }))
 
-  /* ── Individual listing pages (/listing/[slug]) ── */
-  const listingRoutes: MetadataRoute.Sitemap = slugs.map(({ slug }) => ({
+  /* ── Individual listing pages (/listing/[slug]) ──
+     Use each shop's real updated_at so Google sees accurate per-page lastmod
+     dates, rather than every URL claiming to have changed on the last rebuild. ── */
+  const listingRoutes: MetadataRoute.Sitemap = slugs.map(({ slug, updated_at }) => ({
     url:             `${SITE_URL}/listing/${slug}`,
-    lastModified:    now,
+    lastModified:    updated_at ? new Date(updated_at) : now,
     changeFrequency: "monthly" as const,
     priority:        0.8,
   }))

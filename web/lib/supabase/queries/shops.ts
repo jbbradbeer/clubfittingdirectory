@@ -104,11 +104,11 @@ export async function getShopsByState(stateCode: string): Promise<Shop[]> {
 }
 
 /* ── All slugs (for generateStaticParams) ── */
-export async function getAllShopSlugs(): Promise<{ slug: string }[]> {
+export async function getAllShopSlugs(): Promise<{ slug: string; updated_at: string }[]> {
   const supabase = createStaticClient()
   const { data, error } = await supabase
     .from("shops")
-    .select("slug")
+    .select("slug, updated_at")
     .eq("status", "active")
 
   if (error) throw error
