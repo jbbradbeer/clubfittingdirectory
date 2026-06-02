@@ -52,7 +52,8 @@ export async function POST(request: Request) {
   if (city.length < 2)            errors.push("City is required.")
   if (!US_STATE_CODES.has(stateCode)) errors.push("A valid US state is required.")
   if (shopType && !VALID_SHOP_TYPES.has(shopType)) errors.push("Invalid shop type.")
-  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errors.push("Enter a valid email or leave it blank.")
+  if (!email)                     errors.push("Your email is required.")
+  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errors.push("Enter a valid email.")
 
   if (errors.length) {
     return NextResponse.json({ error: errors.join(" ") }, { status: 400 })

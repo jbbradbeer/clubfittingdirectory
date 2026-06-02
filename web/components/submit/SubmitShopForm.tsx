@@ -131,8 +131,8 @@ export function SubmitShopForm() {
       </div>
 
       <div>
-        <label htmlFor="submitter_email" className={labelClass}>Your email (optional)</label>
-        <input id="submitter_email" name="submitter_email" type="email" maxLength={200} className={fieldClass} placeholder="In case we need to follow up" />
+        <label htmlFor="submitter_email" className={labelClass}>Your email *</label>
+        <input id="submitter_email" name="submitter_email" type="email" required maxLength={200} className={fieldClass} placeholder="So we can follow up about your submission" />
       </div>
 
       {status === "error" && (

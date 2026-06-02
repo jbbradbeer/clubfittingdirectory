@@ -265,6 +265,32 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
+          SUBMIT A SHOP
+          ═══════════════════════════════════════════════════ */}
+      <section className="bg-[var(--color-ivory)] py-16 md:py-20 border-t border-[var(--color-border)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="section-label mb-4 inline-flex items-center gap-3">
+            <span className="gold-rule" />
+            Help Us Grow
+            <span className="gold-rule rotate-180" />
+          </p>
+          <h2 className="display text-[clamp(1.8rem,4vw,2.6rem)] text-[var(--color-charcoal)]">
+            Know a fitter we&apos;re missing?
+          </h2>
+          <p className="mt-4 max-w-xl mx-auto text-[var(--color-charcoal-light)] leading-relaxed">
+            Help golfers everywhere find the best independent shops. Submit a club fitter,
+            retailer, or simulator in under a minute — we review every entry.
+          </p>
+          <div className="mt-8">
+            <Button href="/submit" variant="primary" size="lg">
+              <Store size={18} />
+              Submit a Shop
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
           CLOSING CTA
           ═══════════════════════════════════════════════════ */}
       <section className="bg-[var(--color-forest-deep)] text-white">

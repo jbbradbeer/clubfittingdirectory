@@ -8,6 +8,7 @@ import { SITE_NAME } from "@/lib/constants"
 const NAV_ITEMS = [
   { label: "Find a Fitter", href: "/directory" },
   { label: "Browse by State", href: "/states" },
+  { label: "Submit a Shop", href: "/submit" },
 ]
 
 export function Header() {
