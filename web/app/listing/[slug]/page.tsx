@@ -272,7 +272,7 @@ export default async function ListingPage({ params }: PageProps) {
               {/* Contact card */}
               <div className="bg-[var(--color-forest)] text-white rounded-2xl shadow-card p-6">
                 <h3
-                  className="text-lg font-bold mb-4"
+                  className="text-lg font-bold mb-4 text-white"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   Contact

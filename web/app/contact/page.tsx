@@ -52,7 +52,7 @@ export default function ContactPage() {
                   <Mail size={22} />
                 </div>
                 <h2
-                  className="text-xl font-bold mb-2"
+                  className="text-xl font-bold mb-2 text-white"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   Email Us
