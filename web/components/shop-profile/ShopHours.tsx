@@ -26,7 +26,12 @@ export function ShopHours({ workingHours }: { workingHours: Record<string, strin
     <dl className="space-y-2">
       {DAY_ORDER.map((day) => {
         const rawHours = workingHours?.[day]
-        const hours = Array.isArray(rawHours) ? rawHours.join(", ") : rawHours ?? "Closed"
+        // A day is only "known" if it's actually present in the data. Most shops
+        // (~89%) have hours for just some days; the source uses an explicit
+        // "Closed" when a shop is genuinely closed. So an ABSENT day means
+        // "unknown" (show "—"), NOT "Closed" — don't invent that claim.
+        const hasData = rawHours != null
+        const hours = Array.isArray(rawHours) ? rawHours.join(", ") : rawHours
         const isToday = day === todayName
         return (
           <div
@@ -39,7 +44,9 @@ export function ShopHours({ workingHours }: { workingHours: Record<string, strin
               {isToday && <span className="w-2 h-2 rounded-full bg-[var(--color-gold)]" />}
               {day}
             </dt>
-            <dd>{hours}</dd>
+            <dd className={hasData ? undefined : "text-[var(--color-charcoal-light)]/50"}>
+              {hasData ? hours : "—"}
+            </dd>
           </div>
         )
       })}
