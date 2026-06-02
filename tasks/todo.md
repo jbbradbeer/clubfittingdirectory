@@ -72,8 +72,12 @@ is now live.
   honeypot→fake-ok-no-insert.
 - Links: footer Quick Links, contact page "List your shop" card, sitemap (/submit).
 - NOTE: a few test rows (__VERIFY_TEST__, __APITEST__) left in shop_submissions — owner can delete.
-- FOLLOW-UP (noted, not built): /admin review page to approve/reject submissions + promote to shops.
-  Approval is manual in Supabase table editor for now.
+- FOLLOW-UP: /admin review page — DONE + DEPLOYED 2026-06-02. Password gate (ADMIN_PASSWORD) +
+  service-role key (SUPABASE_SERVICE_ROLE_KEY), both server-only env vars in Vercel. proxy.ts edge
+  gate + page-level isAdmin() (constant-time hash, httpOnly cookie). One-click approve promotes a
+  submission into shops as active; reject marks rejected. /admin noindex + robots-disallowed.
+  Verified live: /admin → 307 login, forged cookie no leak, login form renders.
+  Access: clubfittingdirectory.com/admin → log in with ADMIN_PASSWORD.
 
 ## Findings reference (severity)
 - H1 env guard ✅ / H2 silent catches ✅ / H3 fake stats ✅ / H4 search error state ✅
