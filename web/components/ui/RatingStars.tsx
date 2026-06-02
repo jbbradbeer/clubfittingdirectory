@@ -1,3 +1,5 @@
+import { useId } from "react"
+
 interface RatingStarsProps {
   rating: number | null
   reviews?: number | null
@@ -6,6 +8,7 @@ interface RatingStarsProps {
 }
 
 export function RatingStars({ rating, reviews, showNumeric = true, size = "md" }: RatingStarsProps) {
+  const clipId = useId()
   if (!rating) return null
 
   const starSize = size === "sm" ? 14 : 18
@@ -19,7 +22,7 @@ export function RatingStars({ rating, reviews, showNumeric = true, size = "md" }
         {Array.from({ length: fullStars }).map((_, i) => (
           <Star key={`full-${i}`} size={starSize} fill="var(--color-gold)" />
         ))}
-        {hasHalf && <StarHalf key="half" size={starSize} />}
+        {hasHalf && <StarHalf key="half" size={starSize} clipId={`${clipId}-half`} />}
         {Array.from({ length: emptyStars }).map((_, i) => (
           <Star key={`empty-${i}`} size={starSize} fill="none" />
         ))}
@@ -46,18 +49,18 @@ function Star({ size, fill }: { size: number; fill: string }) {
   )
 }
 
-function StarHalf({ size }: { size: number }) {
+function StarHalf({ size, clipId }: { size: number; clipId: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" stroke="var(--color-gold)" strokeWidth={1.5} fill="none">
       <defs>
-        <clipPath id="halfClip">
+        <clipPath id={clipId}>
           <rect x="0" y="0" width="12" height="24" />
         </clipPath>
       </defs>
       <path
         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
         fill="var(--color-gold)"
-        clipPath="url(#halfClip)"
+        clipPath={`url(#${clipId})`}
       />
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>

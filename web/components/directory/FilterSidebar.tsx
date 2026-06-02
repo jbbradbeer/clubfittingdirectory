@@ -66,11 +66,12 @@ export function FilterSidebar({
 
       {/* State filter */}
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-2">
+        <label htmlFor="filter-state" className="block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-2">
           State
         </label>
         <div className="relative">
           <select
+            id="filter-state"
             value={selectedState}
             onChange={(e) => onStateChange(e.target.value)}
             className="w-full appearance-none px-3 py-2.5 pr-8 bg-white border border-[var(--color-border)] rounded-lg text-sm text-[var(--color-charcoal)] focus:outline-none focus:border-[var(--color-gold)] cursor-pointer"
@@ -125,16 +126,18 @@ export function FilterSidebar({
 
       {/* Rating filter */}
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-2">
+        <label htmlFor="filter-rating" className="block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-2">
           Minimum Rating
         </label>
         <div className="flex items-center gap-3">
           <input
+            id="filter-rating"
             type="range"
             min={0}
             max={5}
             step={0.5}
             value={minRating}
+            aria-label="Minimum rating"
             onChange={(e) => onRatingChange(parseFloat(e.target.value))}
             className="flex-1 accent-[var(--color-gold)] cursor-pointer"
           />

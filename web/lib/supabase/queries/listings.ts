@@ -7,43 +7,14 @@
  */
 import { createClient } from "@/lib/supabase/client"
 import type { Shop } from "@/types/shop"
+import {
+  CARD_FIELDS,
+  sanitizeSearchTerm,
+  type DirectoryFilters,
+  type DirectoryResult,
+} from "./shared"
 
-const CARD_FIELDS = [
-  "id", "slug", "name", "shop_type", "primary_service",
-  "city", "state", "state_code", "phone", "website",
-  "rating", "rating_tier", "reviews", "photos_count", "has_photos",
-  "offers_fitting", "fitting_environment", "services", "services_array",
-  "num_services", "verified", "location_link", "is_featured", "listing_tier",
-  "latitude", "longitude",
-].join(", ")
-
-export interface DirectoryFilters {
-  q?: string
-  state?: string
-  shopTypes?: string[]
-  services?: string[]
-  fitting?: boolean
-  fittingEnv?: string
-  minRating?: number
-  sort?: "rating" | "name" | "services" | "fitting"
-  page?: number
-  perPage?: number
-}
-
-export interface DirectoryResult {
-  shops: Shop[]
-  total: number
-  page: number
-  perPage: number
-  totalPages: number
-}
-
-/* Strip characters with structural meaning in a PostgREST filter string
-   so a visitor's search text can't break or alter the query. Mirrors the
-   helper in shops.ts. */
-function sanitizeSearchTerm(input: string): string {
-  return input.replace(/[,()%\\*]/g, " ").trim()
-}
+export type { DirectoryFilters, DirectoryResult }
 
 export async function getListings(
   filters: DirectoryFilters = {},
@@ -54,7 +25,7 @@ export async function getListings(
   const from     = (page - 1) * perPage
   const to       = from + perPage - 1
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const applyFilters = (q: any) => {
     if (filters.q) {
       const term = sanitizeSearchTerm(filters.q)

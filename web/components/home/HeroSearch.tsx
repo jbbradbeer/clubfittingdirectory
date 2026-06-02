@@ -33,26 +33,32 @@ export function HeroSearch() {
     }
 
     setLoading(true)
+    const ac = new AbortController()
+    abortRef.current = ac
     const t = setTimeout(async () => {
-      abortRef.current?.abort()
-      const ac = new AbortController()
-      abortRef.current = ac
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(term)}`, {
           signal: ac.signal,
         })
+        if (!res.ok) throw new Error(`search failed: ${res.status}`)
         const data = await res.json()
+        if (ac.signal.aborted) return
         setResults(data.suggestions ?? [])
         setOpen(true)
         setActive(-1)
       } catch {
         /* aborted or failed — ignore */
       } finally {
-        setLoading(false)
+        if (!ac.signal.aborted) setLoading(false)
       }
     }, 180)
 
-    return () => clearTimeout(t)
+    // Cleanup aborts the in-flight request AND cancels the pending timeout, so a
+    // request from a stale keystroke (or after unmount) can't update state late.
+    return () => {
+      clearTimeout(t)
+      ac.abort()
+    }
   }, [value])
 
   /* ── Close on outside click ── */

@@ -257,6 +257,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
               {/* Sort */}
               <select
                 value={sort}
+                aria-label="Sort results"
                 onChange={(e) => {
                   setSort(e.target.value as "rating" | "name")
                   setPage(1)

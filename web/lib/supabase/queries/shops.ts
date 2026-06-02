@@ -1,22 +1,13 @@
 import { createStaticClient } from "@/lib/supabase/server"
 import type { Shop, ShopFilters } from "@/types/shop"
+import {
+  CARD_FIELDS,
+  sanitizeSearchTerm,
+  type DirectoryFilters,
+  type DirectoryResult,
+} from "./shared"
 
-/* Strip characters that have structural meaning inside a PostgREST
-   `.or()` / `.ilike` filter string (commas separate clauses, parens
-   group them, % and \ are LIKE wildcards/escapes). This prevents a
-   visitor's search text from breaking or altering the query. */
-function sanitizeSearchTerm(input: string): string {
-  return input.replace(/[,()%\\*]/g, " ").trim()
-}
-
-const CARD_FIELDS = [
-  "id", "slug", "name", "shop_type", "primary_service",
-  "city", "state", "state_code", "phone", "website",
-  "rating", "rating_tier", "reviews", "photos_count", "has_photos",
-  "offers_fitting", "fitting_environment", "services", "services_array",
-  "num_services", "verified", "location_link", "is_featured", "listing_tier",
-  "latitude", "longitude",
-].join(", ")
+export type { DirectoryFilters, DirectoryResult }
 
 /* ── All active shops with optional filters ── */
 export async function getShops(filters: ShopFilters = {}): Promise<Shop[]> {
@@ -164,33 +155,14 @@ export async function getDirectoryStats(): Promise<{
    DIRECTORY SEARCH — composable paginated query
    Used by the /directory client component.
    All filters are optional; only applied when provided.
+   (DirectoryFilters / DirectoryResult are defined in ./shared and
+   re-exported above.)
    ───────────────────────────────────────────────────────── */
-
-export interface DirectoryFilters {
-  q?: string           // free-text: name or city
-  state?: string       // state_code e.g. "TX"
-  shopTypes?: string[] // array of shop_type values
-  services?: string[]  // partial match against services field
-  fitting?: boolean    // offers_fitting = true
-  fittingEnv?: string  // fitting_environment: "Indoor" | "Outdoor" | "Indoor & Outdoor"
-  minRating?: number   // minimum rating (0–5)
-  sort?: "rating" | "name" | "services" | "fitting"
-  page?: number        // 1-based
-  perPage?: number     // default 24
-}
-
-export interface DirectoryResult {
-  shops: Shop[]
-  total: number        // total matching rows (for pagination)
-  page: number
-  perPage: number
-  totalPages: number
-}
 
 export async function getListings(
   filters: DirectoryFilters = {},
   /** Pass a pre-created client to allow calling from browser-side too */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   clientOverride?: any,
 ): Promise<DirectoryResult> {
   const supabase = clientOverride ?? createStaticClient()
@@ -213,7 +185,7 @@ export async function getListings(
 
   // ── Apply the same filters to both queries ──
   const applyFilters = <T>(q: T): T => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     let qq = q as any
 
     if (filters.q) {
@@ -496,15 +468,16 @@ export async function getShopsForCityPage(
   if (error) throw error
   const stateShops = (data as unknown as Shop[]) ?? []
 
-  // Find the city whose slug matches
-  const matchedCity = stateShops.find(
+  // Match by SLUG (not exact city string) for both identification and filtering,
+  // so cities whose spellings collapse to the same slug (e.g. "St. Louis" and
+  // "St Louis" → "st-louis-mo") are grouped together instead of one silently
+  // hiding the other's listings.
+  const shops = stateShops.filter(
     (s) => s.city && toCitySlug(s.city, stateCode) === citySlug,
-  )?.city ?? null
+  )
 
-  if (!matchedCity) return null
+  if (shops.length === 0) return null
 
-  const shops     = stateShops.filter((s) => s.city === matchedCity)
-  const firstShop = stateShops[0]
-
-  return { shops, city: matchedCity, state: firstShop.state, stateCode }
+  // Display name comes from a shop in this city (not an arbitrary state shop).
+  return { shops, city: shops[0].city, state: shops[0].state, stateCode }
 }

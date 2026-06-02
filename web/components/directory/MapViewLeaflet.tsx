@@ -24,11 +24,21 @@ interface MapViewLeafletProps {
 }
 
 export function MapViewLeaflet({ shops }: MapViewLeafletProps) {
-  const validShops = shops.filter((s) => s.latitude && s.longitude)
+  // Use != null (not truthiness) so a shop at latitude/longitude exactly 0 isn't dropped.
+  const validShops = shops.filter((s) => s.latitude != null && s.longitude != null)
 
-  const center: [number, number] = validShops.length > 0
-    ? [validShops[0].latitude!, validShops[0].longitude!]
-    : [39.8, -98.5] // center of US
+  // Nothing mappable — tell the user instead of showing a blank US map.
+  if (validShops.length === 0) {
+    return (
+      <div className="h-[500px] bg-[var(--color-cream)] border border-[var(--color-border)] rounded-lg flex items-center justify-center text-center px-6">
+        <p className="text-sm text-[var(--color-charcoal-light)]">
+          None of these results have map coordinates yet. Try the list view.
+        </p>
+      </div>
+    )
+  }
+
+  const center: [number, number] = [validShops[0].latitude!, validShops[0].longitude!]
 
   return (
     <div className="h-[500px] border border-[var(--color-border)] rounded-lg overflow-hidden">

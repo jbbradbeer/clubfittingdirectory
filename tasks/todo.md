@@ -16,10 +16,21 @@ is now live.
       /listing, /city, /state, /category now truly static (● not ƒ); cleared 2,001 build errors.
 - [x] Phase 3 — SEO correctness (M2, M3, M4): DONE + DEPLOYED. City breadcrumb schema (3-level),
       sitemap excludes empty categories, valid aggregateRating (only with reviewCount).
-- [ ] Phase 4 — Robustness & polish (M6, M7, L1–L8): lint config, map SSR safety + "no mappable
-      results" state + lat/lng 0 truthiness, HeroSearch abort/res.ok, RatingStars dup clipPath id,
-      a11y labels (sort select, filter controls), dedupe CARD_FIELDS/sanitize/DirectoryFilters,
-      CSP dead/permissive entries, "open today" staleness, city slug collisions.
+- [x] Phase 4 — Robustness & polish (M6, M7, L1–L8): DONE (deploying).
+      M6 lint: added eslint.config.mjs (native flat config from eslint-config-next; FlatCompat threw
+        circular-JSON against this version). `npm run lint` now works & is clean.
+      M7 maps: MapViewLeaflet uses != null (keeps lat/lng 0), shows "no mappable results" empty state.
+      L1 HeroSearch: AbortController aborted on cleanup; res.ok checked before json(); aborted guards.
+      L2: added ShopCard type in shared.ts (card queries no longer pretend to be full Shop).
+      L3 RatingStars: clipPath id from useId() (no duplicate DOM ids).
+      L4 a11y: htmlFor/id on State select + rating slider; aria-label on rating + sort selects.
+      L5 dedupe: CARD_FIELDS/sanitizeSearchTerm/DirectoryFilters/DirectoryResult → lib/.../shared.ts.
+      L6 CSP: removed dead Google frame-src + gstatic font-src; tightened img-src to OSM tiles.
+      L7 open-today: extracted ShopHours client component; "today" read client-side via
+        useSyncExternalStore (no build-time staleness, no hydration mismatch, lint-clean).
+      L8 slug collisions: getShopsForCityPage filters by slug (groups "St. Louis"/"St Louis"), and
+        display name comes from a shop in that city, not an arbitrary state shop.
+      Verified: tsc clean, lint clean, build 0 errors (1,725 pages), affected pages HTTP 200.
 
 ## SEO improvement batches (post-audit, beyond bug fixes)
 

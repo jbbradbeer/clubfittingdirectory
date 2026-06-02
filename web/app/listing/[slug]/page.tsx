@@ -8,6 +8,7 @@ import { getShopBySlug, getNearbyShops, getAllShopSlugs, toCitySlug } from "@/li
 import { buildLocalBusinessSchema, buildBreadcrumbSchema } from "@/lib/structured-data"
 import { Breadcrumb } from "@/components/ui/Breadcrumb"
 import { ListingMap } from "@/components/directory/ListingMap"
+import { ShopHours } from "@/components/shop-profile/ShopHours"
 import { Badge } from "@/components/ui/Badge"
 import { RatingStars } from "@/components/ui/RatingStars"
 import { Button } from "@/components/ui/Button"
@@ -50,13 +51,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-/* ── Day abbreviation map ── */
-const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
-function getTodayName(): string {
-  return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][new Date().getDay()]
-}
-
 export default async function ListingPage({ params }: PageProps) {
   const { slug } = await params
   const shop = await getShopBySlug(slug).catch((e) => logQueryError("listing getShopBySlug", e, null))
@@ -67,7 +61,6 @@ export default async function ListingPage({ params }: PageProps) {
   const localBusinessSchema = buildLocalBusinessSchema(shop)
   const breadcrumbSchema = buildBreadcrumbSchema(shop)
   const citySlug = toCitySlug(shop.city, shop.state_code)
-  const todayName = getTodayName()
 
   /* Parse about JSON for display */
   const aboutEntries: { key: string; value: string }[] = []
@@ -349,31 +342,7 @@ export default async function ListingPage({ params }: PageProps) {
                     <Clock size={18} className="text-[var(--color-gold)]" />
                     Hours
                   </h3>
-                  <dl className="space-y-2">
-                    {DAY_ORDER.map((day) => {
-                      const rawHours = shop.working_hours?.[day]
-                      const hours = Array.isArray(rawHours)
-                        ? rawHours.join(", ")
-                        : rawHours ?? "Closed"
-                      const isToday = day === todayName
-                      return (
-                        <div
-                          key={day}
-                          className={`flex items-center justify-between text-sm ${
-                            isToday ? "font-semibold text-[var(--color-charcoal)]" : "text-[var(--color-charcoal-light)]"
-                          }`}
-                        >
-                          <dt className="flex items-center gap-2">
-                            {isToday && (
-                              <span className="w-2 h-2 rounded-full bg-[var(--color-gold)]" />
-                            )}
-                            {day}
-                          </dt>
-                          <dd>{hours}</dd>
-                        </div>
-                      )
-                    })}
-                  </dl>
+                  <ShopHours workingHours={shop.working_hours} />
                 </div>
               )}
 
