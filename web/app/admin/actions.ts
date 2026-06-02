@@ -1,0 +1,103 @@
+"use server"
+
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
+import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
+import { createAdminClient } from "@/lib/supabase/admin"
+import { US_STATES } from "@/lib/constants"
+
+/* ── Login ── */
+export async function login(formData: FormData) {
+  const password = String(formData.get("password") ?? "")
+  const token = tokenForPassword(password)
+  if (!token) {
+    redirect("/admin/login?error=1")
+  }
+  const cookieStore = await cookies()
+  cookieStore.set(ADMIN_COOKIE, token, {
+    httpOnly: true,
+    // secure in production (HTTPS); allow http://localhost in dev so the cookie
+    // isn't dropped during local testing.
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  })
+  redirect("/admin")
+}
+
+/* ── Logout ── */
+export async function logout() {
+  const cookieStore = await cookies()
+  cookieStore.delete(ADMIN_COOKIE)
+  redirect("/admin/login")
+}
+
+/* Build a URL slug the same way the rest of the site does:
+   {city-name}-{state} but for shops it's {name}-{city}-{state_code}. */
+function buildShopSlug(name: string, city: string, stateCode: string): string {
+  const part = (s: string) =>
+    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+  return [part(name), part(city), stateCode.toLowerCase()].filter(Boolean).join("-")
+}
+
+/* ── Approve: promote a submission into the live shops table ── */
+export async function approveSubmission(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  if (!id) return
+
+  const supabase = createAdminClient()
+
+  // Load the submission
+  const { data: sub, error: subErr } = await supabase
+    .from("shop_submissions")
+    .select("*")
+    .eq("id", id)
+    .single()
+  if (subErr || !sub) throw new Error("Submission not found.")
+
+  const stateName = US_STATES.find((s) => s.code === sub.state_code)?.name ?? sub.state_code
+  let slug = buildShopSlug(sub.name, sub.city, sub.state_code)
+
+  // Avoid a unique-slug collision: append a short suffix if taken.
+  const { data: existing } = await supabase
+    .from("shops")
+    .select("slug")
+    .eq("slug", slug)
+    .limit(1)
+  if (existing && existing.length > 0) {
+    slug = `${slug}-${id.slice(0, 6)}`
+  }
+
+  // Insert into live shops as active
+  const { error: insErr } = await supabase.from("shops").insert({
+    slug,
+    status: "active",
+    name: sub.name,
+    shop_type: sub.shop_type,
+    city: sub.city,
+    state: stateName,
+    state_code: sub.state_code,
+    website: sub.website,
+    phone: sub.phone,
+    offers_fitting: sub.offers_fitting ?? false,
+  })
+  if (insErr) throw new Error(`Could not create listing: ${insErr.message}`)
+
+  // Mark submission approved
+  await supabase.from("shop_submissions").update({ review_status: "approved" }).eq("id", id)
+
+  revalidatePath("/admin")
+}
+
+/* ── Reject: mark a submission rejected (does not touch shops) ── */
+export async function rejectSubmission(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  if (!id) return
+  const supabase = createAdminClient()
+  await supabase.from("shop_submissions").update({ review_status: "rejected" }).eq("id", id)
+  revalidatePath("/admin")
+}
