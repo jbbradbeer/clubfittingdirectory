@@ -57,6 +57,23 @@ is now live.
       (200, no redirect) and www → 307 → non-www. Now matches all canonicals/sitemap/JSON-LD. (307
       not 308 — fine; could upgrade to permanent later but negligible.)
 - [ ] Submit sitemap (https://clubfittingdirectory.com/sitemap.xml) in Google Search Console.
+- [ ] PARKED (low severity): public anon key can write to PostGIS `spatial_ref_sys` (no app data —
+      just standard coordinate-system constants; `shops` is fully secure, maps work). Can't fix via
+      SQL on this plan (table owned by PostGIS → REVOKE reports success but no-ops, ALTER errors
+      "must be owner"). Needs Supabase support to lock server-side. Safe to leave meanwhile.
+
+## Feature: Submit a Shop (grow the data) — DONE (deploying) 2026-06-02
+- New quarantined table `shop_submissions` (web/supabase/002_shop_submissions.sql, run on live DB):
+  RLS insert-only for anon (verified live: INSERT 201, SELECT/UPDATE/DELETE all 401). Owned table,
+  so RLS actually applies (unlike spatial_ref_sys).
+- `/submit` page + SubmitShopForm (forest/gold design, honeypot spam guard).
+- `/api/submit-shop` route: server validation (name/city/state required, US state + shop_type
+  whitelist, email format), honeypot returns before insert. Verified: valid→ok, missing/bad→400,
+  honeypot→fake-ok-no-insert.
+- Links: footer Quick Links, contact page "List your shop" card, sitemap (/submit).
+- NOTE: a few test rows (__VERIFY_TEST__, __APITEST__) left in shop_submissions — owner can delete.
+- FOLLOW-UP (noted, not built): /admin review page to approve/reject submissions + promote to shops.
+  Approval is manual in Supabase table editor for now.
 
 ## Findings reference (severity)
 - H1 env guard ✅ / H2 silent catches ✅ / H3 fake stats ✅ / H4 search error state ✅

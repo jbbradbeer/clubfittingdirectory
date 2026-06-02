@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { Mail, Store, Pencil } from "lucide-react"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
@@ -16,7 +17,8 @@ const REASONS = [
   {
     icon: <Store size={20} />,
     title: "List your shop",
-    body: "Run a club fitting shop or golf retailer? Get in touch to be added to the directory.",
+    body: "Run a club fitting shop or golf retailer? Submit it to the directory in under a minute.",
+    href: "/submit",
   },
   {
     icon: <Pencil size={20} />,
@@ -92,6 +94,15 @@ export default function ContactPage() {
                       <p className="mt-1 text-sm text-[var(--color-charcoal-light)] leading-relaxed">
                         {reason.body}
                       </p>
+                      {reason.href && (
+                        <Link
+                          href={reason.href}
+                          className="inline-flex items-center gap-1.5 mt-2 text-sm font-semibold text-[var(--color-forest)] hover:text-[var(--color-gold)] transition-colors"
+                        >
+                          Submit a shop
+                          <span aria-hidden="true">&rarr;</span>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 ))}
