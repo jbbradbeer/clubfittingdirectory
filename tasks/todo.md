@@ -42,9 +42,9 @@ is now live.
       on all 3 collection types; sitemap lastmod = real data date.
 
 ## Owner action items (not code)
-- [ ] Vercel domain: both apex (clubfittingdirectory.com) and www currently serve 200 with no
-      redirect. Set the apex (non-www) as PRIMARY so www redirects to it — matches all canonicals,
-      sitemap, and JSON-LD (which use non-www). One toggle in Vercel → Settings → Domains.
+- [x] Vercel domain: DONE (2026-06-01). Flipped so clubfittingdirectory.com (non-www) is Production
+      (200, no redirect) and www → 307 → non-www. Now matches all canonicals/sitemap/JSON-LD. (307
+      not 308 — fine; could upgrade to permanent later but negligible.)
 - [ ] Submit sitemap (https://clubfittingdirectory.com/sitemap.xml) in Google Search Console.
 
 ## Findings reference (severity)
