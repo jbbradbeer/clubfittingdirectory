@@ -272,7 +272,7 @@ export default async function ListingPage({ params }: PageProps) {
               {/* Contact card */}
               <div className="bg-[var(--color-forest)] text-white rounded-2xl shadow-card p-6">
                 <h3
-                  className="text-lg font-bold mb-4 text-white"
+                  className="text-lg font-bold mb-4 text-white!"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   Contact
@@ -314,7 +314,7 @@ export default async function ListingPage({ params }: PageProps) {
                   {shop.phone && (
                     <a
                       href={`tel:${shop.phone}`}
-                      className="block w-full text-center py-2.5 bg-white text-[var(--color-forest)] font-semibold text-sm rounded-full hover:bg-[var(--color-cream)] transition-colors"
+                      className="block w-full text-center py-2.5 bg-white text-[var(--color-forest)]! font-semibold text-sm rounded-full hover:bg-[var(--color-cream)] transition-colors"
                     >
                       Call Now
                     </a>

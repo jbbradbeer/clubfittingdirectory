@@ -8,7 +8,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-[var(--color-forest)] text-white hover:bg-[var(--color-forest-dark)]",
+          "bg-[var(--color-forest)] text-white! hover:bg-[var(--color-forest-dark)]",
         secondary:
           "bg-[var(--color-gold)] text-[var(--color-forest-deep)] hover:bg-[var(--color-gold-dark)]",
         outline:

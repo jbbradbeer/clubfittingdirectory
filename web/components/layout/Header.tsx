@@ -55,7 +55,7 @@ export function Header() {
             ))}
             <Link
               href="/directory"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[var(--color-forest)] text-[var(--color-paper)] text-xs font-semibold uppercase tracking-[0.12em] rounded-full hover:bg-[var(--color-forest-dark)] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[var(--color-forest)] text-[var(--color-paper)]! text-xs font-semibold uppercase tracking-[0.12em] rounded-full hover:bg-[var(--color-forest-dark)] transition-colors"
             >
               <Search size={14} />
               Search
@@ -90,7 +90,7 @@ export function Header() {
             <Link
               href="/directory"
               onClick={() => setMobileOpen(false)}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 mt-2 bg-[var(--color-forest)] text-[var(--color-paper)] text-xs font-semibold uppercase tracking-[0.12em] rounded-full hover:bg-[var(--color-forest-dark)] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 mt-2 bg-[var(--color-forest)] text-[var(--color-paper)]! text-xs font-semibold uppercase tracking-[0.12em] rounded-full hover:bg-[var(--color-forest-dark)] transition-colors"
             >
               <Search size={15} />
               Search Directory
