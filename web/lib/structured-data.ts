@@ -1,5 +1,6 @@
 import type { Shop } from "@/types/shop"
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants"
+import { toCitySlug } from "@/lib/supabase/queries/shops"
 
 /* ─────────────────────────────────────────────────────────
    JSON-LD STRUCTURED DATA
@@ -135,20 +136,13 @@ export function buildLocalBusinessSchema(shop: Shop): Record<string, unknown> {
   return schema
 }
 
-/** Build the city slug used in /city/[citySlug] URLs */
-function toCitySlug(city: string, stateCode: string): string {
-  const cityPart = city
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-  return `${cityPart}-${stateCode.toLowerCase()}`
-}
-
 /** BreadcrumbList schema for the breadcrumb nav — matches the visible breadcrumb on the page */
 export function buildBreadcrumbSchema(
   shop: Shop,
 ): Record<string, unknown> {
-  const citySlug = toCitySlug(shop.city, shop.state_code)
+  const citySlug = shop.city && shop.state_code
+    ? toCitySlug(shop.city, shop.state_code)
+    : ""
 
   return {
     "@context": "https://schema.org",
@@ -164,7 +158,7 @@ export function buildBreadcrumbSchema(
         "@type":    "ListItem",
         position:   2,
         name:       shop.state,
-        item:       `${SITE_URL}/state/${shop.state_code.toLowerCase()}`,
+        item:       `${SITE_URL}/state/${(shop.state_code ?? "").toLowerCase()}`,
       },
       {
         "@type":    "ListItem",

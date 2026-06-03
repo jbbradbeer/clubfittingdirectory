@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache"
 import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { US_STATES } from "@/lib/constants"
+import { SHOP_TYPES } from "@/lib/shop-types"
 
 /* ── Login ── */
 export async function login(formData: FormData) {
@@ -71,6 +72,16 @@ export async function approveSubmission(formData: FormData) {
     slug = `${slug}-${id.slice(0, 6)}`
   }
 
+  // Validate shop_type and state_code before inserting
+  const validShopType = SHOP_TYPES.find((t) => t.dbType === sub.shop_type)
+  if (!validShopType) {
+    throw new Error(`Invalid shop_type "${sub.shop_type}". Must be one of: ${SHOP_TYPES.map((t) => t.dbType).join(", ")}.`)
+  }
+  const validState = US_STATES.find((s) => s.code === sub.state_code)
+  if (!validState) {
+    throw new Error(`Invalid state_code "${sub.state_code}". Must be a valid two-letter US state code.`)
+  }
+
   // Insert into live shops as active
   const { error: insErr } = await supabase.from("shops").insert({
     slug,
@@ -90,6 +101,9 @@ export async function approveSubmission(formData: FormData) {
   await supabase.from("shop_submissions").update({ review_status: "approved" }).eq("id", id)
 
   revalidatePath("/admin")
+  revalidatePath("/directory")
+  revalidatePath("/")
+  revalidatePath(`/state/${sub.state_code.toLowerCase()}`)
 }
 
 /* ── Reject: mark a submission rejected (does not touch shops) ── */

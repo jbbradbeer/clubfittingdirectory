@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr"
+import { createClient as createBrowserClient } from "@supabase/supabase-js"
 import { cookies } from "next/headers"
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./env"
 
@@ -37,6 +38,5 @@ export async function createClient() {
  * Uses the anon key — only reads public data.
  */
 export function createStaticClient() {
-  const { createClient: createBrowserClient } = require("@supabase/supabase-js")
   return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 }
