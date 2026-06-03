@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { HeroSearch } from "@/components/home/HeroSearch"
 import { NewsletterForm } from "@/components/newsletter/NewsletterForm"
-import { SITE_NAME, SITE_URL } from "@/lib/constants"
+import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildWebSiteSchema, buildOrganizationSchema } from "@/lib/structured-data"
 import type { Metadata } from "next"
@@ -266,27 +266,6 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          NEWSLETTER
-          ═══════════════════════════════════════════════════ */}
-      <section className="bg-[var(--color-forest)] grain text-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 text-center">
-          <p className="section-label mb-5" style={{ color: "var(--color-gold)" }}>
-            The Tuxedo Collective
-          </p>
-          <h2 className="display text-[clamp(1.8rem,4vw,2.6rem)] text-white">
-            Private club golf, explained.
-          </h2>
-          <p className="mt-4 max-w-xl mx-auto text-white/70 leading-relaxed">
-            Get the free weekly newsletter on the fittings, gear, and stories behind the
-            game&apos;s most exclusive clubs — from the team that curates this directory.
-          </p>
-          <div className="mt-8 max-w-lg mx-auto text-left">
-            <NewsletterForm variant="section" />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
           SUBMIT A SHOP
           ═══════════════════════════════════════════════════ */}
       <section className="bg-[var(--color-ivory)] py-16 md:py-20 border-t border-[var(--color-border)]">
@@ -313,30 +292,22 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          CLOSING CTA
+          CLOSING CTA — Newsletter signup (the homepage's single signup)
           ═══════════════════════════════════════════════════ */}
-      <section className="bg-[var(--color-forest-deep)] text-white">
+      <section className="bg-[var(--color-forest)] grain text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
           <p className="section-label mb-5" style={{ color: "var(--color-gold)" }}>
-            About the Directory
+            The Tuxedo Collective
           </p>
           <h2 className="text-3xl md:text-[2.6rem] font-bold text-white leading-[1.1]">
-            The right fit changes the game.
+            Private club golf, explained.
           </h2>
           <p className="mt-6 max-w-xl mx-auto text-white/70 leading-relaxed">
-            {SITE_NAME} brings together the finest independent club fitters and golf
-            retailers across all 50 states — every listing curated, every detail verified.
+            Get the free weekly newsletter on the fittings, gear, and stories behind the
+            game&apos;s most exclusive clubs — from the team that curates this directory.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Button href="/directory" variant="secondary">
-              Find a fitter
-            </Button>
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-white/25 text-white text-sm font-semibold hover:bg-white/10 transition-colors"
-            >
-              About us
-            </Link>
+          <div className="mt-9 max-w-lg mx-auto text-left">
+            <NewsletterForm variant="section" />
           </div>
         </div>
       </section>
