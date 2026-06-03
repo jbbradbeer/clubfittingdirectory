@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Search, Star, MapPin, Store, Wrench, ShoppingBag, Target, GraduationCap, Flag } from "lucide-react"
-import { getTopRatedShops, getAllStatesWithShops, getShopTypeCounts, getDirectoryStats } from "@/lib/supabase/queries/shops"
+import { getTopRatedShops, getHomepageStats } from "@/lib/supabase/queries/shops"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
@@ -35,14 +35,19 @@ const STEPS = [
 ]
 
 export default async function HomePage() {
-  const [topShops, states, typeCounts, stats] = await Promise.all([
+  // One combined query (getHomepageStats) returns the states list, per-type
+  // counts, and headline stats from a single table scan instead of three.
+  // No fabricated fallback: if it can't load we show honest copy (see below)
+  // rather than invented numbers that won't match reality.
+  const [topShops, home] = await Promise.all([
     getTopRatedShops(6).catch((e) => logQueryError("homepage getTopRatedShops", e, [])),
-    getAllStatesWithShops().catch((e) => logQueryError("homepage getAllStatesWithShops", e, [])),
-    getShopTypeCounts().catch((e) => logQueryError("homepage getShopTypeCounts", e, {} as Record<string, number>)),
-    // No fabricated fallback: if stats can't load we show honest copy (see below)
-    // rather than invented numbers that won't match reality.
-    getDirectoryStats().catch((e) => logQueryError("homepage getDirectoryStats", e, { total: 0, states: 0, fitters: 0 })),
+    getHomepageStats().catch((e) => logQueryError("homepage getHomepageStats", e, {
+      states: [] as { state_code: string; state: string; count: number }[],
+      typeCounts: {} as Record<string, number>,
+      stats: { total: 0, states: 0, fitters: 0 },
+    })),
   ])
+  const { states, typeCounts, stats } = home
 
   const hasStats = stats.total > 0
 

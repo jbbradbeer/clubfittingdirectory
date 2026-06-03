@@ -17,6 +17,21 @@ interface DirectoryClientProps {
 }
 
 type ViewMode = "grid" | "map"
+type SortMode = "rating" | "name"
+
+/* Safe parsers for URL params — a malformed value (e.g. ?page=abc, ?rating=xyz,
+   ?sort=bogus) must never produce NaN/invalid state that breaks the fetch. */
+function parsePage(v: string | null): number {
+  const n = parseInt(v ?? "1", 10)
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+function parseRating(v: string | null): number {
+  const n = parseFloat(v ?? "0")
+  return Number.isFinite(n) && n > 0 ? n : 0
+}
+function parseSort(v: string | null): SortMode {
+  return v === "name" ? "name" : "rating"
+}
 
 export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClientProps) {
   const router = useRouter()
@@ -29,11 +44,9 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     searchParams.get("types")?.split(",").filter(Boolean) ?? [],
   )
   const [fittingOnly, setFittingOnly] = useState(searchParams.get("fitting") === "true")
-  const [minRating, setMinRating] = useState(parseFloat(searchParams.get("rating") ?? "0"))
-  const [sort, setSort] = useState<"rating" | "name">(
-    (searchParams.get("sort") as "rating" | "name") ?? "rating",
-  )
-  const [page, setPage] = useState(parseInt(searchParams.get("page") ?? "1", 10))
+  const [minRating, setMinRating] = useState(parseRating(searchParams.get("rating")))
+  const [sort, setSort] = useState<SortMode>(parseSort(searchParams.get("sort")))
+  const [page, setPage] = useState(parsePage(searchParams.get("page")))
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
 
   /* ── Results ── */
@@ -121,9 +134,9 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     setSelectedState((prev) => (prev !== (searchParams.get("state") ?? "") ? (searchParams.get("state") ?? "") : prev))
     setSelectedShopTypes((prev) => (prev.join(",") !== urlTypes.join(",") ? urlTypes : prev))
     setFittingOnly((prev) => (prev !== (searchParams.get("fitting") === "true") ? searchParams.get("fitting") === "true" : prev))
-    setMinRating((prev) => (prev !== parseFloat(searchParams.get("rating") ?? "0") ? parseFloat(searchParams.get("rating") ?? "0") : prev))
-    setSort((prev) => (prev !== ((searchParams.get("sort") as "rating" | "name") ?? "rating") ? ((searchParams.get("sort") as "rating" | "name") ?? "rating") : prev))
-    setPage((prev) => (prev !== parseInt(searchParams.get("page") ?? "1", 10) ? parseInt(searchParams.get("page") ?? "1", 10) : prev))
+    setMinRating((prev) => { const v = parseRating(searchParams.get("rating")); return prev !== v ? v : prev })
+    setSort((prev) => { const v = parseSort(searchParams.get("sort")); return prev !== v ? v : prev })
+    setPage((prev) => { const v = parsePage(searchParams.get("page")); return prev !== v ? v : prev })
   }, [searchParams])
 
   /* ── Auto-trigger Near Me when the page is opened via /directory?near=1

@@ -60,7 +60,9 @@ export default async function ListingPage({ params }: PageProps) {
 
   const localBusinessSchema = buildLocalBusinessSchema(shop)
   const breadcrumbSchema = buildBreadcrumbSchema(shop)
-  const citySlug = toCitySlug(shop.city, shop.state_code)
+  // Guard against rows with a null city/state_code so a single bad row can't
+  // crash the whole page (mirrors the defensive handling in structured-data.ts).
+  const citySlug = shop.city && shop.state_code ? toCitySlug(shop.city, shop.state_code) : ""
 
   /* Parse about JSON for display */
   const aboutEntries: { key: string; value: string }[] = []
@@ -91,7 +93,7 @@ export default async function ListingPage({ params }: PageProps) {
           <Breadcrumb
             items={[
               { label: "Home", href: "/" },
-              { label: shop.state, href: `/state/${shop.state_code.toLowerCase()}` },
+              { label: shop.state, href: `/state/${(shop.state_code ?? "").toLowerCase()}` },
               { label: shop.city, href: `/city/${citySlug}` },
               { label: shop.name },
             ]}
