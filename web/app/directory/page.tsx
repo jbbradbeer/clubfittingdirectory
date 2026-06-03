@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/directory` },
 }
 
+// Cache the static filter options (state + type dropdowns). The actual result
+// list is fetched client-side, so these only change when shops are added.
+export const revalidate = 86400
+
 export default async function DirectoryPage() {
   const [stateOptions, shopTypeOptions] = await Promise.all([
     getAllStatesWithShops().catch((e) => logQueryError("directory getAllStatesWithShops", e, [])),

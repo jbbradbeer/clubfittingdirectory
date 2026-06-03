@@ -1,3 +1,4 @@
+import { cache } from "react"
 import { createStaticClient } from "@/lib/supabase/server"
 import type { Shop, ShopFilters } from "@/types/shop"
 import {
@@ -59,8 +60,10 @@ export async function getTopRatedShops(limit = 6): Promise<Shop[]> {
   return (data as unknown as Shop[]) ?? []
 }
 
-/* ── Single shop by slug ── */
-export async function getShopBySlug(slug: string): Promise<Shop | null> {
+/* ── Single shop by slug ──
+   Wrapped in React cache() so the listing page's generateMetadata + body (same
+   request) share one query instead of hitting the DB twice. */
+export const getShopBySlug = cache(async (slug: string): Promise<Shop | null> => {
   const supabase = createStaticClient()
   // Use limit(1) instead of .single(): .single() throws (→ 500) if two active
   // rows ever share a slug. This selects the top match, returns null for "no
@@ -76,7 +79,7 @@ export async function getShopBySlug(slug: string): Promise<Shop | null> {
   // A real database error still throws; "no rows" is just an empty array → null.
   if (error) throw error
   return (data?.[0] as Shop) ?? null
-}
+})
 
 /* ── Shops in a given state ── */
 export async function getShopsByState(stateCode: string): Promise<Shop[]> {
@@ -106,10 +109,11 @@ export async function getAllShopSlugs(): Promise<{ slug: string; updated_at: str
   return data ?? []
 }
 
-/* ── All states that have at least one listing ── */
-export async function getAllStatesWithShops(): Promise<
+/* ── All states that have at least one listing ──
+   cache()'d: state pages call this in both generateMetadata and the body. */
+export const getAllStatesWithShops = cache(async (): Promise<
   { state_code: string; state: string; count: number }[]
-> {
+> => {
   const supabase = createStaticClient()
   const { data, error } = await supabase
     .from("shops")
@@ -129,7 +133,7 @@ export async function getAllStatesWithShops(): Promise<
   return Object.entries(counts)
     .map(([state_code, { state, count }]) => ({ state_code, state, count }))
     .sort((a, b) => a.state.localeCompare(b.state))
-}
+})
 
 /* ── Directory-wide stats for the homepage ── */
 export async function getDirectoryStats(): Promise<{
@@ -150,6 +154,46 @@ export async function getDirectoryStats(): Promise<{
   const fitters = rows.filter((r: { shop_type: string | null }) => r.shop_type === "Clubfitter").length
   return { total: rows.length, states, fitters }
 }
+
+/* ── Combined homepage aggregates in ONE table scan ──
+   Replaces three separate full-table queries (states list, type counts, and
+   directory stats) with a single pass. cache()'d for good measure. */
+export const getHomepageStats = cache(async (): Promise<{
+  states: { state_code: string; state: string; count: number }[]
+  typeCounts: Record<string, number>
+  stats: { total: number; states: number; fitters: number }
+}> => {
+  const supabase = createStaticClient()
+  const { data, error } = await supabase
+    .from("shops")
+    .select("state_code, state, shop_type")
+    .eq("status", "active")
+
+  if (error) throw error
+  const rows = (data ?? []) as { state_code: string | null; state: string; shop_type: string | null }[]
+
+  const stateMap: Record<string, { state: string; count: number }> = {}
+  const typeCounts: Record<string, number> = {}
+  for (const row of rows) {
+    if (row.state_code) {
+      if (!stateMap[row.state_code]) stateMap[row.state_code] = { state: row.state, count: 0 }
+      stateMap[row.state_code].count++
+    }
+    const t = row.shop_type ?? "Unknown"
+    typeCounts[t] = (typeCounts[t] ?? 0) + 1
+  }
+
+  const states = Object.entries(stateMap)
+    .map(([state_code, { state, count }]) => ({ state_code, state, count }))
+    .sort((a, b) => a.state.localeCompare(b.state))
+  const fitters = rows.filter((r) => r.shop_type === "Clubfitter").length
+
+  return {
+    states,
+    typeCounts,
+    stats: { total: rows.length, states: Object.keys(stateMap).length, fitters },
+  }
+})
 
 /* ─────────────────────────────────────────────────────────
    DIRECTORY SEARCH — composable paginated query
@@ -447,20 +491,27 @@ export async function getAllCitySlugs(): Promise<{ citySlug: string }[]> {
   return result
 }
 
-/* ── All shops for a city page, derived from state query ── */
-export async function getShopsForCityPage(
+/* ── All shops for a city page, derived from state query ──
+   cache()'d (called in both generateMetadata and the page body). */
+export const getShopsForCityPage = cache(async (
   citySlug: string,
-): Promise<{ shops: Shop[]; city: string; state: string; stateCode: string } | null> {
+): Promise<{ shops: Shop[]; city: string; state: string; stateCode: string } | null> => {
   // State code is always the final hyphen-segment (2 letters)
   const parts     = citySlug.split("-")
   const stateCode = parts[parts.length - 1].toUpperCase()
+  // First token of the city name — used to narrow the DB query (index-friendly)
+  // instead of fetching the whole state. The exact-city match still happens by
+  // slug below, so this only has to be a safe SUPERSET of the target rows.
+  const cityFirstWord = (parts[0] ?? "").replace(/[^a-z0-9]/gi, "")
 
   const supabase = createStaticClient()
-  const { data, error } = await supabase
+  let query = supabase
     .from("shops")
     .select(CARD_FIELDS)
     .eq("status", "active")
     .eq("state_code", stateCode)
+  if (cityFirstWord) query = query.ilike("city", `${cityFirstWord}%`)
+  const { data, error } = await query
     .order("is_featured", { ascending: false })
     .order("rating",      { ascending: false, nullsFirst: false })
     .limit(1000)
@@ -480,4 +531,4 @@ export async function getShopsForCityPage(
 
   // Display name comes from a shop in this city (not an arbitrary state shop).
   return { shops, city: shops[0].city, state: shops[0].state, stateCode }
-}
+})

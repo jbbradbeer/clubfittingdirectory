@@ -60,6 +60,7 @@ export default async function StatePage({ params }: PageProps) {
   /* Build city breakdown */
   const cityMap: Record<string, { count: number; slug: string }> = {}
   for (const shop of shops) {
+    if (!shop.city) continue // a shop with no city can't anchor a city link/slug
     if (!cityMap[shop.city]) {
       cityMap[shop.city] = { count: 0, slug: toCitySlug(shop.city, code) }
     }

@@ -223,12 +223,16 @@ export function buildItemListSchema(
   shops: Pick<Shop, "name" | "slug">[],
   listName: string,
 ): Record<string, unknown> {
+  // Cap the embedded list: Google only uses a limited number of ItemList
+  // entries, so serializing 1,000 into the HTML just bloats page weight.
+  const MAX_ITEMS = 100
+  const items = shops.slice(0, MAX_ITEMS)
   return {
     "@context": "https://schema.org",
     "@type":    "ItemList",
     name:        listName,
-    numberOfItems: shops.length,
-    itemListElement: shops.map((shop, i) => ({
+    numberOfItems: items.length,
+    itemListElement: items.map((shop, i) => ({
       "@type":   "ListItem",
       position:  i + 1,
       url:       `${SITE_URL}/listing/${shop.slug}`,

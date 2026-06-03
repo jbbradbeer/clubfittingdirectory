@@ -25,6 +25,10 @@ import { logQueryError } from "@/lib/utils"
      - Listings: monthly (data changes occasionally)
    ───────────────────────────────────────────────────────── */
 
+// Regenerate the sitemap at most once a day instead of on every crawler hit —
+// the underlying data (shops, cities, states) changes slowly.
+export const revalidate = 86400
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Fetch all dynamic routes in parallel */
   const [slugs, stateCodes, citySlugs, typeCounts] = await Promise.all([
