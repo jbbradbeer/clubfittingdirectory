@@ -1,0 +1,115 @@
+"use client"
+
+import { useState } from "react"
+import { CheckCircle, Loader2 } from "lucide-react"
+
+/**
+ * Newsletter signup form for "The Tuxedo Collective".
+ * Posts to /api/newsletter, which adds the email to the beehiiv audience.
+ *
+ * Designed to sit on the site's dark forest backgrounds (footer, homepage
+ * band, /newsletter hero). The `variant` only adjusts sizing/width.
+ */
+
+type Status = "idle" | "submitting" | "success" | "error"
+type Variant = "footer" | "section" | "page"
+
+export function NewsletterForm({ variant = "section" }: { variant?: Variant }) {
+  const [status, setStatus] = useState<Status>("idle")
+  const [errorMsg, setErrorMsg] = useState("")
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setStatus("submitting")
+    setErrorMsg("")
+
+    const fd = new FormData(e.currentTarget)
+    const payload = {
+      email: fd.get("email"),
+      company_website: fd.get("company_website"), // honeypot
+      source: typeof window !== "undefined" ? window.location.pathname : undefined,
+    }
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.")
+      setStatus("success")
+    } catch (err) {
+      setStatus("error")
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.")
+    }
+  }
+
+  const big = variant === "page"
+
+  if (status === "success") {
+    return (
+      <div
+        className={`flex items-center gap-3 rounded-full bg-white/10 border border-[var(--color-gold)]/40 text-white ${
+          big ? "px-6 py-4 text-base" : "px-5 py-3.5 text-sm"
+        }`}
+      >
+        <CheckCircle size={big ? 24 : 20} className="shrink-0 text-[var(--color-gold)]" />
+        <span>
+          <strong className="font-semibold text-white">You&apos;re in!</strong> Check your inbox
+          to confirm your subscription.
+        </span>
+      </div>
+    )
+  }
+
+  const inputClass = `flex-1 min-w-0 rounded-full bg-white border border-transparent text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:ring-2 focus:ring-[var(--color-gold)]/60 transition-all ${
+    big ? "px-5 py-3.5 text-base" : "px-4 py-3 text-sm"
+  }`
+  const buttonClass = `inline-flex items-center justify-center gap-2 shrink-0 rounded-full bg-[var(--color-gold)] text-[var(--color-forest-deep)] font-semibold hover:bg-[var(--color-gold-dark)] transition-colors cursor-pointer disabled:opacity-60 ${
+    big ? "px-7 py-3.5 text-base" : "px-6 py-3 text-sm"
+  }`
+
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      {/* Honeypot — visually hidden; real users never fill it */}
+      <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
+        <label>
+          Company website
+          <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3">
+        <label htmlFor={`newsletter-email-${variant}`} className="sr-only">
+          Email address
+        </label>
+        <input
+          id={`newsletter-email-${variant}`}
+          name="email"
+          type="email"
+          required
+          maxLength={200}
+          autoComplete="email"
+          placeholder="you@email.com"
+          className={inputClass}
+        />
+        <button type="submit" disabled={status === "submitting"} className={buttonClass}>
+          {status === "submitting" ? (
+            <>
+              <Loader2 size={18} className="animate-spin" /> Joining…
+            </>
+          ) : (
+            "Subscribe"
+          )}
+        </button>
+      </div>
+
+      {status === "error" && <p className="mt-2.5 text-sm text-[var(--color-gold)]">{errorMsg}</p>}
+
+      <p className={`mt-3 text-white/50 ${big ? "text-sm" : "text-xs"}`}>
+        Free. Weekly. Unsubscribe anytime.
+      </p>
+    </form>
+  )
+}
