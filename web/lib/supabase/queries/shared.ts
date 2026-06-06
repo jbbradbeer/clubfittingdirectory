@@ -37,7 +37,21 @@ export type ShopCard = Pick<
    are LIKE wildcards/escapes), so a visitor's search text can't break or alter
    the query. */
 export function sanitizeSearchTerm(input: string): string {
-  return input.replace(/[,()%\\*]/g, " ").trim()
+  return (
+    input
+      // Treat every apostrophe variant as a single-character wildcard (_) so a
+      // search matches the stored name regardless of which apostrophe the
+      // keyboard produced. macOS/iOS "smart quotes" silently turns a typed '
+      // into a curly ’ (U+2019); the data uses straight apostrophes, so without
+      // this "Pete’s" would never match the stored "Pete's".
+      .replace(/['’‘`´]/g, "_")
+      // Strip characters that have structural meaning inside a PostgREST `.or()`
+      // / `.ilike` filter string (commas separate clauses, parens group them, %
+      // and \ are LIKE wildcards/escapes), so a visitor's search text can't
+      // break or alter the query.
+      .replace(/[,()%\\*]/g, " ")
+      .trim()
+  )
 }
 
 export interface DirectoryFilters {
