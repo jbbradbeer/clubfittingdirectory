@@ -115,6 +115,10 @@ CREATE INDEX IF NOT EXISTS idx_shops_services_array ON public.shops USING GIN (s
 ALTER TABLE public.shops ENABLE ROW LEVEL SECURITY;
 
 -- Anyone can read active shops (public directory)
+-- NOTE: Supabase's Security Advisor flags this table as "visible to anon /
+-- authenticated" (lints 0026/0027). That is INTENTIONAL — a public directory must
+-- let anonymous visitors read active shops. The policy above limits them to
+-- status = 'active' rows; writes are blocked (no write policy → service_role only).
 CREATE POLICY "Public read active shops"
   ON public.shops FOR SELECT
   USING (status = 'active');
@@ -124,7 +128,8 @@ CREATE POLICY "Public read active shops"
 -- ============================================================
 
 CREATE OR REPLACE FUNCTION public.handle_updated_at()
-RETURNS TRIGGER LANGUAGE plpgsql AS $$
+RETURNS TRIGGER LANGUAGE plpgsql
+SET search_path = public AS $$
 BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
@@ -167,7 +172,8 @@ RETURNS TABLE (
   phone               TEXT,
   distance_km         FLOAT
 )
-LANGUAGE plpgsql AS $$
+LANGUAGE plpgsql
+SET search_path = public AS $$
 BEGIN
   RETURN QUERY
   SELECT
@@ -217,7 +223,8 @@ RETURNS TABLE (
   website     TEXT,
   rank        FLOAT
 )
-LANGUAGE plpgsql AS $$
+LANGUAGE plpgsql
+SET search_path = public AS $$
 BEGIN
   RETURN QUERY
   SELECT

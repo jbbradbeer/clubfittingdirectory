@@ -43,6 +43,10 @@ CREATE INDEX IF NOT EXISTS idx_shop_submissions_created_at
 ALTER TABLE public.shop_submissions ENABLE ROW LEVEL SECURITY;
 
 -- The public form (anon key) may INSERT a submission...
+-- NOTE: Supabase's Security Advisor flags WITH CHECK (true) as "RLS policy always
+-- true" (lint 0024). That is INTENTIONAL here — anyone is meant to be able to
+-- submit a shop. There is deliberately NO SELECT/UPDATE/DELETE policy, so the
+-- public still cannot read back, edit, or delete submissions.
 CREATE POLICY "Public can submit a shop"
   ON public.shop_submissions FOR INSERT
   TO anon, authenticated
