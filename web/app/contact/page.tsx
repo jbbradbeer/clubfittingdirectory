@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Mail, Store, Pencil } from "lucide-react"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
+import { IconCircle } from "@/components/ui/IconCircle"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 
 const CONTACT_EMAIL = "bowtiedgolf@gmail.com"
@@ -48,15 +49,12 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Email card */}
-            <div className="lg:w-96 shrink-0">
+            <div className="w-full lg:max-w-sm lg:shrink-0">
               <div className="bg-[var(--color-forest)] text-white rounded-2xl p-8 shadow-card">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/10 mb-5">
-                  <Mail size={22} />
-                </div>
-                <h2
-                  className="text-xl font-bold mb-2 text-white"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
+                <IconCircle size="md" tone="whiteOnDark" className="mb-5">
+                  <Mail size={24} />
+                </IconCircle>
+                <h2 className="font-display text-xl font-bold mb-2 text-white">
                   Email Us
                 </h2>
                 <p className="text-sm text-white/70 mb-6 leading-relaxed">
@@ -82,11 +80,11 @@ export default function ContactPage() {
                 {REASONS.map((reason) => (
                   <div
                     key={reason.title}
-                    className="flex items-start gap-4 bg-white border border-[var(--color-border)] rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-shadow duration-300"
+                    className="flex items-start gap-4 bg-white border border-[var(--color-border)] rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-shadow duration-300"
                   >
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-forest-tint)] text-[var(--color-forest)] shrink-0">
+                    <IconCircle size="sm" className="shrink-0">
                       {reason.icon}
-                    </div>
+                    </IconCircle>
                     <div>
                       <h3 className="text-base font-semibold text-[var(--color-charcoal)]">
                         {reason.title}
@@ -97,7 +95,7 @@ export default function ContactPage() {
                       {reason.href && (
                         <Link
                           href={reason.href}
-                          className="inline-flex items-center gap-1.5 mt-2 text-sm font-semibold text-[var(--color-forest)] hover:text-[var(--color-gold)] transition-colors"
+                          className="inline-flex items-center gap-1.5 mt-2 text-sm font-semibold text-[var(--color-forest)] hover:text-[var(--color-gold-ink)] transition-colors"
                         >
                           Submit a shop
                           <span aria-hidden="true">&rarr;</span>

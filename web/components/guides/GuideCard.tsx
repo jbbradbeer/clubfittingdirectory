@@ -21,10 +21,7 @@ export function GuideCard({ guide }: { guide: Guide }) {
         )}
       </div>
 
-      <h3
-        className="text-xl font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
+      <h3 className="font-display text-xl font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors">
         {guide.h1}
       </h3>
 

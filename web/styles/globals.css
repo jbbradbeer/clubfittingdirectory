@@ -5,6 +5,32 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ─────────────────────────────────────────────────────────
+   DESIGN CONVENTIONS — read before styling anything
+   ─────────────────────────────────────────────────────────
+   Section backgrounds: page sections alternate ivory ↔ cream.
+     Pure white (--color-paper / bg-white) is reserved for cards,
+     inputs, the header, and popovers so they visibly float.
+     `grain` goes on dark forest sections (always) and at most one
+     cream "editorial moment" per page — never on white/ivory.
+     `grain` needs a positioned parent: use `relative grain`.
+   Card padding: p-6 base; p-8 only for hero-level panels and
+     full-form cards. No p-5 / p-7.
+   Radius: rounded-full = pills/CTAs/search · rounded-2xl =
+     cards/popovers · rounded-lg = inputs/selects/compact controls.
+   Icons (lucide size=): 14 inline meta text · 16 default UI/buttons
+     · 20 input leading icons & icon circles · 24 feature/empty-state.
+   Links: prose = .link-gold · standalone action links = forest base,
+     gold-ink hover · nav chrome = charcoal → forest · on dark =
+     white/80 → white.
+   Card grids: grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6
+     (sidebar-constrained lists: md:grid-cols-2 gap-6; compact tile
+     grids like states keep gap-3).
+   Gotcha: the typography rules below (h1–h6, body, a) are UNLAYERED
+     so they beat Tailwind utilities — color/weight utilities on
+     headings need the trailing important modifier, e.g. text-white!.
+   ───────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────
    DESIGN TOKENS — Club Fitting Directory
    Brand: forest green + gold on clean white/airy neutrals.
    shadcn semantic tokens are mapped to the brand below.
@@ -21,9 +47,10 @@
   --color-gold-tint:    #f6edd9;
 
   /* ── Neutrals ── */
+  /* ivory sits between paper and cream so white cards float on it */
   --color-cream:      #f6f5f1;
   --color-cream-dark: #eceae3;
-  --color-ivory:      #ffffff;
+  --color-ivory:      #fbfaf7;
   --color-white:      #ffffff;
   --color-paper:      #ffffff;
 
@@ -165,6 +192,20 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-gold-ink);
 }
 
+/* Left-aligned eyebrow with a leading gold hairline */
+.with-rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.with-rule::before {
+  content: "";
+  width: 2.5rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+}
+
 /* Hairline rule */
 .rule { border: none; border-top: 1px solid var(--color-line); }
 
@@ -216,7 +257,14 @@ h1, h2, h3, h4, h5, h6 {
   mask-image: radial-gradient(70% 70% at 50% 40%, #000 30%, transparent 100%);
 }
 
-/* Fine grain — adds tactile, print-like texture */
+/* Fine grain — adds tactile, print-like texture.
+   Self-positioning + isolated so the ::after (z-index -1) paints above the
+   element's own background instead of escaping behind the page. Without
+   this, grain silently never renders outside .hero-surface. */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
 .grain::after {
   content: "";
   position: absolute;

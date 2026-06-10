@@ -26,11 +26,11 @@ export function ResultsGrid({
 }: ResultsGridProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="h-56 bg-[var(--color-cream)] border border-[var(--color-border)] rounded-lg animate-pulse"
+            className="h-56 bg-[var(--color-cream)] border border-[var(--color-border)] rounded-2xl animate-pulse"
           />
         ))}
       </div>
@@ -40,10 +40,7 @@ export function ResultsGrid({
   if (error) {
     return (
       <div className="py-16 text-center">
-        <p
-          className="text-2xl text-[var(--color-charcoal)]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
+        <p className="font-display text-2xl text-[var(--color-charcoal)]">
           Couldn&apos;t load listings
         </p>
         <p className="mt-2 text-sm text-[var(--color-charcoal-light)]">
@@ -64,10 +61,7 @@ export function ResultsGrid({
   if (shops.length === 0) {
     return (
       <div className="py-16 text-center">
-        <p
-          className="text-2xl text-[var(--color-charcoal)]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
+        <p className="font-display text-2xl text-[var(--color-charcoal)]">
           No results found
         </p>
         <p className="mt-2 text-sm text-[var(--color-charcoal-light)]">
@@ -93,7 +87,7 @@ export function ResultsGrid({
       </p>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {shops.map((shop) => (
           <ListingCard key={shop.slug} {...shop} />
         ))}
@@ -105,7 +99,7 @@ export function ResultsGrid({
           <button
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
-            className="px-3 py-1.5 text-sm text-[var(--color-charcoal)] border border-[var(--color-border)] rounded hover:bg-[var(--color-cream)] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            className="px-3 py-1.5 text-sm text-[var(--color-charcoal)] border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-cream)] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
           >
             Prev
           </button>
@@ -119,9 +113,9 @@ export function ResultsGrid({
               <button
                 key={p}
                 onClick={() => onPageChange(p as number)}
-                className={`px-3 py-1.5 text-sm rounded cursor-pointer transition-colors ${
+                className={`px-3 py-1.5 text-sm rounded-lg cursor-pointer transition-colors ${
                   p === page
-                    ? "bg-[var(--color-gold)] text-white font-semibold border border-[var(--color-gold)]"
+                    ? "bg-[var(--color-gold)] text-[var(--color-forest-deep)] font-semibold border border-[var(--color-gold)]"
                     : "text-[var(--color-charcoal)] border border-[var(--color-border)] hover:bg-[var(--color-cream)]"
                 }`}
               >
@@ -133,7 +127,7 @@ export function ResultsGrid({
           <button
             disabled={page >= totalPages}
             onClick={() => onPageChange(page + 1)}
-            className="px-3 py-1.5 text-sm text-[var(--color-charcoal)] border border-[var(--color-border)] rounded hover:bg-[var(--color-cream)] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            className="px-3 py-1.5 text-sm text-[var(--color-charcoal)] border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-cream)] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
           >
             Next
           </button>

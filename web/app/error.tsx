@@ -10,25 +10,19 @@ export default function ErrorPage({
   reset: () => void
 }) {
   return (
-    <section className="bg-[var(--color-cream)] bg-grain min-h-[60vh] flex items-center justify-center">
+    <section className="bg-[var(--color-cream)] grain min-h-[60vh] flex items-center justify-center">
       <div className="max-w-md mx-auto px-4 text-center relative z-10">
         <p className="section-label mb-4">Error</p>
-        <h1
-          className="text-4xl font-normal text-[var(--color-charcoal)]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
+        <h1 className="font-display text-4xl font-normal text-[var(--color-charcoal)]">
           An Unexpected Lie
         </h1>
         <p className="mt-4 text-[var(--color-charcoal-light)]">
           Something went wrong loading this page. It&apos;s likely a temporary issue — try refreshing.
         </p>
         <div className="mt-8 flex items-center justify-center gap-3">
-          <button
-            onClick={reset}
-            className="px-6 py-2.5 bg-[var(--color-gold)] text-white text-sm font-semibold rounded hover:bg-[var(--color-gold-dark)] transition-colors cursor-pointer"
-          >
+          <Button onClick={reset} variant="secondary" size="md">
             Try Again
-          </button>
+          </Button>
           <Button href="/" variant="outline" size="md">
             Return Home
           </Button>

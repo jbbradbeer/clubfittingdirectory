@@ -3,6 +3,7 @@ import { Search, MapPin, ShieldCheck } from "lucide-react"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
+import { IconCircle } from "@/components/ui/IconCircle"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 
 export const metadata: Metadata = {
@@ -47,16 +48,16 @@ export default function AboutPage() {
             eyebrow="What We Do"
             title="A directory built for the fitting community"
           />
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {PILLARS.map((pillar) => (
               <div
                 key={pillar.title}
-                className="bg-white border border-[var(--color-border)] rounded-2xl p-7 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
+                className="bg-white border border-[var(--color-border)] rounded-2xl p-6 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
               >
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-forest-tint)] text-[var(--color-forest)] mb-5">
+                <IconCircle size="md" className="mb-5">
                   {pillar.icon}
-                </div>
-                <h3 className="text-lg font-bold text-[var(--color-charcoal)] mb-2" style={{ fontFamily: "var(--font-display)" }}>
+                </IconCircle>
+                <h3 className="font-display text-lg font-bold text-[var(--color-charcoal)] mb-2">
                   {pillar.title}
                 </h3>
                 <p className="text-sm text-[var(--color-charcoal-light)] leading-relaxed">
@@ -72,10 +73,7 @@ export default function AboutPage() {
       <section className="bg-[var(--color-cream)] grain relative py-20">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <p className="section-label mb-4">Our Belief</p>
-          <p
-            className="text-xl md:text-2xl leading-relaxed text-[var(--color-charcoal)] italic"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
+          <p className="font-display text-xl md:text-2xl leading-relaxed text-[var(--color-charcoal)] italic">
             The right fit changes the game. We exist to connect golfers with the
             independent experts who make that happen.
           </p>

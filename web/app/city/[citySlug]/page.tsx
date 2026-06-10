@@ -84,7 +84,7 @@ export default async function CityPage({ params }: PageProps) {
       />
 
       {/* Intro copy */}
-      <section className="bg-white pt-10">
+      <section className="bg-[var(--color-ivory)] pt-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
             {cityIntro(city, state, shops.length)}
@@ -93,14 +93,14 @@ export default async function CityPage({ params }: PageProps) {
       </section>
 
       {/* Listings */}
-      <section className="bg-[var(--color-ivory)] py-12">
+      <section className="bg-[var(--color-cream)] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow={`${shops.length} Listings`}
             title={`All Fitters in ${city}`}
             centered={false}
           />
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {shops.map((shop) => (
               <ListingCard key={shop.slug} {...shop} />
             ))}
@@ -109,7 +109,7 @@ export default async function CityPage({ params }: PageProps) {
       </section>
 
       {/* Back to state */}
-      <section className="bg-white py-10">
+      <section className="bg-[var(--color-ivory)] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Button href={`/state/${stateCode.toLowerCase()}`} variant="outline" size="sm">
             &larr; All fitters in {state}

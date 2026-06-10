@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { CheckCircle, Loader2 } from "lucide-react"
+import { darkInputBase, darkButtonBase } from "@/lib/form-styles"
 
 /**
  * Newsletter signup form for "The Tuxedo Collective".
@@ -63,12 +64,8 @@ export function NewsletterForm({ variant = "section" }: { variant?: Variant }) {
     )
   }
 
-  const inputClass = `flex-1 min-w-0 rounded-full bg-white border border-transparent text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:ring-2 focus:ring-[var(--color-gold)]/60 transition-all ${
-    big ? "px-5 py-3.5 text-base" : "px-4 py-3 text-sm"
-  }`
-  const buttonClass = `inline-flex items-center justify-center gap-2 shrink-0 rounded-full bg-[var(--color-gold)] text-[var(--color-forest-deep)] font-semibold hover:bg-[var(--color-gold-dark)] transition-colors cursor-pointer disabled:opacity-60 ${
-    big ? "px-7 py-3.5 text-base" : "px-6 py-3 text-sm"
-  }`
+  const inputClass = `${darkInputBase} ${big ? "px-5 py-3.5 text-base" : "px-4 py-3 text-sm"}`
+  const buttonClass = `${darkButtonBase} ${big ? "px-7 py-3.5 text-base" : "px-6 py-3 text-sm"}`
 
   return (
     <form onSubmit={handleSubmit} noValidate>

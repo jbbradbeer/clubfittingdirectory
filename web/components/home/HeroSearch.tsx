@@ -101,7 +101,7 @@ export function HeroSearch() {
   }
 
   return (
-    <div ref={rootRef} className="relative max-w-2xl mx-auto">
+    <div ref={rootRef} className="relative">
       <form
         role="search"
         onSubmit={(e) => {
@@ -129,7 +129,7 @@ export function HeroSearch() {
             onChange={(e) => setValue(e.target.value)}
             onFocus={() => results.length > 0 && setOpen(true)}
             onKeyDown={onKeyDown}
-            className="w-full pl-12 pr-12 py-4 bg-white border border-[var(--color-border)] shadow-card rounded-full text-base text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:border-[var(--color-forest)] focus:ring-2 focus:ring-[var(--color-forest)]/15 transition-all"
+            className="w-full pl-12 pr-12 py-4 bg-[var(--color-cream)] border border-transparent rounded-full text-base md:text-lg text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:bg-white focus:border-[var(--color-forest)] focus:ring-2 focus:ring-[var(--color-forest)]/15 transition-all"
           />
           {loading && (
             <Loader2
@@ -152,7 +152,7 @@ export function HeroSearch() {
         <div
           id="hero-search-results"
           role="listbox"
-          className="absolute z-30 mt-2 w-full sm:w-[calc(100%-9.5rem)] sm:left-0 left-0 bg-white border border-[var(--color-border)] rounded-2xl shadow-card-hover overflow-hidden text-left animate-fade-in-up"
+          className="absolute z-30 mt-2 w-full left-0 bg-white border border-[var(--color-border)] rounded-2xl shadow-card-hover overflow-hidden text-left animate-fade-in-up"
           style={{ animationDuration: "0.2s" }}
         >
           {results.length === 0 ? (
