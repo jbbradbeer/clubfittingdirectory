@@ -3,6 +3,7 @@ import { createStaticClient } from "@/lib/supabase/server"
 import type { Shop, ShopFilters } from "@/types/shop"
 import {
   CARD_FIELDS,
+  fetchAllRows,
   sanitizeSearchTerm,
   type DirectoryFilters,
   type DirectoryResult,
@@ -100,13 +101,13 @@ export async function getShopsByState(stateCode: string): Promise<Shop[]> {
 /* ── All slugs (for generateStaticParams) ── */
 export async function getAllShopSlugs(): Promise<{ slug: string; updated_at: string }[]> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("slug, updated_at")
-    .eq("status", "active")
-
-  if (error) throw error
-  return data ?? []
+  return fetchAllRows(() =>
+    supabase
+      .from("shops")
+      .select("slug, updated_at")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
 }
 
 /* ── All states that have at least one listing ──
@@ -115,15 +116,16 @@ export const getAllStatesWithShops = cache(async (): Promise<
   { state_code: string; state: string; count: number }[]
 > => {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("state_code, state")
-    .eq("status", "active")
-
-  if (error) throw error
+  const data = await fetchAllRows<{ state_code: string | null; state: string }>(() =>
+    supabase
+      .from("shops")
+      .select("state_code, state")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
 
   const counts: Record<string, { state: string; count: number }> = {}
-  for (const row of data ?? []) {
+  for (const row of data) {
     if (!row.state_code) continue
     if (!counts[row.state_code])
       counts[row.state_code] = { state: row.state, count: 0 }
@@ -142,14 +144,14 @@ export async function getDirectoryStats(): Promise<{
   fitters: number
 }> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("state_code, shop_type")
-    .eq("status", "active")
+  const rows = await fetchAllRows<{ state_code: string; shop_type: string | null }>(() =>
+    supabase
+      .from("shops")
+      .select("state_code, shop_type")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
 
-  if (error) throw error
-
-  const rows = data ?? []
   const states  = new Set(rows.map((r: { state_code: string }) => r.state_code)).size
   const fitters = rows.filter((r: { shop_type: string | null }) => r.shop_type === "Clubfitter").length
   return { total: rows.length, states, fitters }
@@ -164,13 +166,13 @@ export const getHomepageStats = cache(async (): Promise<{
   stats: { total: number; states: number; fitters: number }
 }> => {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("state_code, state, shop_type")
-    .eq("status", "active")
-
-  if (error) throw error
-  const rows = (data ?? []) as { state_code: string | null; state: string; shop_type: string | null }[]
+  const rows = await fetchAllRows<{ state_code: string | null; state: string; shop_type: string | null }>(() =>
+    supabase
+      .from("shops")
+      .select("state_code, state, shop_type")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
 
   const stateMap: Record<string, { state: string; count: number }> = {}
   const typeCounts: Record<string, number> = {}
@@ -307,15 +309,16 @@ export async function getListings(
 /* ── Count per shop_type (for category cards) ── */
 export async function getShopTypeCounts(): Promise<Record<string, number>> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("shop_type")
-    .eq("status", "active")
-
-  if (error) throw error
+  const data = await fetchAllRows<{ shop_type: string | null }>(() =>
+    supabase
+      .from("shops")
+      .select("shop_type")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
 
   const counts: Record<string, number> = {}
-  for (const row of data ?? []) {
+  for (const row of data) {
     const t = row.shop_type ?? "Unknown"
     counts[t] = (counts[t] ?? 0) + 1
   }
@@ -397,13 +400,14 @@ export async function getShopsForStatePage(
 /* ── All distinct state_codes (for generateStaticParams on state page) ── */
 export async function getAllStateCodes(): Promise<string[]> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("state_code")
-    .eq("status", "active")
-
-  if (error) throw error
-  const codes = [...new Set((data ?? []).map((r: { state_code: string }) => r.state_code))]
+  const data = await fetchAllRows<{ state_code: string }>(() =>
+    supabase
+      .from("shops")
+      .select("state_code")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
+  const codes = [...new Set(data.map((r: { state_code: string }) => r.state_code))]
   return codes.filter((c): c is string => Boolean(c))
 }
 
@@ -442,13 +446,14 @@ export async function getShopsForCategoryPage(
 /* ── All distinct shop_type values (for generateStaticParams on category page) ── */
 export async function getAllShopTypes(): Promise<string[]> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("shop_type")
-    .eq("status", "active")
-
-  if (error) throw error
-  const types = [...new Set((data ?? []).map((r: { shop_type: string | null }) => r.shop_type ?? ""))]
+  const data = await fetchAllRows<{ shop_type: string | null }>(() =>
+    supabase
+      .from("shops")
+      .select("shop_type")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
+  const types = [...new Set(data.map((r: { shop_type: string | null }) => r.shop_type ?? ""))]
   return types.filter((t): t is string => Boolean(t))
 }
 
@@ -471,16 +476,17 @@ export function toCitySlug(city: string, stateCode: string): string {
 /* ── All city slugs (for generateStaticParams on city page) ── */
 export async function getAllCitySlugs(): Promise<{ citySlug: string }[]> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select("city, state_code")
-    .eq("status", "active")
-
-  if (error) throw error
+  const data = await fetchAllRows<{ city: string; state_code: string }>(() =>
+    supabase
+      .from("shops")
+      .select("city, state_code")
+      .eq("status", "active")
+      .order("id", { ascending: true }),
+  )
 
   const seen = new Set<string>()
   const result: { citySlug: string }[] = []
-  for (const row of (data ?? []) as { city: string; state_code: string }[]) {
+  for (const row of data) {
     if (!row.city || !row.state_code) continue
     const slug = toCitySlug(row.city, row.state_code)
     if (!seen.has(slug)) {
