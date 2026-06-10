@@ -39,6 +39,10 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
 
   /* ── State from URL params ── */
   const [query, setQuery] = useState(searchParams.get("q") ?? "")
+  /* Debounced copy of `query`. Fetching and URL sync key off this instead of
+     the raw input, so typing "scottsdale" costs one DB round-trip instead of
+     ten. 180ms matches the HeroSearch debounce. */
+  const [debouncedQuery, setDebouncedQuery] = useState(query)
   const [selectedState, setSelectedState] = useState(searchParams.get("state") ?? "")
   const [selectedShopTypes, setSelectedShopTypes] = useState<string[]>(
     searchParams.get("types")?.split(",").filter(Boolean) ?? [],
@@ -70,10 +74,15 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
      correct newer one when filters change quickly. */
   const fetchSeq = useRef(0)
 
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query), 180)
+    return () => clearTimeout(t)
+  }, [query])
+
   /* ── Sync URL params ── */
   const syncUrl = useCallback(() => {
     const params = new URLSearchParams()
-    if (query) params.set("q", query)
+    if (debouncedQuery) params.set("q", debouncedQuery)
     if (selectedState) params.set("state", selectedState)
     if (selectedShopTypes.length) params.set("types", selectedShopTypes.join(","))
     if (fittingOnly) params.set("fitting", "true")
@@ -82,7 +91,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     if (page > 1) params.set("page", String(page))
     const qs = params.toString()
     router.replace(`/directory${qs ? `?${qs}` : ""}`, { scroll: false })
-  }, [query, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, router])
+  }, [debouncedQuery, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, router])
 
   /* ── Fetch results ── */
   const fetchResults = useCallback(async () => {
@@ -92,7 +101,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     setLoadError(false)
     try {
       const result = await getListings({
-        q: query || undefined,
+        q: debouncedQuery || undefined,
         state: selectedState || undefined,
         shopTypes: selectedShopTypes.length ? selectedShopTypes : undefined,
         fitting: fittingOnly || undefined,
@@ -117,7 +126,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     } finally {
       if (seq === fetchSeq.current) setLoading(false)
     }
-  }, [query, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, nearMeActive])
+  }, [debouncedQuery, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, nearMeActive])
 
   useEffect(() => {
     fetchResults()
