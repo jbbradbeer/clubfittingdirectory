@@ -14,7 +14,9 @@ export async function GET(request: Request) {
     const suggestions = await searchShops(q, 6)
     return NextResponse.json(
       { suggestions },
-      { headers: { "Cache-Control": "public, max-age=30, stale-while-revalidate=120" } },
+      // s-maxage is what Vercel's edge cache keys off (max-age is browser-only),
+      // so popular prefixes are served from the CDN instead of re-querying the DB.
+      { headers: { "Cache-Control": "public, max-age=30, s-maxage=30, stale-while-revalidate=120" } },
     )
   } catch (e) {
     // Log so a broken search backend is visible in Vercel logs, but still
