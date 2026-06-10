@@ -133,7 +133,7 @@ export default async function ListingPage({ params }: PageProps) {
             <div className="hidden lg:flex items-center gap-3 shrink-0">
               {shop.phone && (
                 <Button href={`tel:${shop.phone}`} variant="primary" external>
-                  <Phone size={15} className="mr-1.5" />
+                  <Phone size={16} className="mr-1.5" />
                   Call Now
                 </Button>
               )}
@@ -143,7 +143,7 @@ export default async function ListingPage({ params }: PageProps) {
                   variant="secondary"
                   external
                 >
-                  <Globe size={15} className="mr-1.5" />
+                  <Globe size={16} className="mr-1.5" />
                   Visit Website
                 </Button>
               )}
@@ -161,10 +161,7 @@ export default async function ListingPage({ params }: PageProps) {
               {/* Services */}
               {shop.services_array && shop.services_array.length > 0 && (
                 <div>
-                  <h2
-                    className="text-xl font-semibold text-[var(--color-charcoal)] mb-4"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
+                  <h2 className="font-display text-xl font-semibold text-[var(--color-charcoal)] mb-4">
                     Services Offered
                   </h2>
                   <div className="flex flex-wrap gap-2">
@@ -178,13 +175,10 @@ export default async function ListingPage({ params }: PageProps) {
               {/* Club Fitting Details */}
               {shop.offers_fitting && (
                 <div>
-                  <h2
-                    className="text-xl font-semibold text-[var(--color-charcoal)] mb-4"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
+                  <h2 className="font-display text-xl font-semibold text-[var(--color-charcoal)] mb-4">
                     Club Fitting Details
                   </h2>
-                  <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5 space-y-3">
+                  <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6 space-y-3">
                     <div className="flex items-center gap-2">
                       <Wrench size={16} className="text-[var(--color-gold)]" />
                       <span className="text-sm font-medium">Club Fitting Available</span>
@@ -210,13 +204,10 @@ export default async function ListingPage({ params }: PageProps) {
               {/* About */}
               {aboutEntries.length > 0 && (
                 <div>
-                  <h2
-                    className="text-xl font-semibold text-[var(--color-charcoal)] mb-4"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
+                  <h2 className="font-display text-xl font-semibold text-[var(--color-charcoal)] mb-4">
                     About
                   </h2>
-                  <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5">
+                  <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
                     <dl className="space-y-3">
                       {aboutEntries.map(({ key, value }) => (
                         <div key={key}>
@@ -233,13 +224,10 @@ export default async function ListingPage({ params }: PageProps) {
 
               {/* Location */}
               <div>
-                <h2
-                  className="text-xl font-semibold text-[var(--color-charcoal)] mb-4"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
+                <h2 className="font-display text-xl font-semibold text-[var(--color-charcoal)] mb-4">
                   Location
                 </h2>
-                <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5">
+                <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
                   {shop.latitude != null && shop.longitude != null && (
                     <div className="mb-4">
                       <ListingMap
@@ -259,7 +247,7 @@ export default async function ListingPage({ params }: PageProps) {
                       href={shop.location_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-[var(--color-forest)] hover:text-[var(--color-gold)] transition-colors"
+                      className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-[var(--color-forest)] hover:text-[var(--color-gold-ink)] transition-colors"
                     >
                       <Navigation size={14} />
                       Open in Google Maps &rarr;
@@ -273,10 +261,7 @@ export default async function ListingPage({ params }: PageProps) {
             <aside className="lg:w-80 shrink-0 space-y-6">
               {/* Contact card */}
               <div className="bg-[var(--color-forest)] text-white rounded-2xl shadow-card p-6">
-                <h3
-                  className="text-lg font-bold mb-4 text-white!"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
+                <h3 className="font-display text-lg font-bold mb-4 text-white!">
                   Contact
                 </h3>
                 <div className="space-y-3">
@@ -337,11 +322,8 @@ export default async function ListingPage({ params }: PageProps) {
               {/* Hours card */}
               {shop.working_hours && Object.keys(shop.working_hours).length > 0 && (
                 <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
-                  <h3
-                    className="text-lg font-bold text-[var(--color-charcoal)] mb-4 flex items-center gap-2"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    <Clock size={18} className="text-[var(--color-gold)]" />
+                  <h3 className="font-display text-lg font-bold text-[var(--color-charcoal)] mb-4 flex items-center gap-2">
+                    <Clock size={20} className="text-[var(--color-gold)]" />
                     Hours
                   </h3>
                   <ShopHours workingHours={shop.working_hours} />
@@ -381,7 +363,7 @@ export default async function ListingPage({ params }: PageProps) {
               eyebrow="Also in this area"
               title={`More Fitters in ${shop.state}`}
             />
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {nearby.map((s) => (
                 <ListingCard key={s.slug} {...s} />
               ))}

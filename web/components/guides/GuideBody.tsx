@@ -68,8 +68,7 @@ function Block({ block }: { block: GuideBlock }) {
       return (
         <h2
           id={id}
-          className="scroll-mt-28 mt-14 mb-4 text-[1.75rem] font-bold text-[var(--color-charcoal)] tracking-[-0.02em]"
-          style={{ fontFamily: "var(--font-display)" }}
+          className="font-display scroll-mt-28 mt-14 mb-4 text-[1.75rem] font-bold text-[var(--color-charcoal)] tracking-[-0.02em]"
         >
           {block.text}
         </h2>
@@ -157,7 +156,7 @@ function Block({ block }: { block: GuideBlock }) {
       return (
         <div className="my-10 rounded-2xl bg-[var(--color-forest)] grain px-7 py-8 text-center sm:text-left sm:flex sm:items-center sm:justify-between sm:gap-6">
           <div>
-            <p className="text-xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+            <p className="font-display text-xl font-bold text-white">
               {block.heading}
             </p>
             {block.text && <p className="mt-1.5 text-white/70 leading-relaxed">{block.text}</p>}

@@ -19,10 +19,7 @@ export default async function AdminLoginPage({
   return (
     <section className="min-h-[70vh] flex items-center justify-center bg-[var(--color-ivory)] px-4 py-20">
       <div className="w-full max-w-sm">
-        <h1
-          className="text-2xl text-[var(--color-charcoal)] mb-6 text-center"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
+        <h1 className="font-display text-2xl text-[var(--color-charcoal)] mb-6 text-center">
           Admin Login
         </h1>
         <form

@@ -31,8 +31,8 @@ export function ListingCard({
         <div className="absolute -right-8 -top-10 w-36 h-36 rounded-full border border-white/10" />
         <div className="absolute -right-2 -bottom-12 w-40 h-40 rounded-full border border-white/10" />
         <span
-          className="text-white/95 text-6xl leading-none"
-          style={{ fontFamily: "var(--font-display)", fontWeight: 800 }}
+          aria-hidden="true"
+          className="font-display font-extrabold text-white/95 text-6xl leading-none"
         >
           {monogram}
         </span>
@@ -67,16 +67,13 @@ export function ListingCard({
       </div>
 
       {/* ── Body ── */}
-      <div className="flex flex-col flex-1 p-5">
+      <div className="flex flex-col flex-1 p-6">
         {shop_type && (
           <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-gold-ink)]">
             {shop_type}
           </span>
         )}
-        <h3
-          className="mt-1.5 text-lg font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
+        <h3 className="font-display mt-1.5 text-lg font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors">
           {name}
         </h3>
 

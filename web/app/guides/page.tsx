@@ -43,10 +43,7 @@ export default function GuidesIndexPage() {
       {/* Funnel back into the directory */}
       <section className="bg-[var(--color-forest)] grain text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
-          <h2
-            className="text-3xl md:text-[2.4rem] font-bold text-white leading-[1.1]"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
+          <h2 className="font-display text-3xl md:text-[2.4rem] font-bold text-white leading-[1.1]">
             Ready to get fitted?
           </h2>
           <p className="mt-4 max-w-xl mx-auto text-white/70 leading-relaxed">

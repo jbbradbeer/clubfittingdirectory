@@ -68,6 +68,25 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
 
   /* ── Mobile filter drawer ── */
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const filtersToggleRef = useRef<HTMLButtonElement>(null)
+  const drawerCloseRef = useRef<HTMLButtonElement>(null)
+
+  /* Drawer a11y: move focus in on open, close on Escape, lock body scroll,
+     and hand focus back to the Filters toggle on close. */
+  useEffect(() => {
+    if (!filtersOpen) return
+    drawerCloseRef.current?.focus()
+    document.body.style.overflow = "hidden"
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFiltersOpen(false)
+    }
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.body.style.overflow = ""
+      document.removeEventListener("keydown", onKey)
+      filtersToggleRef.current?.focus()
+    }
+  }, [filtersOpen])
 
   /* Sequence counter: each fetch gets a number; only the latest one is allowed
      to write its results. Prevents a slow earlier request from overwriting the
@@ -292,7 +311,9 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
 
               {/* Mobile filter toggle */}
               <button
+                ref={filtersToggleRef}
                 onClick={() => setFiltersOpen(!filtersOpen)}
+                aria-expanded={filtersOpen}
                 className="lg:hidden inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold border border-[var(--color-border)] bg-white rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
               >
                 Filters
@@ -323,7 +344,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
           {/* Desktop sidebar */}
-          <div className="hidden lg:block w-56 shrink-0">
+          <div className="hidden lg:block w-60 xl:w-64 shrink-0">
             <FilterSidebar
               stateOptions={stateOptions}
               shopTypeOptions={shopTypeOptions}
@@ -364,12 +385,22 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
       {filtersOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setFiltersOpen(false)} />
-          <div className="absolute right-0 top-0 bottom-0 w-80 bg-white p-6 overflow-y-auto shadow-xl">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filters"
+            className="absolute right-0 top-0 bottom-0 w-[min(20rem,85vw)] bg-white p-6 overflow-y-auto shadow-xl"
+          >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+              <h2 className="font-display text-lg font-semibold">
                 Filters
               </h2>
-              <button onClick={() => setFiltersOpen(false)} className="p-1 cursor-pointer">
+              <button
+                ref={drawerCloseRef}
+                onClick={() => setFiltersOpen(false)}
+                aria-label="Close filters"
+                className="p-1 cursor-pointer"
+              >
                 <X size={20} />
               </button>
             </div>

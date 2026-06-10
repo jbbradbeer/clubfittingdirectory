@@ -19,10 +19,7 @@ export function FooterNewsletterBand() {
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)] mb-3">
             The Tuxedo Collective
           </p>
-          <h3
-            className="text-2xl md:text-[1.75rem] text-white leading-tight"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
+          <h3 className="font-display text-2xl md:text-[1.75rem] text-white leading-tight">
             Private club golf, explained — every week.
           </h3>
           <p className="mt-2.5 text-sm text-white/60 leading-relaxed max-w-md">

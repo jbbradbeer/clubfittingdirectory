@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Wrench, Trophy, Newspaper } from "lucide-react"
 import { NewsletterForm } from "@/components/newsletter/NewsletterForm"
+import { IconCircle } from "@/components/ui/IconCircle"
 import { SITE_URL } from "@/lib/constants"
 
 export const metadata: Metadata = {
@@ -71,9 +72,9 @@ export default function NewsletterPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {REASONS.map((r) => (
               <div key={r.title} className="text-center">
-                <span className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--color-forest-tint)] text-[var(--color-forest)] mb-5">
+                <IconCircle size="lg" className="mb-5">
                   {r.icon}
-                </span>
+                </IconCircle>
                 <h3 className="text-xl font-bold text-[var(--color-charcoal)]">{r.title}</h3>
                 <p className="mt-2 text-[var(--color-charcoal-light)] leading-relaxed">{r.body}</p>
               </div>

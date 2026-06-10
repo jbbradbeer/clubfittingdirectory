@@ -1,6 +1,7 @@
 "use client"
 
 import { ChevronDown } from "lucide-react"
+import { fieldClass, labelClass, checkboxClass } from "@/lib/form-styles"
 
 interface FilterSidebarProps {
   /* Available options */
@@ -66,7 +67,7 @@ export function FilterSidebar({
 
       {/* State filter */}
       <div>
-        <label htmlFor="filter-state" className="block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-2">
+        <label htmlFor="filter-state" className={labelClass}>
           State
         </label>
         <div className="relative">
@@ -74,7 +75,7 @@ export function FilterSidebar({
             id="filter-state"
             value={selectedState}
             onChange={(e) => onStateChange(e.target.value)}
-            className="w-full appearance-none px-3 py-2.5 pr-8 bg-white border border-[var(--color-border)] rounded-lg text-sm text-[var(--color-charcoal)] focus:outline-none focus:border-[var(--color-gold)] cursor-pointer"
+            className={`${fieldClass} appearance-none pr-8 cursor-pointer`}
           >
             <option value="">All States</option>
             {stateOptions.map((s) => (
@@ -89,7 +90,7 @@ export function FilterSidebar({
 
       {/* Shop Type checkboxes */}
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-2">
+        <label className={labelClass}>
           Shop Type
         </label>
         <div className="space-y-2">
@@ -99,7 +100,7 @@ export function FilterSidebar({
                 type="checkbox"
                 checked={selectedShopTypes.includes(type)}
                 onChange={() => toggleShopType(type)}
-                className="w-4 h-4 rounded border-[var(--color-border)] text-[var(--color-forest)] focus:ring-[var(--color-gold)] cursor-pointer accent-[var(--color-forest)]"
+                className={checkboxClass}
               />
               <span className="text-sm text-[var(--color-charcoal)] group-hover:text-[var(--color-forest)] transition-colors">
                 {type}
@@ -116,7 +117,7 @@ export function FilterSidebar({
             type="checkbox"
             checked={fittingOnly}
             onChange={(e) => onFittingChange(e.target.checked)}
-            className="w-4 h-4 rounded border-[var(--color-border)] text-[var(--color-forest)] focus:ring-[var(--color-gold)] cursor-pointer accent-[var(--color-forest)]"
+            className={checkboxClass}
           />
           <span className="text-sm font-medium text-[var(--color-charcoal)] group-hover:text-[var(--color-forest)] transition-colors">
             Offers Club Fitting
@@ -126,7 +127,7 @@ export function FilterSidebar({
 
       {/* Rating filter */}
       <div>
-        <label htmlFor="filter-rating" className="block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-2">
+        <label htmlFor="filter-rating" className={labelClass}>
           Minimum Rating
         </label>
         <div className="flex items-center gap-3">

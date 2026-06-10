@@ -18,10 +18,7 @@ export function SectionHeader({
       {eyebrow && (
         <p className={`section-label mb-4 ${centered ? "" : "with-rule"}`}>{eyebrow}</p>
       )}
-      <h2
-        className="text-[2rem] sm:text-4xl md:text-[2.6rem] font-bold leading-[1.05] tracking-[-0.025em]"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
+      <h2 className="font-display text-[2rem] sm:text-4xl md:text-[2.6rem] font-bold leading-[1.05] tracking-[-0.025em]">
         {title}
       </h2>
       {subtitle && (
