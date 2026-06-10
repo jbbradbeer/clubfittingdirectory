@@ -1,7 +1,7 @@
 import type { Shop } from "@/types/shop"
 import type { Guide } from "@/lib/guides/types"
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants"
-import { toCitySlug } from "@/lib/supabase/queries/shops"
+import { toCitySlug } from "@/lib/slugs"
 
 /* ─────────────────────────────────────────────────────────
    JSON-LD STRUCTURED DATA

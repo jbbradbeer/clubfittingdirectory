@@ -1,5 +1,6 @@
 import { cache } from "react"
 import { createStaticClient } from "@/lib/supabase/server"
+import { toCitySlug } from "@/lib/slugs"
 import type { Shop, ShopFilters } from "@/types/shop"
 import {
   CARD_FIELDS,
@@ -461,17 +462,9 @@ export async function getAllShopTypes(): Promise<string[]> {
    CITY PAGES — SEO city-level landing pages
    ───────────────────────────────────────────────────────── */
 
-/** Converts a city name + state code into a URL-safe slug.
- *  e.g. "San Francisco", "CA" → "san-francisco-ca"
- *       "St. Louis", "MO"    → "st-louis-mo"
- */
-export function toCitySlug(city: string, stateCode: string): string {
-  const cityPart = city
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-  return `${cityPart}-${stateCode.toLowerCase()}`
-}
+/* toCitySlug now lives in lib/slugs.ts (pure helper, unit-tested there);
+   re-exported here so existing imports keep working. */
+export { toCitySlug } from "@/lib/slugs"
 
 /* ── All city slugs (for generateStaticParams on city page) ── */
 export async function getAllCitySlugs(): Promise<{ citySlug: string }[]> {
