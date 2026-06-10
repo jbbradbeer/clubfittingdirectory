@@ -13,7 +13,19 @@ import { buildWebSiteSchema, buildOrganizationSchema } from "@/lib/structured-da
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
+  // `absolute` bypasses the layout's "%s | Club Fitting Directory" template so the
+  // homepage gets a tight, keyword-led title rather than a long suffixed one.
+  title: { absolute: "Golf Club Fitting Near You | Club Fitting Directory" },
+  description:
+    "Find independent golf club fitters, retailers, and simulators near you. Browse 1,000+ shops across all 50 states — compare ratings, services, and locations.",
   alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: "Golf Club Fitting Near You | Club Fitting Directory",
+    description:
+      "Find independent golf club fitters, retailers, and simulators near you across all 50 states.",
+    url: SITE_URL,
+    type: "website",
+  },
 }
 
 export const revalidate = 3600

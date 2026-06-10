@@ -1,4 +1,5 @@
 import type { Shop } from "@/types/shop"
+import type { Guide } from "@/lib/guides/types"
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants"
 import { toCitySlug } from "@/lib/supabase/queries/shops"
 
@@ -275,5 +276,51 @@ export function buildOrganizationSchema(): Record<string, unknown> {
     url:         SITE_URL,
     logo:        `${SITE_URL}/icon.png`,
     description: SITE_DESCRIPTION,
+  }
+}
+
+/**
+ * Article schema for a guide page — tells Google this is editorial content with a
+ * headline, publish/modified dates, and a publisher. Helps the article qualify
+ * for article-style rich results and signals freshness.
+ */
+export function buildArticleSchema(guide: Guide): Record<string, unknown> {
+  const url = `${SITE_URL}/guides/${guide.slug}`
+  return {
+    "@context": "https://schema.org",
+    "@type":    "Article",
+    headline:        guide.h1,
+    description:     guide.metaDescription,
+    datePublished:   guide.datePublished,
+    dateModified:    guide.dateModified,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    author:    { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    publisher: {
+      "@type": "Organization",
+      name:    SITE_NAME,
+      url:     SITE_URL,
+      logo:    { "@type": "ImageObject", url: `${SITE_URL}/icon.png` },
+    },
+  }
+}
+
+/**
+ * BreadcrumbList schema for a GUIDE page: Home > Guides > Article.
+ * Matches the visible 3-level breadcrumb on /guides/[slug].
+ */
+export function buildGuideBreadcrumbSchema(guide: Guide): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home",   item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Guides", item: `${SITE_URL}/guides` },
+      {
+        "@type":  "ListItem",
+        position: 3,
+        name:     guide.h1,
+        item:     `${SITE_URL}/guides/${guide.slug}`,
+      },
+    ],
   }
 }

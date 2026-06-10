@@ -6,6 +6,7 @@ import {
   getShopTypeCounts,
 } from "@/lib/supabase/queries/shops"
 import { SHOP_TYPES } from "@/lib/shop-types"
+import { getAllGuides } from "@/lib/guides"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 
@@ -56,6 +57,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url:              `${SITE_URL}/states`,
+      lastModified:     now,
+      changeFrequency:  "weekly",
+      priority:         0.8,
+    },
+    {
+      url:              `${SITE_URL}/guides`,
       lastModified:     now,
       changeFrequency:  "weekly",
       priority:         0.8,
@@ -115,6 +122,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.7,
   }))
 
+  /* ── Guide / content-hub articles (/guides/[slug]) ──
+     Editorial pages that target informational keywords and funnel readers
+     into the directory. Use each guide's dateModified for an accurate lastmod. ── */
+  const guideRoutes: MetadataRoute.Sitemap = getAllGuides().map((g) => ({
+    url:             `${SITE_URL}/guides/${g.slug}`,
+    lastModified:    g.dateModified ? new Date(g.dateModified) : now,
+    changeFrequency: "monthly" as const,
+    priority:        0.8,
+  }))
+
   /* ── Individual listing pages (/listing/[slug]) ──
      Use each shop's real updated_at so Google sees accurate per-page lastmod
      dates, rather than every URL claiming to have changed on the last rebuild. ── */
@@ -129,6 +146,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticRoutes,
     ...stateRoutes,
     ...categoryRoutes,
+    ...guideRoutes,
     ...cityRoutes,
     ...listingRoutes,
   ]
