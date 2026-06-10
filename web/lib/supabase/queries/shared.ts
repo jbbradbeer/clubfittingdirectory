@@ -54,6 +54,35 @@ export function sanitizeSearchTerm(input: string): string {
   )
 }
 
+/* PostgREST (Supabase's API layer) silently caps every response at 1,000 rows.
+   The shops table passed that size in June 2026, which silently truncated the
+   sitemap, generateStaticParams, and the homepage stats — ~267 shops vanished
+   from Google with no error anywhere. Any "fetch all rows" query must go
+   through this helper, which pages in 1,000-row chunks until a short page
+   signals the end.
+
+   The query returned by makeQuery MUST include a stable .order() (e.g.
+   .order("id")) — without one Postgres guarantees no consistent ordering
+   across pages, so rows could repeat or be skipped between chunks. */
+export async function fetchAllRows<Row>(
+  makeQuery: () => {
+    range: (from: number, to: number) => PromiseLike<{ data: Row[] | null; error: unknown }>
+  },
+): Promise<Row[]> {
+  const PAGE = 1000
+  const MAX_PAGES = 20 // runaway guard (20,000 rows) — raise when the table grows past this
+  const all: Row[] = []
+  for (let i = 0; i < MAX_PAGES; i++) {
+    const { data, error } = await makeQuery().range(i * PAGE, (i + 1) * PAGE - 1)
+    if (error) throw error
+    const rows = data ?? []
+    all.push(...rows)
+    if (rows.length < PAGE) return all
+  }
+  console.error(`[fetchAllRows] hit the ${MAX_PAGES * PAGE}-row guard — results may be truncated`)
+  return all
+}
+
 export interface DirectoryFilters {
   q?: string           // free-text: name or city
   state?: string       // state_code e.g. "TX"
