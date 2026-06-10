@@ -7,6 +7,7 @@ const QUICK_LINKS = [
   { label: "Browse by State", href: "/states" },
   { label: "Club Fitters", href: "/category/club-fitters" },
   { label: "Golf Retailers", href: "/category/golf-retailers" },
+  { label: "Fitting Guides", href: "/guides" },
   { label: "Submit a Shop", href: "/submit" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },

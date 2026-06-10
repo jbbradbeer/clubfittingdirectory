@@ -1,0 +1,31 @@
+import type { Guide } from "@/lib/guides/types"
+import { golfClubFittingGuide } from "@/lib/guides/golf-club-fitting"
+import { golfClubFittingChartGuide } from "@/lib/guides/golf-club-fitting-chart"
+import { whereToGetFittedGuide } from "@/lib/guides/where-to-get-fitted-for-golf-clubs"
+
+/* ─────────────────────────────────────────────────────────
+   GUIDE REGISTRY — the single source of truth for the Content
+   Hub. The hub index, the [slug] route, and the sitemap all
+   read from here, so adding an article is a one-line change:
+   write the content file, then add it to this array.
+
+   Order matters: the pillar should come first, then spokes in
+   priority order (it controls the order shown on /guides).
+   ───────────────────────────────────────────────────────── */
+export const GUIDES: Guide[] = [
+  golfClubFittingGuide,
+  golfClubFittingChartGuide,
+  whereToGetFittedGuide,
+]
+
+export function getAllGuides(): Guide[] {
+  return GUIDES
+}
+
+export function getGuideBySlug(slug: string): Guide | undefined {
+  return GUIDES.find((g) => g.slug === slug)
+}
+
+export function getAllGuideSlugs(): { slug: string }[] {
+  return GUIDES.map((g) => ({ slug: g.slug }))
+}
