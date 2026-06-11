@@ -4,13 +4,14 @@ import { usePathname } from "next/navigation"
 import { NewsletterForm } from "@/components/newsletter/NewsletterForm"
 
 /**
- * Newsletter band shown at the top of the footer on every page EXCEPT the
- * homepage. The homepage has its own prominent newsletter signup (the closing
- * section), so showing this band there too would duplicate it.
+ * Newsletter band shown at the top of the footer on every page EXCEPT pages
+ * that already have their own prominent signup directly above the footer:
+ * the homepage (closing section) and /directory (post-results capture block).
+ * Showing the band there too would stack two identical forms.
  */
 export function FooterNewsletterBand() {
   const pathname = usePathname()
-  if (pathname === "/") return null
+  if (pathname === "/" || pathname === "/directory") return null
 
   return (
     <div className="border-b border-white/10">

@@ -15,7 +15,13 @@ import { darkInputBase, darkButtonBase } from "@/lib/form-styles"
 type Status = "idle" | "submitting" | "success" | "error"
 type Variant = "footer" | "section" | "page"
 
-export function NewsletterForm({ variant = "section" }: { variant?: Variant }) {
+export function NewsletterForm({
+  variant = "section",
+  buttonLabel = "Subscribe",
+}: {
+  variant?: Variant
+  buttonLabel?: string
+}) {
   const [status, setStatus] = useState<Status>("idle")
   const [errorMsg, setErrorMsg] = useState("")
 
@@ -97,7 +103,7 @@ export function NewsletterForm({ variant = "section" }: { variant?: Variant }) {
               <Loader2 size={18} className="animate-spin" /> Joining…
             </>
           ) : (
-            "Subscribe"
+            buttonLabel
           )}
         </button>
       </div>
