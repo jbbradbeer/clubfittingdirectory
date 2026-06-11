@@ -52,9 +52,13 @@ guide→newsletter conversion.
 - [x] GSC export received from James (2026-06-10, in `tasks/gsc-2026-06-10/`)
 - [x] Phase 1: keyword research + map → `tasks/seo-keyword-map.md` (2026-06-10;
       raw research preserved in `tasks/research/`)
-- [ ] Phase 2: data report v1 + page upgrades
-- [ ] Phase 3: scheduled weekly agent created
-- [ ] Phase 4: monthly review routine
+- [x] Phase 2: data report v1 + page upgrades (PR #11, 2026-06-11 — data-driven
+      city/state FAQs, RelatedGuides block, /guides/state-of-club-fitting-2026)
+- [x] Phase 3: weekly drafting agent created (routine `trig_01SXFyummSJdtcFWjuUe1t5v`,
+      Mondays 13:00 UTC ≈ 9am ET, claude.ai/code/routines — drafts next queue
+      article, opens `seo-article-<slug>` PR; requires PR #11 merged so the
+      queue exists on main)
+- [ ] Phase 4: monthly review routine (start ~July: GSC check → re-sort queue)
 
 ## GSC export — click-by-click (for James)
 1. Go to **search.google.com/search-console** and pick the
