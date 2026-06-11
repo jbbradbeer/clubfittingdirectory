@@ -10,6 +10,7 @@ import { SearchBar } from "./SearchBar"
 import { FilterSidebar } from "./FilterSidebar"
 import { ResultsGrid } from "./ResultsGrid"
 import { MapView } from "./MapView"
+import { NewsletterCaptureBlock } from "@/components/newsletter/NewsletterCaptureBlock"
 
 interface DirectoryClientProps {
   stateOptions: { state_code: string; state: string; count: number }[]
@@ -380,6 +381,9 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
           </div>
         </div>
       </div>
+
+      {/* Post-results newsletter capture (replaces the footer band on this page) */}
+      <NewsletterCaptureBlock />
 
       {/* Mobile filter drawer */}
       {filtersOpen && (

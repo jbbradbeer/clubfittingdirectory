@@ -14,6 +14,7 @@ import { RatingStars } from "@/components/ui/RatingStars"
 import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { SectionHeader } from "@/components/ui/SectionHeader"
+import { TuxedoInlineLink } from "@/components/newsletter/TuxedoInlineLink"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 
@@ -255,6 +256,9 @@ export default async function ListingPage({ params }: PageProps) {
                   )}
                 </div>
               </div>
+
+              {/* Tuxedo Collective plug */}
+              <TuxedoInlineLink />
             </div>
 
             {/* Right: sidebar */}
