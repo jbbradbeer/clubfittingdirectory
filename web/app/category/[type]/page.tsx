@@ -11,6 +11,7 @@ import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
 import { FaqSection } from "@/components/seo/FaqSection"
+import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { categoryIntro, categoryFaqs } from "@/lib/seo-content"
 
 interface PageProps {
@@ -121,6 +122,8 @@ export default async function CategoryPage({ params }: PageProps) {
       </section>
 
       <FaqSection items={categoryFaqs(label)} heading={`${label} — FAQ`} />
+
+      <RelatedGuides />
     </>
   )
 }

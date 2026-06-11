@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
 import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured-data"
 import { FaqSection } from "@/components/seo/FaqSection"
+import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { cityIntro, cityFaqs } from "@/lib/seo-content"
 import { logQueryError } from "@/lib/utils"
 
@@ -117,7 +118,9 @@ export default async function CityPage({ params }: PageProps) {
         </div>
       </section>
 
-      <FaqSection items={cityFaqs(city, state)} heading={`Club fitting in ${city} — FAQ`} />
+      <FaqSection items={cityFaqs(city, state, shops)} heading={`Club fitting in ${city} — FAQ`} />
+
+      <RelatedGuides />
     </>
   )
 }

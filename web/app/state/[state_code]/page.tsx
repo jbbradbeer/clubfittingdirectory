@@ -15,6 +15,7 @@ import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
 import { FaqSection } from "@/components/seo/FaqSection"
+import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { stateIntro, stateFaqs } from "@/lib/seo-content"
 
 interface PageProps {
@@ -184,7 +185,9 @@ export default async function StatePage({ params }: PageProps) {
         </section>
       )}
 
-      <FaqSection items={stateFaqs(stateName)} heading={`Club fitting in ${stateName} — FAQ`} />
+      <FaqSection items={stateFaqs(stateName, shops)} heading={`Club fitting in ${stateName} — FAQ`} />
+
+      <RelatedGuides />
     </>
   )
 }
