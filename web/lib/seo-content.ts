@@ -26,6 +26,38 @@ export function categoryIntro(label: string, shopCount: number, stateCount: numb
   }. Compare ratings, services, and locations to find the right option for your game.`
 }
 
+/* ── Data-driven FAQ helpers ──
+   A minimal structural type so collection pages can pass their shop arrays
+   straight in. Answering with each page's REAL data (top-rated shop, fitting
+   count) makes every page unique — and gives Google/AI engines a concrete,
+   quotable answer instead of boilerplate. */
+export interface ShopFact {
+  name: string
+  rating: number | null
+  offers_fitting: boolean | null
+}
+
+function topRatedFaq(place: string, shops: ShopFact[]): FaqItem | null {
+  const rated = shops.filter((s) => s.rating != null && s.rating >= 4)
+  if (!rated.length) return null
+  const top = rated.reduce((a, b) => ((b.rating ?? 0) > (a.rating ?? 0) ? b : a))
+  return {
+    question: `Who is the highest-rated club fitter in ${place}?`,
+    answer: `${top.name} is currently the highest-rated shop listed in ${place}, with a ${top.rating}/5 rating. Ratings change as new reviews come in, so compare the listings above before you book.`,
+  }
+}
+
+function fittingCountFaq(place: string, shops: ShopFact[]): FaqItem | null {
+  const fitting = shops.filter((s) => s.offers_fitting).length
+  if (!fitting) return null
+  return {
+    question: `How many shops in ${place} offer club fitting?`,
+    answer: `${fitting} of the ${shops.length} ${place} ${
+      shops.length === 1 ? "shop" : "shops"
+    } in this directory explicitly ${fitting === 1 ? "offers" : "offer"} club fitting. Others focus on retail, repair, lessons, or simulator time — check each listing's services for details.`,
+  }
+}
+
 /* ── FAQs ── */
 function baseFittingFaqs(): FaqItem[] {
   return [
@@ -47,22 +79,28 @@ function baseFittingFaqs(): FaqItem[] {
   ]
 }
 
-export function stateFaqs(stateName: string): FaqItem[] {
+export function stateFaqs(stateName: string, shops: ShopFact[] = []): FaqItem[] {
   return [
     {
       question: `How do I find a golf club fitter in ${stateName}?`,
       answer: `Use this directory to browse fitters by city across ${stateName}. Each listing includes the shop's services, rating, and contact information so you can compare options near you.`,
     },
+    ...[fittingCountFaq(stateName, shops), topRatedFaq(stateName, shops)].filter(
+      (f): f is FaqItem => f !== null,
+    ),
     ...baseFittingFaqs(),
   ]
 }
 
-export function cityFaqs(city: string, stateName: string): FaqItem[] {
+export function cityFaqs(city: string, stateName: string, shops: ShopFact[] = []): FaqItem[] {
   return [
     {
       question: `Where can I get fitted for golf clubs in ${city}?`,
       answer: `The shops listed on this page offer club fitting in and around ${city}, ${stateName}. Check each listing's services and rating, then contact the shop directly to book a session.`,
     },
+    ...[topRatedFaq(city, shops), fittingCountFaq(city, shops)].filter(
+      (f): f is FaqItem => f !== null,
+    ),
     ...baseFittingFaqs(),
   ]
 }

@@ -1,5 +1,10 @@
 # SEO Content Calendar — Guides Hub (`/guides`)
 
+> **2026-06-10:** Article priority now lives in `tasks/seo-keyword-map.md`
+> (built from GSC + Ahrefs + suggest mining + competitor/forum research).
+> The backlog table below is superseded by that queue; the per-article
+> checklist here still applies to every new guide.
+
 The strategy is a **topic cluster**: one pillar article anchors the cluster, and
 focused "spoke" articles target specific sub-keywords. They cross-link to each
 other and funnel readers into the directory. Adding a guide = write a content
