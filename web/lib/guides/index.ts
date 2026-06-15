@@ -3,6 +3,7 @@ import { golfClubFittingGuide } from "@/lib/guides/golf-club-fitting"
 import { golfClubFittingChartGuide } from "@/lib/guides/golf-club-fitting-chart"
 import { whereToGetFittedGuide } from "@/lib/guides/where-to-get-fitted-for-golf-clubs"
 import { stateOfClubFitting2026 } from "@/lib/guides/state-of-club-fitting-2026"
+import { golfClubFittingCostGuide } from "@/lib/guides/golf-club-fitting-cost"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -15,6 +16,7 @@ import { stateOfClubFitting2026 } from "@/lib/guides/state-of-club-fitting-2026"
    ───────────────────────────────────────────────────────── */
 export const GUIDES: Guide[] = [
   golfClubFittingGuide,
+  golfClubFittingCostGuide,
   golfClubFittingChartGuide,
   whereToGetFittedGuide,
   stateOfClubFitting2026,
