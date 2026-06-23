@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/states` },
 }
 
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export default async function StatesPage() {
   const states = await getAllStatesWithShops().catch((e) => logQueryError("states getAllStatesWithShops", e, []))

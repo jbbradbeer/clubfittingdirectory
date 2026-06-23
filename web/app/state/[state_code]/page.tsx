@@ -22,7 +22,7 @@ interface PageProps {
   params: Promise<{ state_code: string }>
 }
 
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export async function generateStaticParams() {
   const codes = await getAllStateCodes().catch((e) => logQueryError("state generateStaticParams getAllStateCodes", e, []))

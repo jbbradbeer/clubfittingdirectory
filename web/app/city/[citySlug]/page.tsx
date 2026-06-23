@@ -19,7 +19,7 @@ interface PageProps {
   params: Promise<{ citySlug: string }>
 }
 
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export async function generateStaticParams() {
   const slugs = await getAllCitySlugs().catch((e) => logQueryError("city generateStaticParams getAllCitySlugs", e, []))

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 // Cache the static filter options (state + type dropdowns). The actual result
 // list is fetched client-side, so these only change when shops are added.
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export default async function DirectoryPage() {
   const [stateOptions, shopTypeOptions] = await Promise.all([

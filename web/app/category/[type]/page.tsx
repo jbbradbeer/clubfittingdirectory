@@ -18,7 +18,7 @@ interface PageProps {
   params: Promise<{ type: string }>
 }
 
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export async function generateStaticParams() {
   return SHOP_TYPES.map((t) => ({ type: t.slug }))
