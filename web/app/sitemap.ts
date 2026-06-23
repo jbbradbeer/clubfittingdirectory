@@ -39,7 +39,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getShopTypeCounts().catch((e) => logQueryError("sitemap getShopTypeCounts", e, {} as Record<string, number>)),
   ])
 
-  const now = new Date()
+  /* A deterministic "last updated" anchor for routes that have no date of their
+     own (home, /directory, state/category/city indexes). Using `new Date()` here
+     would re-stamp every URL with today's date on EVERY sitemap regeneration —
+     that changes the output bytes each time (a needless ISR write) and tells
+     Google everything changed daily (wasted crawl budget). Anchoring to the most
+     recent shop `updated_at` means the sitemap only changes when data does. */
+  const latestUpdate = slugs.reduce(
+    (max, s) => (s.updated_at && s.updated_at > max ? s.updated_at : max),
+    "",
+  )
+  const now = latestUpdate ? new Date(latestUpdate) : new Date("2026-01-01T00:00:00Z")
 
   /* ── Static pages ── */
   const staticRoutes: MetadataRoute.Sitemap = [
