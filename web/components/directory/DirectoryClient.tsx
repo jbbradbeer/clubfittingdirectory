@@ -344,8 +344,8 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
       {/* Main content: sidebar + results */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
-          {/* Desktop sidebar */}
-          <div className="hidden lg:block w-60 xl:w-64 shrink-0">
+          {/* Desktop sidebar — sticks alongside the scrolling results */}
+          <div className="hidden lg:block w-60 xl:w-64 shrink-0 self-start sticky top-[88px]">
             <FilterSidebar
               stateOptions={stateOptions}
               shopTypeOptions={shopTypeOptions}

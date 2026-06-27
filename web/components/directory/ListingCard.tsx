@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { MapPin, Wrench } from "lucide-react"
 import { RatingStars } from "@/components/ui/RatingStars"
+import { getCover } from "@/lib/cover"
 import type { ListingCardProps } from "@/types/shop"
 
 export function ListingCard({
@@ -18,68 +19,61 @@ export function ListingCard({
   is_featured,
   distance_km,
 }: ListingCardProps & { reviews?: number | null; is_featured?: boolean }) {
-  const monogram = name?.trim()?.charAt(0)?.toUpperCase() || "•"
+  const { paletteIndex: p } = getCover(slug, shop_type)
+
+  const tierTag = is_featured
+    ? { label: "Featured", className: "bg-[var(--color-gold-tint)] text-[var(--color-gold-ink)]" }
+    : rating_tier === "Top Rated"
+      ? { label: "Top Rated", className: "bg-[var(--color-forest-tint)] text-[var(--color-forest)]" }
+      : verified
+        ? { label: "Verified", className: "bg-[var(--color-cream)] text-[var(--color-charcoal-light)]" }
+        : null
 
   return (
     <Link
       href={`/listing/${slug}`}
-      className="group flex flex-col bg-[var(--color-paper)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
+      className="group relative flex flex-col h-full bg-[var(--color-paper)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
     >
-      {/* ── Branded cover (photo-less) ── */}
-      <div className="relative aspect-[16/10] bg-gradient-to-br from-[var(--color-forest-light)] via-[var(--color-forest)] to-[var(--color-forest-deep)] flex items-center justify-center overflow-hidden">
-        {/* decorative ring */}
-        <div className="absolute -right-8 -top-10 w-36 h-36 rounded-full border border-white/10" />
-        <div className="absolute -right-2 -bottom-12 w-40 h-40 rounded-full border border-white/10" />
-        <span
-          aria-hidden="true"
-          className="font-display font-extrabold text-white/95 text-6xl leading-none"
-        >
-          {monogram}
-        </span>
+      {/* Thin palette accent — keeps per-shop identity without a heavy image */}
+      <span
+        aria-hidden="true"
+        className="h-1 w-full shrink-0"
+        style={{ backgroundImage: `linear-gradient(90deg, var(--cover-${p}-a), var(--cover-${p}-b))` }}
+      />
 
-        {/* tier pills (top-left) */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-          {is_featured && (
-            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-[var(--color-gold)] text-[var(--color-forest-deep)]">
-              Featured
+      <div className="flex flex-col flex-1 p-6">
+        {/* ── Header: shop type, with tier tag at right ── */}
+        <div className="flex items-center justify-between gap-3 min-h-[1.25rem]">
+          {shop_type ? (
+            <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-gold-ink)] leading-tight">
+              {shop_type}
             </span>
+          ) : (
+            <span />
           )}
-          {!is_featured && rating_tier === "Top Rated" && (
-            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-white/90 text-[var(--color-forest)]">
-              Top Rated
-            </span>
-          )}
-          {verified && (
-            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-white/15 text-white backdrop-blur-sm">
-              Verified
+          {tierTag && (
+            <span
+              className={`shrink-0 px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.14em] rounded-[3px] ${tierTag.className}`}
+            >
+              {tierTag.label}
             </span>
           )}
         </div>
 
-        {/* distance pill (top-right) */}
-        {distance_km != null && (
-          <div className="absolute top-3 right-3">
-            <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-white/90 text-[var(--color-forest)]">
-              {distance_km < 1 ? "< 1 km" : `${Math.round(distance_km)} km`}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* ── Body ── */}
-      <div className="flex flex-col flex-1 p-6">
-        {shop_type && (
-          <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-gold-ink)]">
-            {shop_type}
-          </span>
-        )}
-        <h3 className="font-display mt-1.5 text-lg font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors">
+        <h3 className="font-display mt-3 text-lg font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors">
           {name}
         </h3>
 
         <div className="mt-2 flex items-center gap-1.5 text-sm text-[var(--color-charcoal-light)]">
           <MapPin size={14} className="text-[var(--color-gold)] shrink-0" />
-          {city}, {state_code}
+          <span>
+            {city}, {state_code}
+          </span>
+          {distance_km != null && (
+            <span className="data ml-1 text-xs text-[var(--color-charcoal-light)]">
+              · {distance_km < 1 ? "<1 km" : `${Math.round(distance_km)} km`}
+            </span>
+          )}
         </div>
 
         {rating && (
@@ -109,7 +103,7 @@ export function ListingCard({
               </span>
             ))}
             {services_array.length > 3 && (
-              <span className="text-xs px-2.5 py-1 text-[var(--color-charcoal-light)]">
+              <span className="data text-xs px-2.5 py-1 text-[var(--color-charcoal-light)]">
                 +{services_array.length - 3}
               </span>
             )}

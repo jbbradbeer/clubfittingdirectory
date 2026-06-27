@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google"
+import { Bricolage_Grotesque, Hanken_Grotesk, Spline_Sans_Mono } from "next/font/google"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import "@/styles/globals.css"
@@ -22,6 +22,15 @@ const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
+  display: "swap",
+})
+
+/* Spline Sans Mono: the "yardage-book" accent — used only for data (ratings,
+   counts, distances, state codes, EST. labels), never for prose. */
+const splineMono = Spline_Sans_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
   display: "swap",
 })
 
@@ -61,7 +70,7 @@ export const metadata: Metadata = {
    ───────────────────────────────────────────────────────── */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn(bricolage.variable, hanken.variable, "font-sans")}>
+    <html lang="en" className={cn(bricolage.variable, hanken.variable, splineMono.variable, "font-sans")}>
       <body className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-1">{children}</main>

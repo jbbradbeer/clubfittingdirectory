@@ -15,7 +15,7 @@ export function GuideCard({ guide }: { guide: Guide }) {
           <BookOpen size={18} />
         </span>
         {guide.pillar && (
-          <span className="px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] rounded-full bg-[var(--color-gold)] text-[var(--color-forest-deep)]">
+          <span className="px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.12em] rounded-[3px] bg-[var(--color-gold-tint)] text-[var(--color-gold-ink)]">
             Complete Guide
           </span>
         )}
@@ -32,7 +32,7 @@ export function GuideCard({ guide }: { guide: Guide }) {
       <div className="mt-auto pt-5 flex items-center justify-between">
         <span className="inline-flex items-center gap-1.5 text-xs text-[var(--color-charcoal-light)]">
           <Clock size={13} className="text-[var(--color-gold)]" />
-          {guide.readMinutes} min read
+          <span className="data">{guide.readMinutes}</span> min read
         </span>
         <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-forest)] group-hover:gap-2 transition-all">
           Read guide

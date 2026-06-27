@@ -59,6 +59,17 @@
   --color-gold-dark: #a3823f;
   --color-gold-ink:  #8a6a30;
 
+  /* ── Generative cover palettes ──
+     Used ONLY by the shop-cover system (lib/cover.ts) to skin photo-less
+     listing covers. Each palette is a {base → deep} gradient pair plus an
+     ink tone for the motif lines. Gold/clay/slate stay muted so a wall of
+     cards reads varied but unmistakably one brand. NOT brand UI colors. */
+  --cover-1-a: #235a40;  --cover-1-b: #0f2c1f;  --cover-1-ink: #ffffff;  /* forest    */
+  --cover-2-a: #0f3326;  --cover-2-b: #07160f;  --cover-2-ink: #c2a05a;  /* deep pine */
+  --cover-3-a: #8a6a30;  --cover-3-b: #5c4519;  --cover-3-ink: #f6edd9;  /* gold-sand */
+  --cover-4-a: #9c6b4a;  --cover-4-b: #5e3c28;  --cover-4-ink: #f3e6da;  /* clay      */
+  --cover-5-a: #3a564a;  --cover-5-b: #1d2c25;  --cover-5-ink: #d9e4dd;  /* slate-green */
+
   /* ── Text ── */
   --color-charcoal:       #1c1f1a;
   --color-charcoal-light: #5f6259;
@@ -71,6 +82,7 @@
   /* ── Fonts (next/font injects the family vars) ── */
   --font-display: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
   --font-body:    "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --font-mono:    "Spline Sans Mono", ui-monospace, "SFMono-Regular", monospace;
   --font-sans:    var(--font-body);
 
   /* ── shadcn semantic tokens → brand ── */
@@ -104,6 +116,7 @@
 @theme inline {
   --font-sans:       var(--font-body);
   --font-heading:    var(--font-display);
+  --font-mono:       var(--font-mono);
 
   --color-background:           var(--background);
   --color-foreground:           var(--foreground);
@@ -172,6 +185,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .font-display { font-family: var(--font-display); }
 .font-body    { font-family: var(--font-body); }
+.font-mono    { font-family: var(--font-mono); }
+
+/* Yardage-book data treatment — mono, tabular figures, slight tracking.
+   Use on numbers and short data labels (ratings, counts, distances,
+   state codes, "EST." marks), never on running prose. */
+.data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  font-feature-settings: "tnum" 1;
+}
+.tabular { font-variant-numeric: tabular-nums; }
 
 /* Oversized display — bold sans, tight leading */
 .display {
@@ -209,12 +234,17 @@ h1, h2, h3, h4, h5, h6 {
 /* Hairline rule */
 .rule { border: none; border-top: 1px solid var(--color-line); }
 
-/* Soft card shadows */
+/* Soft card shadows — tinted with the forest hue (not flat black) so elevation
+   feels lit by the same light as the rest of the palette. */
 .shadow-card {
-  box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 1px 3px rgba(16, 24, 20, 0.06);
+  box-shadow:
+    0 1px 2px rgba(15, 44, 31, 0.05),
+    0 2px 6px rgba(15, 44, 31, 0.06);
 }
 .shadow-card-hover {
-  box-shadow: 0 18px 42px -22px rgba(16, 24, 20, 0.38);
+  box-shadow:
+    0 1px 2px rgba(15, 44, 31, 0.06),
+    0 22px 48px -24px rgba(15, 44, 31, 0.42);
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -321,3 +351,35 @@ a { color: inherit; text-decoration: none; }
 .stagger-children > *:nth-child(4) { animation-delay: 210ms; }
 .stagger-children > *:nth-child(5) { animation-delay: 280ms; }
 .stagger-children > *:nth-child(6) { animation-delay: 350ms; }
+
+/* ─────────────────────────────────────────────────────────
+   SCROLL REVEAL — deliberate on-enter motion (see lib/useReveal.ts).
+   Elements marked `data-reveal` rest hidden + nudged down, then spring
+   up into place when scrolled into view (data-reveal="in"). A custom
+   easing gives it a little weight/overshoot instead of a flat fade.
+   ───────────────────────────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-reveal="in"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Respect users who ask for less motion: show everything, animate nothing. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-fade-in-up,
+  .stagger-children > * { animation: none !important; opacity: 1 !important; }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

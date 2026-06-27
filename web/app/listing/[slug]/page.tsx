@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { TuxedoInlineLink } from "@/components/newsletter/TuxedoInlineLink"
+import { Reveal } from "@/lib/useReveal"
+import { getCover } from "@/lib/cover"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 
@@ -22,7 +24,7 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export async function generateStaticParams() {
   const slugs = await getAllShopSlugs().catch((e) => logQueryError("listing generateStaticParams getAllShopSlugs", e, []))
@@ -64,6 +66,7 @@ export default async function ListingPage({ params }: PageProps) {
   // Guard against rows with a null city/state_code so a single bad row can't
   // crash the whole page (mirrors the defensive handling in structured-data.ts).
   const citySlug = shop.city && shop.state_code ? toCitySlug(shop.city, shop.state_code) : ""
+  const { paletteIndex: coverPalette } = getCover(shop.slug, shop.shop_type)
 
   /* Parse about JSON for display */
   const aboutEntries: { key: string; value: string }[] = []
@@ -87,8 +90,18 @@ export default async function ListingPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
+      <Reveal />
+
       {/* Breadcrumb + Header */}
       <section className="hero-surface grain border-b border-[var(--color-border)]">
+        {/* Thin palette accent — ties the profile to its directory card */}
+        <span
+          aria-hidden="true"
+          className="block h-1 w-full"
+          style={{
+            backgroundImage: `linear-gradient(90deg, var(--cover-${coverPalette}-a), var(--cover-${coverPalette}-b))`,
+          }}
+        />
         <div className="hero-contours" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Breadcrumb
@@ -261,8 +274,8 @@ export default async function ListingPage({ params }: PageProps) {
               <TuxedoInlineLink />
             </div>
 
-            {/* Right: sidebar */}
-            <aside className="lg:w-80 shrink-0 space-y-6">
+            {/* Right: sidebar — sticks while the main column scrolls */}
+            <aside className="lg:w-80 shrink-0 space-y-6 lg:self-start lg:sticky lg:top-[88px]">
               {/* Contact card */}
               <div className="bg-[var(--color-forest)] text-white rounded-2xl shadow-card p-6">
                 <h3 className="font-display text-lg font-bold mb-4 text-white!">
@@ -275,7 +288,7 @@ export default async function ListingPage({ params }: PageProps) {
                       className="flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors"
                     >
                       <Phone size={16} />
-                      {shop.phone}
+                      <span className="data">{shop.phone}</span>
                     </a>
                   )}
                   {shop.website && (
@@ -367,9 +380,14 @@ export default async function ListingPage({ params }: PageProps) {
               eyebrow="Also in this area"
               title={`More Fitters in ${shop.state}`}
             />
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              data-reveal-group
+            >
               {nearby.map((s) => (
-                <ListingCard key={s.slug} {...s} />
+                <div key={s.slug} data-reveal className="h-full">
+                  <ListingCard {...s} />
+                </div>
               ))}
             </div>
           </div>

@@ -5,7 +5,7 @@ import { GuideCard } from "@/components/guides/GuideCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL, SITE_NAME } from "@/lib/constants"
 
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export const metadata: Metadata = {
   title: "Golf Club Fitting Guides — Charts, Costs & How-Tos",

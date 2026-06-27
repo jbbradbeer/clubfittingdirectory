@@ -39,7 +39,10 @@ export async function getShops(filters: ShopFilters = {}): Promise<Shop[]> {
       .order("is_featured", { ascending: false })
       .order("rating", { ascending: false, nullsFirst: false })
 
-  query = query.limit(200)
+  // Final tiebreaker by id so rows that tie on the sort key always come back in
+  // the SAME order. Without this, the DB may return ties in a different order each
+  // run, which changes the rendered HTML and forces a needless ISR write.
+  query = query.order("id", { ascending: true }).limit(200)
 
   const { data, error } = await query
   if (error) throw error
@@ -56,6 +59,7 @@ export async function getTopRatedShops(limit = 6): Promise<Shop[]> {
     .gte("rating", 4.8)
     .order("rating", { ascending: false, nullsFirst: false })
     .order("reviews", { ascending: false, nullsFirst: false })
+    .order("id", { ascending: true }) // stable tiebreaker — see getShops
     .limit(limit)
 
   if (error) throw error
@@ -76,6 +80,7 @@ export const getShopBySlug = cache(async (slug: string): Promise<Shop | null> =>
     .eq("slug", slug)
     .eq("status", "active")
     .order("rating", { ascending: false, nullsFirst: false })
+    .order("id", { ascending: true }) // stable pick if a slug is ever duplicated
     .limit(1)
 
   // A real database error still throws; "no rows" is just an empty array → null.
@@ -93,6 +98,7 @@ export async function getShopsByState(stateCode: string): Promise<Shop[]> {
     .eq("state_code", stateCode)
     .order("is_featured", { ascending: false })
     .order("rating", { ascending: false, nullsFirst: false })
+    .order("id", { ascending: true }) // stable tiebreaker — see getShops
     .limit(500)
 
   if (error) throw error
@@ -191,10 +197,15 @@ export const getHomepageStats = cache(async (): Promise<{
     .sort((a, b) => a.state.localeCompare(b.state))
   const fitters = rows.filter((r) => r.shop_type === "Clubfitter").length
 
+  // DC has its own state_code and stays browsable in the `states` list, but it
+  // is NOT a state — so the headline "states covered" stat must exclude it
+  // (otherwise it reads 51, contradicting the "all 50 states" copy).
+  const stateCount = Object.keys(stateMap).filter((code) => code !== "DC").length
+
   return {
     states,
     typeCounts,
-    stats: { total: rows.length, states: Object.keys(stateMap).length, fitters },
+    stats: { total: rows.length, states: stateCount, fitters },
   }
 })
 
@@ -288,7 +299,9 @@ export async function getListings(
   }
 
   // ── Pagination ──
-  dataQ = dataQ.range(from, to)
+  // Stable tiebreaker by id: without it, ties in the sort key can shuffle between
+  // page requests and cause rows to be dropped or duplicated across pages.
+  dataQ = dataQ.order("id", { ascending: true }).range(from, to)
 
   // ── Execute both in parallel ──
   const [{ count }, { data, error }] = await Promise.all([countQ, dataQ])
@@ -372,6 +385,7 @@ export async function getNearbyShops(
     .neq("slug", excludeSlug)
     .order("is_featured", { ascending: false })
     .order("rating", { ascending: false, nullsFirst: false })
+    .order("id", { ascending: true }) // stable tiebreaker — keeps "nearby" picks identical between regenerations
     .limit(limit)
 
   if (error) throw error
@@ -390,6 +404,7 @@ export async function getShopsForStatePage(
     .eq("state_code", stateCode)
     .order("is_featured", { ascending: false })
     .order("rating",      { ascending: false, nullsFirst: false })
+    .order("id",          { ascending: true }) // stable tiebreaker — see getShops
     .limit(1000)
 
   if (error) throw error
@@ -424,6 +439,7 @@ export async function getShopsForCategoryPage(
     .eq("shop_type", shopType)
     .order("is_featured", { ascending: false })
     .order("rating",      { ascending: false, nullsFirst: false })
+    .order("id",          { ascending: true }) // stable tiebreaker — see getShops
     .limit(1000)
 
   if (error) throw error
@@ -513,6 +529,7 @@ export const getShopsForCityPage = cache(async (
   const { data, error } = await query
     .order("is_featured", { ascending: false })
     .order("rating",      { ascending: false, nullsFirst: false })
+    .order("id",          { ascending: true }) // stable tiebreaker — see getShops
     .limit(1000)
 
   if (error) throw error

@@ -7,6 +7,7 @@ import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
+import { toCitySlug } from "@/lib/slugs"
 
 /* ── Login ── */
 export async function login(formData: FormData) {
@@ -100,10 +101,18 @@ export async function approveSubmission(formData: FormData) {
   // Mark submission approved
   await supabase.from("shop_submissions").update({ review_status: "approved" }).eq("id", id)
 
-  revalidatePath("/admin")
-  revalidatePath("/directory")
-  revalidatePath("/")
-  revalidatePath(`/state/${sub.state_code.toLowerCase()}`)
+  // A newly-approved shop changes the exact pages it appears on AND the site-wide
+  // counts. Revalidate precisely those — the new listing, its city/state/category
+  // index pages, plus the count-driven aggregates (homepage stats, directory,
+  // states index). We deliberately do NOT touch every listing page.
+  revalidatePath("/admin")                                       // submissions queue
+  revalidatePath(`/listing/${slug}`)                             // the new shop's own page
+  revalidatePath(`/state/${sub.state_code.toLowerCase()}`)       // its state page
+  revalidatePath(`/city/${toCitySlug(sub.city, sub.state_code)}`) // its city page
+  revalidatePath(`/category/${validShopType.slug}`)              // its category page
+  revalidatePath("/")                                            // homepage total count
+  revalidatePath("/directory")                                   // directory shell
+  revalidatePath("/states")                                      // states index counts
 }
 
 /* ── Reject: mark a submission rejected (does not touch shops) ── */

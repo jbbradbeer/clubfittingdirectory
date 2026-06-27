@@ -44,7 +44,7 @@ export function ShopHours({ workingHours }: { workingHours: Record<string, strin
               {isToday && <span className="w-2 h-2 rounded-full bg-[var(--color-gold)]" />}
               {day}
             </dt>
-            <dd className={hasData ? undefined : "text-[var(--color-charcoal-light)]/50"}>
+            <dd className={hasData ? "data text-[0.8rem]" : "data text-[0.8rem] text-[var(--color-charcoal-light)]/50"}>
               {hasData ? hours : "—"}
             </dd>
           </div>

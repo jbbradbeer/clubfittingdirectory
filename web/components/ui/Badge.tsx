@@ -20,9 +20,17 @@ const variantStyles: Record<BadgeVariant, string> = {
 }
 
 export function Badge({ variant = "default", children, className = "" }: BadgeProps) {
+  // Two visual classes share this component:
+  //  • status labels (gold/verified/forest) → squared cartographic tags,
+  //    matching the tier tags on ListingCard.
+  //  • the default variant → a soft rounded chip used for services/meta.
+  const shape =
+    variant === "default"
+      ? "px-3 py-1 text-xs rounded-full"
+      : "px-2 py-1 text-[0.6rem] uppercase tracking-[0.12em] rounded-[3px]"
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full ${variantStyles[variant]} ${className}`}
+      className={`inline-flex items-center gap-1.5 font-semibold ${shape} ${variantStyles[variant]} ${className}`}
     >
       {variant === "verified" && <CheckCircle size={12} />}
       {children}
