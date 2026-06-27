@@ -22,7 +22,7 @@ export function ListingCard({
   const { paletteIndex: p } = getCover(slug, shop_type)
 
   const tierTag = is_featured
-    ? { label: "Featured", className: "bg-[var(--color-gold-tint)] text-[var(--color-gold-ink)]" }
+    ? { label: "Featured", className: "bg-[var(--color-gold)] text-[var(--color-forest-deep)]" }
     : rating_tier === "Top Rated"
       ? { label: "Top Rated", className: "bg-[var(--color-forest-tint)] text-[var(--color-forest)]" }
       : verified

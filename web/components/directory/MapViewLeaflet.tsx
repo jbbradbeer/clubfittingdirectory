@@ -49,8 +49,10 @@ export function MapViewLeaflet({ shops }: MapViewLeafletProps) {
         scrollWheelZoom={false}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org">OpenStreetMap</a> &copy; <a href="https://carto.com">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          subdomains="abcd"
+          maxZoom={20}
         />
         {validShops.map((shop) => (
           <Marker
@@ -71,7 +73,7 @@ export function MapViewLeaflet({ shops }: MapViewLeafletProps) {
                 </p>
                 {shop.rating && (
                   <p className="text-xs mt-1">
-                    <span className="text-[var(--color-gold)]">★</span> {shop.rating.toFixed(1)}
+                    <span className="text-[var(--color-gold-dark)]">★</span> {shop.rating.toFixed(1)}
                   </p>
                 )}
               </div>

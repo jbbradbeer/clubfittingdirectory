@@ -70,8 +70,17 @@ export const metadata: Metadata = {
    ───────────────────────────────────────────────────────── */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn(bricolage.variable, hanken.variable, splineMono.variable, "font-sans")}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(bricolage.variable, hanken.variable, splineMono.variable, "font-sans")}
+    >
       <body className="flex flex-col min-h-screen">
+        {/* Marks the document as JS-capable BEFORE paint, so scroll-reveal only
+            hides content when JS can reveal it again (no-JS users see everything). */}
+        <script
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
+        />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

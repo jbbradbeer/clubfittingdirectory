@@ -328,7 +328,7 @@ export default async function ListingPage({ params }: PageProps) {
                       href={shop.website.startsWith("http") ? shop.website : `https://${shop.website}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block w-full text-center py-2.5 bg-[var(--color-gold)] text-[var(--color-forest-deep)] font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors"
+                      className="block w-full text-center py-2.5 bg-[var(--color-gold)] text-[var(--color-forest-deep)]! font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors"
                     >
                       Visit Website
                     </a>
