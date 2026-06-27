@@ -32,7 +32,7 @@ export function Footer() {
       <FooterNewsletterBand />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           {/* Column 1: Branding */}
           <div>
             <h3 className="font-display text-2xl text-white mb-4 tracking-[-0.01em]">
@@ -53,42 +53,46 @@ export function Footer() {
             </a>
           </div>
 
-          {/* Column 2: Quick Links */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)] mb-5">
-              Quick Links
-            </h4>
-            <ul className="space-y-3">
-              {QUICK_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/60 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Link columns — side by side on mobile, flattened into the 3-col
+              grid on md+ so they don't stack into a tall empty band on phones. */}
+          <div className="grid grid-cols-2 gap-8 md:contents">
+            {/* Quick Links */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)] mb-5">
+                Quick Links
+              </h4>
+              <ul className="space-y-3">
+                {QUICK_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-white/60 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Column 3: Popular States */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)] mb-5">
-              Popular States
-            </h4>
-            <ul className="space-y-3">
-              {POPULAR_STATES.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/60 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {/* Popular States */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)] mb-5">
+                Popular States
+              </h4>
+              <ul className="space-y-3">
+                {POPULAR_STATES.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-white/60 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -100,7 +104,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
           </p>
           <p className="text-xs text-white/40">
-            Independent fitters. Expert fitting. Your game, elevated.
+            Independent fitters. Honest listings. Find your fit.
           </p>
         </div>
       </div>

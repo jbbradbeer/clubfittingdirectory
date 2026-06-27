@@ -288,7 +288,7 @@ export default async function ListingPage({ params }: PageProps) {
                       className="flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors"
                     >
                       <Phone size={16} />
-                      {shop.phone}
+                      <span className="data">{shop.phone}</span>
                     </a>
                   )}
                   {shop.website && (
