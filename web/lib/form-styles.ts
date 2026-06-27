@@ -7,13 +7,17 @@
  */
 
 export const fieldClass =
-  "w-full px-4 py-2.5 bg-white border border-[var(--color-border)] rounded-lg text-sm text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] focus:outline-none focus:border-[var(--color-forest)] focus:ring-2 focus:ring-[var(--color-forest)]/15 transition-all"
+  "w-full px-4 py-3 bg-white border border-[var(--color-border)] rounded-lg text-[0.95rem] text-[var(--color-charcoal)] placeholder:text-[var(--color-charcoal-light)] hover:border-[var(--color-charcoal-light)]/45 focus:outline-none focus:border-[var(--color-forest)] focus:ring-2 focus:ring-[var(--color-forest)]/15 transition-all"
+
+/* Selects reuse the field look but hide the native arrow so a custom chevron
+   can be layered on top (see the `relative` wrapper + ChevronDown pattern). */
+export const selectClass = `${fieldClass} appearance-none pr-10 cursor-pointer`
 
 export const labelClass =
-  "block text-xs font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-1.5"
+  "block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-charcoal-light)] mb-2"
 
 export const checkboxClass =
-  "w-4 h-4 rounded border-[var(--color-border)] accent-[var(--color-forest)] cursor-pointer"
+  "w-[1.05rem] h-[1.05rem] rounded border-[var(--color-border)] accent-[var(--color-forest)] cursor-pointer"
 
 /* ── Dark (on-forest) variants — sizing is appended by the consumer ── */
 

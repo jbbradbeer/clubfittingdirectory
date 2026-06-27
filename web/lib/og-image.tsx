@@ -11,6 +11,7 @@ const FOREST = "#18402e"
 const FOREST_DEEP = "#0c2017"
 const GOLD = "#c2a05a"
 const CREAM = "#f6f5f1"
+const SITE_DOMAIN = "clubfittingdirectory.com"
 
 /**
  * Renders a branded social-share card. Used by every opengraph-image route so
@@ -25,6 +26,7 @@ export function renderOgImage(title: string, eyebrow?: string): ImageResponse {
     (
       <div
         style={{
+          position: "relative",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -33,8 +35,31 @@ export function renderOgImage(title: string, eyebrow?: string): ImageResponse {
           padding: "80px",
           background: `linear-gradient(135deg, ${FOREST} 0%, ${FOREST_DEEP} 100%)`,
           fontFamily: "sans-serif",
+          overflow: "hidden",
         }}
       >
+        {/* Course-contour motif — the brand signature, echoing the cards.
+            Concentric rings springing off the top-right corner. */}
+        <svg
+          width="1200"
+          height="630"
+          viewBox="0 0 1200 630"
+          style={{ position: "absolute", top: 0, left: 0 }}
+        >
+          {[70, 150, 230, 310, 390, 470, 550].map((r) => (
+            <circle
+              key={r}
+              cx="1180"
+              cy="70"
+              r={r}
+              fill="none"
+              stroke={GOLD}
+              strokeWidth="2"
+              opacity="0.12"
+            />
+          ))}
+        </svg>
+
         {/* Top: site name with a gold rule */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <div style={{ width: "56px", height: "4px", background: GOLD }} />
@@ -52,14 +77,20 @@ export function renderOgImage(title: string, eyebrow?: string): ImageResponse {
         </div>
 
         {/* Middle: eyebrow + headline */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {eyebrow ? (
             <div
               style={{
-                fontSize: "32px",
+                display: "flex",
+                alignSelf: "flex-start",
+                fontSize: "26px",
                 fontWeight: 600,
                 color: GOLD,
-                letterSpacing: "0.04em",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                border: `2px solid rgba(194,160,90,0.5)`,
+                borderRadius: "6px",
+                padding: "8px 18px",
               }}
             >
               {eyebrow}
@@ -70,8 +101,9 @@ export function renderOgImage(title: string, eyebrow?: string): ImageResponse {
               fontSize: "84px",
               fontWeight: 800,
               color: CREAM,
-              lineHeight: 1.05,
-              maxWidth: "1040px",
+              lineHeight: 1.04,
+              letterSpacing: "-0.02em",
+              maxWidth: "1000px",
               display: "flex",
             }}
           >
@@ -79,9 +111,17 @@ export function renderOgImage(title: string, eyebrow?: string): ImageResponse {
           </div>
         </div>
 
-        {/* Bottom: tagline */}
-        <div style={{ fontSize: "28px", color: "rgba(246,245,241,0.7)" }}>
-          Independent golf club fitters across the US
+        {/* Bottom: hairline + tagline + domain */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div style={{ width: "100%", height: "1px", background: "rgba(246,245,241,0.15)" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ fontSize: "26px", color: "rgba(246,245,241,0.7)" }}>
+              Independent golf club fitters across the US
+            </div>
+            <div style={{ fontSize: "24px", color: GOLD, letterSpacing: "0.04em" }}>
+              {SITE_DOMAIN}
+            </div>
+          </div>
         </div>
       </div>
     ),
