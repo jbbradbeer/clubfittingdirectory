@@ -7,6 +7,8 @@ import { ListingCard } from "@/components/directory/ListingCard"
 import { HeroSearch } from "@/components/home/HeroSearch"
 import { CategoryChips } from "@/components/home/CategoryChips"
 import { NewsletterForm } from "@/components/newsletter/NewsletterForm"
+import { Reveal } from "@/lib/useReveal"
+import { SHOP_TYPES } from "@/lib/shop-types"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildWebSiteSchema, buildOrganizationSchema } from "@/lib/structured-data"
@@ -52,6 +54,7 @@ export default async function HomePage() {
   const { states, typeCounts, stats } = home
 
   const hasStats = stats.total > 0
+  const categoryCount = SHOP_TYPES.filter((t) => (typeCounts[t.dbType] ?? 0) > 0).length
 
   return (
     <>
@@ -65,82 +68,106 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrganizationSchema()) }}
       />
 
+      {/* Scroll-reveal observer — deliberate on-enter motion below the fold */}
+      <Reveal />
+
       {/* ═══════════════════════════════════════════════════
-          HERO — compact, with the Search Command Panel front
-          and center. Everything funnels into search.
+          HERO — editorial, left-anchored. Oversized headline +
+          search panel on the left; a yardage-book "Index" of the
+          directory's stats on the right.
           ═══════════════════════════════════════════════════ */}
       <section className="hero-surface grain border-b border-[var(--color-border)]">
         <div className="hero-contours" aria-hidden="true" />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 text-center">
-          <p className="section-label mb-5 inline-flex items-center gap-3 animate-fade-in-up">
-            <span className="gold-rule" />
-            The Club Fitting Directory
-            <span className="gold-rule rotate-180" />
-          </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* ── Left: headline + search command panel ── */}
+            <div className={hasStats ? "lg:col-span-7" : "lg:col-span-12 max-w-3xl"}>
+              <p className="section-label mb-5 inline-flex items-center gap-3 animate-fade-in-up">
+                <span className="gold-rule" />
+                The Club Fitting Directory
+              </p>
 
-          <h1
-            className="display text-[clamp(2.4rem,6vw,4.25rem)] text-[var(--color-charcoal)] animate-fade-in-up"
-            style={{ animationDelay: "60ms" }}
-          >
-            Find your{" "}
-            <span className="relative whitespace-nowrap text-[var(--color-forest)]">
-              perfect fit
-              <svg
-                className="absolute -bottom-2 left-0 w-full"
-                height="10"
-                viewBox="0 0 200 10"
-                fill="none"
-                preserveAspectRatio="none"
-                aria-hidden="true"
+              <h1
+                className="display text-[clamp(2.6rem,6.2vw,4.75rem)] text-[var(--color-charcoal)] animate-fade-in-up"
+                style={{ animationDelay: "60ms" }}
               >
-                <path
-                  d="M2 7C45 3 120 2 198 6"
-                  stroke="var(--color-gold)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-            .
-          </h1>
+                Find your{" "}
+                <span className="relative whitespace-nowrap text-[var(--color-forest)]">
+                  perfect fit
+                  <svg
+                    className="absolute -bottom-2 left-0 w-full"
+                    height="10"
+                    viewBox="0 0 200 10"
+                    fill="none"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2 7C45 3 120 2 198 6"
+                      stroke="var(--color-gold)"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
+                .
+              </h1>
 
-          <p
-            className="mt-5 max-w-2xl mx-auto text-lg md:text-xl text-[var(--color-charcoal-light)] leading-relaxed animate-fade-in-up"
-            style={{ animationDelay: "120ms" }}
-          >
-            Search {hasStats ? `${stats.total.toLocaleString()}+ ` : ""}independent golf club fitters,
-            retailers, and simulators across all 50 states.
-          </p>
+              <p
+                className="mt-5 max-w-xl text-lg md:text-xl text-[var(--color-charcoal-light)] leading-relaxed animate-fade-in-up"
+                style={{ animationDelay: "120ms" }}
+              >
+                Search {hasStats ? `${stats.total.toLocaleString()}+ ` : ""}independent golf club fitters,
+                retailers, and simulators across all 50 states.
+              </p>
 
-          {/* ── Search Command Panel — search + category chips on one
-                 elevated surface ── */}
-          <div
-            className="mt-9 max-w-3xl mx-auto text-left bg-white rounded-2xl shadow-card-hover ring-1 ring-black/5 p-3 sm:p-4 animate-fade-in-up"
-            style={{ animationDelay: "180ms" }}
-          >
-            <HeroSearch />
-            <div className="rule my-3" aria-hidden="true" />
-            <CategoryChips typeCounts={typeCounts} />
-          </div>
+              {/* Search Command Panel — search + category chips on one surface */}
+              <div
+                className="mt-8 max-w-2xl bg-white rounded-2xl shadow-card-hover ring-1 ring-black/5 p-3 sm:p-4 animate-fade-in-up"
+                style={{ animationDelay: "180ms" }}
+              >
+                <HeroSearch />
+                <div className="rule my-3" aria-hidden="true" />
+                <CategoryChips typeCounts={typeCounts} />
+              </div>
+            </div>
 
-          {/* Trust line */}
-          <div
-            className="mt-8 flex items-center justify-center gap-x-3 gap-y-2 flex-wrap text-sm text-[var(--color-charcoal-light)] animate-fade-in-up"
-            style={{ animationDelay: "240ms" }}
-          >
+            {/* ── Right: "The Index" — almanac stat panel ── */}
             {hasStats && (
-              <>
-                <span>
-                  <strong className="text-[var(--color-charcoal)] font-semibold">{stats.total.toLocaleString()}</strong> Fitters
-                </span>
-                <span className="text-[var(--color-border)]">•</span>
-                <span>
-                  <strong className="text-[var(--color-charcoal)] font-semibold">{stats.states}</strong> States
-                </span>
-                <span className="text-[var(--color-border)]">•</span>
-              </>
+              <aside
+                className="lg:col-span-5 animate-fade-in-up"
+                style={{ animationDelay: "240ms" }}
+                aria-label="Directory at a glance"
+              >
+                <div className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white shadow-card">
+                  <div className="flex items-center justify-between px-5 py-3 bg-[var(--color-forest)]">
+                    <span className="section-label text-[var(--color-gold)]!">The Index</span>
+                    <span className="data text-[0.7rem] text-white/60">EST. 2025</span>
+                  </div>
+                  <dl>
+                    {[
+                      { label: "Fitters listed", value: stats.total.toLocaleString() },
+                      { label: "States covered", value: stats.states.toString() },
+                      { label: "Categories", value: categoryCount.toString() },
+                    ].map((row) => (
+                      <div
+                        key={row.label}
+                        className="flex items-baseline justify-between gap-4 px-5 py-4 border-t border-[var(--color-line)] first:border-t-0"
+                      >
+                        <dt className="text-sm text-[var(--color-charcoal-light)]">{row.label}</dt>
+                        <dd className="data text-[1.7rem] font-semibold leading-none text-[var(--color-forest)]">
+                          {row.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <div className="flex items-center gap-2.5 px-5 py-3 border-t border-[var(--color-line)] bg-[var(--color-cream)] text-xs text-[var(--color-charcoal-light)]">
+                    <span className="gold-rule" />
+                    Curated &amp; independent — every entry reviewed
+                  </div>
+                </div>
+              </aside>
             )}
-            <span>Curated &amp; Independent</span>
           </div>
         </div>
       </section>
@@ -150,15 +177,23 @@ export default async function HomePage() {
           ═══════════════════════════════════════════════════ */}
       <section className="bg-[var(--color-cream)] grain py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div
+            className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
+            data-reveal
+          >
             <SectionHeader eyebrow="Top Rated" title="Highest-rated fitters" centered={false} />
             <Button href="/directory" variant="outline" size="sm">
               View all {hasStats ? `${stats.total.toLocaleString()} ` : ""}shops
             </Button>
           </div>
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+          <div
+            className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            data-reveal-group
+          >
             {topShops.map((shop) => (
-              <ListingCard key={shop.slug} {...shop} />
+              <div key={shop.slug} data-reveal className="h-full">
+                <ListingCard {...shop} />
+              </div>
             ))}
           </div>
         </div>
@@ -169,23 +204,29 @@ export default async function HomePage() {
           ═══════════════════════════════════════════════════ */}
       <section className="bg-[var(--color-ivory)] py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div
+            className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
+            data-reveal
+          >
             <SectionHeader eyebrow="Explore" title="Browse by state" centered={false} />
             <Button href="/states" variant="outline" size="sm">
               View all states
             </Button>
           </div>
-          <div className="mt-12 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+          <div
+            className="mt-12 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3"
+            data-reveal
+          >
             {states.map((s) => (
               <Link
                 key={s.state_code}
                 href={`/state/${s.state_code.toLowerCase()}`}
-                className="flex flex-col items-center justify-center py-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-paper)] shadow-card hover:bg-[var(--color-forest)] hover:border-[var(--color-forest)] transition-colors group"
+                className="group flex items-center justify-between gap-2 px-3.5 py-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-paper)] shadow-card hover:bg-[var(--color-forest)] hover:border-[var(--color-forest)] transition-colors"
               >
                 <span className="font-display text-base font-bold text-[var(--color-charcoal)] group-hover:text-white transition-colors">
                   {s.state_code}
                 </span>
-                <span className="text-[11px] text-[var(--color-charcoal-light)] group-hover:text-white/70 mt-0.5 transition-colors">
+                <span className="data text-xs text-[var(--color-gold-ink)] group-hover:text-[var(--color-gold)] transition-colors">
                   {s.count}
                 </span>
               </Link>
@@ -198,7 +239,10 @@ export default async function HomePage() {
           SPLIT CTA BAND — fitting primer + submit-a-shop
           ═══════════════════════════════════════════════════ */}
       <section className="bg-[var(--color-cream)] py-16 border-t border-[var(--color-border)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-6"
+          data-reveal
+        >
           {/* Card A — what happens in a fitting */}
           <div className="bg-white rounded-2xl shadow-card p-8 flex flex-col">
             <p className="section-label with-rule mb-4">New to fitting?</p>
@@ -208,7 +252,7 @@ export default async function HomePage() {
             <ol className="mt-6 space-y-5 flex-1">
               {STEPS.map((step, i) => (
                 <li key={step.title} className="flex gap-4">
-                  <span className="font-display text-lg font-bold text-[var(--color-gold-ink)] leading-snug">
+                  <span className="data text-base font-semibold text-[var(--color-gold-ink)] leading-snug pt-0.5">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span>
@@ -250,7 +294,10 @@ export default async function HomePage() {
           CLOSING CTA — Newsletter signup (the homepage's single signup)
           ═══════════════════════════════════════════════════ */}
       <section className="bg-[var(--color-forest)] grain text-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
+        <div
+          className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center"
+          data-reveal
+        >
           <p className="section-label mb-5 text-[var(--color-gold)]!">
             The Tuxedo Collective
           </p>

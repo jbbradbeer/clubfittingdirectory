@@ -41,9 +41,17 @@ function DirectoryLoading() {
             <div key={i} className="h-10 bg-[var(--color-cream)] rounded animate-pulse" />
           ))}
         </div>
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-56 bg-[var(--color-cream)] border border-[var(--color-border)] rounded-lg animate-pulse" />
+            <div key={i} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-paper)] overflow-hidden shadow-card">
+              <div className="h-1 w-full bg-[var(--color-cream-dark)]" />
+              <div className="p-6 animate-pulse">
+                <div className="h-3 w-20 bg-[var(--color-cream)] rounded" />
+                <div className="mt-4 h-5 w-3/4 bg-[var(--color-cream)] rounded" />
+                <div className="mt-3 h-3 w-1/2 bg-[var(--color-cream)] rounded" />
+                <div className="mt-5 h-3 w-2/3 bg-[var(--color-cream)] rounded" />
+              </div>
+            </div>
           ))}
         </div>
       </div>

@@ -34,7 +34,7 @@ export function RatingStars({ rating, reviews, showNumeric = true, size = "md" }
       {showNumeric && (
         <span
           aria-hidden="true"
-          className={`font-semibold text-[var(--color-charcoal)] ${size === "sm" ? "text-xs" : "text-sm"}`}
+          className={`data font-semibold text-[var(--color-charcoal)] ${size === "sm" ? "text-xs" : "text-sm"}`}
         >
           {rating.toFixed(1)}
         </span>
@@ -42,7 +42,7 @@ export function RatingStars({ rating, reviews, showNumeric = true, size = "md" }
       {reviews != null && reviews > 0 && (
         <span
           aria-hidden="true"
-          className={`text-[var(--color-charcoal-light)] ${size === "sm" ? "text-xs" : "text-sm"}`}
+          className={`data text-[var(--color-charcoal-light)] ${size === "sm" ? "text-xs" : "text-sm"}`}
         >
           ({reviews.toLocaleString()})
         </span>

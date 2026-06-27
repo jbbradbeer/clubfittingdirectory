@@ -30,8 +30,20 @@ export function ResultsGrid({
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="h-56 bg-[var(--color-cream)] border border-[var(--color-border)] rounded-2xl animate-pulse"
-          />
+            className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-paper)] overflow-hidden shadow-card"
+          >
+            <div className="h-1 w-full bg-[var(--color-cream-dark)]" />
+            <div className="p-6 animate-pulse">
+              <div className="h-3 w-20 bg-[var(--color-cream)] rounded" />
+              <div className="mt-4 h-5 w-3/4 bg-[var(--color-cream)] rounded" />
+              <div className="mt-3 h-3 w-1/2 bg-[var(--color-cream)] rounded" />
+              <div className="mt-3 h-3 w-2/3 bg-[var(--color-cream)] rounded" />
+              <div className="mt-5 pt-4 border-t border-[var(--color-line)] flex gap-2">
+                <div className="h-6 w-16 bg-[var(--color-cream)] rounded-full" />
+                <div className="h-6 w-20 bg-[var(--color-cream)] rounded-full" />
+              </div>
+            </div>
+          </div>
         ))}
       </div>
     )
@@ -60,12 +72,28 @@ export function ResultsGrid({
 
   if (shops.length === 0) {
     return (
-      <div className="py-16 text-center">
-        <p className="font-display text-2xl text-[var(--color-charcoal)]">
-          No results found
+      <div className="py-20 text-center">
+        <svg
+          width="72"
+          height="72"
+          viewBox="0 0 72 72"
+          fill="none"
+          aria-hidden="true"
+          className="mx-auto text-[var(--color-forest)] opacity-25"
+        >
+          <g stroke="currentColor" strokeWidth="1.5">
+            <circle cx="36" cy="34" r="9" />
+            <circle cx="36" cy="34" r="18" />
+            <circle cx="36" cy="34" r="27" />
+          </g>
+          <line x1="36" y1="34" x2="36" y2="62" stroke="currentColor" strokeWidth="2" />
+          <path d="M36 36 L52 41 L36 47 Z" fill="currentColor" stroke="none" opacity="0.6" />
+        </svg>
+        <p className="mt-6 font-display text-2xl text-[var(--color-charcoal)]">
+          No fitters match those filters
         </p>
         <p className="mt-2 text-sm text-[var(--color-charcoal-light)]">
-          Try adjusting your search or filters.
+          Try widening your search — clear a filter or search a nearby city.
         </p>
       </div>
     )
@@ -73,18 +101,22 @@ export function ResultsGrid({
 
   return (
     <div>
-      {/* Results count */}
-      <p className="mb-4 text-sm text-[var(--color-charcoal-light)]">
-        Showing{" "}
-        <span className="font-semibold text-[var(--color-charcoal)]">
-          {shops.length}
-        </span>{" "}
-        of{" "}
-        <span className="font-semibold text-[var(--color-charcoal)]">
-          {total.toLocaleString()}
-        </span>{" "}
-        results
-      </p>
+      {/* Almanac result header — tabular counts */}
+      <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-[var(--color-line)] pb-3">
+        <p className="text-sm text-[var(--color-charcoal-light)]">
+          <span className="data font-semibold text-[var(--color-charcoal)]">{shops.length}</span>
+          {" of "}
+          <span className="data font-semibold text-[var(--color-charcoal)]">
+            {total.toLocaleString()}
+          </span>{" "}
+          fitters
+        </p>
+        {totalPages > 1 && (
+          <p className="data text-xs text-[var(--color-charcoal-light)]">
+            Page {page} / {totalPages}
+          </p>
+        )}
+      </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

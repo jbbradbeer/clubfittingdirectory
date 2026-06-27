@@ -1,5 +1,31 @@
 # Lessons
 
+## "States covered" stat counts DC as a 51st state (2026-06-26)
+- The homepage Index / any `Object.keys(stateMap).length` over `shops.state_code`
+  returns **51**, because the data includes `state_code = "DC"` (Washington, DC has
+  shops) on top of all 50 states. DC is browsable but is NOT a state.
+- Fix in `getHomepageStats` (`web/lib/supabase/queries/shops.ts`): the headline
+  `states` count excludes DC (`.filter(code => code !== "DC")`) → reads 50 and
+  matches the "across all 50 states" copy; the `states` LIST still includes DC so
+  it stays browsable.
+- Rule: when turning a distinct-`state_code` count into a user-facing "states"
+  number, exclude `DC` (and any territory codes) — region count ≠ state count.
+
+## Design taste: this site is already good — elevate, don't slop-rescue; founder prefers minimal cards (2026-06-26)
+- Front-end overhaul ("Course Almanac" direction): kept the forest+gold editorial
+  DNA, added a mono "yardage-book" font (`--font-mono` Spline Sans Mono, `.data`
+  helper) for all numbers, scroll reveals (`lib/useReveal.ts` + `[data-reveal]`),
+  forest-tinted shadows, and an editorial asymmetric homepage hero with a "The Index"
+  stat panel.
+- Built a generative shop-cover system (`lib/cover.ts` + `ShopCover.tsx`) — deterministic
+  palette+motif per slug — but the founder did NOT like big cover images stacked above
+  every card ("a wall of dark blocks"). They chose **fully minimal text-forward cards**:
+  just a thin palette accent line at the card top, no image, no monogram chip.
+  `ShopCover`/`getCover` are retained (palette feeds the accent line + the listing-page
+  top strip), but the big cover is not used on cards.
+- Rule: when a redesign decision is visual taste, SHOW a real screenshot comparison and
+  let the founder pick before rolling it site-wide. Default toward minimal/restraint here.
+
 ## Data shape: `shops.working_hours` values are NOT always strings
 - A day's value is usually `"9 AM–5 PM"` but can be an **array** for split hours,
   e.g. `{"Wednesday": ["11AM-7PM"]}`. ~5+ active shops use the array form.
@@ -26,3 +52,17 @@
      real error state in the UI (distinct from empty results), never a silent swallow.
 - Rule: a misconfigured deploy should FAIL THE BUILD, not ship a broken site; and every
   data-fetch failure must be logged + visibly surfaced, never silently turned into "empty".
+
+## ISR write-cost reduction (2026-06-23)
+
+- **Next route-segment config must be a STATIC LITERAL.** `export const revalidate = SOME_IMPORTED_CONST`
+  fails the build with "Invalid segment configuration export detected." Inline the literal number
+  (e.g. `export const revalidate = 2592000 // 30 days`) — do NOT factor it into a shared constant.
+- **Non-deterministic DB ordering = silent ISR write amplifier.** Any `.order()` chain without a
+  final unique tiebreaker (`.order("id")`) lets Postgres return tied rows in a different order each
+  run → the rendered HTML changes → Vercel bills an ISR write on every regeneration even when data
+  is unchanged. ALWAYS end list queries with a stable tiebreaker.
+- **`new Date()` in server-rendered output** (e.g. sitemap `lastModified`) re-stamps bytes on every
+  regeneration → needless writes. Anchor to a data value (max `updated_at`) or a fixed constant.
+- **Never `git add -A` in this repo.** It sweeps in `.claude/worktrees/` (embedded git repos) and
+  stray downloads in the root. Stage explicit paths instead.

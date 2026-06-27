@@ -197,10 +197,15 @@ export const getHomepageStats = cache(async (): Promise<{
     .sort((a, b) => a.state.localeCompare(b.state))
   const fitters = rows.filter((r) => r.shop_type === "Clubfitter").length
 
+  // DC has its own state_code and stays browsable in the `states` list, but it
+  // is NOT a state — so the headline "states covered" stat must exclude it
+  // (otherwise it reads 51, contradicting the "all 50 states" copy).
+  const stateCount = Object.keys(stateMap).filter((code) => code !== "DC").length
+
   return {
     states,
     typeCounts,
-    stats: { total: rows.length, states: Object.keys(stateMap).length, fitters },
+    stats: { total: rows.length, states: stateCount, fitters },
   }
 })
 

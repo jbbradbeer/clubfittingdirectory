@@ -36,11 +36,11 @@ export default async function StatesPage() {
               >
                 <div>
                   <span className="block text-sm font-semibold">{s.state}</span>
-                  <span className="block text-xs text-[var(--color-charcoal-light)] group-hover:text-white/70 mt-0.5">
+                  <span className="data block text-xs text-[var(--color-charcoal-light)] group-hover:text-white/70 mt-0.5">
                     {s.state_code}
                   </span>
                 </div>
-                <span className="text-xs font-bold text-[var(--color-gold)] group-hover:text-white/80">
+                <span className="data text-xs font-semibold text-[var(--color-gold-ink)] group-hover:text-white/80">
                   {s.count}
                 </span>
               </Link>
