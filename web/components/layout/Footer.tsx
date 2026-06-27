@@ -35,7 +35,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           {/* Column 1: Branding */}
           <div>
-            <h3 className="font-display text-2xl text-white mb-4 tracking-[-0.01em]">
+            <h3 className="font-display text-2xl text-white! mb-4 tracking-[-0.01em]">
               {SITE_NAME}
             </h3>
             <p className="text-sm leading-relaxed text-white/60 mb-6">

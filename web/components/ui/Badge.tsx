@@ -12,7 +12,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   default:
     "bg-[var(--color-cream)] text-[var(--color-charcoal-light)]",
   gold:
-    "bg-[var(--color-gold-tint)] text-[var(--color-gold-ink)]",
+    "bg-[var(--color-gold)] text-[var(--color-forest-deep)]",
   verified:
     "bg-[var(--color-forest-tint)] text-[var(--color-forest)]",
   forest:

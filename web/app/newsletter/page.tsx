@@ -49,7 +49,7 @@ export default function NewsletterPage() {
             The Tuxedo Collective
             <span className="gold-rule rotate-180" />
           </p>
-          <h1 className="display text-[clamp(2.4rem,6vw,4rem)] text-white leading-[1.05]">
+          <h1 className="display text-[clamp(2.4rem,6vw,4rem)] text-white! leading-[1.05]">
             Private club golf,
             <br />
             <span className="text-[var(--color-gold)]">explained.</span>

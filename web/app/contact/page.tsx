@@ -54,7 +54,7 @@ export default function ContactPage() {
                 <IconCircle size="md" tone="whiteOnDark" className="mb-5">
                   <Mail size={24} />
                 </IconCircle>
-                <h2 className="font-display text-xl font-bold mb-2 text-white">
+                <h2 className="font-display text-xl font-bold mb-2 text-white!">
                   Email Us
                 </h2>
                 <p className="text-sm text-white/70 mb-6 leading-relaxed">
@@ -62,7 +62,7 @@ export default function ContactPage() {
                 </p>
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
-                  className="block w-full text-center py-3 bg-[var(--color-gold)] text-[var(--color-forest-deep)] font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors"
+                  className="block w-full text-center py-3 bg-[var(--color-gold)] text-[var(--color-forest-deep)]! font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors"
                 >
                   {CONTACT_EMAIL}
                 </a>

@@ -328,6 +328,23 @@ a { color: inherit; text-decoration: none; }
 .link-gold:hover { color: var(--color-gold-dark); text-decoration-color: var(--color-gold); }
 
 /* ─────────────────────────────────────────────────────────
+   KEYBOARD FOCUS — a single visible ring for keyboard / AT users.
+   :focus-visible (not :focus) means mouse clicks don't show it.
+   Inputs/selects/textareas already show a forest ring via Tailwind
+   focus utilities, so they opt out here to avoid a doubled outline.
+   ───────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}
+
+/* ─────────────────────────────────────────────────────────
    SELECTION & SCROLLBAR
    ───────────────────────────────────────────────────────── */
 ::selection { background-color: var(--color-forest); color: #ffffff; }
@@ -358,7 +375,9 @@ a { color: inherit; text-decoration: none; }
    up into place when scrolled into view (data-reveal="in"). A custom
    easing gives it a little weight/overshoot instead of a flat fade.
    ───────────────────────────────────────────────────────── */
-[data-reveal] {
+/* Scoped to html.js (set by an inline script in layout.tsx) so that WITHOUT
+   JavaScript the content is never left hidden — it just renders statically. */
+html.js [data-reveal] {
   opacity: 0;
   transform: translateY(18px);
   transition:
@@ -367,7 +386,7 @@ a { color: inherit; text-decoration: none; }
   transition-delay: var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
-[data-reveal="in"] {
+html.js [data-reveal="in"] {
   opacity: 1;
   transform: none;
 }

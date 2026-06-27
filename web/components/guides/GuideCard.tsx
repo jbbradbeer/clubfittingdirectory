@@ -15,7 +15,7 @@ export function GuideCard({ guide }: { guide: Guide }) {
           <BookOpen size={18} />
         </span>
         {guide.pillar && (
-          <span className="px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.12em] rounded-[3px] bg-[var(--color-gold-tint)] text-[var(--color-gold-ink)]">
+          <span className="px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.12em] rounded-[3px] bg-[var(--color-gold)] text-[var(--color-forest-deep)]">
             Complete Guide
           </span>
         )}
