@@ -81,7 +81,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             {/* ── Left: headline + search command panel ── */}
-            <div className={hasStats ? "lg:col-span-7" : "lg:col-span-12 max-w-3xl"}>
+            <div className={`min-w-0 ${hasStats ? "lg:col-span-7" : "lg:col-span-12 max-w-3xl"}`}>
               <p className="section-label mb-5 inline-flex items-center gap-3 animate-fade-in-up">
                 <span className="gold-rule" />
                 The Club Fitting Directory
@@ -135,7 +135,7 @@ export default async function HomePage() {
             {/* ── Right: "The Index" — almanac stat panel ── */}
             {hasStats && (
               <aside
-                className="lg:col-span-5 animate-fade-in-up"
+                className="min-w-0 lg:col-span-5 animate-fade-in-up"
                 style={{ animationDelay: "240ms" }}
                 aria-label="Directory at a glance"
               >
