@@ -1,5 +1,19 @@
 # Lessons
 
+## The unlayered-CSS gotcha hides as a contrast/visibility bug (2026-06-27)
+- globals.css has UNLAYERED rules `h1..h6 { color: charcoal }` and `a { color: inherit }`.
+  In Tailwind v4 utilities live in `@layer`, and unlayered CSS beats ALL layered rules
+  regardless of specificity. So `<h2 class="text-white">` on a dark section silently
+  renders CHARCOAL (dark-on-dark, ~1.4:1) and `<a class="text-forest-deep">` button text
+  on a forest card inherits WHITE → white-on-gold fails contrast.
+- An a11y/axe pass surfaced 5 invisible dark-section headings (footer brand, Email Us,
+  newsletter, footer band, guides CTA) + 2 button-text fails this way.
+- Rule: ANY color/weight utility on an `h1..h6` or a bare `<a>` needs the trailing `!`
+  (e.g. `text-white!`, `text-[var(--color-forest-deep)]!`). When adding white headings or
+  colored button-anchors on dark/gold backgrounds, add `!` immediately — don't wait for axe.
+  Verify with `getComputedStyle(el).color`, not just the screenshot (grain overlays can make
+  axe report "incomplete" instead of "violation", so a clean axe run ≠ correct color).
+
 ## "States covered" stat counts DC as a 51st state (2026-06-26)
 - The homepage Index / any `Object.keys(stateMap).length` over `shops.state_code`
   returns **51**, because the data includes `state_code = "DC"` (Washington, DC has
