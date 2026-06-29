@@ -1,5 +1,15 @@
 # Lessons
 
+## Blank maps = CSP img-src vs tile provider mismatch (2026-06-28)
+- Leaflet maps (ListingMapLeaflet, MapViewLeaflet) load tiles from CARTO
+  `https://{s}.basemaps.cartocdn.com/light_all/...` (Positron light), NOT OpenStreetMap.
+- The CSP in `web/vercel.json` `img-src` only allowed `*.tile.openstreetmap.org`, so the browser
+  silently blocked every tile → maps rendered as a blank frame (no console error visible to user).
+- Fix: add `https://*.basemaps.cartocdn.com` to `img-src`. RULE: whenever a tile/style/font/script
+  source changes, update the CSP allowlist in the SAME change. When debugging "blank/missing
+  external content," check the live CSP header (`curl -sI <url> | grep -i content-security-policy`)
+  against the actual resource URLs before anything else.
+
 ## The unlayered-CSS gotcha hides as a contrast/visibility bug (2026-06-27)
 - globals.css has UNLAYERED rules `h1..h6 { color: charcoal }` and `a { color: inherit }`.
   In Tailwind v4 utilities live in `@layer`, and unlayered CSS beats ALL layered rules
