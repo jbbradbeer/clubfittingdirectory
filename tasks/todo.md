@@ -90,3 +90,69 @@ is now live.
 - TypeScript typecheck passes. Dynamic params awaited everywhere. Internal /state/ links consistent.
 - Maps load. sanitizeSearchTerm mitigates ilike injection. Pagination range correct.
 - One h1 per page. robots.txt correct. metadataBase set.
+
+---
+
+# BOOKING ENGINE PLAN — "Request a Fitting" (started 2026-06-27)
+
+## Strategy & decisions (locked with founder)
+- **Booking type:** Request-to-book (lead form). NOT live calendars. Golfer submits a request;
+  shop is contacted to confirm. Fastest path to revenue, no shop-side calendar maintenance.
+- **Shop accounts:** None yet. No shop logins in MVP.
+- **First milestone:** PROVE DEMAND FAST. Ship the request flow, measure real golfer intent.
+- **Monetization (later, layered):** per-lead/per-booking fee → monthly subscription (+Verified
+  badge) → featured/premium placement. NOT building payments now.
+
+## Key constraint discovered
+- The `shops` table has `phone` + `website` but **NO email column**. So we cannot auto-email a
+  shop the lead on day one. → MVP is a **concierge model**: every request saved to DB + emailed to
+  the FOUNDER (jamesbradbeer3@gmail.com), who manually relays it to the shop (and collects the
+  shop's email in the process). This is intentional "do things that don't scale" — it also starts
+  the shop relationship we will monetize. Auto-shop-notify is a later phase once we have emails.
+
+## Reusable patterns already in the codebase (clone these, don't reinvent)
+- DB-insert form pattern: `web/app/api/submit-shop/route.ts` (validation + honeypot + insert).
+- Quarantined insert-only table w/ RLS: `web/supabase/002_shop_submissions.sql`.
+- Admin review dashboard (password gate + service-role): `web/app/admin/` + `web/lib/admin-auth.ts`
+  + `web/lib/supabase/admin.ts`. Booking requests get an analogous admin view.
+- Server Supabase clients: `createClient()` (anon/RLS) vs `createAdminClient()` (service role).
+- Listing page CTA home: contact card sidebar in `web/app/listing/[slug]/page.tsx` (~lines 279-337).
+
+## PHASE 1 — Capture & deliver requests (the MVP)  [CODE DONE 2026-06-28]
+- [x] 1.1 DB schema written: web/supabase/003_fitting_requests.sql (table + RLS anon INSERT-only,
+      mirrors shop_submissions; shop_id FK ON DELETE SET NULL; status new/contacted/booked/closed).
+      ⚠ STILL TO RUN on the live Supabase DB (owner action below).
+- [x] 1.2 API route: web/app/api/request-fitting/route.ts. Validates (name, email, fitting_type +
+      preferred_time whitelists), honeypot, inserts via createClient() (anon RLS). Registered as ƒ.
+- [x] 1.3 Email-to-founder: `resend` installed; web/lib/email.ts notifyNewFittingRequest() — BEST
+      EFFORT (save happens first; if RESEND_API_KEY unset it logs + skips, never blocks the lead).
+      Defaults to Resend test sender → founder inbox. ⚠ Needs RESEND_API_KEY (owner action).
+- [x] 1.4 UI: components/booking/RequestFittingButton.tsx — gold CTA opens an accessible modal
+      (Esc/backdrop close, scroll lock, focus first field) with the full form + success state.
+- [x] 1.5 Wired: RequestFittingButton is now the primary (gold) CTA in the listing contact card;
+      old "Visit Website" demoted to white outline so there's one clear primary action.
+- [x] 1.6 Golfer confirmation: in-modal "Request sent" success screen.
+- [x] 1.7 Verify (code): tsc clean, eslint clean, full build OK (1,271 listing pages), route ƒ
+      registered. ⚠ Live end-to-end (insert→email) pending DB migration + Resend key.
+
+### OWNER ACTIONS to go live (2 quick steps — see message)
+- [ ] A. Run web/supabase/003_fitting_requests.sql in Supabase → SQL Editor.
+- [ ] B. Add RESEND_API_KEY (+ optional BOOKING_NOTIFY_EMAIL) in Vercel env, then redeploy.
+- [ ] C. (then I verify live: submit a test request → row saved + email received.)
+
+## PHASE 2 — Measure & operate (no/low code)
+- [ ] 2.1 Admin view of fitting_requests (clone /admin submissions list): see leads, mark status.
+- [ ] 2.2 Track conversion: how many listing views → requests. (Vercel Analytics is already a
+      pending item — good moment to add it.)
+- [ ] 2.3 Founder works leads manually; collect shop emails; note which shops want the leads.
+
+## PHASE 3 — Monetize (only after demand is proven)
+- [ ] 3.1 Per-lead: simple billing/agreement; "first N free, then $X/lead".
+- [ ] 3.2 Subscription + Verified badge: needs shop accounts/dashboard (revisit paused claim-shop
+      plan, see memory). Shops log in, see their leads, set preferences.
+- [ ] 3.3 Featured/premium placement: paid ranking + badges in search/listings.
+- [ ] 3.4 (Optional, last) auto-notify shops by email once we have addresses; later, real calendars
+      for top shops (the "hybrid" upgrade).
+
+## Review
+- (to be filled in after Phase 1 ships)
