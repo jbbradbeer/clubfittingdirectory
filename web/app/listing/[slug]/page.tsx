@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { TuxedoInlineLink } from "@/components/newsletter/TuxedoInlineLink"
+import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
 import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
 import { SITE_URL } from "@/lib/constants"
@@ -315,6 +316,12 @@ export default async function ListingPage({ params }: PageProps) {
                   )}
                 </div>
                 <div className="mt-5 flex flex-col gap-2">
+                  {/* Primary CTA — the booking engine. Captures a fitting lead. */}
+                  <RequestFittingButton
+                    shopId={shop.id}
+                    shopName={shop.name}
+                    shopSlug={shop.slug}
+                  />
                   {shop.phone && (
                     <a
                       href={`tel:${shop.phone}`}
@@ -328,7 +335,7 @@ export default async function ListingPage({ params }: PageProps) {
                       href={shop.website.startsWith("http") ? shop.website : `https://${shop.website}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block w-full text-center py-2.5 bg-[var(--color-gold)] text-[var(--color-forest-deep)]! font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors"
+                      className="block w-full text-center py-2.5 border border-white/30 text-white! font-semibold text-sm rounded-full hover:bg-white/10 transition-colors"
                     >
                       Visit Website
                     </a>
