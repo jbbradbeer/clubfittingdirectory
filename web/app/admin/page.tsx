@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { redirect } from "next/navigation"
 import { isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -43,7 +44,7 @@ export default async function AdminPage() {
   return (
     <section className="bg-[var(--color-ivory)] min-h-screen py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="font-display text-3xl text-[var(--color-charcoal)]">
             Submissions
           </h1>
@@ -53,6 +54,12 @@ export default async function AdminPage() {
             </button>
           </form>
         </div>
+        <nav className="flex gap-4 mb-8 text-sm">
+          <span className="font-semibold text-[var(--color-forest)]">Submissions</span>
+          <Link href="/admin/leads" className="text-[var(--color-charcoal-light)] hover:text-[var(--color-forest)]">
+            Fitting Requests
+          </Link>
+        </nav>
 
         {error && (
           <p className="mb-6 text-sm text-red-600">
