@@ -1,9 +1,10 @@
 import type { Guide } from "@/lib/guides/types"
 import { golfClubFittingGuide } from "@/lib/guides/golf-club-fitting"
+import { golfClubFittingCostGuide } from "@/lib/guides/golf-club-fitting-cost"
+import { isGolfClubFittingWorthItGuide } from "@/lib/guides/is-golf-club-fitting-worth-it"
 import { golfClubFittingChartGuide } from "@/lib/guides/golf-club-fitting-chart"
 import { whereToGetFittedGuide } from "@/lib/guides/where-to-get-fitted-for-golf-clubs"
 import { stateOfClubFitting2026 } from "@/lib/guides/state-of-club-fitting-2026"
-import { golfClubFittingCostGuide } from "@/lib/guides/golf-club-fitting-cost"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -17,6 +18,7 @@ import { golfClubFittingCostGuide } from "@/lib/guides/golf-club-fitting-cost"
 export const GUIDES: Guide[] = [
   golfClubFittingGuide,
   golfClubFittingCostGuide,
+  isGolfClubFittingWorthItGuide,
   golfClubFittingChartGuide,
   whereToGetFittedGuide,
   stateOfClubFitting2026,
