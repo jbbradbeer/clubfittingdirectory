@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import { Bricolage_Grotesque, Hanken_Grotesk, Spline_Sans_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import "@/styles/globals.css"
@@ -84,6 +86,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        {/* Vercel-native observability — zero config, no external account.
+            Analytics = page views / traffic; SpeedInsights = real-user web vitals
+            (load speed). Both only send data from production deploys. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

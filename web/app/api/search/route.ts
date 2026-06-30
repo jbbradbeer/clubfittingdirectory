@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { searchShops } from "@/lib/supabase/queries/shops"
+import { log } from "@/lib/logger"
 
 /**
  * Type-ahead search endpoint for the homepage hero (and header).
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
   } catch (e) {
     // Log so a broken search backend is visible in Vercel logs, but still
     // return an empty list (200) so the type-ahead UI degrades gracefully.
-    console.error("[api/search] searchShops failed:", e)
+    log.error("api/search", "searchShops failed", { error: e })
     return NextResponse.json({ suggestions: [] }, { status: 200 })
   }
 }

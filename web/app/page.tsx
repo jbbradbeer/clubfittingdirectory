@@ -30,7 +30,12 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 3600
+// The homepage is rebuilt on-demand by /api/revalidate when a shop is added,
+// removed, or has its rating / featured status changed (the only data shown
+// here). The 30-day window is a self-healing safety net, NOT a refresh clock —
+// it means a missed webhook still corrects itself within a month instead of
+// rebuilding 24x/day on a timer.
+export const revalidate = 2592000 // 30 days
 
 const STEPS = [
   { title: "Search your area", body: "Browse by city, state, or shop name to find fitters near you." },

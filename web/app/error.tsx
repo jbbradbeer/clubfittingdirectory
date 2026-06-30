@@ -1,6 +1,8 @@
 "use client"
 
+import { useEffect } from "react"
 import { Button } from "@/components/ui/Button"
+import { log } from "@/lib/logger"
 
 export default function ErrorPage({
   error,
@@ -9,6 +11,10 @@ export default function ErrorPage({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  useEffect(() => {
+    log.error("error-boundary", "page render failed", { error, digest: error.digest })
+  }, [error])
+
   return (
     <section className="bg-[var(--color-cream)] grain min-h-[60vh] flex items-center justify-center">
       <div className="max-w-md mx-auto px-4 text-center relative z-10">

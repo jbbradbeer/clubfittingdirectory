@@ -1,4 +1,5 @@
 import type { Shop } from "@/types/shop"
+import { log } from "@/lib/logger"
 
 /* ─────────────────────────────────────────────────────────
    Shared query helpers — single source of truth used by both
@@ -79,7 +80,7 @@ export async function fetchAllRows<Row>(
     all.push(...rows)
     if (rows.length < PAGE) return all
   }
-  console.error(`[fetchAllRows] hit the ${MAX_PAGES * PAGE}-row guard — results may be truncated`)
+  log.error("fetchAllRows", `hit the ${MAX_PAGES * PAGE}-row guard — results may be truncated`)
   return all
 }
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { toCitySlug } from "@/lib/slugs"
 import { dbTypeToShopType } from "@/lib/shop-types"
+import { log } from "@/lib/logger"
 
 /**
  * On-demand revalidation endpoint.
@@ -31,6 +32,8 @@ type ShopRow = {
   state_code?: string | null
   city?: string | null
   shop_type?: string | null
+  rating?: number | null
+  is_featured?: boolean | null
 }
 
 function pathsForShop(row: ShopRow): string[] {
@@ -49,7 +52,7 @@ export async function POST(request: Request) {
   // ── Auth ──
   const secret = process.env.REVALIDATE_SECRET
   if (!secret) {
-    console.error("[api/revalidate] REVALIDATE_SECRET is not set")
+    log.error("api/revalidate", "REVALIDATE_SECRET is not set")
     return NextResponse.json({ error: "Revalidation is not configured." }, { status: 500 })
   }
   const auth = request.headers.get("authorization") ?? ""
@@ -91,6 +94,16 @@ export async function POST(request: Request) {
     paths.add("/directory")
     paths.add("/states")
     paths.add("/sitemap.xml")
+  }
+
+  // The homepage shows a "Top Rated" carousel ordered by rating + featured flag.
+  // A plain UPDATE doesn't change shop counts, but if it changes one of those two
+  // fields the carousel order can shift, so refresh the homepage too — and only
+  // then, to keep the blast radius minimal.
+  if (type === "UPDATE" && record && oldRecord) {
+    const ratingChanged = record.rating !== oldRecord.rating
+    const featuredChanged = record.is_featured !== oldRecord.is_featured
+    if (ratingChanged || featuredChanged) paths.add("/")
   }
 
   if (paths.size === 0) {
