@@ -2,11 +2,13 @@
 
 **Goal:** When a shop changes in Supabase, your site rebuilds *just that shop's pages* within seconds — instead of waiting up to 30 days.
 
-**Your secret (generated for you — use this exact value in both places below):**
+**Your secret:** use the fresh 64-character value Claude gave you in chat. Paste
+that same value everywhere `<YOUR_SECRET>` appears below.
 
-```
-23147a152325ea5a2adbef30345fe6d565a2bce884523bb0ca0a989d692d9fc3
-```
+> 🔒 **Never paste the real secret into this file** — or any file in the repo,
+> which is **public on GitHub**. It belongs only in Vercel and Supabase. If a
+> secret ever lands in a commit, treat it as compromised: generate a new one
+> with `openssl rand -hex 32` and rotate all three places below.
 
 ---
 
@@ -16,7 +18,7 @@
 2. **Settings** → **Environment Variables**.
 3. Add a new variable:
    - **Name:** `REVALIDATE_SECRET`
-   - **Value:** the secret above
+   - **Value:** `<YOUR_SECRET>` (the value Claude gave you in chat)
    - **Environments:** tick **Production** (and Preview if you like).
 4. Click **Save**.
 
@@ -41,8 +43,8 @@
    - **URL:** `https://clubfittingdirectory.com/api/revalidate`
    - **HTTP Headers** → add one header:
      - **Name:** `Authorization`
-     - **Value:** `Bearer 23147a152325ea5a2adbef30345fe6d565a2bce884523bb0ca0a989d692d9fc3`
-       *(the word `Bearer`, one space, then the secret)*
+     - **Value:** `Bearer <YOUR_SECRET>`
+       *(the word `Bearer`, one space, then the secret — no quotes, no trailing spaces)*
 4. Click **Create webhook**.
 
 ## Step 4 — Test it (1 minute)
