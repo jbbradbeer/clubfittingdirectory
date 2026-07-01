@@ -1,4 +1,5 @@
 import { Resend } from "resend"
+import { log } from "@/lib/logger"
 
 /**
  * Transactional email via Resend.
@@ -42,7 +43,7 @@ function row(label: string, value?: string | null): string {
 export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
-    console.warn("[email] RESEND_API_KEY not set — skipping lead notification (lead was still saved).")
+    log.warn("email", "RESEND_API_KEY not set — skipping lead notification (lead was still saved)")
     return false
   }
 
@@ -80,7 +81,7 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
     if (error) throw error
     return true
   } catch (e) {
-    console.error("[email] failed to send fitting lead notification:", e)
+    log.error("email", "failed to send fitting lead notification", { error: e })
     return false
   }
 }

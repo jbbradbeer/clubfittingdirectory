@@ -135,10 +135,13 @@ is now live.
 - [x] 1.7 Verify (code): tsc clean, eslint clean, full build OK (1,271 listing pages), route ƒ
       registered. ⚠ Live end-to-end (insert→email) pending DB migration + Resend key.
 
-### OWNER ACTIONS to go live (2 quick steps — see message)
-- [ ] A. Run web/supabase/003_fitting_requests.sql in Supabase → SQL Editor.
-- [ ] B. Add RESEND_API_KEY (+ optional BOOKING_NOTIFY_EMAIL) in Vercel env, then redeploy.
-- [ ] C. (then I verify live: submit a test request → row saved + email received.)
+### OWNER ACTIONS to go live — ALL DONE ✅ (LIVE 2026-06-28)
+- [x] A. Ran 003_fitting_requests.sql in Supabase.
+- [x] B. Added RESEND_API_KEY in Vercel + redeployed.
+- [x] C. Verified live: production POST → lead saved in DB + founder confirmed email received.
+      Deployed via merge of feature/booking-engine → main (commit 4085709). PHASE 1 COMPLETE.
+- [ ] Housekeeping: run `DELETE FROM public.fitting_requests WHERE notes LIKE '%__VERIFY_TEST__%';`
+      in Supabase to clear test rows (3 left from verification).
 
 ## PHASE 2 — Measure & operate (no/low code)
 - [ ] 2.1 Admin view of fitting_requests (clone /admin submissions list): see leads, mark status.

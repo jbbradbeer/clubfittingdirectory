@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { notifyNewFittingRequest } from "@/lib/email"
+import { log } from "@/lib/logger"
 
 /**
  * Public "Request a Fitting" endpoint — the booking engine's intake.
@@ -76,7 +77,7 @@ export async function POST(request: Request) {
     const { error } = await supabase.from("fitting_requests").insert(row)
     if (error) {
       if (error.code === "23503" && row.shop_id) {
-        console.warn("[api/request-fitting] shop_id FK miss — saving lead without link.")
+        log.warn("api/request-fitting", "shop_id FK miss — saving lead without link")
         const { error: retryError } = await supabase
           .from("fitting_requests")
           .insert({ ...row, shop_id: null })
@@ -86,7 +87,7 @@ export async function POST(request: Request) {
       }
     }
   } catch (e) {
-    console.error("[api/request-fitting] insert failed:", e)
+    log.error("api/request-fitting", "insert failed", { error: e })
     return NextResponse.json(
       { error: "Something went wrong sending your request. Please try again." },
       { status: 500 },

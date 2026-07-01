@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { log } from "@/lib/logger"
 
 /**
  * Public newsletter signup endpoint.
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
   const apiKey = process.env.BEEHIIV_API_KEY
   const pubId = process.env.BEEHIIV_PUBLICATION_ID
   if (!apiKey || !pubId) {
-    console.error("[api/newsletter] missing BEEHIIV_API_KEY or BEEHIIV_PUBLICATION_ID env var")
+    log.error("api/newsletter", "missing BEEHIIV_API_KEY or BEEHIIV_PUBLICATION_ID env var")
     return NextResponse.json(
       { error: "Newsletter signup is temporarily unavailable. Please try again later." },
       { status: 500 },
@@ -68,14 +69,14 @@ export async function POST(request: Request) {
 
     if (!res.ok) {
       const detail = await res.text().catch(() => "")
-      console.error(`[api/newsletter] beehiiv responded ${res.status}: ${detail}`)
+      log.error("api/newsletter", "beehiiv request failed", { status: res.status, detail })
       return NextResponse.json(
         { error: "We couldn't sign you up just now. Please try again in a moment." },
         { status: 502 },
       )
     }
   } catch (e) {
-    console.error("[api/newsletter] request to beehiiv failed:", e)
+    log.error("api/newsletter", "request to beehiiv failed", { error: e })
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 },

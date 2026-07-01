@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { SHOP_TYPES } from "@/lib/shop-types"
+import { log } from "@/lib/logger"
 
 /**
  * Public "Submit a Shop" endpoint.
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
     })
     if (error) throw error
   } catch (e) {
-    console.error("[api/submit-shop] insert failed:", e)
+    log.error("api/submit-shop", "insert failed", { error: e })
     return NextResponse.json(
       { error: "Something went wrong saving your submission. Please try again." },
       { status: 500 },
