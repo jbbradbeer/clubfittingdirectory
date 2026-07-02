@@ -20,6 +20,7 @@ import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
 import { ProvenanceBadge } from "@/components/shop-profile/ProvenanceBadge"
 import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
+import { isTopRated } from "@/lib/badges"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 
@@ -142,8 +143,13 @@ export default async function ListingPage({ params }: PageProps) {
                   <RatingStars rating={shop.rating} reviews={shop.reviews} />
                 )}
                 <div className="flex flex-wrap items-center gap-2">
-                  {shop.verified && <Badge variant="verified">Verified</Badge>}
+                  {/* Paid Verified tier — the product. The scraped `verified`
+                      boolean is deliberately not shown (free lookalike). */}
+                  {shop.listing_tier === "verified" && <Badge variant="forest">Verified</Badge>}
                   {shop.is_featured && <Badge variant="gold">Featured</Badge>}
+                  {isTopRated(shop.rating, shop.reviews) && (
+                    <Badge variant="verified">Top Rated</Badge>
+                  )}
                   <ProvenanceBadge level={verification.level} />
                 </div>
               </div>
@@ -347,6 +353,22 @@ export default async function ListingPage({ params }: PageProps) {
                   )}
                 </div>
               </div>
+
+              {/* Claim hook — free, feeds the outreach funnel. Hidden once claimed. */}
+              {(shop as { claimed_at?: string | null }).claimed_at ? (
+                <p className="text-center text-xs text-[var(--color-charcoal-light)]">
+                  Owner-managed listing
+                </p>
+              ) : (
+                <p className="text-center text-sm">
+                  <Link
+                    href={`/claim/${shop.slug}`}
+                    className="text-[var(--color-charcoal-light)] hover:text-[var(--color-forest)] transition-colors"
+                  >
+                    Own this shop? <span className="font-semibold text-[var(--color-forest)]">Claim it free →</span>
+                  </Link>
+                </p>
+              )}
 
               {/* Hours card */}
               {shop.working_hours && Object.keys(shop.working_hours).length > 0 && (

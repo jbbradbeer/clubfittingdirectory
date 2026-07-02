@@ -124,3 +124,50 @@ export async function rejectSubmission(formData: FormData) {
   await supabase.from("shop_submissions").update({ review_status: "rejected" }).eq("id", id)
   revalidatePath("/admin")
 }
+
+/* ── Approve a claim: stamp the shop owner-claimed + capture owner_email.
+     Claimed ≠ Verified — the paid tier is set separately when they buy. ── */
+export async function approveClaim(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  if (!id) return
+
+  const supabase = createAdminClient()
+  const { data: claim, error: claimErr } = await supabase
+    .from("shop_claims")
+    .select("id, shop_id, claimant_email")
+    .eq("id", id)
+    .single()
+  if (claimErr || !claim) throw new Error("Claim not found.")
+
+  const { data: shop, error: shopErr } = await supabase
+    .from("shops")
+    .update({ claimed_at: new Date().toISOString(), owner_email: claim.claimant_email })
+    .eq("id", claim.shop_id)
+    .select("slug")
+    .single()
+  if (shopErr) throw new Error(`Could not mark shop claimed: ${shopErr.message}`)
+
+  const { error: updErr } = await supabase
+    .from("shop_claims")
+    .update({ review_status: "approved" })
+    .eq("id", id)
+  if (updErr) throw new Error(`Could not update claim: ${updErr.message}`)
+
+  revalidatePath("/admin")
+  if (shop?.slug) revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed"
+}
+
+/* ── Reject a claim (does not touch shops) ── */
+export async function rejectClaim(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  if (!id) return
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from("shop_claims")
+    .update({ review_status: "rejected" })
+    .eq("id", id)
+  if (error) throw new Error(`Could not reject claim: ${error.message}`)
+  revalidatePath("/admin")
+}

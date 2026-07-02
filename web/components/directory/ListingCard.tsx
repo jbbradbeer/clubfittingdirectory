@@ -2,6 +2,7 @@ import Link from "next/link"
 import { MapPin, Wrench } from "lucide-react"
 import { RatingStars } from "@/components/ui/RatingStars"
 import { getCover } from "@/lib/cover"
+import { getShopTag } from "@/lib/badges"
 import type { ListingCardProps } from "@/types/shop"
 
 export function ListingCard({
@@ -10,24 +11,19 @@ export function ListingCard({
   city,
   state_code,
   rating,
-  rating_tier,
+  reviews,
   services_array,
   offers_fitting,
   fitting_environment,
-  verified,
   slug,
   is_featured,
+  listing_tier,
   distance_km,
-}: ListingCardProps & { reviews?: number | null; is_featured?: boolean }) {
+}: ListingCardProps & { reviews?: number | null; is_featured?: boolean; listing_tier?: string | null }) {
   const { paletteIndex: p } = getCover(slug, shop_type)
 
-  const tierTag = is_featured
-    ? { label: "Featured", className: "bg-[var(--color-gold)] text-[var(--color-forest-deep)]" }
-    : rating_tier === "Top Rated"
-      ? { label: "Top Rated", className: "bg-[var(--color-forest-tint)] text-[var(--color-forest)]" }
-      : verified
-        ? { label: "Verified", className: "bg-[var(--color-cream)] text-[var(--color-charcoal-light)]" }
-        : null
+  // Single-source badge logic — Verified (paid) > Featured > Top Rated (earned)
+  const tierTag = getShopTag({ listing_tier, is_featured, rating, reviews })
 
   return (
     <Link

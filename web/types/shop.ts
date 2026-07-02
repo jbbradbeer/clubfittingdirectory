@@ -3,7 +3,7 @@ export interface Shop {
   slug: string
   status: "pending" | "active" | "inactive"
   is_featured: boolean
-  listing_tier: "free" | "basic" | "featured"
+  listing_tier: "free" | "basic" | "featured" | "verified"
 
   // Identity
   name: string
@@ -27,6 +27,7 @@ export interface Shop {
 
   // Google data
   rating: number | null
+  /** @deprecated scraped snapshot, goes stale — use isTopRated() in lib/badges.ts */
   rating_tier: string | null
   reviews: number | null
   photos_count: number

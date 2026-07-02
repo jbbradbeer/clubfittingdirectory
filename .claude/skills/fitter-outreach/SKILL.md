@@ -69,7 +69,9 @@ prominently and refuse `--allow-c` even if requested.
   homepage is thin). Extract ONE hook for `{{hook_line}}` — see Voice below.
 - Render the template for the touch number. Fill `{{greeting}}` with the
   contact first name if known, else "Gents". `{{listing_url}}` =
-  `https://clubfittingdirectory.com/listing/<slug>`. Touch 3 `{{closing_angle}}`:
+  `https://clubfittingdirectory.com/listing/<slug>`. `{{claim_url}}` =
+  `https://clubfittingdirectory.com/claim/<slug>?src=outreach` (the free-claim
+  landing page; claims arrive in /admin). Touch 3 `{{closing_angle}}`:
   use config SOCIAL_PROOF numbers if set, else the listing-value line with the
   shop's state.
 - Create a Gmail **draft** to `contact_email` from FROM_EMAIL.

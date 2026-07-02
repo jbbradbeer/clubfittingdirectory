@@ -32,7 +32,7 @@ export function Badge({ variant = "default", children, className = "" }: BadgePr
     <span
       className={`inline-flex items-center gap-1.5 font-semibold ${shape} ${variantStyles[variant]} ${className}`}
     >
-      {variant === "verified" && <CheckCircle size={12} />}
+      {variant === "forest" && <CheckCircle size={12} />}
       {children}
     </span>
   )

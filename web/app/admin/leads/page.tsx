@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 
-/* Fitting requests now live on the unified /admin dashboard.
+/* Fitting requests live on the unified /admin dashboard (Fitting Requests tab).
    Keep this route so old bookmarks still work. */
 export default function LeadsRedirect() {
-  redirect("/admin")
+  redirect("/admin?tab=leads")
 }
