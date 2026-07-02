@@ -59,6 +59,7 @@ JUNK_SUBSTRINGS = (
     "squarespace", "shopify", "wordpress", "cloudflare", "recaptcha", "schema.org",
     "yourdomain", "domain.com", "email.com", "@2x", "u003e",
     "mystore.com",   # website-template placeholder (found on multiple PA sites)
+    "mysite.com",    # Wix template placeholder
     "sudtipos",      # font foundry credit embedded in site code
     "latofonts",     # ditto (Lato typeface)
     "fontsquirrel", "typekit", "fonts.com", "myfonts",
