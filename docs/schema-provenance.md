@@ -133,3 +133,55 @@ claim-shop plan) becomes the `owner` provenance source.
 ---
 
 _Audited 2026-06-30 against `web/supabase/001_schema.sql`, `002_shop_submissions.sql`, `003_fitting_requests.sql`. No code or schema changed by this document._
+
+---
+
+## 6. IMPLEMENTED in Phase 1 (2026-07-01)
+
+The design above is now live in the database. Migrations:
+`web/supabase/005_provenance_schema.sql` + `006_provenance_backfill.sql`.
+
+- **`listing_facts`** — the provenance store, one row per `(listing_id, attribute, source)`:
+  `value` (jsonb), `source`, `source_url`, `fetched_at`, `confidence` (0–1),
+  `verified_by` (system|human), `is_current`. Unique winner per `(listing, attribute)`.
+- **`fact_sources`** — source precedence + base confidence (admin 1.0 → heuristic 0.3).
+- **`fact_attributes`** — the 10 tracked attributes, each mapped to its `shops`
+  column (the promotion target) + a numeric `conflict_delta`.
+- **`recompute_current_fact(listing, attribute)`** — winner selection
+  (human > confidence > precedence > recency) + promotion into `shops`.
+- **Views:** `listing_current_facts` (winners), `listing_facts_published`
+  (public, confident subset), **`listing_fact_conflicts`** (disagreements > threshold).
+- **RLS:** public reads only published facts; writes are service-role only.
+  (Owner-claim writes await a Supabase Auth "claim" flow — a later sub-phase.)
+- **Backfill:** every existing value seeded as `source = 'scrape:google'`,
+  `confidence 0.6`. New attributes (`brands_fitted`, `launch_monitors`,
+  `ownership_type`) wait for their pipelines.
+
+Example queries + a live conflict demo: `docs/provenance-queries.sql`.
+
+The live site is unchanged — it still reads `shops`, which is now the
+materialized projection of the winning facts.
+
+---
+
+## 7. Kathmere proof point — the shared governance pattern
+
+This schema is the direct architectural sibling of **clientSafe** / the
+provenance model in the assessment: same governance instinct, different domain.
+Put them side by side and the shared pattern is obvious.
+
+| Governance concept | This directory | clientSafe-style provenance |
+|---|---|---|
+| Atomic fact keyed by attribute + source | `listing_facts(listing_id, attribute, source)` | record/field keyed by entity + attribute + source |
+| Where it came from | `source`, `source_url`, `fetched_at` | source system / document + timestamp |
+| How sure we are | `confidence` (0–1), `verified_by` | confidence score + human-review flag |
+| The single surfaced truth | `is_current` + promotion into `shops` | "current/approved value" projection |
+| Full history retained | superseded rows (`is_current=false`) | prior-version rows |
+| Disagreement surfacing | `listing_fact_conflicts` view (SQL) | conflict / discrepancy report |
+| Access governance | RLS: public reads published only; writes service-role/claim | row/field-level authz on published vs raw |
+
+The reusable principle: **never store a bare value — store a claim** (value +
+source + confidence + time), materialize the current best for reads, keep the
+rest queryable, and make conflicts a first-class, query-able object rather than a
+manual review step.
+

@@ -5,6 +5,7 @@ import {
   MapPin, Phone, Globe, ExternalLink, Clock, CheckCircle, Wrench, Navigation,
 } from "lucide-react"
 import { getShopBySlug, getNearbyShops, getAllShopSlugs, toCitySlug } from "@/lib/supabase/queries/shops"
+import { getListingVerification } from "@/lib/supabase/queries/provenance"
 import { buildLocalBusinessSchema, buildBreadcrumbSchema } from "@/lib/structured-data"
 import { Breadcrumb } from "@/components/ui/Breadcrumb"
 import { ListingMap } from "@/components/directory/ListingMap"
@@ -16,6 +17,7 @@ import { ListingCard } from "@/components/directory/ListingCard"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { TuxedoInlineLink } from "@/components/newsletter/TuxedoInlineLink"
 import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
+import { ProvenanceBadge } from "@/components/shop-profile/ProvenanceBadge"
 import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
 import { SITE_URL } from "@/lib/constants"
@@ -61,6 +63,8 @@ export default async function ListingPage({ params }: PageProps) {
   if (!shop) notFound()
 
   const nearby = await getNearbyShops(shop.state_code, shop.slug, 3).catch((e) => logQueryError("listing getNearbyShops", e, []))
+  // Provenance/confidence level for the "Owner-verified / Unverified" badge.
+  const verification = await getListingVerification(shop.id)
 
   const localBusinessSchema = buildLocalBusinessSchema(shop)
   const breadcrumbSchema = buildBreadcrumbSchema(shop)
@@ -137,9 +141,10 @@ export default async function ListingPage({ params }: PageProps) {
                 {shop.rating && (
                   <RatingStars rating={shop.rating} reviews={shop.reviews} />
                 )}
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {shop.verified && <Badge variant="verified">Verified</Badge>}
                   {shop.is_featured && <Badge variant="gold">Featured</Badge>}
+                  <ProvenanceBadge level={verification.level} />
                 </div>
               </div>
             </div>

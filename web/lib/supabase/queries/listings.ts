@@ -71,7 +71,9 @@ export async function getListings(
       .order("rating",      { ascending: false, nullsFirst: false })
   }
 
-  dataQ = dataQ.range(from, to)
+  // Stable tiebreaker: without a final unique sort key, rows that tie on the
+  // chosen sort can shuffle between page requests (duplicated/skipped shops).
+  dataQ = dataQ.order("id", { ascending: true }).range(from, to)
 
   const [{ count }, { data, error }] = await Promise.all([countQ, dataQ])
   if (error) throw error
