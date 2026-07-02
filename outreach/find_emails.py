@@ -58,6 +58,9 @@ JUNK_SUBSTRINGS = (
     "privacy@", "abuse@", "dmca@", "webmaster@", "postmaster@", "mailer-daemon",
     "squarespace", "shopify", "wordpress", "cloudflare", "recaptcha", "schema.org",
     "yourdomain", "domain.com", "email.com", "@2x", "u003e",
+    "mystore.com",   # website-template placeholder (found on multiple PA sites)
+    "sudtipos",      # font foundry credit embedded in site code
+    "filesusr",      # Wix asset domain
 )
 # Image-artifact "emails" like logo@2x.png that the regex can catch.
 IMAGE_EXT_RE = re.compile(r"\.(png|jpe?g|gif|webp|svg|css|js)$", re.IGNORECASE)
