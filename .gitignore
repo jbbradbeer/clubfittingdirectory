@@ -53,3 +53,8 @@ Club fitting directory claude */
 
 # Local editor/launch config (not needed in the repo)
 .claude/launch.json
+
+# Outreach engine — local state (checkpoints, verification CSVs contain PII, OAuth token)
+outreach/checkpoints/
+outreach/verification/
+outreach/.gmail_token.json

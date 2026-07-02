@@ -1,0 +1,12 @@
+{
+  "FROM_EMAIL": "bowtiedgolf@gmail.com",
+  "DAILY_CAP": 20,
+  "STRIPE_LINK": "{{STRIPE_LINK}}",
+  "CALENDLY_URL": "{{CALENDLY_URL}}",
+  "MAILING_ADDRESS": "{{MAILING_ADDRESS}}",
+  "SIGNATURE_NAME": "James",
+  "SOCIAL_PROOF": {
+    "founding_spots_sold": null,
+    "example_shop": null
+  }
+}

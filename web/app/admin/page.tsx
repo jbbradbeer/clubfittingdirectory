@@ -97,11 +97,16 @@ export default async function AdminPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="font-display text-3xl text-[var(--color-charcoal)]">Dashboard</h1>
-          <form action={logout}>
-            <button className="text-sm text-[var(--color-charcoal-light)] hover:text-[var(--color-forest)] cursor-pointer">
-              Log out
-            </button>
-          </form>
+          <div className="flex items-center gap-4">
+            <Link href="/admin/outreach" className="text-sm text-[var(--color-charcoal-light)] hover:text-[var(--color-forest)]">
+              Outreach
+            </Link>
+            <form action={logout}>
+              <button className="text-sm text-[var(--color-charcoal-light)] hover:text-[var(--color-forest)] cursor-pointer">
+                Log out
+              </button>
+            </form>
+          </div>
         </div>
 
         {/* ── Fitting requests ── */}
