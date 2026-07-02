@@ -60,6 +60,8 @@ JUNK_SUBSTRINGS = (
     "yourdomain", "domain.com", "email.com", "@2x", "u003e",
     "mystore.com",   # website-template placeholder (found on multiple PA sites)
     "sudtipos",      # font foundry credit embedded in site code
+    "latofonts",     # ditto (Lato typeface)
+    "fontsquirrel", "typekit", "fonts.com", "myfonts",
     "filesusr",      # Wix asset domain
 )
 # Image-artifact "emails" like logo@2x.png that the regex can catch.
