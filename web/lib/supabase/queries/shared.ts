@@ -65,10 +65,12 @@ export function sanitizeSearchTerm(input: string): string {
    The query returned by makeQuery MUST include a stable .order() (e.g.
    .order("id")) — without one Postgres guarantees no consistent ordering
    across pages, so rows could repeat or be skipped between chunks. */
+export type PagedQuery<Row> = {
+  range: (from: number, to: number) => PromiseLike<{ data: Row[] | null; error: unknown }>
+}
+
 export async function fetchAllRows<Row>(
-  makeQuery: () => {
-    range: (from: number, to: number) => PromiseLike<{ data: Row[] | null; error: unknown }>
-  },
+  makeQuery: () => PagedQuery<Row>,
 ): Promise<Row[]> {
   const PAGE = 1000
   const MAX_PAGES = 20 // runaway guard (20,000 rows) — raise when the table grows past this

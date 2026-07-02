@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { notifyNewFittingRequest } from "@/lib/email"
 import { log } from "@/lib/logger"
+import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 
 /**
  * Public "Request a Fitting" endpoint — the booking engine's intake.
@@ -20,6 +21,16 @@ function str(v: unknown, max: number): string {
 }
 
 export async function POST(request: Request) {
+  // Rate limit: 5 requests per IP per 10 minutes. A real golfer submits once;
+  // this only stops floods (spam bots, runaway scripts).
+  if (!rateLimitOk(`request-fitting:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+    log.warn("api/request-fitting", "rate limited", { ip: clientIp(request) })
+    return NextResponse.json(
+      { error: "Too many requests. Please try again in a few minutes." },
+      { status: 429 },
+    )
+  }
+
   let body: Record<string, unknown>
   try {
     body = await request.json()

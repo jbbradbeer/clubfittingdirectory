@@ -8,6 +8,7 @@ import {
   sanitizeSearchTerm,
   type DirectoryFilters,
   type DirectoryResult,
+  type PagedQuery,
 } from "./shared"
 
 export type { DirectoryFilters, DirectoryResult }
@@ -397,18 +398,19 @@ export async function getShopsForStatePage(
   stateCode: string,
 ): Promise<{ shops: Shop[]; cityCount: number }> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select(CARD_FIELDS)
-    .eq("status", "active")
-    .eq("state_code", stateCode)
-    .order("is_featured", { ascending: false })
-    .order("rating",      { ascending: false, nullsFirst: false })
-    .order("id",          { ascending: true }) // stable tiebreaker — see getShops
-    .limit(1000)
+  const data = await fetchAllRows<Shop>(() => {
+    const q = supabase
+      .from("shops")
+      .select(CARD_FIELDS)
+      .eq("status", "active")
+      .eq("state_code", stateCode)
+      .order("is_featured", { ascending: false })
+      .order("rating",      { ascending: false, nullsFirst: false })
+      .order("id",          { ascending: true }) // stable tiebreaker — see getShops
+    return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
+  })
 
-  if (error) throw error
-  const shops     = (data as unknown as Shop[]) ?? []
+  const shops     = data
   const cityCount = new Set(shops.map((s) => s.city)).size
   return { shops, cityCount }
 }
@@ -432,18 +434,17 @@ export async function getShopsForCategoryPage(
   shopType: string,
 ): Promise<{ shops: Shop[]; stateBreakdown: { state_code: string; state: string; count: number }[] }> {
   const supabase = createStaticClient()
-  const { data, error } = await supabase
-    .from("shops")
-    .select(CARD_FIELDS)
-    .eq("status", "active")
-    .eq("shop_type", shopType)
-    .order("is_featured", { ascending: false })
-    .order("rating",      { ascending: false, nullsFirst: false })
-    .order("id",          { ascending: true }) // stable tiebreaker — see getShops
-    .limit(1000)
-
-  if (error) throw error
-  const shops = (data as unknown as Shop[]) ?? []
+  const shops = await fetchAllRows<Shop>(() => {
+    const q = supabase
+      .from("shops")
+      .select(CARD_FIELDS)
+      .eq("status", "active")
+      .eq("shop_type", shopType)
+      .order("is_featured", { ascending: false })
+      .order("rating",      { ascending: false, nullsFirst: false })
+      .order("id",          { ascending: true }) // stable tiebreaker — see getShops
+    return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
+  })
 
   // Tally by state
   const stateMap: Record<string, { state: string; count: number }> = {}
@@ -520,20 +521,19 @@ export const getShopsForCityPage = cache(async (
   const cityFirstWord = (parts[0] ?? "").replace(/[^a-z0-9]/gi, "")
 
   const supabase = createStaticClient()
-  let query = supabase
-    .from("shops")
-    .select(CARD_FIELDS)
-    .eq("status", "active")
-    .eq("state_code", stateCode)
-  if (cityFirstWord) query = query.ilike("city", `${cityFirstWord}%`)
-  const { data, error } = await query
-    .order("is_featured", { ascending: false })
-    .order("rating",      { ascending: false, nullsFirst: false })
-    .order("id",          { ascending: true }) // stable tiebreaker — see getShops
-    .limit(1000)
-
-  if (error) throw error
-  const stateShops = (data as unknown as Shop[]) ?? []
+  const stateShops = await fetchAllRows<Shop>(() => {
+    let query = supabase
+      .from("shops")
+      .select(CARD_FIELDS)
+      .eq("status", "active")
+      .eq("state_code", stateCode)
+    if (cityFirstWord) query = query.ilike("city", `${cityFirstWord}%`)
+    const q = query
+      .order("is_featured", { ascending: false })
+      .order("rating",      { ascending: false, nullsFirst: false })
+      .order("id",          { ascending: true }) // stable tiebreaker — see getShops
+    return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
+  })
 
   // Match by SLUG (not exact city string) for both identification and filtering,
   // so cities whose spellings collapse to the same slug (e.g. "St. Louis" and

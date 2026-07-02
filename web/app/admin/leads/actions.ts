@@ -16,6 +16,10 @@ export async function updateLeadStatus(formData: FormData) {
   if (!id || !VALID_STATUSES.has(status)) return
 
   const supabase = createAdminClient()
-  await supabase.from("fitting_requests").update({ status }).eq("id", id)
-  revalidatePath("/admin/leads")
+  const { error } = await supabase
+    .from("fitting_requests")
+    .update({ status })
+    .eq("id", id)
+  if (error) throw new Error(`Could not update lead status: ${error.message}`)
+  revalidatePath("/admin")
 }

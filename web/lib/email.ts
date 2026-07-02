@@ -31,9 +31,20 @@ export type FittingLead = {
   notes?: string | null
 }
 
+/* Escape user-typed text before embedding it in email HTML, so a visitor
+   can't inject markup/scripts into the notification email. */
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
 function row(label: string, value?: string | null): string {
   if (!value) return ""
-  return `<tr><td style="padding:4px 12px 4px 0;color:#6b6b6b;font-size:13px;">${label}</td><td style="padding:4px 0;color:#0a0a0a;font-size:14px;font-weight:600;">${value}</td></tr>`
+  return `<tr><td style="padding:4px 12px 4px 0;color:#6b6b6b;font-size:13px;">${label}</td><td style="padding:4px 0;color:#0a0a0a;font-size:14px;font-weight:600;">${escapeHtml(value)}</td></tr>`
 }
 
 /**
@@ -55,7 +66,7 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
   const html = `
     <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
       <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">New fitting request</p>
-      <p style="font-size:14px;color:#6b6b6b;margin:0 0 16px;">for <strong>${shopLine}</strong></p>
+      <p style="font-size:14px;color:#6b6b6b;margin:0 0 16px;">for <strong>${escapeHtml(shopLine)}</strong></p>
       <table style="border-collapse:collapse;width:100%;">
         ${row("Golfer", lead.visitorName)}
         ${row("Email", lead.visitorEmail)}
