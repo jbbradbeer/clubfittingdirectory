@@ -30,8 +30,18 @@ Draft the next **two** eligible queue articles. Each article gets:
 
 - Its own branch `seo-article-<slug>` **and its own PR** — two separate PRs,
   never combined, so one weak draft doesn't block the other from merging.
-- Live research first: read the current top-ranking pages for the target
-  keyword; the draft must be genuinely better or fresher, not a paraphrase.
+- Live research first: use WebSearch/WebFetch to study what currently ranks
+  for the target keyword (titles, angles, gaps); the draft must be genuinely
+  better or fresher, not a paraphrase. Also read the supporting research in
+  `tasks/research/` — especially `voice-of-customer-forums.md` (use golfers'
+  real phrasings: say "get fitted", address readers by score like "if you
+  shoot 100-110") and `competitor-content-inventory.md` (what to beat).
+- **Statistics rule:** for any numbers about the directory itself, use ONLY
+  `tasks/research/directory-stats-2026-06.md`. Never invent numbers; never
+  cite review counts.
+- **Voice:** honest broker for independent fitters. Golfers distrust chain
+  marketing — never shill. Question-form H2s ("How much does…"); "cost"
+  beats "price"; year-stamp cost/chart content.
 - The typed-Guide format (`web/lib/guides/types.ts`), registered in the
   `GUIDES` array in `web/lib/guides/index.ts`.
 - The full per-article checklist in `tasks/seo-content-calendar.md`, PLUS:
@@ -42,8 +52,12 @@ Draft the next **two** eligible queue articles. Each article gets:
     the topic touches repair, grips, shafts, or adjustments.
   - Mark the queue row ✅ with the date in `tasks/seo-keyword-map.md` inside
     the same PR.
-- `cd web && npm run build` must pass before the PR is opened. If it fails,
-  fix it or don't open the PR.
+- `cd web && npm install && npm run build` must pass before the PR is opened.
+  If it fails for a reason unrelated to your change, open the PR anyway and
+  flag it clearly at the top of the PR body; otherwise fix it first.
+- **File scope for article PRs:** only `web/lib/guides/` and
+  `tasks/seo-keyword-map.md`. Maintenance PRs may also touch the runbook's
+  named files. Nothing else.
 
 ## Step 2 — Maintenance mode (first Monday of the month)
 
@@ -67,8 +81,10 @@ spend the second slot on maintenance (its own branch
 
 - Branch names: `seo-article-<slug>` / `seo-maintenance-<yyyy-mm>`.
 - PR title: `New guide: <article title>` or `SEO maintenance: <month>`.
-- PR description: target keyword, evidence line from the queue, word count,
-  checklist confirmation, and anything James must know before merging.
+- PR description: written for a non-technical reader (James). Include the
+  target keyword and why it was next, a 3-bullet summary of the article's
+  angle, what to double-check when reviewing, a note that merging publishes
+  it live, and the checklist confirmation.
 - Never send email, never post externally, never touch the `shops` table or
   anything outside the files named in this runbook.
 
