@@ -58,3 +58,6 @@ Club fitting directory claude */
 outreach/checkpoints/
 outreach/verification/
 outreach/.gmail_token.json
+
+# Search Console service-account key — secret, NEVER commit (see tasks/gsc-api-setup.md)
+gsc-service-account.json

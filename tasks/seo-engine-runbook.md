@@ -69,13 +69,19 @@ spend the second slot on maintenance (its own branch
    with the oldest `dateModified`. Update stale year references, refresh any
    numbers that have drifted, add internal links to guides published since it
    was written, and bump `dateModified`.
-2. **Re-sort the queue if fresh data exists.** Look in `tasks/` for a Google
-   Search Console export newer than `tasks/gsc-2026-06-10/`. If found:
-   analyze it and re-order the remaining queue in `tasks/seo-keyword-map.md`,
-   adding a dated note explaining what moved and why. If not found: add this
-   line to the maintenance PR description —
-   *"James — drop a fresh GSC export into `tasks/` so next month's run can
-   re-sort the queue against real ranking data."*
+2. **Re-sort the queue against fresh data.** First try
+   `python3 scripts/gsc_pull.py` — it writes a fresh export to
+   `tasks/gsc-latest/` (needs the service-account key; see
+   `tasks/gsc-api-setup.md`). If the script can't run (no key in this
+   environment), fall back to the newest manual export in `tasks/` (dirs
+   named `gsc-*`). With whichever data is newest: re-order the remaining
+   queue in `tasks/seo-keyword-map.md` with a dated note explaining what
+   moved and why, and append a snapshot column to `tasks/seo-baselines.md`
+   if it exists. If the freshest data is over 2 months old, add this line
+   to the maintenance PR description —
+   *"James — the GSC key isn't set up in this environment and the manual
+   export is stale; run the pull locally or drop a fresh export into
+   `tasks/`."*
 
 ## PR conventions
 
