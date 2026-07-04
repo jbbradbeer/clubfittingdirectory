@@ -48,6 +48,12 @@ export interface Guide {
   h1: string
   /** One-sentence summary shown on the hub card and as the lede */
   excerpt: string
+  /**
+   * 3–5 answer-first bullets rendered in a Key Takeaways box above the body
+   * and joined into the Article JSON-LD `abstract`. Each bullet is one
+   * sentence that leads with the answer.
+   */
+  keyTakeaways?: string[]
   /** Approx reading time in minutes (shown as a small meta line) */
   readMinutes: number
 

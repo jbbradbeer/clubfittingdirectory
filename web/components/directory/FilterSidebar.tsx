@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react"
 import { fieldClass, labelClass, checkboxClass } from "@/lib/form-styles"
+import { SERVICE_FILTERS } from "@/lib/service-filters"
 
 interface FilterSidebarProps {
   /* Available options */
@@ -10,11 +11,13 @@ interface FilterSidebarProps {
   /* Current filter values */
   selectedState: string
   selectedShopTypes: string[]
+  selectedServices: string[]
   fittingOnly: boolean
   minRating: number
   /* Handlers */
   onStateChange: (state: string) => void
   onShopTypesChange: (types: string[]) => void
+  onServicesChange: (services: string[]) => void
   onFittingChange: (fitting: boolean) => void
   onRatingChange: (rating: number) => void
   onReset: () => void
@@ -26,10 +29,12 @@ export function FilterSidebar({
   shopTypeOptions,
   selectedState,
   selectedShopTypes,
+  selectedServices,
   fittingOnly,
   minRating,
   onStateChange,
   onShopTypesChange,
+  onServicesChange,
   onFittingChange,
   onRatingChange,
   onReset,
@@ -40,6 +45,14 @@ export function FilterSidebar({
       onShopTypesChange(selectedShopTypes.filter((t) => t !== type))
     } else {
       onShopTypesChange([...selectedShopTypes, type])
+    }
+  }
+
+  const toggleService = (service: string) => {
+    if (selectedServices.includes(service)) {
+      onServicesChange(selectedServices.filter((s) => s !== service))
+    } else {
+      onServicesChange([...selectedServices, service])
     }
   }
 
@@ -104,6 +117,28 @@ export function FilterSidebar({
               />
               <span className="text-sm text-[var(--color-charcoal)] group-hover:text-[var(--color-forest)] transition-colors">
                 {type}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Services checkboxes */}
+      <div>
+        <label className={labelClass}>
+          Services
+        </label>
+        <div className="space-y-2">
+          {SERVICE_FILTERS.map((service) => (
+            <label key={service.value} className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={selectedServices.includes(service.value)}
+                onChange={() => toggleService(service.value)}
+                className={checkboxClass}
+              />
+              <span className="text-sm text-[var(--color-charcoal)] group-hover:text-[var(--color-forest)] transition-colors">
+                {service.label}
               </span>
             </label>
           ))}

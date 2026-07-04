@@ -10,9 +10,16 @@ export const isGolfClubFittingWorthItGuide: Guide = {
   h1: "Is a Golf Club Fitting Worth It? Honest Answer by Skill Level",
   excerpt:
     "The honest answer to golf's most-asked question: yes for some, not yet for others — broken down by skill level so you can decide what actually makes sense for your game.",
+  keyTakeaways: [
+    "A full custom fitting is worth it once you can break 100: below 80 it is a clear yes, at 80 to 99 a single-club fitting pays off, and at 100 or higher a full session can wait.",
+    "If you shoot 100 or higher, the smart sequence is used clubs in the right ballpark, lessons, then a proper fitting once your swing stabilises, because a detailed spec sheet loses accuracy as your swing changes.",
+    "A 30-to-45-minute basics check covering length, lie angle, grip size, and shaft flex is worth doing at every skill level, and its results stay relevant even as your swing improves.",
+    "Badly fitted clubs create the Phantom Miss: one golfer spent two years and multiple instructors fixing a swing fault that turned out to be irons bent 3 to 4 degrees upright from factory.",
+    "Wrong specs are fundamentals, not refinements: a shaft too stiff for your speed sends the ball lower and offline, and length and grip size errors bias every shot.",
+  ],
   readMinutes: 7,
   datePublished: "2026-06-29",
-  dateModified: "2026-06-29",
+  dateModified: "2026-07-04",
   blocks: [
     {
       type: "paragraph",
