@@ -48,6 +48,9 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   const [selectedShopTypes, setSelectedShopTypes] = useState<string[]>(
     searchParams.get("types")?.split(",").filter(Boolean) ?? [],
   )
+  const [selectedServices, setSelectedServices] = useState<string[]>(
+    searchParams.get("services")?.split(",").filter(Boolean) ?? [],
+  )
   const [fittingOnly, setFittingOnly] = useState(searchParams.get("fitting") === "true")
   const [minRating, setMinRating] = useState(parseRating(searchParams.get("rating")))
   const [sort, setSort] = useState<SortMode>(parseSort(searchParams.get("sort")))
@@ -105,13 +108,14 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     if (debouncedQuery) params.set("q", debouncedQuery)
     if (selectedState) params.set("state", selectedState)
     if (selectedShopTypes.length) params.set("types", selectedShopTypes.join(","))
+    if (selectedServices.length) params.set("services", selectedServices.join(","))
     if (fittingOnly) params.set("fitting", "true")
     if (minRating > 0) params.set("rating", String(minRating))
     if (sort !== "rating") params.set("sort", sort)
     if (page > 1) params.set("page", String(page))
     const qs = params.toString()
     router.replace(`/directory${qs ? `?${qs}` : ""}`, { scroll: false })
-  }, [debouncedQuery, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, router])
+  }, [debouncedQuery, selectedState, selectedShopTypes, selectedServices, fittingOnly, minRating, sort, page, router])
 
   /* ── Fetch results ── */
   const fetchResults = useCallback(async () => {
@@ -124,6 +128,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
         q: debouncedQuery || undefined,
         state: selectedState || undefined,
         shopTypes: selectedShopTypes.length ? selectedShopTypes : undefined,
+        services: selectedServices.length ? selectedServices : undefined,
         fitting: fittingOnly || undefined,
         minRating: minRating > 0 ? minRating : undefined,
         sort,
@@ -146,7 +151,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
     } finally {
       if (seq === fetchSeq.current) setLoading(false)
     }
-  }, [debouncedQuery, selectedState, selectedShopTypes, fittingOnly, minRating, sort, page, nearMeActive])
+  }, [debouncedQuery, selectedState, selectedShopTypes, selectedServices, fittingOnly, minRating, sort, page, nearMeActive])
 
   useEffect(() => {
     fetchResults()
@@ -159,9 +164,11 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
      syncUrl() router.replace() can't trigger a feedback loop. ── */
   useEffect(() => {
     const urlTypes = searchParams.get("types")?.split(",").filter(Boolean) ?? []
+    const urlServices = searchParams.get("services")?.split(",").filter(Boolean) ?? []
     setQuery((prev) => (prev !== (searchParams.get("q") ?? "") ? (searchParams.get("q") ?? "") : prev))
     setSelectedState((prev) => (prev !== (searchParams.get("state") ?? "") ? (searchParams.get("state") ?? "") : prev))
     setSelectedShopTypes((prev) => (prev.join(",") !== urlTypes.join(",") ? urlTypes : prev))
+    setSelectedServices((prev) => (prev.join(",") !== urlServices.join(",") ? urlServices : prev))
     setFittingOnly((prev) => (prev !== (searchParams.get("fitting") === "true") ? searchParams.get("fitting") === "true" : prev))
     setMinRating((prev) => { const v = parseRating(searchParams.get("rating")); return prev !== v ? v : prev })
     setSort((prev) => { const v = parseSort(searchParams.get("sort")); return prev !== v ? v : prev })
@@ -212,12 +219,14 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   const activeFilterCount =
     (selectedState ? 1 : 0) +
     selectedShopTypes.length +
+    selectedServices.length +
     (fittingOnly ? 1 : 0) +
     (minRating > 0 ? 1 : 0)
 
   const resetFilters = () => {
     setSelectedState("")
     setSelectedShopTypes([])
+    setSelectedServices([])
     setFittingOnly(false)
     setMinRating(0)
     setPage(1)
@@ -351,10 +360,12 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
               shopTypeOptions={shopTypeOptions}
               selectedState={selectedState}
               selectedShopTypes={selectedShopTypes}
+              selectedServices={selectedServices}
               fittingOnly={fittingOnly}
               minRating={minRating}
               onStateChange={(s) => { setSelectedState(s); setPage(1) }}
               onShopTypesChange={(t) => { setSelectedShopTypes(t); setPage(1) }}
+              onServicesChange={(s) => { setSelectedServices(s); setPage(1) }}
               onFittingChange={(f) => { setFittingOnly(f); setPage(1) }}
               onRatingChange={(r) => { setMinRating(r); setPage(1) }}
               onReset={resetFilters}
@@ -413,10 +424,12 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
               shopTypeOptions={shopTypeOptions}
               selectedState={selectedState}
               selectedShopTypes={selectedShopTypes}
+              selectedServices={selectedServices}
               fittingOnly={fittingOnly}
               minRating={minRating}
               onStateChange={(s) => { setSelectedState(s); setPage(1) }}
               onShopTypesChange={(t) => { setSelectedShopTypes(t); setPage(1) }}
+              onServicesChange={(s) => { setSelectedServices(s); setPage(1) }}
               onFittingChange={(f) => { setFittingOnly(f); setPage(1) }}
               onRatingChange={(r) => { setMinRating(r); setPage(1) }}
               onReset={resetFilters}

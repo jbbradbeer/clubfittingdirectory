@@ -10,9 +10,16 @@ export const whereToGetFittedGuide: Guide = {
   h1: "Where to Get Fitted for Golf Clubs",
   excerpt:
     "Your options for getting fitted — independent studios, big-box retailers, brand centres, and simulator shops — compared, plus how to find a great fitter near you.",
+  keyTakeaways: [
+    "Independent fitting studios are usually the gold standard because they are brand-agnostic, though they often charge the highest fitting fee.",
+    "Big-box retailers are best for buying new clubs and getting fitted in one trip, and many credit the fitting fee toward clubs you purchase.",
+    "Brand (OEM) fitting centres offer unmatched depth within one manufacturer, but you will only be fitted into that brand's clubs.",
+    "Simulator studios and teaching pros are legitimate fitting venues too; a pro who already knows your swing can be a real advantage.",
+    "Wherever you go, check for a launch monitor, a wide head-and-shaft selection, a clear fee policy, and reviews that praise the fitter's explanations, not just the products.",
+  ],
   readMinutes: 6,
   datePublished: "2026-06-03",
-  dateModified: "2026-06-03",
+  dateModified: "2026-07-04",
   blocks: [
     {
       type: "paragraph",

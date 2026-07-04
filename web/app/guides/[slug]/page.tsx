@@ -80,7 +80,7 @@ export default async function GuidePage({ params }: PageProps) {
       {/* Article body */}
       <article className="bg-white py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <GuideBody blocks={guide.blocks} />
+          <GuideBody blocks={guide.blocks} keyTakeaways={guide.keyTakeaways} />
         </div>
       </article>
 

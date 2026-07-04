@@ -291,6 +291,7 @@ export function buildArticleSchema(guide: Guide): Record<string, unknown> {
     "@type":    "Article",
     headline:        guide.h1,
     description:     guide.metaDescription,
+    ...(guide.keyTakeaways?.length ? { abstract: guide.keyTakeaways.join(" ") } : {}),
     datePublished:   guide.datePublished,
     dateModified:    guide.dateModified,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },

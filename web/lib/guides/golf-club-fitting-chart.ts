@@ -10,9 +10,16 @@ export const golfClubFittingChartGuide: Guide = {
   h1: "Golf Club Fitting Chart",
   excerpt:
     "Quick-reference charts for length, lie angle, and shaft flex — by height, wrist-to-floor measurement, and swing speed. A starting point before a proper fitting.",
+  keyTakeaways: [
+    "Standard iron length fits golfers from 5'6\" to 6'0\"; add roughly 0.5 inch per 3 inches of height above that and subtract 0.5 inch per 3 inches below.",
+    "Wrist-to-floor beats height for predicting club length: 32\" to 34.5\" is standard, 34.5\" to 37\" suggests +0.5 inch, and 29\" to 32\" suggests -0.5 inch.",
+    "Match shaft flex to driver swing speed: Regular for 84 to 96 mph (200 to 240 yards carry), Stiff for 96 to 104 mph, Senior/A below 84 mph, and Extra Stiff above 105 mph.",
+    "Lie angle should not be set from a chart because it depends on impact delivery: an impact-tape mark toward the toe means too flat, toward the heel means too upright.",
+    "Charts are a starting point, not a final answer; confirm the numbers with a launch-monitor fitting because flex labels are not standardised across brands.",
+  ],
   readMinutes: 7,
   datePublished: "2026-06-03",
-  dateModified: "2026-06-03",
+  dateModified: "2026-07-04",
   blocks: [
     {
       type: "paragraph",

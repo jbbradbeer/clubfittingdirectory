@@ -171,9 +171,32 @@ function Block({ block }: { block: GuideBlock }) {
   }
 }
 
-export function GuideBody({ blocks }: { blocks: GuideBlock[] }) {
+export function GuideBody({
+  blocks,
+  keyTakeaways,
+}: {
+  blocks: GuideBlock[]
+  keyTakeaways?: string[]
+}) {
   return (
     <div>
+      {keyTakeaways && keyTakeaways.length > 0 && (
+        <aside
+          id="key-takeaways"
+          className="mb-10 rounded-2xl border-l-4 border-[var(--color-gold)] bg-[var(--color-gold-tint)] px-6 py-5"
+        >
+          <p className="font-display mb-2.5 text-sm font-bold uppercase tracking-[0.12em] text-[var(--color-gold-ink)]">
+            Key takeaways
+          </p>
+          <ul className="space-y-2 pl-5 list-disc marker:text-[var(--color-gold)] text-lg leading-relaxed text-[var(--color-charcoal)]">
+            {keyTakeaways.map((t, i) => (
+              <li key={i} className="pl-1">
+                {t}
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
       {blocks.map((block, i) => (
         <Block key={i} block={block} />
       ))}

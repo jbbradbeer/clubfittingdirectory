@@ -461,6 +461,40 @@ export async function getShopsForCategoryPage(
   return { shops, stateBreakdown }
 }
 
+/* ── All shops offering a given service (service landing pages, e.g. /repair).
+   `serviceTerm` is substring-matched against the pipe-delimited services text
+   — see lib/service-filters.ts for the curated values. ── */
+export async function getShopsForServicePage(
+  serviceTerm: string,
+): Promise<{ shops: Shop[]; stateBreakdown: { state_code: string; state: string; count: number }[] }> {
+  const supabase = createStaticClient()
+  const shops = await fetchAllRows<Shop>(() => {
+    const q = supabase
+      .from("shops")
+      .select(CARD_FIELDS)
+      .eq("status", "active")
+      .ilike("services", `%${serviceTerm}%`)
+      .order("is_featured", { ascending: false })
+      .order("rating",      { ascending: false, nullsFirst: false })
+      .order("id",          { ascending: true }) // stable tiebreaker — see getShops
+    return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
+  })
+
+  // Tally by state
+  const stateMap: Record<string, { state: string; count: number }> = {}
+  for (const s of shops) {
+    if (!s.state_code) continue
+    if (!stateMap[s.state_code])
+      stateMap[s.state_code] = { state: s.state, count: 0 }
+    stateMap[s.state_code].count++
+  }
+  const stateBreakdown = Object.entries(stateMap)
+    .map(([state_code, { state, count }]) => ({ state_code, state, count }))
+    .sort((a, b) => b.count - a.count)
+
+  return { shops, stateBreakdown }
+}
+
 /* ── All distinct shop_type values (for generateStaticParams on category page) ── */
 export async function getAllShopTypes(): Promise<string[]> {
   const supabase = createStaticClient()

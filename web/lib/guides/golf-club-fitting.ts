@@ -11,9 +11,16 @@ export const golfClubFittingGuide: Guide = {
   h1: "Golf Club Fitting: The Complete Guide",
   excerpt:
     "Everything you need to know about golf club fitting — what it is, what gets measured, what it costs, and how to find a fitter who will build clubs around your swing.",
+  keyTakeaways: [
+    "Golf club fitting adjusts length, lie angle, shaft, loft, clubhead, and grip to match how you actually swing, instead of forcing your swing to adapt to off-the-rack clubs.",
+    "A single-club fitting typically costs $50 to $150 and takes 30 to 60 minutes, while a full-bag fitting runs $200 to $400 or more and can take two hours plus.",
+    "The best fittings combine static measurements (height, wrist-to-floor) with dynamic launch-monitor data, because static numbers alone cannot see how you deliver the club at impact.",
+    "Lie angle is one of the highest-impact, lowest-cost adjustments, since a lie that is too upright or too flat sends the ball offline even on a perfect strike.",
+    "Choose a fitter who uses a launch monitor, carries multiple brands of heads and shafts, and explains the data rather than just selling the newest model.",
+  ],
   readMinutes: 11,
   datePublished: "2026-06-03",
-  dateModified: "2026-06-03",
+  dateModified: "2026-07-04",
   blocks: [
     {
       type: "paragraph",

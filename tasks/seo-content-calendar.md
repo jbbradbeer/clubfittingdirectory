@@ -37,6 +37,8 @@ file in `web/lib/guides/` and add it to the array in `web/lib/guides/index.ts`.
 - [ ] 2–3 contextual internal links to other guides + relevant `/category` or `/state` pages
 - [ ] 3–4 FAQs (these power the FAQ rich-result schema)
 - [ ] `related` array links to the pillar + 1–2 sibling spokes
+- [ ] `keyTakeaways`: 3–5 answer-first bullets (renders as the Key Takeaways box + Article JSON-LD `abstract`)
+- [ ] Confirmed slug is NOT already in the `GUIDES` array or marked ✅ in the keyword map (duplicate guard)
 - [ ] Added to the `GUIDES` array in `web/lib/guides/index.ts`
 - [ ] `npm run build` passes and the new URL appears in the sitemap
 

@@ -14,9 +14,16 @@ export const stateOfClubFitting2026: Guide = {
   h1: "The State of Club Fitting in America (2026)",
   excerpt:
     "What 1,268 golf shops across all 50 states reveal about club fitting access in America — including the four big golf states that rank dead last per capita.",
+  keyTakeaways: [
+    "Only 44.8% of the 1,268 golf shops analyzed (568 shops) explicitly offer club fitting; the rest focus on retail, instruction, simulator rental, or repair.",
+    "Indoor fitting has won: 87% of fitting providers with a known environment fit indoors (486 shops) versus just 13% outdoors (75 shops).",
+    "Ohio and New York tie for the most listed shops at 59 each, but Vermont leads the nation per capita with 26.2 shops per million residents against a national average of 3.7.",
+    "California, Texas, Florida, and New York hold about a third of the U.S. population but only 16% of listed golf shops, and California ranks dead last at 1.3 shops per million residents.",
+    "Across 1,255 shops with a public rating, the average is 4.46 out of 5, with Indiana (4.80) and South Carolina (4.79) leading states with 15+ shops.",
+  ],
   readMinutes: 9,
   datePublished: "2026-06-11",
-  dateModified: "2026-06-11",
+  dateModified: "2026-07-04",
   blocks: [
     {
       type: "paragraph",

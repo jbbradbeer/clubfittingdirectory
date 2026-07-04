@@ -114,3 +114,46 @@ export function categoryFaqs(label: string): FaqItem[] {
     ...baseFittingFaqs(),
   ]
 }
+
+/* ── Repair landing page (/repair) ── */
+export function repairIntro(shopCount: number, stateCount: number): string {
+  return `Golf club repair keeps a good set in play for a fraction of the cost of replacing it. The ${shopCount} shops listed here across ${stateCount} ${
+    stateCount === 1 ? "state" : "states"
+  } offer repair services like regripping, reshafting, and loft and lie adjustment alongside fitting and retail. Compare ratings and services, then contact the shop directly for a quote.`
+}
+
+export function repairFaqs(shops: ShopFact[] = []): FaqItem[] {
+  return [
+    {
+      question: "How much does golf club repair cost?",
+      answer:
+        "Typical US prices: regripping runs about $3–$15 per club plus the grip, reshafting an iron or wood about $20–$45 plus the shaft, and a loft or lie adjustment about $5–$10 per club. Prices vary by shop and shaft, so confirm before you commit.",
+    },
+    {
+      question: "Is it worth repairing golf clubs instead of replacing them?",
+      answer:
+        "Usually yes for clubs you like: fresh grips, a shaft that matches your swing, or corrected loft and lie can make a familiar set perform like new for far less than a new set. Replacement makes more sense when heads are worn out or the technology gap is large.",
+    },
+    {
+      question: "How do I find golf club repair near me?",
+      answer:
+        "Every shop on this page offers club repair — use the state links above to narrow to your area, or search the full directory and filter by the Club Repair service to compare ratings and contact details near you.",
+    },
+    {
+      question: "How long does golf club repair take?",
+      answer:
+        "Regrips are often same-day once the solvent sets, while reshafts and loft/lie adjustments typically take a few days depending on parts and the shop's queue. Ask the shop for turnaround when you get your quote.",
+    },
+    ...[topRatedRepairFaq(shops)].filter((f): f is FaqItem => f !== null),
+  ]
+}
+
+function topRatedRepairFaq(shops: ShopFact[]): FaqItem | null {
+  const rated = shops.filter((s) => s.rating != null && s.rating >= 4)
+  if (!rated.length) return null
+  const top = rated.reduce((a, b) => ((b.rating ?? 0) > (a.rating ?? 0) ? b : a))
+  return {
+    question: "Who is the highest-rated golf club repair shop in the directory?",
+    answer: `${top.name} is currently the highest-rated shop offering club repair in this directory, with a ${top.rating}/5 rating. Ratings change as new reviews come in, so compare the listings above before you book.`,
+  }
+}
