@@ -20,7 +20,7 @@ import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
 import { ProvenanceBadge } from "@/components/shop-profile/ProvenanceBadge"
 import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
-import { isTopRated } from "@/lib/badges"
+import { isTopRated, isVerified } from "@/lib/badges"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 
@@ -145,7 +145,7 @@ export default async function ListingPage({ params }: PageProps) {
                 <div className="flex flex-wrap items-center gap-2">
                   {/* Paid Verified tier — the product. The scraped `verified`
                       boolean is deliberately not shown (free lookalike). */}
-                  {shop.listing_tier === "verified" && <Badge variant="forest">Verified</Badge>}
+                  {isVerified(shop) && <Badge variant="forest">Verified</Badge>}
                   {shop.is_featured && <Badge variant="gold">Featured</Badge>}
                   {isTopRated(shop.rating, shop.reviews) && (
                     <Badge variant="verified">Top Rated</Badge>

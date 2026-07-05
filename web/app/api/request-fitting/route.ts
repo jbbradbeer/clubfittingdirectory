@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { notifyNewFittingRequest } from "@/lib/email"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
@@ -66,6 +67,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: errors.join(" ") }, { status: 400 })
   }
 
+  // ── Resolve the shop server-side (never trust the posted id/name) ──
+  // Also tells us whether the listing is claimed: claimed shops get the lead
+  // forwarded to their owner directly (the free-claim promise).
+  let dbShop: {
+    id: string
+    name: string
+    slug: string
+    owner_email: string | null
+    claimed_at: string | null
+  } | null = null
+  if (shopSlug) {
+    try {
+      const admin = createAdminClient()
+      const { data } = await admin
+        .from("shops")
+        .select("id,name,slug,owner_email,claimed_at")
+        .eq("slug", shopSlug)
+        .eq("status", "active")
+        .maybeSingle()
+      dbShop = data ?? null
+    } catch (e) {
+      log.warn("api/request-fitting", "shop lookup failed — falling back to posted values", { error: e })
+    }
+  }
+
   // ── Insert (RLS: anon INSERT only) ──
   // A lead is the asset — never lose one. We try with the shop link first; if
   // the shop_id no longer matches a row (FK violation 23503, e.g. shop removed
@@ -74,9 +100,9 @@ export async function POST(request: Request) {
   try {
     const supabase = await createClient()
     const row = {
-      shop_id: shopId || null,
-      shop_slug: shopSlug || null,
-      shop_name: shopName || null,
+      shop_id: dbShop?.id ?? (shopId || null),
+      shop_slug: dbShop?.slug ?? (shopSlug || null),
+      shop_name: dbShop?.name ?? (shopName || null),
       visitor_name: visitorName,
       visitor_email: visitorEmail,
       visitor_phone: visitorPhone || null,
@@ -105,10 +131,12 @@ export async function POST(request: Request) {
     )
   }
 
-  // ── Notify the founder (best-effort; never blocks the save) ──
+  // ── Notify (best-effort; never blocks the save). Claimed shop → email goes
+  // to the owner with the founder cc'd; otherwise founder-only as before. ──
   await notifyNewFittingRequest({
-    shopName: shopName || null,
-    shopSlug: shopSlug || null,
+    shopName: dbShop?.name ?? (shopName || null),
+    shopSlug: dbShop?.slug ?? (shopSlug || null),
+    ownerEmail: dbShop?.claimed_at && dbShop.owner_email ? dbShop.owner_email : null,
     visitorName,
     visitorEmail,
     visitorPhone,

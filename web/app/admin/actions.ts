@@ -169,6 +169,56 @@ export async function approveClaim(formData: FormData) {
   if (shop?.slug) revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed"
 }
 
+/* ── Activate the paid Verified tier (replaces the manual-SQL step).
+   Run when a Stripe payment email arrives — see tasks/paid-activation-runbook.md.
+   Sets the badge live and stamps a 1-year expiry so a lapsed subscription
+   can't stay "Verified" forever. ── */
+export async function activateVerified(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
+  if (!slug) return
+
+  const now = new Date()
+  const expires = new Date(now)
+  expires.setFullYear(expires.getFullYear() + 1)
+
+  const supabase = createAdminClient()
+  const { data: shop, error } = await supabase
+    .from("shops")
+    .update({
+      listing_tier: "verified",
+      verified_at: now.toISOString(),
+      verified_expires_at: expires.toISOString(),
+    })
+    .eq("slug", slug)
+    .select("slug")
+    .single()
+  if (error || !shop) throw new Error(`Could not activate: ${error?.message ?? "shop not found"}`)
+
+  revalidatePath("/admin")
+  revalidatePath(`/listing/${slug}`)
+  revalidatePath("/") // badge shows on homepage carousel cards
+}
+
+/* ── Lapse a Verified listing (subscription not renewed). Keeps verified_at /
+   verified_expires_at as history; only the tier goes back to free. ── */
+export async function lapseVerified(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
+  if (!slug) return
+
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from("shops")
+    .update({ listing_tier: "free" })
+    .eq("slug", slug)
+  if (error) throw new Error(`Could not lapse: ${error.message}`)
+
+  revalidatePath("/admin")
+  revalidatePath(`/listing/${slug}`)
+  revalidatePath("/")
+}
+
 /* ── Reject a claim (does not touch shops) ── */
 export async function rejectClaim(formData: FormData) {
   if (!(await isAdmin())) redirect("/admin/login")

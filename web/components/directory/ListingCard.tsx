@@ -18,12 +18,13 @@ export function ListingCard({
   slug,
   is_featured,
   listing_tier,
+  verified_expires_at,
   distance_km,
-}: ListingCardProps & { reviews?: number | null; is_featured?: boolean; listing_tier?: string | null }) {
+}: ListingCardProps & { reviews?: number | null; is_featured?: boolean; listing_tier?: string | null; verified_expires_at?: string | null }) {
   const { paletteIndex: p } = getCover(slug, shop_type)
 
   // Single-source badge logic — Verified (paid) > Featured > Top Rated (earned)
-  const tierTag = getShopTag({ listing_tier, is_featured, rating, reviews })
+  const tierTag = getShopTag({ listing_tier, verified_expires_at, is_featured, rating, reviews })
 
   return (
     <Link

@@ -14,7 +14,7 @@ export const CARD_FIELDS = [
   "rating", "rating_tier", "reviews", "photos_count", "has_photos",
   "offers_fitting", "fitting_environment", "services", "services_array",
   "num_services", "verified", "location_link", "is_featured", "listing_tier",
-  "latitude", "longitude",
+  "verified_expires_at", "latitude", "longitude",
 ].join(", ")
 
 /**
@@ -30,7 +30,7 @@ export type ShopCard = Pick<
   | "rating" | "rating_tier" | "reviews" | "photos_count" | "has_photos"
   | "offers_fitting" | "fitting_environment" | "services" | "services_array"
   | "num_services" | "verified" | "location_link" | "is_featured" | "listing_tier"
-  | "latitude" | "longitude"
+  | "verified_expires_at" | "latitude" | "longitude"
 >
 
 /* Strip characters that have structural meaning inside a PostgREST `.or()` /

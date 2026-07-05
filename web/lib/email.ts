@@ -22,6 +22,8 @@ const NOTIFY_TO = process.env.BOOKING_NOTIFY_EMAIL || "jamesbradbeer3@gmail.com"
 export type FittingLead = {
   shopName: string | null
   shopSlug: string | null
+  /** Claimed shop's owner email — when set, the lead goes to the shop with the founder cc'd. */
+  ownerEmail?: string | null
   visitorName: string
   visitorEmail: string
   visitorPhone?: string | null
@@ -80,14 +82,21 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
         ${row("Notes", lead.notes)}
       </table>
       ${listingUrl ? `<p style="margin-top:16px;font-size:13px;"><a href="${escapeHtml(listingUrl)}" style="color:#1B4332;">View the shop listing →</a></p>` : ""}
-      <p style="margin-top:20px;font-size:12px;color:#9b9b9b;">Reply to this golfer directly, then relay the request to the shop.</p>
+      <p style="margin-top:20px;font-size:12px;color:#9b9b9b;">${
+        lead.ownerEmail
+          ? "This golfer found you on Club Fitting Directory — just hit reply to reach them directly."
+          : "Reply to this golfer directly, then relay the request to the shop."
+      }</p>
     </div>`
 
   try {
     const resend = new Resend(apiKey)
+    // Claimed shop: the lead goes straight to the owner (the free-claim
+    // promise), with the founder cc'd for visibility. Unclaimed: founder-only.
     const { error } = await resend.emails.send({
       from: FROM,
-      to: NOTIFY_TO,
+      to: lead.ownerEmail || NOTIFY_TO,
+      ...(lead.ownerEmail ? { cc: NOTIFY_TO } : {}),
       replyTo: lead.visitorEmail,
       subject: `New fitting request — ${shopLine}`,
       html,
