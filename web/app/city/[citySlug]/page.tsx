@@ -13,7 +13,7 @@ import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { cityIntro, cityFaqs } from "@/lib/seo-content"
-import { logQueryError } from "@/lib/utils"
+import { logQueryError, rethrowQueryError } from "@/lib/utils"
 
 interface PageProps {
   params: Promise<{ citySlug: string }>
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CityPage({ params }: PageProps) {
   const { citySlug } = await params
-  const result = await getShopsForCityPage(citySlug).catch((e) => logQueryError("city getShopsForCityPage", e, null))
+  const result = await getShopsForCityPage(citySlug).catch(rethrowQueryError("city getShopsForCityPage"))
 
   if (!result) notFound()
 

@@ -7,7 +7,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { TrackedButton } from "@/components/ui/TrackedButton"
 import { SITE_URL } from "@/lib/constants"
-import { logQueryError } from "@/lib/utils"
+import { rethrowQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RepairPage() {
-  const result = await getShopsForServicePage("Club Repair").catch((e) =>
-    logQueryError("repair getShopsForServicePage", e, null),
+  const result = await getShopsForServicePage("Club Repair").catch(
+    rethrowQueryError("repair getShopsForServicePage"),
   )
   if (!result || result.shops.length === 0) notFound()
 

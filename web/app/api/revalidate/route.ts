@@ -4,6 +4,7 @@ import { toCitySlug } from "@/lib/slugs"
 import { dbTypeToShopType } from "@/lib/shop-types"
 import { log } from "@/lib/logger"
 import { pingIndexNow } from "@/lib/indexnow"
+import { SERVICE_FILTERS } from "@/lib/service-filters"
 
 /**
  * On-demand revalidation endpoint.
@@ -33,6 +34,7 @@ type ShopRow = {
   state_code?: string | null
   city?: string | null
   shop_type?: string | null
+  services?: string | null
   rating?: number | null
   is_featured?: boolean | null
   listing_tier?: string | null
@@ -46,6 +48,11 @@ function pathsForShop(row: ShopRow): string[] {
   if (row.shop_type) {
     const cat = dbTypeToShopType(row.shop_type)
     if (cat) paths.push(`/category/${cat.slug}`)
+  }
+  // Service landing pages (/repair) list shops by services text, so a change
+  // to a shop with a matching service must refresh them too.
+  if (row.services && SERVICE_FILTERS.some((s) => row.services!.includes(s.value))) {
+    paths.push("/repair")
   }
   return paths
 }
@@ -81,6 +88,7 @@ export async function POST(request: Request) {
     state_code: body.state_code as string | undefined,
     city: body.city as string | undefined,
     shop_type: body.shop_type as string | undefined,
+    services: body.services as string | undefined,
   }
 
   // Collect the affected paths from the new row AND the old row (so a shop that

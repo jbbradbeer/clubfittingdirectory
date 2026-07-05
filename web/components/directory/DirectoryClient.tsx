@@ -98,9 +98,15 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   const fetchSeq = useRef(0)
 
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedQuery(query), 180)
+    const t = setTimeout(() => {
+      setDebouncedQuery(query)
+      // A NEW search must land on page 1 — otherwise a user on page 3 sees
+      // "no results" for a query that has matches. Both setters batch into
+      // one render.
+      if (query !== debouncedQuery) setPage(1)
+    }, 180)
     return () => clearTimeout(t)
-  }, [query])
+  }, [query, debouncedQuery])
 
   /* ── Sync URL params ── */
   const syncUrl = useCallback(() => {

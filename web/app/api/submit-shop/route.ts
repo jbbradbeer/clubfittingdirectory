@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { log } from "@/lib/logger"
+import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 
 /**
  * Public "Submit a Shop" endpoint.
@@ -24,6 +25,13 @@ function str(v: unknown, max: number): string {
 }
 
 export async function POST(request: Request) {
+  // Same throttle the other public write routes use — the honeypot alone
+  // doesn't stop a targeted script.
+  if (!rateLimitOk(`submit-shop:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+    log.warn("api/submit-shop", "rate limited", { ip: clientIp(request) })
+    return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 })
+  }
+
   let body: Record<string, unknown>
   try {
     body = await request.json()
