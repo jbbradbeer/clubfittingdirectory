@@ -5,7 +5,7 @@ import { getShopsForServicePage } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
-import { Button } from "@/components/ui/Button"
+import { TrackedButton } from "@/components/ui/TrackedButton"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
@@ -122,9 +122,13 @@ export default async function RepairPage() {
       {/* CTA */}
       <section className="bg-[var(--color-cream)] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Button href="/directory?services=Club+Repair" variant="primary">
+          <TrackedButton
+            href="/directory?services=Club+Repair"
+            variant="primary"
+            event="repair_directory_cta"
+          >
             Filter the Full Directory by Repair
-          </Button>
+          </TrackedButton>
         </div>
       </section>
 

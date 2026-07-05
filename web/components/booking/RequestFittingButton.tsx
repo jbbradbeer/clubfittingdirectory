@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { track } from "@vercel/analytics"
 import { CalendarCheck, CheckCircle, Loader2, ChevronDown, X } from "lucide-react"
 import { fieldClass, selectClass, labelClass } from "@/lib/form-styles"
 import { Button } from "@/components/ui/Button"
@@ -82,6 +83,7 @@ export function RequestFittingButton({ shopId, shopName, shopSlug, className }: 
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || "Request failed. Please try again.")
       setStatus("success")
+      track("fitting_request", { slug: shopSlug })
     } catch (err) {
       setStatus("error")
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.")

@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache"
 import { toCitySlug } from "@/lib/slugs"
 import { dbTypeToShopType } from "@/lib/shop-types"
 import { log } from "@/lib/logger"
+import { pingIndexNow } from "@/lib/indexnow"
 
 /**
  * On-demand revalidation endpoint.
@@ -114,6 +115,9 @@ export async function POST(request: Request) {
   }
 
   for (const p of paths) revalidatePath(p)
+
+  // Nudge Bing/AI search to recrawl the refreshed pages (never throws).
+  await pingIndexNow([...paths])
 
   return NextResponse.json({ ok: true, type, revalidated: [...paths] })
 }
