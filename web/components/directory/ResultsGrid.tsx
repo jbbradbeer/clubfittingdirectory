@@ -1,5 +1,6 @@
 "use client"
 
+import { track } from "@vercel/analytics"
 import { ListingCard } from "./ListingCard"
 import type { Shop } from "@/types/shop"
 
@@ -121,7 +122,11 @@ export function ResultsGrid({
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {shops.map((shop) => (
-          <ListingCard key={shop.slug} {...shop} />
+          /* onClickCapture: record which listings directory searches open,
+             without making ListingCard itself a client component. */
+          <div key={shop.slug} className="h-full" onClickCapture={() => track("listing_open", { slug: shop.slug })}>
+            <ListingCard {...shop} />
+          </div>
         ))}
       </div>
 

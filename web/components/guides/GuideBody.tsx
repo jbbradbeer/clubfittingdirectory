@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/Button"
+import { TrackedButton } from "@/components/ui/TrackedButton"
 import type { GuideBlock, Inline, RichText } from "@/lib/guides/types"
 
 /* ─────────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ function Rich({ text }: { text: RichText }) {
   )
 }
 
-function Block({ block }: { block: GuideBlock }) {
+function Block({ block, guideSlug }: { block: GuideBlock; guideSlug?: string }) {
   switch (block.type) {
     case "heading": {
       const id = headingId(block.text)
@@ -162,9 +162,15 @@ function Block({ block }: { block: GuideBlock }) {
             {block.text && <p className="mt-1.5 text-white/70 leading-relaxed">{block.text}</p>}
           </div>
           <div className="mt-5 sm:mt-0 shrink-0">
-            <Button href={block.href} variant="secondary" size="md">
+            <TrackedButton
+              href={block.href}
+              variant="secondary"
+              size="md"
+              event="guide_cta"
+              eventProps={{ guide: guideSlug ?? "unknown", href: block.href }}
+            >
               {block.buttonLabel}
-            </Button>
+            </TrackedButton>
           </div>
         </div>
       )
@@ -174,9 +180,11 @@ function Block({ block }: { block: GuideBlock }) {
 export function GuideBody({
   blocks,
   keyTakeaways,
+  guideSlug,
 }: {
   blocks: GuideBlock[]
   keyTakeaways?: string[]
+  guideSlug?: string
 }) {
   return (
     <div>
@@ -198,7 +206,7 @@ export function GuideBody({
         </aside>
       )}
       {blocks.map((block, i) => (
-        <Block key={i} block={block} />
+        <Block key={i} block={block} guideSlug={guideSlug} />
       ))}
     </div>
   )
