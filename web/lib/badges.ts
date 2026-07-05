@@ -26,13 +26,29 @@ export interface ShopTag {
   className: string
 }
 
+/**
+ * Paid Verified status: the tier must be set AND the subscription not past its
+ * expiry. Evaluated at render time, so an expired badge disappears on the next
+ * page regeneration (up to the 30-day ISR window; the admin Verified card is
+ * the real renewal control).
+ */
+export function isVerified(shop: {
+  listing_tier?: string | null
+  verified_expires_at?: string | null
+}): boolean {
+  if (shop.listing_tier !== "verified") return false
+  if (!shop.verified_expires_at) return true // legacy activation without expiry
+  return new Date(shop.verified_expires_at) > new Date()
+}
+
 export function getShopTag(shop: {
   listing_tier?: string | null
+  verified_expires_at?: string | null
   is_featured?: boolean | null
   rating?: number | null
   reviews?: number | null
 }): ShopTag | null {
-  if (shop.listing_tier === "verified") {
+  if (isVerified(shop)) {
     return { label: "Verified", className: "bg-[var(--color-forest)] text-white" }
   }
   if (shop.is_featured) {

@@ -60,8 +60,9 @@ export function ClaimShopForm({ shopSlug, shopName, source }: {
           </h2>
           <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
             We verify every claim by hand, usually within a day or two. Once approved,
-            you&apos;ll hear from us at the email you provided — with edit access to your
-            listing and the fitting requests golfers send through it.
+            fitting requests golfers send through your page are forwarded straight to
+            the email you provided — and you can reply to us anytime to correct
+            details or add photos on your listing.
           </p>
         </div>
       </div>

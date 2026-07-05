@@ -48,6 +48,12 @@ export interface Shop {
   working_hours: Record<string, string | string[]> | null
   open_on_weekends: boolean | null
 
+  // Claim + paid Verified bookkeeping (migration 009; stamped by admin actions)
+  claimed_at?: string | null
+  owner_email?: string | null
+  verified_at?: string | null
+  verified_expires_at?: string | null
+
   // Meta
   business_status: string
   outreach_ready: boolean
