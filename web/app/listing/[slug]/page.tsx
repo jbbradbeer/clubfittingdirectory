@@ -22,7 +22,7 @@ import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
 import { isTopRated } from "@/lib/badges"
 import { SITE_URL } from "@/lib/constants"
-import { logQueryError } from "@/lib/utils"
+import { logQueryError, rethrowQueryError } from "@/lib/utils"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ListingPage({ params }: PageProps) {
   const { slug } = await params
-  const shop = await getShopBySlug(slug).catch((e) => logQueryError("listing getShopBySlug", e, null))
+  const shop = await getShopBySlug(slug).catch(rethrowQueryError("listing getShopBySlug"))
   if (!shop) notFound()
 
   const nearby = await getNearbyShops(shop.state_code, shop.slug, 3).catch((e) => logQueryError("listing getNearbyShops", e, []))

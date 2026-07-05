@@ -1,7 +1,9 @@
 "use server"
 
-import { cookies } from "next/headers"
+import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { rateLimitOk } from "@/lib/rate-limit"
+import { log } from "@/lib/logger"
 import { revalidatePath } from "next/cache"
 import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -11,6 +13,15 @@ import { toCitySlug } from "@/lib/slugs"
 
 /* ── Login ── */
 export async function login(formData: FormData) {
+  // Throttle brute-force attempts: the constant-time comparison doesn't help
+  // if a bot can try thousands of passwords per minute.
+  const hdrs = await headers()
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+  if (!rateLimitOk(`admin-login:${ip}`, 5, 15 * 60 * 1000)) {
+    log.warn("admin/login", "rate limited", { ip })
+    redirect("/admin/login?error=1")
+  }
+
   const password = String(formData.get("password") ?? "")
   const token = tokenForPassword(password)
   if (!token) {

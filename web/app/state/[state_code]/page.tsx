@@ -12,7 +12,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingCard } from "@/components/directory/ListingCard"
 import { Button } from "@/components/ui/Button"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
-import { logQueryError } from "@/lib/utils"
+import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
@@ -39,7 +39,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `Golf Club Fitters in ${stateName}`,
     description: `Find ${stateInfo?.count ?? ""} independent golf club fitters, retailers, and pro shops in ${stateName}. Browse by city, filter by type, and find your perfect fit.`,
-    alternates: { canonical: `${SITE_URL}/state/${state_code}` },
+    // Always lowercase: /state/TX renders too (dynamicParams), and a raw-param
+    // canonical would let Google index both casings as separate pages.
+    alternates: { canonical: `${SITE_URL}/state/${state_code.toLowerCase()}` },
   }
 }
 
@@ -48,7 +50,7 @@ export default async function StatePage({ params }: PageProps) {
   const code = state_code.toUpperCase()
 
   const [result, states] = await Promise.all([
-    getShopsForStatePage(code).catch((e) => logQueryError("state getShopsForStatePage", e, null)),
+    getShopsForStatePage(code).catch(rethrowQueryError("state getShopsForStatePage")),
     getAllStatesWithShops().catch((e) => logQueryError("state getAllStatesWithShops", e, [])),
   ])
 

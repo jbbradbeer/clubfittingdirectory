@@ -59,8 +59,11 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
   }
 
   const shopLine = lead.shopName || "a shop"
-  const listingUrl = lead.shopSlug
-    ? `https://clubfittingdirectory.com/listing/${lead.shopSlug}`
+  // shopSlug is visitor-supplied: only build the link from a strictly valid
+  // slug so a crafted value can't inject markup/links into this email.
+  const safeSlug = lead.shopSlug && /^[a-z0-9-]+$/.test(lead.shopSlug) ? lead.shopSlug : null
+  const listingUrl = safeSlug
+    ? `https://clubfittingdirectory.com/listing/${safeSlug}`
     : null
 
   const html = `
@@ -76,7 +79,7 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
         ${row("Preferred time", lead.preferredTime)}
         ${row("Notes", lead.notes)}
       </table>
-      ${listingUrl ? `<p style="margin-top:16px;font-size:13px;"><a href="${listingUrl}" style="color:#1B4332;">View the shop listing →</a></p>` : ""}
+      ${listingUrl ? `<p style="margin-top:16px;font-size:13px;"><a href="${escapeHtml(listingUrl)}" style="color:#1B4332;">View the shop listing →</a></p>` : ""}
       <p style="margin-top:20px;font-size:12px;color:#9b9b9b;">Reply to this golfer directly, then relay the request to the shop.</p>
     </div>`
 
