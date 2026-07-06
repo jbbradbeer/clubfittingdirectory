@@ -1,9 +1,10 @@
 {
   "FROM_EMAIL": "bowtiedgolf@gmail.com",
+  "AGENTMAIL_INBOX": "bowtiedgolf@agentmail.to",
   "DAILY_CAP": 20,
-  "STRIPE_LINK": "{{STRIPE_LINK}}",
-  "CALENDLY_URL": "{{CALENDLY_URL}}",
-  "MAILING_ADDRESS": "{{MAILING_ADDRESS}}",
+  "STRIPE_LINK": "https://buy.stripe.com/6oU14n2kE2P49zqaeN6EU00",
+  "CALENDLY_URL": "https://cal.com/bowtiedgolf-xbmgrx/founding-partner-intro-call",
+  "MAILING_ADDRESS": "The Tuxedo Collective LLC, 2810 N Church St, PMB 883782, Wilmington, DE 19802-4447 US",
   "SIGNATURE_NAME": "James",
   "SOCIAL_PROOF": {
     "founding_spots_sold": null,
