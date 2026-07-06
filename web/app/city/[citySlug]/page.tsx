@@ -54,6 +54,9 @@ export default async function CityPage({ params }: PageProps) {
     typeMap[t] = (typeMap[t] ?? 0) + 1
   }
 
+  /* Classification tally — renders only once the data exists */
+  const independentCount = shops.filter((s) => s.ownership_type === "independent").length
+
   const breadcrumbSchema = buildCityBreadcrumbSchema(city, state, stateCode, citySlug)
   const itemListSchema = buildItemListSchema(shops, `Golf Club Fitters in ${city}, ${stateCode}`)
 
@@ -81,7 +84,11 @@ export default async function CityPage({ params }: PageProps) {
           typeMap,
         )
           .map(([type, count]) => `${count} ${type.toLowerCase()}${count > 1 ? "s" : ""}`)
-          .join(", ")}.`}
+          .join(", ")}.${
+          independentCount > 0
+            ? ` ${independentCount === shops.length ? "All" : independentCount} independently owned.`
+            : ""
+        }`}
       />
 
       {/* Intro copy */}
