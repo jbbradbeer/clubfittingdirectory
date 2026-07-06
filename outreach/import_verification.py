@@ -37,7 +37,7 @@ def detect_columns(fieldnames):
     email_col = next((lower[k] for k in ("email", "email address", "email_address")
                       if k in lower), None)
     result_col = next((lower[k] for k in ("result", "verification_result", "zb status",
-                                          "zb_status", "status") if k in lower), None)
+                                          "zb_status", "status", "email_status") if k in lower), None)
     if not email_col or not result_col:
         sys.exit(f"ERROR: couldn't find email/result columns in: {fieldnames}")
     return email_col, result_col
