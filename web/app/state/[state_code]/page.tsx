@@ -16,7 +16,8 @@ import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { stateIntro, stateFaqs } from "@/lib/seo-content"
+import { stateIntro, stateFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
+import { TopFittersTable } from "@/components/seo/TopFittersTable"
 
 interface PageProps {
   params: Promise<{ state_code: string }>
@@ -37,8 +38,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const stateName = stateInfo?.state ?? code
 
   return {
-    title: `Golf Club Fitters in ${stateName}`,
-    description: `Find ${stateInfo?.count ?? ""} independent golf club fitters, retailers, and pro shops in ${stateName}. Browse by city, filter by type, and find your perfect fit.`,
+    // Absolute: the year-stamped comparison format needs the full 60-char
+    // budget, so we skip the "| Club Fitting Directory" template suffix here.
+    title: { absolute: `Top Golf Club Fitters in ${stateName} for ${DIRECTORY_YEAR} | Compare Tech & Pricing` },
+    description: `Compare ${stateInfo?.count ?? ""} golf club fitters in ${stateName} — fitting prices, launch monitor tech (TrackMan, GCQuad & more), and independent vs chain. Updated ${LAST_UPDATED_LABEL}.`,
     // Always lowercase: /state/TX renders too (dynamicParams), and a raw-param
     // canonical would let Google index both casings as separate pages.
     alternates: { canonical: `${SITE_URL}/state/${state_code.toLowerCase()}` },
@@ -86,7 +89,7 @@ export default async function StatePage({ params }: PageProps) {
 
   const otherStates = states.filter((s) => s.state_code !== code).slice(0, 10)
 
-  const itemListSchema = buildItemListSchema(shops, `Golf Club Fitters in ${stateName}`)
+  const itemListSchema = buildItemListSchema(shops, `Top Golf Club Fitters in ${stateName} (${DIRECTORY_YEAR})`)
 
   return (
     <>
@@ -101,8 +104,8 @@ export default async function StatePage({ params }: PageProps) {
           { label: "States", href: "/states" },
           { label: stateName },
         ]}
-        eyebrow="Club Fitting Directory"
-        title={`Golf Club Fitters in ${stateName}`}
+        eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
+        title={`Top Golf Club Fitters in ${stateName} (${DIRECTORY_YEAR})`}
         subtitle={`${shops.length} fitters across ${cityCount} cities — including ${Object.entries(
           typeMap,
         )
@@ -121,6 +124,9 @@ export default async function StatePage({ params }: PageProps) {
           </p>
         </div>
       </section>
+
+      {/* Ranked comparison table — the citable "top picks" answer block */}
+      <TopFittersTable shops={shops} place={stateName} year={DIRECTORY_YEAR} />
 
       {/* Cities */}
       {cities.length > 1 && (

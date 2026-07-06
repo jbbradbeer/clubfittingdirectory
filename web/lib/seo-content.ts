@@ -7,17 +7,28 @@ import type { FaqItem } from "@/components/seo/FaqSection"
  * staying genuinely useful and accurate.
  */
 
+/* ── Freshness stamp ──
+   Evaluated when a page is BUILT (each deploy + every 30-day ISR refresh), so
+   it reflects real rebuild dates instead of churning per request. Year-stamped,
+   comparison-framed titles are the format that wins both Google SERPs and AI
+   citations (tasks/research/geo-ai-search-2026-07.md). */
+export const DIRECTORY_YEAR = new Date().getFullYear()
+export const LAST_UPDATED_LABEL = new Date().toLocaleDateString("en-US", {
+  month: "long",
+  year: "numeric",
+})
+
 /* ── Intro paragraph ── */
 export function stateIntro(stateName: string, shopCount: number, cityCount: number): string {
-  return `Looking for golf club fitting in ${stateName}? Browse ${shopCount} independent fitters, retailers, and simulators across ${cityCount} ${
+  return `Comparing golf club fitters in ${stateName}? Browse ${shopCount} fitters, retailers, and simulators across ${cityCount} ${
     cityCount === 1 ? "city" : "cities"
-  }. Each listing shows services, ratings, and contact details so you can find the right fit close to home.`
+  } — with fitting prices, launch monitor technology, and independent-vs-chain ownership shown where we've verified them — so you can find the right fit close to home.`
 }
 
 export function cityIntro(city: string, stateName: string, shopCount: number): string {
   return `Find golf club fitting in ${city}, ${stateName}. We list ${shopCount} ${
     shopCount === 1 ? "shop" : "shops"
-  } offering custom club fitting, equipment retail, and simulator sessions — compare ratings and services to book the fitting that suits your game.`
+  } offering custom club fitting, equipment retail, and simulator sessions — compare ratings, fitting prices, and launch monitor tech to book the fitting that suits your game.`
 }
 
 export function categoryIntro(label: string, shopCount: number, stateCount: number): string {

@@ -204,17 +204,25 @@ export default async function ListingPage({ params }: PageProps) {
                 </div>
               )}
 
-              {/* Club Fitting Details */}
-              {shop.offers_fitting && (
+              {/* Club Fitting Details — render on ANY fitting signal. ~100
+                  shops have crawled launch monitor / price facts while
+                  offers_fitting is still false; gating on the flag alone hid
+                  their data entirely. */}
+              {(shop.offers_fitting ||
+                (shop.launch_monitors?.length ?? 0) > 0 ||
+                shop.fitting_price_min != null ||
+                shop.fitting_price_max != null) && (
                 <div>
                   <h2 className="font-display text-xl font-semibold text-[var(--color-charcoal)] mb-4">
                     Club Fitting Details
                   </h2>
                   <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Wrench size={16} className="text-[var(--color-gold)]" />
-                      <span className="text-sm font-medium">Club Fitting Available</span>
-                    </div>
+                    {shop.offers_fitting && (
+                      <div className="flex items-center gap-2">
+                        <Wrench size={16} className="text-[var(--color-gold)]" />
+                        <span className="text-sm font-medium">Club Fitting Available</span>
+                      </div>
+                    )}
                     {shop.fitting_environment && (
                       <div className="flex items-center gap-2">
                         <CheckCircle size={16} className="text-[var(--color-forest)]" />
