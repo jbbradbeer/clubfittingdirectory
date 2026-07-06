@@ -3,6 +3,11 @@ export const SITE_NAME = "Club Fitting Directory"
 export const SITE_DESCRIPTION =
   "Find independent golf club fitting shops near you. Browse over 1,000 fitters, simulators, and retailers across all 50 states — curated by The Tuxedo Collective."
 
+/* Cal.com booking link shown to shop owners after they claim their listing
+   (thank-you screen + confirmation email). */
+export const CAL_FOUNDING_CALL_URL =
+  "https://cal.com/bowtiedgolf-xbmgrx/founding-partner-intro-call"
+
 /* US states (code + name) — used by the Submit a Shop form's dropdown. */
 export const US_STATES: { code: string; name: string }[] = [
   { code: "AL", name: "Alabama" }, { code: "AK", name: "Alaska" },

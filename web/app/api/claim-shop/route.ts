@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
+import { sendClaimConfirmation } from "@/lib/email"
 
 /**
  * Public "Claim this shop" endpoint — the outreach engine's landing action.
@@ -61,7 +62,7 @@ export async function POST(request: Request) {
     // Resolve the shop server-side from the slug — never trust a posted id.
     const { data: shops, error: shopErr } = await supabase
       .from("shops")
-      .select("id")
+      .select("id, name")
       .eq("slug", slug)
       .eq("status", "active")
       .limit(1)
@@ -80,6 +81,14 @@ export async function POST(request: Request) {
       source,
     })
     if (error) throw error
+
+    // Best-effort: confirm to the claimant + invite them to book the intro
+    // call (founder cc'd as the new-claim alert). Never fails the request.
+    await sendClaimConfirmation({
+      shopName: shops[0].name,
+      claimantName: name,
+      claimantEmail: email,
+    })
   } catch (e) {
     log.error("api/claim-shop", "insert failed", { error: e })
     return NextResponse.json(

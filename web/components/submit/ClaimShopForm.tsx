@@ -4,6 +4,7 @@ import { useState } from "react"
 import { CheckCircle, Loader2 } from "lucide-react"
 import { fieldClass, labelClass } from "@/lib/form-styles"
 import { Button } from "@/components/ui/Button"
+import { CAL_FOUNDING_CALL_URL } from "@/lib/constants"
 
 type Status = "idle" | "submitting" | "success" | "error"
 
@@ -61,9 +62,21 @@ export function ClaimShopForm({ shopSlug, shopName, source }: {
           <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
             We verify every claim by hand, usually within a day or two. Once approved,
             fitting requests golfers send through your page are forwarded straight to
-            the email you provided — and you can reply to us anytime to correct
-            details or add photos on your listing.
+            the email you provided — check your inbox for a confirmation.
           </p>
+          <div className="mt-6 pt-6 border-t border-[var(--color-border)]">
+            <p className="font-display text-lg text-[var(--color-charcoal)]">
+              Want to skip the queue?
+            </p>
+            <p className="mt-2 text-sm text-[var(--color-charcoal-light)] leading-relaxed">
+              Book 15 minutes with the founder — we&apos;ll verify you on the call,
+              fix anything on your listing, and walk through what founding
+              partner shops get.
+            </p>
+            <Button href={CAL_FOUNDING_CALL_URL} external variant="primary" size="lg" className="mt-4">
+              Book your intro call
+            </Button>
+          </div>
         </div>
       </div>
     )
