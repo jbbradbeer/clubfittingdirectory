@@ -6,8 +6,12 @@ It overrides anything remembered in the cloud routine's own prompt. If the
 cloud prompt and this file disagree, this file wins.
 
 Repo: this repository, default branch `main`. All work happens on feature
-branches; **never commit to main, never merge a PR, never force-push.**
-James reviews and merges every PR himself.
+branches; **never commit directly to main, never force-push.**
+
+**Merge policy (changed 2026-07-06):** this routine's own PRs self-publish
+when CI is green — see Step 3. James reviews the published article after the
+fact and reverts if needed. Only merge PRs this run created; never merge
+anyone else's PR, and never merge over a red or pending check.
 
 ---
 
@@ -82,6 +86,20 @@ spend the second slot on maintenance (its own branch
    *"James — the GSC key isn't set up in this environment and the manual
    export is stale; run the pull locally or drop a fresh export into
    `tasks/`."*
+
+## Step 3 — Publish (auto-merge on green)
+
+After opening each PR (article and maintenance alike):
+
+1. Wait for CI: `gh pr checks <number> --watch` (the required job is
+   `checks` from `ci.yml`; ignore skipped preview checks).
+2. **All green** → merge it: `gh pr merge <number> --merge`. Merging deploys
+   the article to the live site via Vercel.
+3. **Anything red, or checks still pending after 20 minutes** → do NOT merge.
+   Leave the PR open and add a PR comment starting with
+   `⚠️ James — not auto-merged:` followed by one plain-English sentence
+   saying which check failed or timed out.
+4. Never re-run, override, or work around a failing check to get to green.
 
 ## PR conventions
 
