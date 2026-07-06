@@ -20,7 +20,7 @@ export const golfClubFittingGuide: Guide = {
   ],
   readMinutes: 11,
   datePublished: "2026-06-03",
-  dateModified: "2026-07-04",
+  dateModified: "2026-07-06",
   blocks: [
     {
       type: "paragraph",
@@ -129,7 +129,11 @@ export const golfClubFittingGuide: Guide = {
     { type: "heading", level: 2, text: "How much does golf club fitting cost?" },
     {
       type: "paragraph",
-      text: "Costs vary by shop and by what you are fitting. As a rough guide, a single-club fitting (for example, a driver or your irons) often runs from around $50 to $150, while a full-bag fitting can cost $200 to $400 or more at a premium independent studio. Many retailers waive or credit the fitting fee toward clubs you buy from them.",
+      text: [
+        "Costs vary by shop and by what you are fitting. As a rough guide, a single-club fitting (for example, a driver or your irons) often runs from around $50 to $175, while a full-bag fitting can cost $150 to $450 depending on the venue. Many retailers waive or credit the fitting fee toward clubs you buy from them — see our detailed breakdown in ",
+        { text: "How much does a golf club fitting cost?", href: "/guides/golf-club-fitting-cost" },
+        " for the full range by venue type and how the fee-waived model really works.",
+      ],
     },
     {
       type: "paragraph",
@@ -143,7 +147,11 @@ export const golfClubFittingGuide: Guide = {
     { type: "heading", level: 2, text: "Who should get fitted?" },
     {
       type: "paragraph",
-      text: "Almost every golfer benefits, but a fitting pays off most if any of these apply: you are about to buy new clubs, you are taller or shorter than average, your misses are consistently one-directional, you have changed your swing, or you simply want to stop guessing whether your equipment is holding you back. Beginners benefit too — being fitted early means you learn the game with clubs that suit you.",
+      text: [
+        "Almost every golfer benefits, but a fitting pays off most if any of these apply: you are about to buy new clubs, you are taller or shorter than average, your misses are consistently one-directional, you have changed your swing, or you simply want to stop guessing whether your equipment is holding you back. Beginners benefit too — being fitted early means you learn the game with clubs that suit you. For a skill-level breakdown of when the return on fitting is clearest, see ",
+        { text: "Is a golf club fitting worth it?", href: "/guides/is-golf-club-fitting-worth-it" },
+        ".",
+      ],
     },
 
     { type: "heading", level: 2, text: "How to choose a club fitter" },
@@ -190,7 +198,9 @@ export const golfClubFittingGuide: Guide = {
     },
   ],
   related: [
-    { label: "Golf Club Fitting Chart: Length, Lie & Shaft by Height and Swing Speed", href: "/guides/golf-club-fitting-chart" },
+    { label: "How Much Does a Golf Club Fitting Cost? (2026)", href: "/guides/golf-club-fitting-cost" },
+    { label: "Is a Golf Club Fitting Worth It?", href: "/guides/is-golf-club-fitting-worth-it" },
     { label: "Where to Get Fitted for Golf Clubs", href: "/guides/where-to-get-fitted-for-golf-clubs" },
+    { label: "Golf Club Fitting Chart: Length, Lie & Shaft by Height and Swing Speed", href: "/guides/golf-club-fitting-chart" },
   ],
 }
