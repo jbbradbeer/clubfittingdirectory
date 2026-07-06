@@ -7,12 +7,30 @@ import { SITE_URL } from "@/lib/constants"
 
    Rules:
      - Allow all crawlers to index everything
-     - Disallow access to /api/ routes (not for public crawling)
+     - Explicitly allow the AI search/answer crawlers — a directory
+       WANTS to be cited by ChatGPT/Perplexity/Claude/Google AI
+       answers (tasks/research/geo-ai-search-2026-07.md). The `*`
+       rule already permits them; naming them makes the welcome
+       unambiguous and survives any future tightening of `*`.
+     - Disallow access to /api/ routes and /admin (not for crawling)
 
    Sitemap line lets Google find all pages automatically.
 
    ⚠️  Update SITE_URL before launch if the domain changes.
    ───────────────────────────────────────────────────────── */
+
+const AI_SEARCH_BOTS = [
+  "GPTBot",          // OpenAI — training + ChatGPT browsing
+  "OAI-SearchBot",   // OpenAI — ChatGPT Search index
+  "ChatGPT-User",    // OpenAI — live user-initiated fetches
+  "PerplexityBot",   // Perplexity index
+  "Perplexity-User", // Perplexity live fetches
+  "ClaudeBot",       // Anthropic crawler
+  "Claude-SearchBot",// Anthropic search index
+  "Claude-User",     // Anthropic live fetches
+  "Google-Extended", // Google — Gemini/AI grounding
+  "Bingbot",         // Bing — feeds ChatGPT Search results
+]
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -22,6 +40,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/api/", "/admin"],
       },
+      ...AI_SEARCH_BOTS.map((userAgent) => ({
+        userAgent,
+        allow: "/",
+        disallow: ["/api/", "/admin"],
+      })),
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   }
