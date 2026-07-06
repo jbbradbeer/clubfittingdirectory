@@ -3,6 +3,7 @@
 import { ChevronDown } from "lucide-react"
 import { fieldClass, labelClass, checkboxClass } from "@/lib/form-styles"
 import { SERVICE_FILTERS } from "@/lib/service-filters"
+import { OWNERSHIP_OPTIONS } from "@/lib/fitter-classification"
 
 interface FilterSidebarProps {
   /* Available options */
@@ -12,12 +13,14 @@ interface FilterSidebarProps {
   selectedState: string
   selectedShopTypes: string[]
   selectedServices: string[]
+  selectedOwnership: string[]
   fittingOnly: boolean
   minRating: number
   /* Handlers */
   onStateChange: (state: string) => void
   onShopTypesChange: (types: string[]) => void
   onServicesChange: (services: string[]) => void
+  onOwnershipChange: (ownership: string[]) => void
   onFittingChange: (fitting: boolean) => void
   onRatingChange: (rating: number) => void
   onReset: () => void
@@ -30,11 +33,13 @@ export function FilterSidebar({
   selectedState,
   selectedShopTypes,
   selectedServices,
+  selectedOwnership,
   fittingOnly,
   minRating,
   onStateChange,
   onShopTypesChange,
   onServicesChange,
+  onOwnershipChange,
   onFittingChange,
   onRatingChange,
   onReset,
@@ -53,6 +58,14 @@ export function FilterSidebar({
       onServicesChange(selectedServices.filter((s) => s !== service))
     } else {
       onServicesChange([...selectedServices, service])
+    }
+  }
+
+  const toggleOwnership = (value: string) => {
+    if (selectedOwnership.includes(value)) {
+      onOwnershipChange(selectedOwnership.filter((o) => o !== value))
+    } else {
+      onOwnershipChange([...selectedOwnership, value])
     }
   }
 
@@ -139,6 +152,28 @@ export function FilterSidebar({
               />
               <span className="text-sm text-[var(--color-charcoal)] group-hover:text-[var(--color-forest)] transition-colors">
                 {service.label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Fitter type checkboxes (independent / chain / big box / brand studio) */}
+      <div>
+        <label className={labelClass}>
+          Fitter Type
+        </label>
+        <div className="space-y-2">
+          {OWNERSHIP_OPTIONS.map((option) => (
+            <label key={option.value} className="flex items-center gap-2 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={selectedOwnership.includes(option.value)}
+                onChange={() => toggleOwnership(option.value)}
+                className={checkboxClass}
+              />
+              <span className="text-sm text-[var(--color-charcoal)] group-hover:text-[var(--color-forest)] transition-colors">
+                {option.label}
               </span>
             </label>
           ))}

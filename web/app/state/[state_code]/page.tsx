@@ -80,6 +80,10 @@ export default async function StatePage({ params }: PageProps) {
     typeMap[t] = (typeMap[t] ?? 0) + 1
   }
 
+  /* Classification / tech tallies — render only once the data exists */
+  const independentCount = shops.filter((s) => s.ownership_type === "independent").length
+  const launchMonitorCount = shops.filter((s) => (s.launch_monitors?.length ?? 0) > 0).length
+
   const otherStates = states.filter((s) => s.state_code !== code).slice(0, 10)
 
   const itemListSchema = buildItemListSchema(shops, `Golf Club Fitters in ${stateName}`)
@@ -104,7 +108,9 @@ export default async function StatePage({ params }: PageProps) {
         )
           .slice(0, 3)
           .map(([type, count]) => `${count} ${type.toLowerCase()}s`)
-          .join(", ")}.`}
+          .join(", ")}.${independentCount > 0 ? ` ${independentCount} independently owned.` : ""}${
+          launchMonitorCount > 0 ? ` ${launchMonitorCount} with launch monitor details.` : ""
+        }`}
       />
 
       {/* Intro copy */}

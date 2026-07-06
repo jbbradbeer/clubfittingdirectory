@@ -41,6 +41,7 @@ export async function getListings(
         .join(",")
       if (orClauses) q = q.or(orClauses)
     }
+    if (filters.ownership?.length)                q = q.in("ownership_type", filters.ownership)
     if (filters.fitting === true)                 q = q.eq("offers_fitting", true)
     if (filters.fittingEnv)                       q = q.eq("fitting_environment", filters.fittingEnv)
     if (filters.minRating && filters.minRating > 0) q = q.gte("rating", filters.minRating)

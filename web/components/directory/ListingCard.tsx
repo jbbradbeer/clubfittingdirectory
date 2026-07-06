@@ -3,6 +3,7 @@ import { MapPin, Wrench } from "lucide-react"
 import { RatingStars } from "@/components/ui/RatingStars"
 import { getCover } from "@/lib/cover"
 import { getShopTag } from "@/lib/badges"
+import { ownershipCardLabel } from "@/lib/fitter-classification"
 import type { ListingCardProps } from "@/types/shop"
 
 export function ListingCard({
@@ -15,6 +16,7 @@ export function ListingCard({
   services_array,
   offers_fitting,
   fitting_environment,
+  ownership_type,
   slug,
   is_featured,
   listing_tier,
@@ -25,6 +27,7 @@ export function ListingCard({
 
   // Single-source badge logic — Verified (paid) > Featured > Top Rated (earned)
   const tierTag = getShopTag({ listing_tier, verified_expires_at, is_featured, rating, reviews })
+  const ownershipTag = ownershipCardLabel(ownership_type ?? null)
 
   return (
     <Link
@@ -41,9 +44,9 @@ export function ListingCard({
       <div className="flex flex-col flex-1 p-6">
         {/* ── Header: shop type, with tier tag at right ── */}
         <div className="flex items-center justify-between gap-3 min-h-[1.25rem]">
-          {shop_type ? (
+          {shop_type || ownershipTag ? (
             <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-gold-ink)] leading-tight">
-              {shop_type}
+              {[shop_type, ownershipTag].filter(Boolean).join(" · ")}
             </span>
           ) : (
             <span />

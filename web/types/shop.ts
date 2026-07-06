@@ -43,6 +43,14 @@ export interface Shop {
   fitting_environment: string | null
   public_fitting: boolean
 
+  // Fitting attributes (migrations 005/011; values managed by the provenance
+  // ledger and promoted into these columns — empty/null until populated)
+  launch_monitors: string[]
+  ownership_type: "independent" | "big_box" | "national_chain" | "oem" | "unknown" | null
+  /** Fitting price range in whole USD; "From $150" when only min is known */
+  fitting_price_min: number | null
+  fitting_price_max: number | null
+
   // Hours — a day's value is usually a string ("9 AM–5 PM") but can be an
   // array of strings for split hours (e.g. ["9 AM–1 PM", "2 PM–6 PM"]).
   working_hours: Record<string, string | string[]> | null
@@ -93,6 +101,8 @@ export interface ListingCardProps {
   website: string | null
   verified: boolean
   slug: string
+  ownership_type?: Shop["ownership_type"]
+  launch_monitors?: string[]
   /** Distance in km — shown as a badge when the user uses "Near Me" */
   distance_km?: number
 }

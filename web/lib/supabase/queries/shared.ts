@@ -15,6 +15,7 @@ export const CARD_FIELDS = [
   "offers_fitting", "fitting_environment", "services", "services_array",
   "num_services", "verified", "location_link", "is_featured", "listing_tier",
   "verified_expires_at", "latitude", "longitude",
+  "launch_monitors", "ownership_type", "fitting_price_min", "fitting_price_max",
 ].join(", ")
 
 /**
@@ -31,6 +32,7 @@ export type ShopCard = Pick<
   | "offers_fitting" | "fitting_environment" | "services" | "services_array"
   | "num_services" | "verified" | "location_link" | "is_featured" | "listing_tier"
   | "verified_expires_at" | "latitude" | "longitude"
+  | "launch_monitors" | "ownership_type" | "fitting_price_min" | "fitting_price_max"
 >
 
 /* Strip characters that have structural meaning inside a PostgREST `.or()` /
@@ -91,6 +93,7 @@ export interface DirectoryFilters {
   state?: string       // state_code e.g. "TX"
   shopTypes?: string[] // array of shop_type values
   services?: string[]  // partial match against services field
+  ownership?: string[] // ownership_type values (see lib/fitter-classification.ts)
   fitting?: boolean    // offers_fitting = true
   fittingEnv?: string  // fitting_environment
   minRating?: number   // minimum rating (0–5)

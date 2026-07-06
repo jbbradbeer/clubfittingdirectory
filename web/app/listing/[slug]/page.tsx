@@ -21,6 +21,7 @@ import { ProvenanceBadge } from "@/components/shop-profile/ProvenanceBadge"
 import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
 import { isTopRated, isVerified } from "@/lib/badges"
+import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 
@@ -150,6 +151,11 @@ export default async function ListingPage({ params }: PageProps) {
                   {isTopRated(shop.rating, shop.reviews) && (
                     <Badge variant="verified">Top Rated</Badge>
                   )}
+                  {/* Descriptive classification, not a quality tier — default
+                      (soft) variant keeps it visually below the paid badges. */}
+                  {ownershipLabel(shop.ownership_type) && (
+                    <Badge>{ownershipLabel(shop.ownership_type)}</Badge>
+                  )}
                   <ProvenanceBadge level={verification.level} />
                 </div>
               </div>
@@ -222,6 +228,40 @@ export default async function ListingPage({ params }: PageProps) {
                         <CheckCircle size={16} className="text-[var(--color-forest)]" />
                         <span className="text-sm">Public Fitting Available</span>
                       </div>
+                    )}
+                    {shop.launch_monitors && shop.launch_monitors.length > 0 && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">
+                          Launch Monitors: <strong>{shop.launch_monitors.join(" · ")}</strong>
+                        </span>
+                      </div>
+                    )}
+                    {formatFittingPrice(shop.fitting_price_min, shop.fitting_price_max) ? (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">
+                          Fitting Price:{" "}
+                          <strong>{formatFittingPrice(shop.fitting_price_min, shop.fitting_price_max)}</strong>
+                          <span className="text-[var(--color-charcoal-light)]"> (reported from shop website)</span>
+                        </span>
+                      </div>
+                    ) : (
+                      /* Missing price = claim driver: owners add pricing via the
+                         claim funnel. Hidden once the shop is claimed. */
+                      !(shop as { claimed_at?: string | null }).claimed_at && (
+                        <p className="pt-1 text-sm border-t border-[var(--color-line)]">
+                          <Link
+                            href={`/claim/${shop.slug}`}
+                            className="text-[var(--color-charcoal-light)] hover:text-[var(--color-forest)] transition-colors"
+                          >
+                            Own this shop?{" "}
+                            <span className="font-semibold text-[var(--color-forest)]">
+                              Add your fitting prices →
+                            </span>
+                          </Link>
+                        </p>
+                      )
                     )}
                   </div>
                 </div>
