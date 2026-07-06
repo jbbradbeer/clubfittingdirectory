@@ -1,5 +1,6 @@
 import { Resend } from "resend"
 import { log } from "@/lib/logger"
+import { CAL_FOUNDING_CALL_URL } from "@/lib/constants"
 
 /**
  * Transactional email via Resend.
@@ -105,6 +106,62 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
     return true
   } catch (e) {
     log.error("email", "failed to send fitting lead notification", { error: e })
+    return false
+  }
+}
+
+/**
+ * Confirm a shop claim to the claimant and invite them to book the founding
+ * partner intro call. The founder is cc'd, which doubles as the new-claim
+ * alert. Best-effort like the lead email: the claim row is already saved, so
+ * a send failure must never fail the request.
+ */
+export async function sendClaimConfirmation(claim: {
+  shopName: string
+  claimantName: string
+  claimantEmail: string
+}): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    log.warn("email", "RESEND_API_KEY not set — skipping claim confirmation (claim was still saved)")
+    return false
+  }
+
+  const html = `
+    <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
+      <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">We got your claim</p>
+      <p style="font-size:14px;color:#6b6b6b;margin:0 0 16px;">for <strong>${escapeHtml(claim.shopName)}</strong></p>
+      <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 16px;">
+        Hi ${escapeHtml(claim.claimantName)} — thanks for claiming your listing on
+        Club Fitting Directory. We verify every claim by hand, usually within a
+        day or two. Once approved, fitting requests from golfers go straight to
+        this email address.
+      </p>
+      <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 20px;">
+        Want to skip the queue? Grab 15 minutes with the founder — we'll verify
+        you on the call, fix anything on your listing, and walk through what
+        founding partner shops get.
+      </p>
+      <p style="margin:0 0 24px;">
+        <a href="${CAL_FOUNDING_CALL_URL}" style="display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;">Book your intro call →</a>
+      </p>
+      <p style="font-size:12px;color:#9b9b9b;">Or just reply to this email — it reaches us directly.</p>
+    </div>`
+
+  try {
+    const resend = new Resend(apiKey)
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: claim.claimantEmail,
+      cc: NOTIFY_TO,
+      replyTo: NOTIFY_TO,
+      subject: `Claim received — ${claim.shopName}`,
+      html,
+    })
+    if (error) throw error
+    return true
+  } catch (e) {
+    log.error("email", "failed to send claim confirmation", { error: e })
     return false
   }
 }
