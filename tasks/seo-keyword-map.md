@@ -17,12 +17,15 @@ voice-of-customer frequency.
 
 ---
 
-## Already published (3)
+## Already published (6 — updated 2026-07-06)
 | URL | Keyword | Note |
 |---|---|---|
 | /guides/golf-club-fitting | golf club fitting (A: Medium, >1000; G: pos 17) | Pillar — every new spoke must link to/from it |
 | /guides/golf-club-fitting-chart | golf club fitting chart (A: Easy, >100) | Extend over time: length-by-height + wrist-to-floor tables |
 | /guides/where-to-get-fitted-for-golf-clubs | where to get fitted (1.3K) | Directory funnel |
+| /guides/golf-club-fitting-cost | golf club fitting cost | Queue row 1 — ✅ merged |
+| /guides/is-golf-club-fitting-worth-it | is golf club fitting worth it | Queue row 2 — ✅ merged |
+| /guides/state-of-club-fitting-2026 | state of club fitting 2026 | Flagship data report — structural piece |
 
 ## Article queue (priority order)
 
@@ -48,6 +51,16 @@ voice-of-customer frequency.
 | 18 | Indoor vs. Outdoor Fitting: Can You Trust the Numbers? | indoor vs outdoor golf fitting | V: MEDIUM recurring trust worry · C: only Club Champion's self-defense post. Mat-vs-turf lie story; independents with outdoor fitting get showcased. |
 | 19 | Golf Grip Size: Chart + How to Measure | golf grip size chart | S: own cluster · C: component shops only · Chart/snippet win. |
 | 20 | Senior Golf Club Fitting: What Changes | golf club fitting for seniors | S: audience cluster · C: True Spec 2022 thin post only. (Women's fitting guide is the natural #21.) |
+
+### Queue re-sort note — 2026-07-06 (GSC export: 2026-06-10)
+
+Re-reviewed queue order against the 2026-06-10 GSC export (most recent available; script can't run in this environment — no service-account key):
+
+- **Item #8 (Golf Club Repair) confirmed at elevated priority.** GSC shows "golf repair shop" (pos 12), "golf club repair near me" (pos 15.5), "golf club repair peoria il" (pos 10), "golf club repair omaha" (pos 18.5) already generating impressions — repair intent is landing on city pages and we have no informational authority. Paired with the new /repair landing page, this is the next highest-leverage piece. Existing bump note (2026-07-04) stands.
+- **Item #4 (Independent vs. chains comparison) remains at #4.** No new GSC signal to move it higher, but the how-to-choose guide (item #3, PR open) partially covers this ground — the full comparison piece still warrants its own article.
+- **City/state pages flagged.** GSC confirms city-level thinness: phoenix /city/phoenix-az at pos 38-60, scottsdale at pos 50, st louis at pos 16, minneapolis at pos 20. These pages are too thin to rank — the highest-leverage structural fix remains city/state enrichment (see structural projects below). No queue re-ordering needed for this.
+- **"ping fitters near me"** showing 1 impression at pos 11 — supports item #17 (Ping Fitting guide) as a future priority once the core cluster is deeper.
+- No items moved. Existing order (3 → 8 → 4 → 5 → 6 → 7 → 9 …) reflects the current signal correctly.
 
 ## Structural projects (not articles — bigger levers)
 
