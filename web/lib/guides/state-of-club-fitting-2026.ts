@@ -8,7 +8,7 @@ export const stateOfClubFitting2026: Guide = {
   slug: "state-of-club-fitting-2026",
   metaTitle: "The State of Club Fitting in America: 2026 Report",
   metaDescription:
-    "Original data from 1,268 golf shops across all 50 states: where club fitters are (and aren't), the indoor fitting takeover, per-capita access rankings, and more.",
+    "Original data from 1,268 golf shops across all 50 states: real fitting prices (median $120), TrackMan's 66% market share, the indoor takeover, and per-capita access rankings.",
   targetKeyword: "club fitting statistics",
   eyebrow: "2026 Data Report",
   h1: "The State of Club Fitting in America (2026)",
@@ -20,10 +20,12 @@ export const stateOfClubFitting2026: Guide = {
     "Ohio and New York tie for the most listed shops at 59 each, but Vermont leads the nation per capita with 26.2 shops per million residents against a national average of 3.7.",
     "California, Texas, Florida, and New York hold about a third of the U.S. population but only 16% of listed golf shops, and California ranks dead last at 1.3 shops per million residents.",
     "Across 1,255 shops with a public rating, the average is 4.46 out of 5, with Indiana (4.80) and South Carolina (4.79) leading states with 15+ shops.",
+    "The median published entry-level fitting price at independent shops is $120, and 35% of shops with published prices offer a fitting for under $100 (91-shop sample, July 2026).",
+    "TrackMan is the launch monitor in 66% of the 310 tech-verified fitting shops, with Foresight's GCQuad/GC3 second at 28%.",
   ],
-  readMinutes: 9,
+  readMinutes: 11,
   datePublished: "2026-06-11",
-  dateModified: "2026-07-04",
+  dateModified: "2026-07-06",
   blocks: [
     {
       type: "paragraph",
@@ -160,10 +162,62 @@ export const stateOfClubFitting2026: Guide = {
       ],
     },
 
+    { type: "heading", level: 2, text: "What a club fitting actually costs in 2026" },
+    {
+      type: "paragraph",
+      text: [
+        "In July 2026 we crawled the websites of every shop in the directory and recorded published fitting prices wherever a shop lists them — 91 shops across 37 states so far. The result is the first public sample of what ",
+        { text: "independent", href: "/directory?ownership=independent" },
+        " fitters (as opposed to national chains) actually charge: the median entry-level fitting is $120, and just over a third of shops with published prices offer a fitting for under $100.",
+      ],
+    },
+    {
+      type: "table",
+      caption:
+        "Published entry-level fitting prices at the 91 directory shops that list prices on their website (July 2026).",
+      headers: ["Entry-level fitting price", "Shops", "Share"],
+      rows: [
+        ["Under $100", "32", "35%"],
+        ["$100–$199", "28", "31%"],
+        ["$200–$299", "8", "9%"],
+        ["$300 and up", "23", "25%"],
+      ],
+    },
+    {
+      type: "paragraph",
+      text: "Cheapest published fitting in the sample: $40. At the top end — typically full-bag fittings and tour-style experiences — the median high price is $350, and the most expensive published fitting is $1,200. Averages run higher than medians (entry $190, top $358) because a handful of premium studios pull the mean up. For comparison, national fitting chains' published menus generally run from about $100 for a single-club fitting to $400 or more for a full bag.",
+    },
+
+    { type: "heading", level: 2, text: "The tech in the bay: TrackMan runs two-thirds of fitting studios" },
+    {
+      type: "paragraph",
+      text: "The same crawl verified which launch monitor each shop advertises — 310 shops name their system. TrackMan dominates American fitting bays, appearing in 66% of tech-verified shops, with Foresight's camera-based units (GCQuad, GC3) a clear second. Forty-two shops run two or more systems.",
+    },
+    {
+      type: "table",
+      caption: "Launch monitors advertised by the 310 tech-verified shops (a shop can run more than one).",
+      headers: ["System", "Shops", "Share of tech-verified shops"],
+      rows: [
+        ["TrackMan", "204", "66%"],
+        ["Foresight (GCQuad / GC3)", "88", "28%"],
+        ["FlightScope", "26", "8%"],
+        ["SAM PuttLab", "19", "6%"],
+        ["Full Swing", "10", "3%"],
+        ["SkyTrak", "10", "3%"],
+        ["Quintic", "5", "2%"],
+      ],
+    },
+
+    { type: "heading", level: 2, text: "America's fitting shops are overwhelmingly independent" },
+    {
+      type: "paragraph",
+      text: "We also classified every listing by ownership: 95.5% of the shops in the directory are independently owned (1,189 of 1,245 active listings), alongside 31 brand-owned fitting studios, 13 big-box locations, and 12 national fitting-chain studios. Among shops that explicitly offer club fitting, 92% are independent — the American club fitting landscape outside the top-50 metros is an independent-shop story.",
+    },
+
     { type: "heading", level: 2, text: "Methodology" },
     {
       type: "paragraph",
-      text: "Statistics were computed in June 2026 from the Club Fitting Directory's database of 1,268 active listings spanning all 50 states and Washington, D.C., across 834 cities; 88% of listings are verified. \"Offers club fitting\" reflects services the shop explicitly advertises, so true fitting availability may be modestly higher. Per-capita figures use U.S. Census Bureau 2024 state population estimates. Ratings are public customer ratings as collected at enrichment time. The directory focuses on independent shops, so national chain locations are intentionally under-represented. We'll refresh this report annually.",
+      text: "Statistics were computed in June 2026 from the Club Fitting Directory's database of 1,268 active listings spanning all 50 states and Washington, D.C., across 834 cities; 88% of listings are verified. \"Offers club fitting\" reflects services the shop explicitly advertises, so true fitting availability may be modestly higher. Per-capita figures use U.S. Census Bureau 2024 state population estimates. Ratings are public customer ratings as collected at enrichment time. The directory focuses on independent shops, so national chain locations are intentionally under-represented. Pricing, launch monitor, and ownership statistics were added in July 2026 from a crawl of every listed shop's own website (1,245 active listings at crawl time); prices reflect what shops publish and were sanity-checked by hand. We'll refresh this report annually.",
     },
 
     {
@@ -191,6 +245,16 @@ export const stateOfClubFitting2026: Guide = {
         "Indoors, by a wide margin: 87% of fitting providers in this directory fit indoors using launch monitors or simulator bays, while only 13% offer outdoor fittings on a range or course.",
     },
     {
+      question: "How much does a golf club fitting cost at an independent shop?",
+      answer:
+        "Among the 91 directory shops that publish fitting prices on their websites (July 2026), the median entry-level fitting costs $120, and 35% offer a fitting for under $100. Full-bag and premium fittings run higher — the median top price is $350, and the most expensive published fitting is $1,200.",
+    },
+    {
+      question: "What launch monitor do most club fitters use?",
+      answer:
+        "TrackMan, by a wide margin: 66% of the 310 shops that advertise their launch monitor use TrackMan, followed by Foresight camera-based units (GCQuad/GC3) at 28% and FlightScope at 8%. Forty-two shops run two or more systems.",
+    },
+    {
       question: "Which states have the fewest club fitting options?",
       answer:
         "Alaska (1 listed shop), Wyoming (2), and Washington D.C. (3) have the fewest listings overall. Adjusted for population, California ranks last in the country at just 1.3 golf shops per million residents.",
@@ -198,6 +262,7 @@ export const stateOfClubFitting2026: Guide = {
   ],
   related: [
     { label: "Golf Club Fitting: The Complete Guide", href: "/guides/golf-club-fitting" },
+    { label: "Club Champion vs. an Independent Fitter: Prices Compared", href: "/guides/club-champion-vs-independent-fitter" },
     { label: "Where to Get Fitted for Golf Clubs", href: "/guides/where-to-get-fitted-for-golf-clubs" },
     { label: "Browse fitters by state", href: "/states" },
   ],
