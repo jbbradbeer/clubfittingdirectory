@@ -1,19 +1,15 @@
-# Touch 1 — hybrid: free claim leads, founding offer teased
-# Placeholders: {{greeting}} {{shop_name}} {{listing_url}} {{hook_line}} {{claim_url}}
-#               {{STRIPE_LINK}} {{CALENDLY_URL}} {{SIGNATURE}}
+# Touch 1 — short claim ask (founder-approved copy "Option A", 2026-07-06):
+# 3 sentences max, ONE link (the claim URL). The Verified/$349 pitch moves
+# entirely to touches 2 and 3.
+# Placeholders: {{greeting}} {{shop_name}} {{claim_url}} {{SIGNATURE}}
 # {{claim_url}} = https://clubfittingdirectory.com/claim/<slug>?src=outreach
-# Body target: 90-120 words before the signature.
 
 Subject: {{shop_name}} is listed on clubfittingdirectory.com
 
 {{greeting}} —
 
-I run The Tuxedo Collective and built clubfittingdirectory.com, the independent fitter directory. {{shop_name}} is already listed: {{listing_url}}
+I built clubfittingdirectory.com, the independent fitter directory, and {{shop_name}} is already listed. The listing is free and it's yours: claim it in 60 seconds and I'll fix details, add photos, and forward the fitting requests golfers send through it.
 
-{{hook_line}}
-
-The listing is free and it's yours. Claim it in 60 seconds and I'll fix details, add photos, and forward the fitting requests golfers send through it: {{claim_url}}
-
-I'm also opening 100 founding Verified spots: badge, full profile with booking link, and rotation in the newsletter's Gear Shelf (6,600 subscribers, 65% opens). $349 a year, grandfathered. Grab one here: {{STRIPE_LINK}} or take 10 minutes with me first: {{CALENDLY_URL}}
+{{claim_url}}
 
 {{SIGNATURE}}
