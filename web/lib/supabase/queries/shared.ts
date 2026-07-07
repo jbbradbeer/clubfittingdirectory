@@ -18,22 +18,9 @@ export const CARD_FIELDS = [
   "launch_monitors", "ownership_type", "fitting_price_min", "fitting_price_max",
 ].join(", ")
 
-/**
- * The subset of Shop fields that CARD_FIELDS actually selects. Card/grid
- * queries return this — not a full Shop — so the type reflects reality instead
- * of pretending every column is present (the old `as unknown as Shop` cast hid
- * that the other ~15 columns are undefined on card results).
- */
-export type ShopCard = Pick<
-  Shop,
-  | "id" | "slug" | "name" | "shop_type" | "primary_service"
-  | "city" | "state" | "state_code" | "phone" | "website"
-  | "rating" | "rating_tier" | "reviews" | "photos_count" | "has_photos"
-  | "offers_fitting" | "fitting_environment" | "services" | "services_array"
-  | "num_services" | "verified" | "location_link" | "is_featured" | "listing_tier"
-  | "verified_expires_at" | "latitude" | "longitude"
-  | "launch_monitors" | "ownership_type" | "fitting_price_min" | "fitting_price_max"
->
+/* NOTE: card/grid queries cast their rows to Shop even though only the
+   CARD_FIELDS columns are actually selected — the other ~15 columns are
+   undefined at runtime. Card consumers must only rely on CARD_FIELDS columns. */
 
 /* Strip characters that have structural meaning inside a PostgREST `.or()` /
    `.ilike` filter string (commas separate clauses, parens group them, % and \
@@ -86,6 +73,37 @@ export async function fetchAllRows<Row>(
   }
   log.error("fetchAllRows", `hit the ${MAX_PAGES * PAGE}-row guard — results may be truncated`)
   return all
+}
+
+/* ── Aggregate tallies shared by the state/category/homepage queries ── */
+
+/** Count shops per state. Unsorted — callers sort by name or by count. */
+export function tallyStates(
+  rows: Array<{ state_code: string | null; state: string }>,
+): { state_code: string; state: string; count: number }[] {
+  const map: Record<string, { state: string; count: number }> = {}
+  for (const row of rows) {
+    if (!row.state_code) continue
+    if (!map[row.state_code]) map[row.state_code] = { state: row.state, count: 0 }
+    map[row.state_code].count++
+  }
+  return Object.entries(map).map(([state_code, { state, count }]) => ({
+    state_code,
+    state,
+    count,
+  }))
+}
+
+/** Count shops per shop_type (null → "Unknown"). */
+export function tallyTypes(
+  rows: Array<{ shop_type: string | null }>,
+): Record<string, number> {
+  const counts: Record<string, number> = {}
+  for (const row of rows) {
+    const t = row.shop_type ?? "Unknown"
+    counts[t] = (counts[t] ?? 0) + 1
+  }
+  return counts
 }
 
 export interface DirectoryFilters {
