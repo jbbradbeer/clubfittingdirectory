@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
+import { US_STATE_CODES } from "@/lib/constants"
+import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
 
 /**
  * Public "Submit a Shop" endpoint.
@@ -11,18 +13,7 @@ import { rateLimitOk, clientIp } from "@/lib/rate-limit"
  * live listings.
  */
 
-const US_STATE_CODES = new Set([
-  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
-  "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
-  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
-  "VA","WA","WV","WI","WY","DC",
-])
-
 const VALID_SHOP_TYPES = new Set(SHOP_TYPES.map((t) => t.dbType))
-
-function str(v: unknown, max: number): string {
-  return typeof v === "string" ? v.trim().slice(0, max) : ""
-}
 
 export async function POST(request: Request) {
   // Same throttle the other public write routes use — the honeypot alone
@@ -32,18 +23,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 })
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 })
-  }
-
-  // Honeypot: a hidden field real users never fill. Bots that fill everything
-  // trip it. Pretend success so the bot doesn't learn it was caught.
-  if (str(body.company_website, 200)) {
-    return NextResponse.json({ ok: true })
-  }
+  const body = await parseJsonBody(request)
+  if (!body) return invalidBodyResponse()
+  if (honeypotTripped(body)) return NextResponse.json({ ok: true })
 
   // ── Validate ──
   const name       = str(body.name, 120)
@@ -62,7 +44,7 @@ export async function POST(request: Request) {
   if (!US_STATE_CODES.has(stateCode)) errors.push("A valid US state is required.")
   if (shopType && !VALID_SHOP_TYPES.has(shopType)) errors.push("Invalid shop type.")
   if (!email)                     errors.push("Your email is required.")
-  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errors.push("Enter a valid email.")
+  else if (!isValidEmail(email)) errors.push("Enter a valid email.")
 
   if (errors.length) {
     return NextResponse.json({ error: errors.join(" ") }, { status: 400 })

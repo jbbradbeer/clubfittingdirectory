@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { notifyNewFittingRequest } from "@/lib/email"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
+import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
 
 /**
  * Public "Request a Fitting" endpoint — the booking engine's intake.
@@ -17,10 +18,6 @@ const VALID_FITTING_TYPES = new Set([
 ])
 const VALID_TIMES = new Set(["morning", "afternoon", "evening", "flexible"])
 
-function str(v: unknown, max: number): string {
-  return typeof v === "string" ? v.trim().slice(0, max) : ""
-}
-
 export async function POST(request: Request) {
   // Rate limit: 5 requests per IP per 10 minutes. A real golfer submits once;
   // this only stops floods (spam bots, runaway scripts).
@@ -32,17 +29,9 @@ export async function POST(request: Request) {
     )
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 })
-  }
-
-  // Honeypot: hidden field real users never fill. Pretend success so bots don't learn.
-  if (str(body.company_website, 200)) {
-    return NextResponse.json({ ok: true })
-  }
+  const body = await parseJsonBody(request)
+  if (!body) return invalidBodyResponse()
+  if (honeypotTripped(body)) return NextResponse.json({ ok: true })
 
   // ── Validate ──
   const shopId        = str(body.shop_id, 60)
@@ -59,7 +48,7 @@ export async function POST(request: Request) {
   const errors: string[] = []
   if (visitorName.length < 2) errors.push("Your name is required.")
   if (!visitorEmail) errors.push("Your email is required.")
-  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(visitorEmail)) errors.push("Enter a valid email.")
+  else if (!isValidEmail(visitorEmail)) errors.push("Enter a valid email.")
   if (fittingType && !VALID_FITTING_TYPES.has(fittingType)) errors.push("Invalid fitting type.")
   if (preferredTime && !VALID_TIMES.has(preferredTime)) errors.push("Invalid preferred time.")
 
@@ -79,6 +68,8 @@ export async function POST(request: Request) {
   } | null = null
   if (shopSlug) {
     try {
+      // Admin (service-role) client: owner_email isn't readable through the
+      // public RLS policy. The insert below still uses the anon RLS client.
       const admin = createAdminClient()
       const { data } = await admin
         .from("shops")

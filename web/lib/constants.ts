@@ -37,3 +37,9 @@ export const US_STATES: { code: string; name: string }[] = [
   { code: "WV", name: "West Virginia" }, { code: "WI", name: "Wisconsin" },
   { code: "WY", name: "Wyoming" },
 ]
+
+/* Fast membership checks (e.g. validating a posted state_code). */
+export const US_STATE_CODES = new Set(US_STATES.map((s) => s.code))
+
+/* Public contact address shown on the contact page. */
+export const CONTACT_EMAIL = "bowtiedgolf@gmail.com"
