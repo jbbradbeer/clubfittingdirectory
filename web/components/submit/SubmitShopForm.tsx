@@ -1,28 +1,23 @@
 "use client"
 
-import { useState } from "react"
 import { CheckCircle, Loader2, ChevronDown } from "lucide-react"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { fieldClass, selectClass, labelClass, checkboxClass } from "@/lib/form-styles"
 import { Button } from "@/components/ui/Button"
-
-type Status = "idle" | "submitting" | "success" | "error"
-
-/* Gold required-field marker. */
-const Req = () => <span className="text-[var(--color-gold-ink)]"> *</span>
+import { useFormSubmit } from "@/lib/hooks/useFormSubmit"
+import { Honeypot, Req } from "@/components/forms/FormBits"
 
 export function SubmitShopForm() {
-  const [status, setStatus] = useState<Status>("idle")
-  const [errorMsg, setErrorMsg] = useState("")
+  const { status, errorMsg, submit } = useFormSubmit(
+    "/api/submit-shop",
+    "Submission failed. Please try again.",
+  )
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setStatus("submitting")
-    setErrorMsg("")
-
     const fd = new FormData(e.currentTarget)
-    const payload = {
+    await submit({
       name: fd.get("name"),
       city: fd.get("city"),
       state_code: fd.get("state_code"),
@@ -33,21 +28,7 @@ export function SubmitShopForm() {
       notes: fd.get("notes"),
       submitter_email: fd.get("submitter_email"),
       company_website: fd.get("company_website"), // honeypot
-    }
-
-    try {
-      const res = await fetch("/api/submit-shop", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error || "Submission failed. Please try again.")
-      setStatus("success")
-    } catch (err) {
-      setStatus("error")
-      setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.")
-    }
+    })
   }
 
   if (status === "success") {
@@ -77,13 +58,7 @@ export function SubmitShopForm() {
       <span aria-hidden="true" className="block h-1 w-full bg-gradient-to-r from-[var(--color-forest)] to-[var(--color-gold)]" />
 
       <div className="p-6 sm:p-8 space-y-5">
-        {/* Honeypot — visually hidden; real users never fill it */}
-        <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
-          <label>
-            Company website
-            <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
-          </label>
-        </div>
+        <Honeypot />
 
         <div>
           <label htmlFor="name" className={labelClass}>Shop name<Req /></label>

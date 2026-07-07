@@ -4,11 +4,12 @@ import { notFound } from "next/navigation"
 import { getShopsForServicePage } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
-import { ListingCard } from "@/components/directory/ListingCard"
+import { ListingGrid } from "@/components/directory/ListingGrid"
 import { TrackedButton } from "@/components/ui/TrackedButton"
 import { SITE_URL } from "@/lib/constants"
 import { rethrowQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
+import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { repairIntro, repairFaqs } from "@/lib/seo-content"
@@ -41,10 +42,7 @@ export default async function RepairPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-      />
+      <JsonLd data={itemListSchema} />
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Club Repair" }]}
@@ -111,11 +109,7 @@ export default async function RepairPage() {
             title="All Shops Offering Club Repair"
             centered={false}
           />
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shops.map((shop) => (
-              <ListingCard key={shop.slug} {...shop} />
-            ))}
-          </div>
+          <ListingGrid shops={shops} />
         </div>
       </section>
 

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 import { sendClaimConfirmation } from "@/lib/email"
+import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
 
 /**
  * Public "Claim this shop" endpoint — the outreach engine's landing action.
@@ -11,10 +12,6 @@ import { sendClaimConfirmation } from "@/lib/email"
  * claimed_at + owner_email on the shop. Claiming is free — the Verified
  * badge stays a paid tier.
  */
-
-function str(v: unknown, max: number): string {
-  return typeof v === "string" ? v.trim().slice(0, max) : ""
-}
 
 export async function POST(request: Request) {
   // 5 claims per IP per 10 minutes — an owner claims once.
@@ -25,17 +22,9 @@ export async function POST(request: Request) {
     )
   }
 
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 })
-  }
-
-  // Honeypot — pretend success so bots don't learn.
-  if (str(body.company_website, 200)) {
-    return NextResponse.json({ ok: true })
-  }
+  const body = await parseJsonBody(request)
+  if (!body) return invalidBodyResponse()
+  if (honeypotTripped(body)) return NextResponse.json({ ok: true })
 
   // ── Validate ──
   const slug   = str(body.shop_slug, 200)
@@ -50,7 +39,7 @@ export async function POST(request: Request) {
   if (!slug)            errors.push("Missing shop.")
   if (name.length < 2)  errors.push("Your name is required.")
   if (!email)           errors.push("Your email is required.")
-  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errors.push("Enter a valid email.")
+  else if (!isValidEmail(email)) errors.push("Enter a valid email.")
 
   if (errors.length) {
     return NextResponse.json({ error: errors.join(" ") }, { status: 400 })

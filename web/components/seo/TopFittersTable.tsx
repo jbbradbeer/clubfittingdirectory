@@ -13,7 +13,7 @@ import { LAST_UPDATED_LABEL } from "@/lib/seo-content"
    the page's top shops as one server-rendered table.
    ───────────────────────────────────────────────────────── */
 
-/* Structural subset so both Shop and ShopCard arrays can be passed in. */
+/* Structural subset — any shop-shaped row with these fields can be passed in. */
 export interface TopFitterRow {
   slug: string
   name: string

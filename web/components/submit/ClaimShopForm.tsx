@@ -1,30 +1,26 @@
 "use client"
 
-import { useState } from "react"
 import { CheckCircle, Loader2 } from "lucide-react"
 import { fieldClass, labelClass } from "@/lib/form-styles"
 import { Button } from "@/components/ui/Button"
 import { CAL_FOUNDING_CALL_URL } from "@/lib/constants"
-
-type Status = "idle" | "submitting" | "success" | "error"
-
-const Req = () => <span className="text-[var(--color-gold-ink)]"> *</span>
+import { useFormSubmit } from "@/lib/hooks/useFormSubmit"
+import { Honeypot, Req } from "@/components/forms/FormBits"
 
 export function ClaimShopForm({ shopSlug, shopName, source }: {
   shopSlug: string
   shopName: string
   source?: string
 }) {
-  const [status, setStatus] = useState<Status>("idle")
-  const [errorMsg, setErrorMsg] = useState("")
+  const { status, errorMsg, submit } = useFormSubmit(
+    "/api/claim-shop",
+    "Claim failed. Please try again.",
+  )
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setStatus("submitting")
-    setErrorMsg("")
-
     const fd = new FormData(e.currentTarget)
-    const payload = {
+    await submit({
       shop_slug: shopSlug,
       claimant_name: fd.get("claimant_name"),
       claimant_role: fd.get("claimant_role"),
@@ -33,21 +29,7 @@ export function ClaimShopForm({ shopSlug, shopName, source }: {
       message: fd.get("message"),
       source,
       company_website: fd.get("company_website"), // honeypot
-    }
-
-    try {
-      const res = await fetch("/api/claim-shop", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error || "Claim failed. Please try again.")
-      setStatus("success")
-    } catch (err) {
-      setStatus("error")
-      setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.")
-    }
+    })
   }
 
   if (status === "success") {
@@ -90,13 +72,7 @@ export function ClaimShopForm({ shopSlug, shopName, source }: {
       <span aria-hidden="true" className="block h-1 w-full bg-gradient-to-r from-[var(--color-forest)] to-[var(--color-gold)]" />
 
       <div className="p-6 sm:p-8 space-y-5">
-        {/* Honeypot — visually hidden; real users never fill it */}
-        <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
-          <label>
-            Company website
-            <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
-          </label>
-        </div>
+        <Honeypot />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>

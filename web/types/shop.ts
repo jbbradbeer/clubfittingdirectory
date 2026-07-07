@@ -75,14 +75,6 @@ export interface Shop {
   updated_at: string
 }
 
-export interface ShopFilters {
-  state?: string
-  shopType?: string
-  offersFitting?: boolean
-  search?: string
-  sort?: "rating" | "name" | "reviews"
-}
-
 /** Subset of Shop used by ListingCard — keeps component props clean */
 export interface ListingCardProps {
   name: string

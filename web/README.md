@@ -66,7 +66,7 @@ From the **project root** (one folder up from `web/`), run the import script:
 
 ```bash
 cd ..
-python migrate_to_supabase.py
+python archive/migrate_to_supabase.py  # one-time historical import (moved to archive/)
 ```
 
 This reads `golf_directory_MASTER.csv` and uploads all shop listings to your Supabase database.
@@ -116,7 +116,7 @@ If you add or update listings in `golf_directory_MASTER.csv`:
 
 2. Re-run the import to push changes to Supabase:
    ```bash
-   python migrate_to_supabase.py
+   python archive/migrate_to_supabase.py
    ```
 
 3. Trigger a Vercel redeploy to regenerate all static pages:

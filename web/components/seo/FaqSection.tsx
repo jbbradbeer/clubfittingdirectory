@@ -1,4 +1,5 @@
 import { SectionHeader } from "@/components/ui/SectionHeader"
+import { JsonLd } from "@/components/seo/JsonLd"
 
 export interface FaqItem {
   question: string
@@ -29,10 +30,7 @@ export function FaqSection({ items, heading = "Common questions" }: { items: Faq
   return (
     <section className="bg-[var(--color-cream)] py-14">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
+        <JsonLd data={faqSchema} />
         <SectionHeader eyebrow="FAQ" title={heading} centered={false} />
         <div className="mt-8 divide-y divide-[var(--color-border)]">
           {items.map((item) => (
