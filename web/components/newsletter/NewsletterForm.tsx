@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
 import { CheckCircle, Loader2 } from "lucide-react"
 import { darkInputBase, darkButtonBase } from "@/lib/form-styles"
+import { useFormSubmit } from "@/lib/hooks/useFormSubmit"
+import { Honeypot } from "@/components/forms/FormBits"
 
 /**
  * Newsletter signup form for "The Tuxedo Collective".
@@ -12,7 +13,6 @@ import { darkInputBase, darkButtonBase } from "@/lib/form-styles"
  * band, /newsletter hero). The `variant` only adjusts sizing/width.
  */
 
-type Status = "idle" | "submitting" | "success" | "error"
 type Variant = "footer" | "section" | "page"
 
 export function NewsletterForm({
@@ -22,34 +22,16 @@ export function NewsletterForm({
   variant?: Variant
   buttonLabel?: string
 }) {
-  const [status, setStatus] = useState<Status>("idle")
-  const [errorMsg, setErrorMsg] = useState("")
+  const { status, errorMsg, submit } = useFormSubmit("/api/newsletter")
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setStatus("submitting")
-    setErrorMsg("")
-
     const fd = new FormData(e.currentTarget)
-    const payload = {
+    await submit({
       email: fd.get("email"),
       company_website: fd.get("company_website"), // honeypot
       source: typeof window !== "undefined" ? window.location.pathname : undefined,
-    }
-
-    try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.")
-      setStatus("success")
-    } catch (err) {
-      setStatus("error")
-      setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.")
-    }
+    })
   }
 
   const big = variant === "page"
@@ -75,13 +57,7 @@ export function NewsletterForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      {/* Honeypot — visually hidden; real users never fill it */}
-      <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
-        <label>
-          Company website
-          <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
+      <Honeypot />
 
       <div className="flex flex-col sm:flex-row gap-3">
         <label htmlFor={`newsletter-email-${variant}`} className="sr-only">

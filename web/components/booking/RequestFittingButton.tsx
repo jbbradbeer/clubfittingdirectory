@@ -5,10 +5,8 @@ import { track } from "@vercel/analytics"
 import { CalendarCheck, CheckCircle, Loader2, ChevronDown, X } from "lucide-react"
 import { fieldClass, selectClass, labelClass } from "@/lib/form-styles"
 import { Button } from "@/components/ui/Button"
-
-type Status = "idle" | "submitting" | "success" | "error"
-
-const Req = () => <span className="text-[var(--color-gold-ink)]"> *</span>
+import { useFormSubmit } from "@/lib/hooks/useFormSubmit"
+import { Honeypot, Req } from "@/components/forms/FormBits"
 
 const FITTING_TYPES = [
   { value: "driver", label: "Driver" },
@@ -36,8 +34,10 @@ type Props = {
 
 export function RequestFittingButton({ shopId, shopName, shopSlug, className }: Props) {
   const [open, setOpen] = useState(false)
-  const [status, setStatus] = useState<Status>("idle")
-  const [errorMsg, setErrorMsg] = useState("")
+  const { status, errorMsg, submit, reset } = useFormSubmit(
+    "/api/request-fitting",
+    "Request failed. Please try again.",
+  )
   const firstFieldRef = useRef<HTMLInputElement>(null)
 
   // Close on Escape + lock body scroll while the modal is open.
@@ -56,11 +56,8 @@ export function RequestFittingButton({ shopId, shopName, shopSlug, className }: 
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setStatus("submitting")
-    setErrorMsg("")
-
     const fd = new FormData(e.currentTarget)
-    const payload = {
+    const ok = await submit({
       shop_id: shopId,
       shop_name: shopName,
       shop_slug: shopSlug,
@@ -72,29 +69,15 @@ export function RequestFittingButton({ shopId, shopName, shopSlug, className }: 
       preferred_time: fd.get("preferred_time"),
       notes: fd.get("notes"),
       company_website: fd.get("company_website"), // honeypot
-    }
-
-    try {
-      const res = await fetch("/api/request-fitting", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error || "Request failed. Please try again.")
-      setStatus("success")
-      track("fitting_request", { slug: shopSlug })
-    } catch (err) {
-      setStatus("error")
-      setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.")
-    }
+    })
+    if (ok) track("fitting_request", { slug: shopSlug })
   }
 
   return (
     <>
       <button
         type="button"
-        onClick={() => { setOpen(true); setStatus("idle") }}
+        onClick={() => { setOpen(true); reset() }}
         className={
           className ??
           "flex w-full items-center justify-center gap-2 py-2.5 bg-[var(--color-gold)] text-[var(--color-forest-deep)]! font-semibold text-sm rounded-full hover:bg-[var(--color-gold-dark)] transition-colors cursor-pointer"
@@ -157,13 +140,7 @@ export function RequestFittingButton({ shopId, shopName, shopSlug, className }: 
                   </p>
                 </div>
 
-                {/* Honeypot */}
-                <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
-                  <label>
-                    Company website
-                    <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
-                  </label>
-                </div>
+                <Honeypot />
 
                 <div>
                   <label htmlFor="visitor_name" className={labelClass}>Your name<Req /></label>
