@@ -311,6 +311,35 @@ export async function getAllCitySlugs(): Promise<{ citySlug: string }[]> {
   return result
 }
 
+/* ── City links for a state (city-page cross-linking) ──
+   Lightweight one-column fetch used by city pages to link sideways to their
+   sibling cities. Without these links every city page is a crawl dead-end that
+   only points back up to its state. cache()'d per state code. */
+export const getCityLinksForState = cache(async (
+  stateCode: string,
+): Promise<{ name: string; slug: string; count: number }[]> => {
+  const supabase = createStaticClient()
+  const rows = await fetchAllRows<{ city: string | null }>(() =>
+    supabase
+      .from("shops")
+      .select("city")
+      .eq("status", "active")
+      .eq("state_code", stateCode)
+      .order("id", { ascending: true }),
+  )
+
+  const map: Record<string, { name: string; count: number }> = {}
+  for (const row of rows) {
+    if (!row.city) continue
+    const slug = toCitySlug(row.city, stateCode)
+    if (!map[slug]) map[slug] = { name: row.city, count: 0 }
+    map[slug].count++
+  }
+  return Object.entries(map)
+    .map(([slug, { name, count }]) => ({ name, slug, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+})
+
 /* ── All shops for a city page, derived from state query ──
    cache()'d (called in both generateMetadata and the page body). */
 export const getShopsForCityPage = cache(async (
