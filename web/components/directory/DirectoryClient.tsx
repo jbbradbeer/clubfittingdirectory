@@ -253,6 +253,27 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
 
   const displayShops = nearMeActive ? (nearMeShops as unknown as Shop[]) : shops
 
+  // One prop bag for both FilterSidebar renders (desktop rail + mobile drawer)
+  // so the two can't drift apart.
+  const sidebarProps = {
+    stateOptions,
+    shopTypeOptions,
+    selectedState,
+    selectedShopTypes,
+    selectedServices,
+    selectedOwnership,
+    fittingOnly,
+    minRating,
+    onStateChange: (s: string) => { setSelectedState(s); setPage(1) },
+    onShopTypesChange: (t: string[]) => { setSelectedShopTypes(t); setPage(1) },
+    onServicesChange: (s: string[]) => { setSelectedServices(s); setPage(1) },
+    onOwnershipChange: (o: string[]) => { setSelectedOwnership(o); setPage(1) },
+    onFittingChange: (f: boolean) => { setFittingOnly(f); setPage(1) },
+    onRatingChange: (r: number) => { setMinRating(r); setPage(1) },
+    onReset: resetFilters,
+    activeFilterCount,
+  }
+
   return (
     <div>
       {/* Top bar: search + controls */}
@@ -370,24 +391,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
         <div className="flex gap-8">
           {/* Desktop sidebar — sticks alongside the scrolling results */}
           <div className="hidden lg:block w-60 xl:w-64 shrink-0 self-start sticky top-[88px]">
-            <FilterSidebar
-              stateOptions={stateOptions}
-              shopTypeOptions={shopTypeOptions}
-              selectedState={selectedState}
-              selectedShopTypes={selectedShopTypes}
-              selectedServices={selectedServices}
-              selectedOwnership={selectedOwnership}
-              fittingOnly={fittingOnly}
-              minRating={minRating}
-              onStateChange={(s) => { setSelectedState(s); setPage(1) }}
-              onShopTypesChange={(t) => { setSelectedShopTypes(t); setPage(1) }}
-              onServicesChange={(s) => { setSelectedServices(s); setPage(1) }}
-              onOwnershipChange={(o) => { setSelectedOwnership(o); setPage(1) }}
-              onFittingChange={(f) => { setFittingOnly(f); setPage(1) }}
-              onRatingChange={(r) => { setMinRating(r); setPage(1) }}
-              onReset={resetFilters}
-              activeFilterCount={activeFilterCount}
-            />
+            <FilterSidebar {...sidebarProps} />
           </div>
 
           {/* Results area */}
@@ -436,24 +440,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
                 <X size={20} />
               </button>
             </div>
-            <FilterSidebar
-              stateOptions={stateOptions}
-              shopTypeOptions={shopTypeOptions}
-              selectedState={selectedState}
-              selectedShopTypes={selectedShopTypes}
-              selectedServices={selectedServices}
-              selectedOwnership={selectedOwnership}
-              fittingOnly={fittingOnly}
-              minRating={minRating}
-              onStateChange={(s) => { setSelectedState(s); setPage(1) }}
-              onShopTypesChange={(t) => { setSelectedShopTypes(t); setPage(1) }}
-              onServicesChange={(s) => { setSelectedServices(s); setPage(1) }}
-              onOwnershipChange={(o) => { setSelectedOwnership(o); setPage(1) }}
-              onFittingChange={(f) => { setFittingOnly(f); setPage(1) }}
-              onRatingChange={(r) => { setMinRating(r); setPage(1) }}
-              onReset={resetFilters}
-              activeFilterCount={activeFilterCount}
-            />
+            <FilterSidebar {...sidebarProps} />
           </div>
         </div>
       )}
