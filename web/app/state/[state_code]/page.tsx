@@ -118,7 +118,7 @@ export default async function StatePage({ params }: PageProps) {
       <section className="bg-[var(--color-ivory)] pt-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
-            {stateIntro(stateName, shops.length, cityCount)}
+            {stateIntro(stateName, shops, cityCount)}
           </p>
         </div>
       </section>

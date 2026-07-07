@@ -3,7 +3,9 @@ import { notFound } from "next/navigation"
 import {
   getShopsForCityPage,
   getAllCitySlugs,
+  getCityLinksForState,
 } from "@/lib/supabase/queries/shops"
+import { ChipLink } from "@/components/ui/ChipLink"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ListingGrid } from "@/components/directory/ListingGrid"
@@ -54,6 +56,12 @@ export default async function CityPage({ params }: PageProps) {
   if (!result) notFound()
 
   const { shops, city, state, stateCode } = result
+
+  const siblingCities = (
+    await getCityLinksForState(stateCode).catch((e) =>
+      logQueryError("city getCityLinksForState", e, []),
+    )
+  ).filter((c) => c.slug !== citySlug)
 
   /* Shop type breakdown */
   const typeMap: Record<string, number> = {}
@@ -106,7 +114,7 @@ export default async function CityPage({ params }: PageProps) {
       <section className="bg-[var(--color-ivory)] pt-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
-            {cityIntro(city, state, shops.length)}
+            {cityIntro(city, state, shops)}
           </p>
         </div>
       </section>
@@ -126,12 +134,34 @@ export default async function CityPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Back to state */}
+      {/* Sibling cities — sideways links so city pages aren't crawl dead-ends */}
       <section className="bg-[var(--color-ivory)] py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Button href={`/state/${stateCode.toLowerCase()}`} variant="outline" size="sm">
-            &larr; All fitters in {state}
-          </Button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {siblingCities.length > 0 && (
+            <>
+              <SectionHeader
+                eyebrow="Nearby"
+                title={`More cities in ${state}`}
+                centered={false}
+              />
+              <div className="mt-6 flex flex-wrap gap-2">
+                {siblingCities.slice(0, 16).map((c) => (
+                  <ChipLink
+                    key={c.slug}
+                    href={`/city/${c.slug}`}
+                    label={c.name}
+                    count={c.count}
+                    size="sm"
+                  />
+                ))}
+              </div>
+            </>
+          )}
+          <div className={`text-center ${siblingCities.length > 0 ? "mt-8" : ""}`}>
+            <Button href={`/state/${stateCode.toLowerCase()}`} variant="outline" size="sm">
+              &larr; All fitters in {state}
+            </Button>
+          </div>
         </div>
       </section>
 

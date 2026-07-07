@@ -18,17 +18,76 @@ export const LAST_UPDATED_LABEL = new Date().toLocaleDateString("en-US", {
   year: "numeric",
 })
 
-/* ── Intro paragraph ── */
-export function stateIntro(stateName: string, shopCount: number, cityCount: number): string {
-  return `Comparing golf club fitters in ${stateName}? Browse ${shopCount} fitters, retailers, and simulators across ${cityCount} ${
-    cityCount === 1 ? "city" : "cities"
-  } — with fitting prices, launch monitor technology, and independent-vs-chain ownership shown where we've verified them — so you can find the right fit close to home.`
+/* ── Data-driven intro paragraphs ──
+   Composed from each page's REAL shop data (launch monitor brands, published
+   prices, ownership) so every one of the ~1,100 city pages reads differently.
+   A clause only renders when the underlying data exists — no invented claims,
+   and data-poor pages just get a shorter honest paragraph. */
+
+function monitorBrands(shops: CollectionShop[]): string[] {
+  const counts: Record<string, number> = {}
+  for (const s of shops) {
+    for (const m of s.launch_monitors ?? []) counts[m] = (counts[m] ?? 0) + 1
+  }
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([brand]) => brand)
 }
 
-export function cityIntro(city: string, stateName: string, shopCount: number): string {
-  return `Find golf club fitting in ${city}, ${stateName}. We list ${shopCount} ${
-    shopCount === 1 ? "shop" : "shops"
-  } offering custom club fitting, equipment retail, and simulator sessions — compare ratings, fitting prices, and launch monitor tech to book the fitting that suits your game.`
+function priceRange(shops: CollectionShop[]): { min: number; max: number } | null {
+  const mins = shops.map((s) => s.fitting_price_min).filter((n): n is number => n != null && n > 0)
+  if (!mins.length) return null
+  const maxes = shops.map((s) => s.fitting_price_max).filter((n): n is number => n != null && n > 0)
+  return { min: Math.min(...mins), max: maxes.length ? Math.max(...maxes) : Math.min(...mins) }
+}
+
+function listWords(items: string[]): string {
+  if (items.length <= 1) return items[0] ?? ""
+  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`
+}
+
+/** Shared data sentences appended to both city and state intros. */
+function dataSentences(shops: CollectionShop[]): string {
+  const parts: string[] = []
+  const brands = monitorBrands(shops).slice(0, 4)
+  if (brands.length) {
+    parts.push(`Launch monitors on record here include ${listWords(brands)}.`)
+  }
+  const price = priceRange(shops)
+  if (price) {
+    parts.push(
+      price.max > price.min
+        ? `Published fitting prices run from $${price.min} to $${price.max}.`
+        : `Published fitting prices start at $${price.min}.`,
+    )
+  }
+  const independent = shops.filter((s) => s.ownership_type === "independent").length
+  if (independent > 0 && shops.length > 1) {
+    parts.push(
+      independent === shops.length
+        ? `Every shop listed is independently owned.`
+        : `${independent} of the ${shops.length} shops are independently owned.`,
+    )
+  }
+  return parts.join(" ")
+}
+
+export function stateIntro(stateName: string, shops: CollectionShop[], cityCount: number): string {
+  const opening = `Comparing golf club fitters in ${stateName}? Browse ${shops.length} fitters, retailers, and simulators across ${cityCount} ${
+    cityCount === 1 ? "city" : "cities"
+  }, with fitting prices, launch monitor technology, and ownership shown where we've verified them.`
+  const data = dataSentences(shops)
+  const closing = `Compare the listings below to find the right fit close to home.`
+  return [opening, data, closing].filter(Boolean).join(" ")
+}
+
+export function cityIntro(city: string, stateName: string, shops: CollectionShop[]): string {
+  const opening = `Find golf club fitting in ${city}, ${stateName}. We list ${shops.length} ${
+    shops.length === 1 ? "shop" : "shops"
+  } offering custom club fitting, equipment retail, and simulator sessions.`
+  const data = dataSentences(shops)
+  const closing = `Compare ratings, prices, and services to book the fitting that suits your game.`
+  return [opening, data, closing].filter(Boolean).join(" ")
 }
 
 export function categoryIntro(label: string, shopCount: number, stateCount: number): string {
@@ -46,6 +105,16 @@ export interface ShopFact {
   name: string
   rating: number | null
   offers_fitting: boolean | null
+}
+
+/** ShopFact plus the enrichment columns the collection pages already fetch
+    (CARD_FIELDS) — used to build data-driven intros and FAQs. All optional so
+    plain ShopFact arrays still type-check. */
+export interface CollectionShop extends ShopFact {
+  launch_monitors?: string[] | null
+  fitting_price_min?: number | null
+  fitting_price_max?: number | null
+  ownership_type?: string | null
 }
 
 function topRatedFaq(place: string, shops: ShopFact[]): FaqItem | null {
@@ -69,19 +138,51 @@ function fittingCountFaq(place: string, shops: ShopFact[]): FaqItem | null {
   }
 }
 
+/** Local price FAQ built from this page's actual published prices — a concrete,
+    quotable answer ("in Austin fittings start at $75") that boilerplate can't
+    give. Returns null when no shop on the page has a published price. */
+function localPriceFaq(place: string, shops: CollectionShop[]): FaqItem | null {
+  const price = priceRange(shops)
+  if (!price) return null
+  const spread =
+    price.max > price.min
+      ? `published fitting prices range from $${price.min} to $${price.max}`
+      : `published fitting prices start at $${price.min}`
+  return {
+    question: `How much does a golf club fitting cost in ${place}?`,
+    answer: `Among the ${place} shops in this directory that publish prices, ${spread}. Nationally, a single-club fitting typically runs $50–$150 and a full-bag fitting more; many shops credit the fee toward clubs you buy. Check each listing for its current menu.`,
+  }
+}
+
+/** Launch-monitor FAQ from this page's real tech data. */
+function localTechFaq(place: string, shops: CollectionShop[]): FaqItem | null {
+  const brands = monitorBrands(shops)
+  if (!brands.length) return null
+  return {
+    question: `What launch monitor technology do ${place} club fitters use?`,
+    answer: `Shops in ${place} with verified fitting technology use ${listWords(brands.slice(0, 5))}. The listings above show each shop's equipment where we've confirmed it — worth checking, since the launch monitor drives the quality of your fitting data.`,
+  }
+}
+
 /* ── FAQs ── */
-function baseFittingFaqs(): FaqItem[] {
+function baseFittingFaqs(opts: { skipCost?: boolean } = {}): FaqItem[] {
   return [
     {
       question: "What is golf club fitting?",
       answer:
         "Club fitting is the process of matching golf clubs to your swing, body, and goals — adjusting factors like shaft, length, lie angle, loft, and grip. A proper fitting can improve consistency, distance, and accuracy.",
     },
-    {
-      question: "How much does a club fitting cost?",
-      answer:
-        "Prices vary by shop and fitting type, but a single-club fitting often ranges from around $50 to $150, while a full-bag fitting can cost more. Many retailers credit the fitting fee toward clubs you purchase.",
-    },
+    // The generic cost FAQ is dropped when the page has a data-driven local
+    // price FAQ, so a page never asks the cost question twice.
+    ...(opts.skipCost
+      ? []
+      : [
+          {
+            question: "How much does a club fitting cost?",
+            answer:
+              "Prices vary by shop and fitting type, but a single-club fitting often ranges from around $50 to $150, while a full-bag fitting can cost more. Many retailers credit the fitting fee toward clubs you purchase.",
+          },
+        ]),
     {
       question: "How long does a fitting take?",
       answer:
@@ -90,29 +191,37 @@ function baseFittingFaqs(): FaqItem[] {
   ]
 }
 
-export function stateFaqs(stateName: string, shops: ShopFact[] = []): FaqItem[] {
+export function stateFaqs(stateName: string, shops: CollectionShop[] = []): FaqItem[] {
+  const priceFaq = localPriceFaq(stateName, shops)
   return [
     {
       question: `How do I find a golf club fitter in ${stateName}?`,
       answer: `Use this directory to browse fitters by city across ${stateName}. Each listing includes the shop's services, rating, and contact information so you can compare options near you.`,
     },
-    ...[fittingCountFaq(stateName, shops), topRatedFaq(stateName, shops)].filter(
-      (f): f is FaqItem => f !== null,
-    ),
-    ...baseFittingFaqs(),
+    ...[
+      priceFaq,
+      localTechFaq(stateName, shops),
+      fittingCountFaq(stateName, shops),
+      topRatedFaq(stateName, shops),
+    ].filter((f): f is FaqItem => f !== null),
+    ...baseFittingFaqs({ skipCost: priceFaq !== null }),
   ]
 }
 
-export function cityFaqs(city: string, stateName: string, shops: ShopFact[] = []): FaqItem[] {
+export function cityFaqs(city: string, stateName: string, shops: CollectionShop[] = []): FaqItem[] {
+  const priceFaq = localPriceFaq(city, shops)
   return [
     {
       question: `Where can I get fitted for golf clubs in ${city}?`,
       answer: `The shops listed on this page offer club fitting in and around ${city}, ${stateName}. Check each listing's services and rating, then contact the shop directly to book a session.`,
     },
-    ...[topRatedFaq(city, shops), fittingCountFaq(city, shops)].filter(
-      (f): f is FaqItem => f !== null,
-    ),
-    ...baseFittingFaqs(),
+    ...[
+      priceFaq,
+      localTechFaq(city, shops),
+      topRatedFaq(city, shops),
+      fittingCountFaq(city, shops),
+    ].filter((f): f is FaqItem => f !== null),
+    ...baseFittingFaqs({ skipCost: priceFaq !== null }),
   ]
 }
 
