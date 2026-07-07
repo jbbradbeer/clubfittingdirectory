@@ -4,9 +4,7 @@ import { Mail, Store, Pencil } from "lucide-react"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { IconCircle } from "@/components/ui/IconCircle"
-import { SITE_NAME, SITE_URL } from "@/lib/constants"
-
-const CONTACT_EMAIL = "bowtiedgolf@gmail.com"
+import { SITE_NAME, SITE_URL, CONTACT_EMAIL } from "@/lib/constants"
 
 export const metadata: Metadata = {
   title: "Contact",

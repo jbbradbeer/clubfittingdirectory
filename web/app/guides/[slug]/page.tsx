@@ -12,6 +12,7 @@ import {
   buildArticleSchema,
   buildGuideBreadcrumbSchema,
 } from "@/lib/structured-data"
+import { JsonLd } from "@/components/seo/JsonLd"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -52,14 +53,8 @@ export default async function GuidePage({ params }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd data={articleSchema} />
+      <JsonLd data={breadcrumbSchema} />
 
       <PageHeader
         breadcrumb={[

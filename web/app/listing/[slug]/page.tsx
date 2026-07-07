@@ -7,13 +7,14 @@ import {
 import { getShopBySlug, getNearbyShops, getAllShopSlugs, toCitySlug } from "@/lib/supabase/queries/shops"
 import { getListingVerification } from "@/lib/supabase/queries/provenance"
 import { buildLocalBusinessSchema, buildBreadcrumbSchema } from "@/lib/structured-data"
+import { JsonLd } from "@/components/seo/JsonLd"
 import { Breadcrumb } from "@/components/ui/Breadcrumb"
 import { ListingMap } from "@/components/directory/ListingMap"
 import { ShopHours } from "@/components/shop-profile/ShopHours"
 import { Badge } from "@/components/ui/Badge"
 import { RatingStars } from "@/components/ui/RatingStars"
 import { Button } from "@/components/ui/Button"
-import { ListingCard } from "@/components/directory/ListingCard"
+import { ListingGrid } from "@/components/directory/ListingGrid"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { TuxedoInlineLink } from "@/components/newsletter/TuxedoInlineLink"
 import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
@@ -73,6 +74,10 @@ export default async function ListingPage({ params }: PageProps) {
   // Guard against rows with a null city/state_code so a single bad row can't
   // crash the whole page (mirrors the defensive handling in structured-data.ts).
   const citySlug = shop.city && shop.state_code ? toCitySlug(shop.city, shop.state_code) : ""
+  // Stored websites sometimes lack a protocol — normalize once for every link below.
+  const websiteUrl = shop.website
+    ? shop.website.startsWith("http") ? shop.website : `https://${shop.website}`
+    : null
   const { paletteIndex: coverPalette } = getCover(shop.slug, shop.shop_type)
 
   /* Parse about JSON for display */
@@ -88,14 +93,8 @@ export default async function ListingPage({ params }: PageProps) {
   return (
     <>
       {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd data={localBusinessSchema} />
+      <JsonLd data={breadcrumbSchema} />
 
       <Reveal />
 
@@ -169,9 +168,9 @@ export default async function ListingPage({ params }: PageProps) {
                   Call Now
                 </Button>
               )}
-              {shop.website && (
+              {websiteUrl && (
                 <Button
-                  href={shop.website.startsWith("http") ? shop.website : `https://${shop.website}`}
+                  href={websiteUrl}
                   variant="secondary"
                   external
                 >
@@ -257,7 +256,7 @@ export default async function ListingPage({ params }: PageProps) {
                     ) : (
                       /* Missing price = claim driver: owners add pricing via the
                          claim funnel. Hidden once the shop is claimed. */
-                      !(shop as { claimed_at?: string | null }).claimed_at && (
+                      !shop.claimed_at && (
                         <p className="pt-1 text-sm border-t border-[var(--color-line)]">
                           <Link
                             href={`/claim/${shop.slug}`}
@@ -351,9 +350,9 @@ export default async function ListingPage({ params }: PageProps) {
                       <span className="data">{shop.phone}</span>
                     </a>
                   )}
-                  {shop.website && (
+                  {websiteUrl && (
                     <a
-                      href={shop.website.startsWith("http") ? shop.website : `https://${shop.website}`}
+                      href={websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors"
@@ -389,9 +388,9 @@ export default async function ListingPage({ params }: PageProps) {
                       Call Now
                     </a>
                   )}
-                  {shop.website && (
+                  {websiteUrl && (
                     <a
-                      href={shop.website.startsWith("http") ? shop.website : `https://${shop.website}`}
+                      href={websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block w-full text-center py-2.5 border border-white/30 text-white! font-semibold text-sm rounded-full hover:bg-white/10 transition-colors"
@@ -403,7 +402,7 @@ export default async function ListingPage({ params }: PageProps) {
               </div>
 
               {/* Claim hook — free, feeds the outreach funnel. Hidden once claimed. */}
-              {(shop as { claimed_at?: string | null }).claimed_at ? (
+              {shop.claimed_at ? (
                 <p className="text-center text-xs text-[var(--color-charcoal-light)]">
                   Owner-managed listing
                 </p>
@@ -437,9 +436,9 @@ export default async function ListingPage({ params }: PageProps) {
                     Call {shop.name}
                   </Button>
                 )}
-                {shop.website && (
+                {websiteUrl && (
                   <Button
-                    href={shop.website.startsWith("http") ? shop.website : `https://${shop.website}`}
+                    href={websiteUrl}
                     variant="secondary"
                     size="lg"
                     external
@@ -462,16 +461,7 @@ export default async function ListingPage({ params }: PageProps) {
               eyebrow="Also in this area"
               title={`More Fitters in ${shop.state}`}
             />
-            <div
-              className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-              data-reveal-group
-            >
-              {nearby.map((s) => (
-                <div key={s.slug} data-reveal className="h-full">
-                  <ListingCard {...s} />
-                </div>
-              ))}
-            </div>
+            <ListingGrid shops={nearby} reveal />
           </div>
         </section>
       )}

@@ -1,15 +1,16 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getShopsForCategoryPage } from "@/lib/supabase/queries/shops"
 import { SHOP_TYPES, slugToShopType } from "@/lib/shop-types"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
-import { ListingCard } from "@/components/directory/ListingCard"
+import { ListingGrid } from "@/components/directory/ListingGrid"
 import { Button } from "@/components/ui/Button"
+import { ChipLink } from "@/components/ui/ChipLink"
 import { SITE_URL } from "@/lib/constants"
 import { rethrowQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
+import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { categoryIntro, categoryFaqs } from "@/lib/seo-content"
@@ -52,10 +53,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-      />
+      <JsonLd data={itemListSchema} />
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: label }]}
@@ -82,14 +80,13 @@ export default async function CategoryPage({ params }: PageProps) {
             </h2>
             <div className="flex flex-wrap gap-2">
               {stateBreakdown.slice(0, 20).map((s) => (
-                <Link
+                <ChipLink
                   key={s.state_code}
                   href={`/state/${s.state_code.toLowerCase()}`}
-                  className="px-3 py-1.5 bg-white border border-[var(--color-border)] rounded-full text-xs font-medium hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] transition-all"
-                >
-                  {s.state}{" "}
-                  <span className="text-[var(--color-charcoal-light)]">{s.count}</span>
-                </Link>
+                  label={s.state}
+                  count={s.count}
+                  size="sm"
+                />
               ))}
             </div>
           </div>
@@ -104,11 +101,7 @@ export default async function CategoryPage({ params }: PageProps) {
             title={`All ${label}`}
             centered={false}
           />
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shops.map((shop) => (
-              <ListingCard key={shop.slug} {...shop} />
-            ))}
-          </div>
+          <ListingGrid shops={shops} />
         </div>
       </section>
 

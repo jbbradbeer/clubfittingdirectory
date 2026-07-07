@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import {
   getShopsForStatePage,
@@ -9,11 +8,13 @@ import {
 } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
-import { ListingCard } from "@/components/directory/ListingCard"
+import { ListingGrid } from "@/components/directory/ListingGrid"
 import { Button } from "@/components/ui/Button"
+import { ChipLink } from "@/components/ui/ChipLink"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import { buildItemListSchema } from "@/lib/structured-data"
+import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { stateIntro, stateFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
@@ -93,10 +94,7 @@ export default async function StatePage({ params }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-      />
+      <JsonLd data={itemListSchema} />
       {/* Hero */}
       <PageHeader
         breadcrumb={[
@@ -139,16 +137,12 @@ export default async function StatePage({ params }: PageProps) {
             />
             <div className="mt-6 flex flex-wrap gap-2">
               {cities.map((city) => (
-                <Link
+                <ChipLink
                   key={city.slug}
                   href={`/city/${city.slug}`}
-                  className="px-4 py-2 bg-white border border-[var(--color-border)] rounded-full text-sm hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] transition-all"
-                >
-                  {city.name}
-                  <span className="ml-1.5 text-[var(--color-charcoal-light)]">
-                    {city.count}
-                  </span>
-                </Link>
+                  label={city.name}
+                  count={city.count}
+                />
               ))}
             </div>
           </div>
@@ -163,11 +157,7 @@ export default async function StatePage({ params }: PageProps) {
             title={`All Fitters in ${stateName}`}
             centered={false}
           />
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shops.map((shop) => (
-              <ListingCard key={shop.slug} {...shop} />
-            ))}
-          </div>
+          <ListingGrid shops={shops} />
         </div>
       </section>
 
@@ -181,13 +171,11 @@ export default async function StatePage({ params }: PageProps) {
             />
             <div className="mt-6 flex flex-wrap justify-center gap-2">
               {otherStates.map((s) => (
-                <Link
+                <ChipLink
                   key={s.state_code}
                   href={`/state/${s.state_code.toLowerCase()}`}
-                  className="px-4 py-2 bg-white border border-[var(--color-border)] rounded-full text-sm hover:bg-[var(--color-forest)] hover:text-white hover:border-[var(--color-forest)] transition-all"
-                >
-                  {s.state}
-                </Link>
+                  label={s.state}
+                />
               ))}
             </div>
             <div className="mt-6 text-center">

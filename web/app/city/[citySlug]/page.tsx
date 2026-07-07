@@ -6,10 +6,11 @@ import {
 } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
-import { ListingCard } from "@/components/directory/ListingCard"
+import { ListingGrid } from "@/components/directory/ListingGrid"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
 import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured-data"
+import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { cityIntro, cityFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
@@ -74,14 +75,8 @@ export default async function CityPage({ params }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-      />
+      <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={itemListSchema} />
 
       {/* Hero */}
       <PageHeader
@@ -127,11 +122,7 @@ export default async function CityPage({ params }: PageProps) {
             title={`All Fitters in ${city}`}
             centered={false}
           />
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shops.map((shop) => (
-              <ListingCard key={shop.slug} {...shop} />
-            ))}
-          </div>
+          <ListingGrid shops={shops} />
         </div>
       </section>
 

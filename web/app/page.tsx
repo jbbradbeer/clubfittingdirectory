@@ -3,7 +3,7 @@ import { Store } from "lucide-react"
 import { getTopRatedShops, getHomepageStats } from "@/lib/supabase/queries/shops"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
-import { ListingCard } from "@/components/directory/ListingCard"
+import { ListingGrid } from "@/components/directory/ListingGrid"
 import { HeroSearch } from "@/components/home/HeroSearch"
 import { CategoryChips } from "@/components/home/CategoryChips"
 import { NewsletterForm } from "@/components/newsletter/NewsletterForm"
@@ -12,6 +12,7 @@ import { SHOP_TYPES } from "@/lib/shop-types"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 import { buildWebSiteSchema, buildOrganizationSchema } from "@/lib/structured-data"
+import { JsonLd } from "@/components/seo/JsonLd"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -64,14 +65,8 @@ export default async function HomePage() {
   return (
     <>
       {/* JSON-LD: WebSite (sitelinks search box) + Organization (brand) */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildWebSiteSchema()) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrganizationSchema()) }}
-      />
+      <JsonLd data={buildWebSiteSchema()} />
+      <JsonLd data={buildOrganizationSchema()} />
 
       {/* Scroll-reveal observer — deliberate on-enter motion below the fold */}
       <Reveal />
@@ -191,16 +186,7 @@ export default async function HomePage() {
               View all {hasStats ? `${stats.total.toLocaleString()} ` : ""}shops
             </Button>
           </div>
-          <div
-            className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            data-reveal-group
-          >
-            {topShops.map((shop) => (
-              <div key={shop.slug} data-reveal className="h-full">
-                <ListingCard {...shop} />
-              </div>
-            ))}
-          </div>
+          <ListingGrid shops={topShops} className="mt-12" reveal />
         </div>
       </section>
 
