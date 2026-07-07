@@ -64,3 +64,20 @@ gsc-service-account.json
 
 # Generated GSC exports — refreshed by scripts/gsc_pull.py, do not commit snapshots
 tasks/gsc-latest/
+
+# Python virtualenvs
+/.venv/
+venv/
+
+# Vercel local project link (machine-specific credentials)
+/.vercel/
+
+# Local agent caches
+/.agents/
+
+# Downloaded export archives (e.g. GSC zips)
+*.zip
+
+# Installed third-party Claude skills — only the project's own skill is tracked
+.claude/skills/*
+!.claude/skills/fitter-outreach/

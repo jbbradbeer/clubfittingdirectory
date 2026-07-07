@@ -9,9 +9,9 @@ import re
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 from collections import Counter
 
-INPUT_PATH  = "/Users/jbbradbeer/Coding Projects/BTG Clubfitting directory/golf_directory_MASTER_pre_phase3b.csv"
-OUTPUT_PATH = "/Users/jbbradbeer/Coding Projects/BTG Clubfitting directory/golf_directory_enriched.csv"
-REVIEW_PATH = "/Users/jbbradbeer/Coding Projects/BTG Clubfitting directory/golf_directory_enrichment_review.csv"
+INPUT_PATH  = "/Users/jbbradbeer/Coding Projects/BTG Clubfitting directory/archive/golf_directory_MASTER_pre_phase3b.csv"
+OUTPUT_PATH = "/Users/jbbradbeer/Coding Projects/BTG Clubfitting directory/archive/golf_directory_enriched.csv"
+REVIEW_PATH = "/Users/jbbradbeer/Coding Projects/BTG Clubfitting directory/archive/golf_directory_enrichment_review.csv"
 
 MAX_CONCURRENT = 5
 TIMEOUT        = 15  # seconds per page

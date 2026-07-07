@@ -76,7 +76,7 @@ BTG Clubfitting directory/
 │
 ├── golf_directory_MASTER.csv        ← Master list of all shops (raw data)
 ├── enrich_golf_directory.py         ← Script that adds details to shop data
-├── migrate_to_supabase.py           ← Script that uploads data to the database
+├── archive/                         ← One-off scripts + old data snapshots (kept for history)
 └── recrawl_failed.py                ← Script to retry shops that failed enrichment
 ```
 
