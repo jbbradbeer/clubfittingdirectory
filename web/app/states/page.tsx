@@ -7,7 +7,7 @@ import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Browse by State",
-  description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with over 1,000 independent shop listings.`,
+  description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with over 700 hand-vetted shop listings.`,
   alternates: { canonical: `${SITE_URL}/states` },
 }
 
