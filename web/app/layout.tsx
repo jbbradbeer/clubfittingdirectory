@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     default: `${SITE_NAME} — Independent Golf Fitters Across the US`,
   },
   description:
-    "Find independent golf club fitting shops near you. Browse over 1,000 fitters, simulators, and retailers across all 50 states — curated by The Tuxedo Collective.",
+    "Find independent golf club fitting shops near you. Browse 700+ hand-vetted fitters, simulators, and retailers across all 50 states — curated by The Tuxedo Collective.",
   openGraph: {
     type: "website",
     locale: "en_US",

@@ -16,7 +16,7 @@ const PILLARS = [
   {
     icon: <MapPin size={22} />,
     title: "Nationwide Coverage",
-    body: "Over 1,000 independent club fitters, retailers, simulators, and pro shops across all 50 states — searchable by city, state, and category.",
+    body: "Over 700 hand-vetted club fitters, retailers, simulators, and pro shops across all 50 states — searchable by city, state, and category.",
   },
   {
     icon: <ShieldCheck size={22} />,

@@ -1,0 +1,553 @@
+tier,reason,name,city,state,shop_type,offers_fitting,reviews,rating,slug,website
+1,apparel brand/outlet,Bad Birdie,Scottsdale,AZ,Retailer,False,263,4.9,bad-birdie-scottsdale-az,https://badbirdiegolf.com/
+1,apparel brand/outlet,GOLF Apparel Shop,Chandler,AZ,Retailer,False,3,3,golf-apparel-shop-chandler-az,https://www.golfapparelshop.com/
+1,apparel brand/outlet,Bad Birdie,San Diego,CA,Retailer,False,0,4.8,bad-birdie-san-diego-ca,https://badbirdiegolf.com/
+1,apparel brand/outlet,GOLF Apparel Shop,St. Augustine,FL,Retailer,False,0,4.3,golf-apparel-shop-st-augustine-fl,https://www.golfapparelshop.com/
+1,apparel brand/outlet,GOLF Apparel Shop,Lutz,FL,Retailer,False,0,5,golf-apparel-shop-lutz-fl,https://www.golfapparelshop.com/
+1,apparel brand/outlet,Hole In One GOLF Apparel,Snellville,GA,Retailer,False,0,0,hole-in-one-golf-apparel-snellville-ga,https://www.holeinonegolfapparel.store/
+1,apparel brand/outlet,Shanks GOLF Apparel,Bowie,MD,Retailer,False,0,5,shanks-golf-apparel-bowie-md,https://www.shanksgolfapparel.com/
+1,apparel brand/outlet,Discount GOLF Apparel Store By 2nd Swing GOLF,Minnetonka,MN,Retailer,False,0,5,discount-golf-apparel-store-by-2nd-swing-golf-minnetonka-mn,https://www.2ndswing.com/discount-golf-apparel-shop
+1,apparel brand/outlet,Legendary GOLF Apparel,White Bear Lake,MN,Retailer,False,0,5,legendary-golf-apparel-white-bear-lake-mn,https://lgndy.co/
+1,apparel brand/outlet,Under Armour,New York,NY,Retailer,False,0,4.2,under-armour-new-york-ny,https://www.underarmour.com/en-us/stores/detail/UABH-185GSSLNYN/
+1,apparel brand/outlet,Under Armour Factory House - Tanger Outlet Columbus,Sunbury,OH,Retailer,False,0,4.4,under-armour-factory-house-tanger-outlet-columbus-sunbury-oh,https://www.underarmour.com/en-us/stores/detail/UAFH-400SWRS500/
+1,apparel brand/outlet,GOLF Apparel Shop,Bluffton,SC,Retailer,False,0,5,golf-apparel-shop-bluffton-sc,https://www.golfapparelshop.com/
+1,apparel brand/outlet,Sunfish GOLF And Apparel,Madison,TN,Retailer,False,0,4.3,sunfish-golf-and-apparel-madison-tn,https://www.sunfishsales.com/
+1,driving range — website confirms no fitting,Northshore GOLF Range,North Little Rock,AR,Driving Range,False,0,4.8,northshore-golf-range-north-little-rock-ar,https://www.northshoregolfrange.com/
+1,driving range — website confirms no fitting,Woodhaven Country Club,Louisville,KY,Driving Range,False,0,4.6,woodhaven-country-club-louisville-ky,https://www.woodhavencountryclub.org/
+1,driving range — website confirms no fitting,Wachusett Country Club,West Boylston,MA,Driving Range,False,0,4.4,wachusett-country-club-west-boylston-ma,https://www.wachusettcc.com/
+1,driving range — website confirms no fitting,Hurryville Driving Range & Par,Farmington,MO,Driving Range,False,0,4.8,hurryville-driving-range-par-farmington-mo,https://hurryville.weebly.com/
+1,driving range — website confirms no fitting,University Of New Mexico,Albuquerque,NM,Driving Range,False,0,4.4,university-of-new-mexico-albuquerque-nm,https://unmgolf.unm.edu/
+1,driving range — website confirms no fitting,Colonial Springs GOLF Club,Farmingdale,NY,Driving Range,False,0,4.6,colonial-springs-golf-club-farmingdale-ny,https://www.colonialspringsgolf.com/
+1,driving range — website confirms no fitting,The GOLF Depot,Gahanna,OH,Driving Range,False,0,3.8,the-golf-depot-gahanna-oh,https://www.facebook.com/GolfDepot/
+1,driving range — website confirms no fitting,Penn Oaks GOLF Club,West Chester,PA,Driving Range,False,0,4.6,penn-oaks-golf-club-west-chester-pa,https://www.pennoaksgolfclub.com/
+1,driving range — website confirms no fitting,Ridgeway Country Club,Germantown,TN,Driving Range,False,0,4.8,ridgeway-country-club-germantown-tn,https://www.ridgewaycountryclub.com/
+1,driving range — website confirms no fitting,Texas 9 GOLF,Fort Worth,TX,Driving Range,False,0,4.8,texas-9-golf-fort-worth-tx,https://www.texas9.com/
+1,driving range — website confirms no fitting,Aeropines GOLF Club,Virginia Beach,VA,Driving Range,False,0,4.2,aeropines-golf-club-virginia-beach-va,https://www.navymwroceanadamneck.com/programs/f604e1bc-2b2e-4237-8321-cf5ef95ac3f7
+1,driving range — website confirms no fitting,Blue Ridge Shadows GOLF Club,Front Royal,VA,Driving Range,False,0,4.4,blue-ridge-shadows-golf-club-front-royal-va,https://www.blueridgeshadows.com/
+1,driving range — website confirms no fitting,Essex Country Club,Essex Junction,VT,Driving Range,False,0,3.6,essex-country-club-essex-junction-vt,https://www.essexccvt.com/
+1,driving range — website confirms no fitting,Fox Run GOLF Club,Ludlow,VT,Driving Range,False,0,4.5,fox-run-golf-club-ludlow-vt,https://www.foxrungolfclubvt.com/
+1,driving range — website confirms no fitting,Newport Country Club,Newport,VT,Driving Range,False,0,4.6,newport-country-club-newport-vt,https://www.newportscountryclub.com/
+1,driving range — website confirms no fitting,The Links At Lang Farm,Essex Junction,VT,Driving Range,False,0,4.5,the-links-at-lang-farm-essex-junction-vt,https://www.linksatlangfarm.com/
+1,driving range — website dead/unreachable,Holen1golf - Eric Holen,Woodville,WI,Driving Range,False,0,4.9,holen1golf-eric-holen-woodville-wi,https://www.wwigolf.com/lessons.html#/
+1,golf cart / turf equipment dealer,England GOLF And Powersports,Searcy,AR,Retailer,False,0,4.8,england-golf-and-powersports-searcy-ar,https://www.smith-golf.com/
+1,golf cart / turf equipment dealer,Kansas GOLF & Turf INC,Wichita,KS,Retailer,False,0,4.6,kansas-golf-turf-inc-wichita-ks,https://www.shopkgt.com/
+1,golf cart / turf equipment dealer,Oh GOLF Carts,Sunbury,OH,Retailer,False,0,5,oh-golf-carts-sunbury-oh,https://www.ohgolfcarts.com/
+1,golf cart / turf equipment dealer,GOLF Car Specialties,Pottstown,PA,Retailer,False,0,4.8,golf-car-specialties-pottstown-pa,https://www.golfcarspecialties.com/
+1,golf cart / turf equipment dealer,Surf And Turf Sports,Pawleys Island,SC,Retailer,False,0,5,surf-and-turf-sports-pawleys-island-sc,https://surfturfsports.com/
+1,instruction only — website confirms no fitting,Back Nine GOLF,Bentonville,AR,Instruction,False,0,5,back-nine-golf-bentonville-ar,https://www.backninegolfacademy.com/
+1,instruction only — website confirms no fitting,Brent Smith GOLF,Scottsdale,AZ,Instruction,False,0,5,brent-smith-golf-scottsdale-az,https://brentsmithgolf.com/
+1,instruction only — website confirms no fitting,Byrdie GOLF,Englewood,CO,Instruction,False,0,5,byrdie-golf-englewood-co,https://byrdiegolfco.com/
+1,instruction only — website confirms no fitting,Denver GOLF Performance,Denver,CO,Instruction,False,0,5,denver-golf-performance-denver-co,https://www.denvergolfperformance.com/
+1,instruction only — website confirms no fitting,Lake Wales Country Club,Lake Wales,FL,Instruction,False,0,4,lake-wales-country-club-lake-wales-fl,https://lakewalescountryclub.com/
+1,instruction only — website confirms no fitting,Larry Rinker Florida GOLF Schools,Orlando,FL,Instruction,False,0,5,larry-rinker-florida-golf-schools-orlando-fl,https://www.larryrinker.com/
+1,instruction only — website confirms no fitting,Bobby Jones GOLF Course,Atlanta,GA,Instruction,False,0,4.1,bobby-jones-golf-course-atlanta-ga,https://www.bobbyjonesgc.com/
+1,instruction only — website confirms no fitting,Grand Slam GOLF Academy At Bobby Jones GOLF Course,Atlanta,GA,Instruction,False,0,5,grand-slam-golf-academy-at-bobby-jones-golf-course-atlanta-ga,https://www.bobbyjonesgc.com/grandslamgolfacademy/
+1,instruction only — website confirms no fitting,Iron Horse GOLF Academy,Alpharetta,GA,Instruction,False,0,4.5,iron-horse-golf-academy-alpharetta-ga,https://ironhorsegolfacademy.com/
+1,instruction only — website confirms no fitting,North Georgia GOLF Academy,Dacula,GA,Instruction,False,0,5,north-georgia-golf-academy-dacula-ga,https://www.northgeorgiagolfacademy.com/
+1,instruction only — website confirms no fitting,Summit GOLF Training,Kennesaw,GA,Instruction,False,0,5,summit-golf-training-kennesaw-ga,https://www.summitgolftraining.com/
+1,instruction only — website confirms no fitting,Siouxland GOLF Lessons,Sioux City,IA,Instruction,False,0,5,siouxland-golf-lessons-sioux-city-ia,https://www.siouxlandgolflessons.com/home
+1,instruction only — website confirms no fitting,Hlcc: GOLF Shop,Hayden,ID,Instruction,False,0,4,hlcc-golf-shop-hayden-id,https://www.haydenlakecc.com/
+1,instruction only — website confirms no fitting,Chris Green - GOLF Instruction,GOLF,IL,Instruction,False,0,5,chris-green-golf-instruction-golf-il,https://www.chrisgreen.golf/
+1,instruction only — website confirms no fitting,Clp GOLF Indoors,Romeoville,IL,Instruction,False,0,5,clp-golf-indoors-romeoville-il,https://www.clpgolf.com/
+1,instruction only — website confirms no fitting,Golo GOLF,Indianapolis,IN,Instruction,False,0,5,golo-golf-indianapolis-in,https://goloindy.com/
+1,instruction only — website confirms no fitting,Prairie View GOLF Club,Carmel,IN,Instruction,False,0,4.6,prairie-view-golf-club-carmel-in,https://www.prairieviewgc.com/
+1,instruction only — website confirms no fitting,Totalperformancegolf,Stilwell,KS,Instruction,False,0,5,totalperformancegolf-stilwell-ks,https://johnrichman.com/
+1,instruction only — website confirms no fitting,Coombes Champion GOLF,Quincy,MA,Instruction,False,0,4.4,coombes-champion-golf-quincy-ma,https://coombesgolf.com/
+1,instruction only — website confirms no fitting,Jbc GOLF INC,Brighton,MA,Instruction,False,0,0,jbc-golf-inc-brighton-ma,https://golf-clinics-for-women.square.site/
+1,instruction only — website confirms no fitting,Ocean Edge GOLF PRO Shop,Brewster,MA,Instruction,False,0,5,ocean-edge-golf-pro-shop-brewster-ma,https://oceanedge.com/golf
+1,instruction only — website confirms no fitting,Country Club Of Maryland GOLF Instruction - Public Welcome,Towson,MD,Instruction,False,0,5,country-club-of-maryland-golf-instruction-public-welcome-towson-md,https://www.owendawsongolf.com/
+1,instruction only — website confirms no fitting,United States Naval Academy GOLF Club,Annapolis,MD,Instruction,False,0,4.7,united-states-naval-academy-golf-club-annapolis-md,https://usnagolf.com/
+1,instruction only — website confirms no fitting,Mason GOLF & GOLF Clinics,Clinton Township,MI,Instruction,False,0,4.8,mason-golf-golf-clinics-clinton-township-mi,https://www.masongolf-golfclinics.com/
+1,instruction only — website confirms no fitting,Swingtek GOLF Academy,Troy,MI,Instruction,False,0,4.7,swingtek-golf-academy-troy-mi,https://www.swingtekga.com/
+1,instruction only — website confirms no fitting,Thousand Oaks GOLF Club,Grand Rapids,MI,Instruction,False,0,4.7,thousand-oaks-golf-club-grand-rapids-mi,https://www.thousandoaksgolf.com/
+1,instruction only — website confirms no fitting,Bogey Hills GOLF Academy & Performance Institute,St Charles,MO,Instruction,False,0,5,bogey-hills-golf-academy-performance-institute-st-charles-mo,https://bhgapi.com/
+1,instruction only — website confirms no fitting,Andrew Kiger GOLF,Holly Springs,NC,Instruction,False,0,5,andrew-kiger-golf-holly-springs-nc,https://www.andrewkiger.com/
+1,instruction only — website confirms no fitting,Brad Clayton's Puzzleduck GOLF,Durham,NC,Instruction,False,0,5,brad-claytons-puzzleduck-golf-durham-nc,https://puzzleduckgolf.com/
+1,instruction only — website confirms no fitting,Mike Sullivan GOLF School,Garner,NC,Instruction,False,0,5,mike-sullivan-golf-school-garner-nc,https://www.sullivangolf.net/
+1,instruction only — website confirms no fitting,Grand Forks PRO Shop,Grand Forks,ND,Instruction,False,0,0,grand-forks-pro-shop-grand-forks-nd,https://www.gfcountryclub.com/
+1,instruction only — website confirms no fitting,GOLF Ready Academy,Westwood,NJ,Instruction,False,0,5,golf-ready-academy-westwood-nj,https://golfreadyacademy.com/
+1,instruction only — website confirms no fitting,Skyway GOLF Course,Jersey City,NJ,Instruction,False,0,4.5,skyway-golf-course-jersey-city-nj,https://www.skywaygolfcourse.com/
+1,instruction only — website confirms no fitting,GOLF Lessons Nyc,New York,NY,Instruction,False,0,5,golf-lessons-nyc-new-york-ny,https://www.evancathergolf.com/
+1,instruction only — website confirms no fitting,Union Sports INC,Whitestone,NY,Instruction,False,0,4.7,union-sports-inc-whitestone-ny,https://ny.koreaportal.com/english/yp/22361-New-York-Union-Sports-Inc--Golf-store-in-flushing
+1,instruction only — website confirms no fitting,Lakeshore GOLF Studio,Huron,OH,Instruction,False,0,5,lakeshore-golf-studio-huron-oh,https://my.pga.com/coach/codymartin/schedule
+1,instruction only — website confirms no fitting,Royal American Links,Galena,OH,Instruction,False,0,3.7,royal-american-links-galena-oh,https://www.royalamericanlinks.com/
+1,instruction only — website confirms no fitting,Kyle Willmann GOLF,Oklahoma City,OK,Instruction,False,0,5,kyle-willmann-golf-oklahoma-city-ok,https://www.kylewillmanngolf.com/
+1,instruction only — website confirms no fitting,Flagler GOLF Academy,Warminster,PA,Instruction,False,0,4.7,flagler-golf-academy-warminster-pa,https://flaglergolfacademy.com/
+1,instruction only — website confirms no fitting,Impact GOLF Studio,South Abington Township,PA,Instruction,False,0,5,impact-golf-studio-south-abington-township-pa,https://edbathgolfinstruction.weebly.com/
+1,instruction only — website confirms no fitting,Lancaster GOLF Academy,Lancaster,PA,Instruction,False,0,4.9,lancaster-golf-academy-lancaster-pa,https://www.lancastergolfacademy.com/
+1,instruction only — website confirms no fitting,Matt Reed GOLF Instruction,Birdsboro,PA,Instruction,False,0,5,matt-reed-golf-instruction-birdsboro-pa,https://www.facebook.com/mattreedgolf/
+1,instruction only — website confirms no fitting,Nick Biondi GOLF,West Chester,PA,Instruction,False,0,5,nick-biondi-golf-west-chester-pa,https://www.nbiondi.com/
+1,instruction only — website confirms no fitting,On Plane GOLF Fix,Denver,PA,Instruction,False,0,0,on-plane-golf-fix-denver-pa,https://www.onplanegolffix.com/
+1,instruction only — website confirms no fitting,Peak Performance GOLF Academy,Sellersville,PA,Instruction,False,0,5,peak-performance-golf-academy-sellersville-pa,https://www.peakperformancegolfacademy.com/
+1,instruction only — website confirms no fitting,Mygolfconditioning.com,East Greenwich,RI,Instruction,False,0,5,mygolfconditioningcom-east-greenwich-ri,https://www.mygolfconditioning.com/
+1,instruction only — website confirms no fitting,H. Haney GOLF Academy,Columbia,SC,Instruction,False,0,4.9,h-haney-golf-academy-columbia-sc,https://www.hhaneygolf.com/
+1,instruction only — website confirms no fitting,Mastery GOLF Performance - Hilton Head GOLF Lessons,Hilton Head Island,SC,Instruction,False,0,5,mastery-golf-performance-hilton-head-golf-lessons-hilton-head-island-sc,https://www.masterygolfperformance.com/
+1,instruction only — website confirms no fitting,"Ccc GOLF Usa, LLC",Lebanon,TN,Instruction,False,0,5,ccc-golf-usa-llc-lebanon-tn,https://www.cccgolfusa.com/
+1,instruction only — website confirms no fitting,Franklin Bridge GOLF Club,Franklin,TN,Instruction,False,0,4.2,franklin-bridge-golf-club-franklin-tn,https://www.franklinbridgegolf.com/
+1,instruction only — website confirms no fitting,Jordan Gibbs GOLF,Salt Lake City,UT,Instruction,False,0,0,jordan-gibbs-golf-salt-lake-city-ut,https://www.jordangibbsgolf.com/
+1,instruction only — website confirms no fitting,1757 GOLF Club,Dulles,VA,Instruction,False,0,4.4,1757-golf-club-dulles-va,https://www.1757golfclub.com/
+1,instruction only — website confirms no fitting,1757 Game Improvement Center,Sterling,VA,Instruction,False,0,3.5,1757-game-improvement-center-sterling-va,https://www.1757golfclub.com/
+1,instruction only — website confirms no fitting,Sw GOLF Academy,Chantilly,VA,Instruction,False,0,5,sw-golf-academy-chantilly-va,https://www.theswgolfacademy.com/location/
+1,instruction only — website confirms no fitting,Catalyst GOLF Performance At The Milwaukee Athletic Club,Milwaukee,WI,Instruction,False,0,5,catalyst-golf-performance-at-the-milwaukee-athletic-club-milwaukee-wi,https://catalystgp.com/
+1,instruction only — website confirms no fitting,Jeff Kaiser GOLF Instruction,Madison,WI,Instruction,False,0,5,jeff-kaiser-golf-instruction-madison-wi,https://www.jeffkaisergolf.com/contact-us
+1,instruction only — website confirms no fitting,Mike Nagy GOLF Instruction,Madison,WI,Instruction,False,0,5,mike-nagy-golf-instruction-madison-wi,https://mikenagygolf.com/
+1,instruction only — website confirms no fitting,Natural Swing GOLF Studio,Wauwatosa,WI,Instruction,False,0,5,natural-swing-golf-studio-wauwatosa-wi,https://www.naturalswingperformance.com/
+1,instruction only — website dead/unreachable,Keegan GOLF Performance Studio,Morris,IL,Instruction,False,0,5,keegan-golf-performance-studio-morris-il,https://keegangolf.com/
+1,instruction only — website dead/unreachable,Ben Fulkerson GOLF,Louisville,KY,Instruction,False,0,0,ben-fulkerson-golf-louisville-ky,https://www.fulkersongolf.com/
+1,instruction only — website dead/unreachable,Avid GOLF USA,Edgewater,MD,Instruction,False,0,5,avid-golf-usa-edgewater-md,https://www.avidgolfusa.com/
+1,instruction only — website dead/unreachable,Kyle Senatore GOLF Instruction,New York,NY,Instruction,False,0,5,kyle-senatore-golf-instruction-new-york-ny,https://theturnindoorgolf.com/
+1,junior instruction program,Operation 36 Hq GOLF Academy - Keith Hills,Lillington,NC,Instruction,False,0,0,operation-36-hq-golf-academy-keith-hills-lillington-nc,https://igrowgolf.com/
+1,junior instruction program,Operation 36 Hq GOLF Academy - King's Grant,Fayetteville,NC,Instruction,False,0,5,operation-36-hq-golf-academy-kings-grant-fayetteville-nc,https://igrowgolf.com/
+1,junior instruction program,Operation 36 Hq GOLF Academy - Pete Dye River Course,Radford,VA,Instruction,False,0,5,operation-36-hq-golf-academy-pete-dye-river-course-radford-va,https://igrowgolf.com/
+1,retailer — website dead/unreachable,Brooks GOLF Center,Jonesboro,AR,Retailer,False,0,4.4,brooks-golf-center-jonesboro-ar,https://www.brooksgolfcenter.com/
+1,retailer — website dead/unreachable,Infinity GOLF,Alma,AR,Retailer,False,0,5,infinity-golf-alma-ar,https://bookinfinitygolf.com/
+1,retailer — website dead/unreachable,Olympic GOLF,Fullerton,CA,Retailer,False,0,3.4,olympic-golf-fullerton-ca,https://www.theolympicgolf.com/
+1,retailer — website dead/unreachable,Foreup Website Examples,Waterbury,CT,Retailer,False,0,0,foreup-website-examples-waterbury-ct,https://golfwaterbury.foreupwebsites.com/east-mountain/contact-east-mountain/
+1,retailer — website dead/unreachable,Ace PRO GOLF Shop,Chicago,IL,Retailer,False,0,4.8,ace-pro-golf-shop-chicago-il,https://aceprogolfshop.com/
+1,retailer — website dead/unreachable,Cam GOLF INC,Lynwood,IL,Retailer,False,0,4.5,cam-golf-inc-lynwood-il,https://camgolfinc.com/
+1,retailer — website dead/unreachable,Eastern Maine Sr. GOLF Assoc,Morrill,ME,Retailer,False,0,0,eastern-maine-sr-golf-assoc-morrill-me,https://www.emsga.org/About-Us.html
+1,retailer — website dead/unreachable,Components Plus,Ottawa Lake,MI,Retailer,False,0,4.9,components-plus-ottawa-lake-mi,https://componentsplus.com/
+1,retailer — website dead/unreachable,Shooters GOLF Shop,Parkville,MO,Retailer,False,0,4.7,shooters-golf-shop-parkville-mo,https://www.shootersgolfshop.com/
+1,retailer — website dead/unreachable,GOLF Mission Association,Clifton,NJ,Retailer,False,0,5,golf-mission-association-clifton-nj,https://www.golfmission.com/
+1,retailer — website dead/unreachable,The Complete Golfer,White Plains,NY,Retailer,False,0,5,the-complete-golfer-white-plains-ny,https://www.completegolfer.us/
+1,retailer — website dead/unreachable,Custom Craft GOLF,Arlington,TX,Retailer,False,0,4.4,custom-craft-golf-arlington-tx,https://www.customputterworks.com/
+1,retailer — website dead/unreachable,GOLF Store Houston,Humble,TX,Retailer,False,0,5,golf-store-houston-humble-tx,https://www.texastoughgolf.com/
+1,retailer — website dead/unreachable,The Club Fix Texas,The Colony,TX,Retailer,False,0,3.9,the-club-fix-texas-the-colony-tx,https://theclubfixtexas.com/
+1,retailer — website dead/unreachable,Fizgolf,Salt Lake City,UT,Retailer,False,0,1,fizgolf-salt-lake-city-ut,https://www.fizgolf.com/
+1,retailer — website dead/unreachable,Vermont Custom GOLF,Essex Junction,VT,Retailer,False,0,0,vermont-custom-golf-essex-junction-vt,https://vermontcustomgolf.com/contact-us/
+1,simulator lounge — website confirms no fitting,Fairways Indoor GOLF Lounge,Mountain Home,AR,Simulator,False,0,4.9,fairways-indoor-golf-lounge-mountain-home-ar,https://fairwaysigl.com/
+1,simulator lounge — website confirms no fitting,Swing Shop,Benton,AR,Simulator,False,0,4.9,swing-shop-benton-ar,https://www.swingshopgolf.com/
+1,simulator lounge — website confirms no fitting,Vgpc,Hot Springs Village,AR,Simulator,False,0,4.9,vgpc-hot-springs-village-ar,https://www.villagegolfperformancecenter.com/
+1,simulator lounge — website confirms no fitting,Swing Shift GOLF Club,Paradise Valley,AZ,Simulator,False,0,4.9,swing-shift-golf-club-paradise-valley-az,https://theswingshift.golf/
+1,simulator lounge — website confirms no fitting,Flynn GOLF Lab,Sherman Oaks,CA,Simulator,False,0,4.9,flynn-golf-lab-sherman-oaks-ca,https://www.flynngolflab.com/
+1,simulator lounge — website confirms no fitting,GOLF Performance Lab,Los Angeles,CA,Simulator,False,0,5,golf-performance-lab-los-angeles-ca,https://www.golfperformancelab.com/
+1,simulator lounge — website confirms no fitting,GOLF Performance Studio - Chris Dawkins,Redwood City,CA,Simulator,False,52,5,golf-performance-studio-chris-dawkins-redwood-city-ca,https://www.golfperformancestudio.net/
+1,simulator lounge — website confirms no fitting,Mnml GOLF Club,Redondo Beach,CA,Simulator,False,0,4.7,mnml-golf-club-redondo-beach-ca,https://mnmlgolf.club/
+1,simulator lounge — website confirms no fitting,Jds GOLF Garage & GOLF Simulators,Windsor,CO,Simulator,False,0,5,jds-golf-garage-golf-simulators-windsor-co,https://jdsgolfgarage.com/
+1,simulator lounge — website confirms no fitting,GOLF Lounge 18,Fairfield,CT,Simulator,False,0,5,golf-lounge-18-fairfield-ct,https://www.golflounge18.com/
+1,simulator lounge — website confirms no fitting,GOLF Oasis Ct,Monroe,CT,Simulator,False,0,4.9,golf-oasis-ct-monroe-ct,https://www.golfoasisct.com/
+1,simulator lounge — website confirms no fitting,The Office GOLF Ct,New Fairfield,CT,Simulator,False,0,4.4,the-office-golf-ct-new-fairfield-ct,https://www.theofficegolfct.com/
+1,simulator lounge — website confirms no fitting,Cityswing,Washington,DC,Simulator,False,0,4.9,cityswing-washington-dc,https://cityswing.com/
+1,simulator lounge — website confirms no fitting,East Potomac GOLF Links,Washington,DC,Simulator,False,0,4.1,east-potomac-golf-links-washington-dc,https://www.playdcgolf.com/east-potomac-golf-links/
+1,simulator lounge — website confirms no fitting,The Back Nine GOLF,Wilmington,DE,Simulator,False,0,5,the-back-nine-golf-wilmington-de,https://thebackninegolf.com/wilmingtonde/
+1,simulator lounge — website confirms no fitting,Garage GOLF,Fort Lauderdale,FL,Simulator,False,0,5,garage-golf-fort-lauderdale-fl,https://mygaragegolf.com/
+1,simulator lounge — website confirms no fitting,"365 GOLF - Learn, Enjoy & Play",Peachtree City,GA,Simulator,False,0,5,365-golf-learn-enjoy-play-peachtree-city-ga,https://365.golf/
+1,simulator lounge — website confirms no fitting,Atlanta GOLF & Social,Chamblee,GA,Simulator,False,0,4.9,atlanta-golf-social-chamblee-ga,https://atlantagolfandsocial.com/
+1,simulator lounge — website confirms no fitting,Gridiron GOLF Club,Athens,GA,Simulator,False,0,5,gridiron-golf-club-athens-ga,https://gridirongolfclub.com/
+1,simulator lounge — website confirms no fitting,The Forge Club,Canton,GA,Simulator,False,0,5,the-forge-club-canton-ga,https://theforgeclub.net/
+1,simulator lounge — website confirms no fitting,North Iowa GOLF Center,Mason City,IA,Simulator,False,0,4.4,north-iowa-golf-center-mason-city-ia,https://www.northiowagolf.com/
+1,simulator lounge — website confirms no fitting,Shop GOLF,Grundy Center,IA,Simulator,False,0,5,shop-golf-grundy-center-ia,https://shopgolfgrundy.com/
+1,simulator lounge — website confirms no fitting,Tournament Club Of Iowa,Polk City,IA,Simulator,False,0,4.4,tournament-club-of-iowa-polk-city-ia,https://tcofiowa.com/
+1,simulator lounge — website confirms no fitting,Brian King Performance GOLF,West Chicago,IL,Simulator,False,0,4.9,brian-king-performance-golf-west-chicago-il,https://www.briankingperformancegolf.com/
+1,simulator lounge — website confirms no fitting,GOLF Done Right,Downers Grove,IL,Simulator,False,0,5,golf-done-right-downers-grove-il,https://golfdoneright.com/
+1,simulator lounge — website confirms no fitting,Inhome GOLF,West Chicago,IL,Simulator,False,0,3.7,inhome-golf-west-chicago-il,https://inhomegolf.com/contact/new-jersey/
+1,simulator lounge — website confirms no fitting,Just Fore Fun GOLF,Champaign,IL,Simulator,False,0,4.9,just-fore-fun-golf-champaign-il,https://www.justforefun.com/
+1,simulator lounge — website confirms no fitting,Sports Boss GOLF Exchange,Leland,IL,Simulator,False,0,4.9,sports-boss-golf-exchange-leland-il,https://www.bossgolfing.com/
+1,simulator lounge — website confirms no fitting,The GOLF House,Aurora,IL,Simulator,False,0,4.8,the-golf-house-aurora-il,https://www.thegolfhouse.org/
+1,simulator lounge — website confirms no fitting,Limitless GOLF Club,Munster,IN,Simulator,False,0,5,limitless-golf-club-munster-in,https://www.limitlessgolfclub.com/
+1,simulator lounge — website confirms no fitting,The GOLF Room,Stilwell,KS,Simulator,False,0,0,the-golf-room-stilwell-ks,https://calendly.com/thegolfroom
+1,simulator lounge — website confirms no fitting,Braeburn PRO Shop,Newton,MA,Simulator,False,1,5,braeburn-pro-shop-newton-ma,https://www.braeburngolf.com/
+1,simulator lounge — website confirms no fitting,Citygolf Boston,Boston,MA,Simulator,False,0,4.5,citygolf-boston-boston-ma,https://citygolfboston.com/
+1,simulator lounge — website confirms no fitting,Flynt Lincoln GOLF,Springfield,MA,Simulator,False,0,5,flynt-lincoln-golf-springfield-ma,https://flyntlincolngolf.com/
+1,simulator lounge — website confirms no fitting,Mcgolf,Dedham,MA,Simulator,False,0,4.3,mcgolf-dedham-ma,https://www.mcgolfonline.com/
+1,simulator lounge — website confirms no fitting,Mike Doyle GOLF Academy,Franklin,MA,Simulator,False,0,5,mike-doyle-golf-academy-franklin-ma,https://www.mikedoylegolfacademy.com/
+1,simulator lounge — website confirms no fitting,The Caddy Shack,Halifax,MA,Simulator,False,0,5,the-caddy-shack-halifax-ma,https://www.thecaddyshack.net/
+1,simulator lounge — website confirms no fitting,The Clubhouse GOLF & Entertainment,Middleton,MA,Simulator,False,0,4.4,the-clubhouse-golf-entertainment-middleton-ma,https://www.theclubhousege.com/
+1,simulator lounge — website confirms no fitting,The GOLF Club,Deerfield,MA,Simulator,False,0,5,the-golf-club-deerfield-ma,https://thegolf-club.com/
+1,simulator lounge — website confirms no fitting,Top Shelf GOLF,South Portland,ME,Simulator,False,0,5,top-shelf-golf-south-portland-me,https://topshelfgolf.com/
+1,simulator lounge — website confirms no fitting,Brandon Roby GOLF,Grand Rapids,MI,Simulator,False,0,4.9,brandon-roby-golf-grand-rapids-mi,https://brandonrobygolf.com/
+1,simulator lounge — website confirms no fitting,Fox Hills GOLF Coaching Center,Plymouth,MI,Simulator,False,0,5,fox-hills-golf-coaching-center-plymouth-mi,https://golfcoachingcenter.com/
+1,simulator lounge — website confirms no fitting,Great GOLF Deals,West Bloomfield Township,MI,Simulator,False,0,2.3,great-golf-deals-west-bloomfield-township-mi,https://www.greatgolfdeals.com/
+1,simulator lounge — website confirms no fitting,Lock GOLF Academy,South Lyon,MI,Simulator,False,0,4.9,lock-golf-academy-south-lyon-mi,https://www.lockgolfacademy.com/
+1,simulator lounge — website confirms no fitting,Mike Fay GOLF Academy,South Lyon,MI,Simulator,False,0,5,mike-fay-golf-academy-south-lyon-mi,https://www.mikefaygolf.com/
+1,simulator lounge — website confirms no fitting,Modern Eagle,Commerce Township,MI,Simulator,False,0,5,modern-eagle-commerce-township-mi,https://www.moderneaglegolf.com/
+1,simulator lounge — website confirms no fitting,Deacon's Lodge,Breezy Point,MN,Simulator,False,0,4.7,deacons-lodge-breezy-point-mn,https://www.breezypointresort.com/
+1,simulator lounge — website confirms no fitting,Golden Eagle GOLF Club,Fifty Lakes,MN,Simulator,False,0,4.7,golden-eagle-golf-club-fifty-lakes-mn,https://www.golfgoldeneagle.com/
+1,simulator lounge — website confirms no fitting,Kraftygolf Studio,Plymouth,MN,Simulator,False,0,5,kraftygolf-studio-plymouth-mn,https://www.kraftygolf.com/
+1,simulator lounge — website confirms no fitting,Twincitiesgolf.com,Eden Prairie,MN,Simulator,False,0,4.9,twincitiesgolfcom-eden-prairie-mn,https://www.twincitiesgolf.com/
+1,simulator lounge — website confirms no fitting,Eagle Zone GOLF,Sikeston,MO,Simulator,False,0,5,eagle-zone-golf-sikeston-mo,https://eaglezonegolf.com/
+1,simulator lounge — website confirms no fitting,Gimme GOLF Clubhouse,St Charles,MO,Simulator,False,0,5,gimme-golf-clubhouse-st-charles-mo,https://www.gimmegolfclub.com/
+1,simulator lounge — website confirms no fitting,The First Tee Driving Range,St. Louis,MO,Simulator,False,0,4.6,the-first-tee-driving-range-st-louis-mo,https://thefirstteerange.com/
+1,simulator lounge — website confirms no fitting,X-golf Ellisville,Ellisville,MO,Simulator,False,0,4.6,x-golf-ellisville-ellisville-mo,https://www.xgolfellisville.com/
+1,simulator lounge — website confirms no fitting,Albatross Indoor GOLF Club,Grand Forks,ND,Simulator,False,0,4.8,albatross-indoor-golf-club-grand-forks-nd,https://albatrossgf.com/
+1,simulator lounge — website confirms no fitting,Dogleg North,Fargo,ND,Simulator,False,0,4.8,dogleg-north-fargo-nd,https://www.doglegnorth.com/
+1,simulator lounge — website confirms no fitting,GOLF Addiction,Fargo,ND,Simulator,False,0,4.3,golf-addiction-fargo-nd,https://www.golfaddiction.biz/
+1,simulator lounge — website confirms no fitting,Golfnxt,Fargo,ND,Simulator,False,0,5,golfnxt-fargo-nd,https://www.golfnxt.club/
+1,simulator lounge — website confirms no fitting,21 GOLF Range Powered By Toptracer,Palisades Park,NJ,Simulator,False,0,4.5,21-golf-range-powered-by-toptracer-palisades-park-nj,https://www.21golfrange.com/
+1,simulator lounge — website confirms no fitting,Azuzon GOLF,Palisades Park,NJ,Simulator,False,0,4.8,azuzon-golf-palisades-park-nj,https://www.21golfrange.com/
+1,simulator lounge — website confirms no fitting,Birdies & Lattes,Edison,NJ,Simulator,False,0,4.7,birdies-lattes-edison-nj,https://birdieslattes.com/
+1,simulator lounge — website confirms no fitting,Cart Path Only GOLF & Sport Club,Harrison,NJ,Simulator,False,0,4.7,cart-path-only-golf-sport-club-harrison-nj,https://www.cartpathonlygc.com/
+1,simulator lounge — website confirms no fitting,Core GOLF Performance Lab,Franklin Lakes,NJ,Simulator,False,0,4.9,core-golf-performance-lab-franklin-lakes-nj,https://coregolfperformance.com/
+1,simulator lounge — website confirms no fitting,Fitness Factory Health Club,Jersey City,NJ,Simulator,False,0,4.1,fitness-factory-health-club-jersey-city-nj,https://www.fitnessfactorygym.com/jersey-city
+1,simulator lounge — website confirms no fitting,Golfzon Range By Leadbetter,Little Ferry,NJ,Simulator,False,0,4.8,golfzon-range-by-leadbetter-little-ferry-nj,https://www.golfzonrange.com/
+1,simulator lounge — website confirms no fitting,Grand GOLF PRO Shops INC,Palisades Park,NJ,Simulator,False,0,4,grand-golf-pro-shops-inc-palisades-park-nj,https://playgolfnearme.com/grand-golf-pro-shops-inc
+1,simulator lounge — website confirms no fitting,Js Screen GOLF,Northvale,NJ,Simulator,False,0,4.9,js-screen-golf-northvale-nj,https://www.jsgolfnj.com/
+1,simulator lounge — website confirms no fitting,New Jersey State GOLF Association,Kenilworth,NJ,Simulator,False,0,5,new-jersey-state-golf-association-kenilworth-nj,https://www.njsga.org/
+1,simulator lounge — website confirms no fitting,Play! Hoboken,Hoboken,NJ,Simulator,False,0,3.9,play-hoboken-hoboken-nj,https://www.playhoboken.com/
+1,simulator lounge — website confirms no fitting,Powerhouse GOLF Club,Jersey City,NJ,Simulator,False,0,5,powerhouse-golf-club-jersey-city-nj,https://powerhousegolfclub.com/
+1,simulator lounge — website confirms no fitting,River Vale Country Club,River Vale,NJ,Simulator,False,0,4.5,river-vale-country-club-river-vale-nj,https://www.rivervalecc.com/
+1,simulator lounge — website confirms no fitting,Tee 2 Green Indoor GOLF Center,West Long Branch,NJ,Simulator,False,0,4.9,tee-2-green-indoor-golf-center-west-long-branch-nj,https://tee2green.com/
+1,simulator lounge — website confirms no fitting,The GOLF Center At Athletic Republic Escape,Mt Laurel Township,NJ,Simulator,False,0,5,the-golf-center-at-athletic-republic-escape-mt-laurel-township-nj,https://www.golfmtl.com/
+1,simulator lounge — website confirms no fitting,West End GOLF Club,Rutherford,NJ,Simulator,False,0,4.9,west-end-golf-club-rutherford-nj,https://westendgolfclub.com/
+1,simulator lounge — website confirms no fitting,Flyaway Sim GOLF,Henderson,NV,Simulator,False,0,4.9,flyaway-sim-golf-henderson-nv,https://www.flyawaysimgolf.com/
+1,simulator lounge — website confirms no fitting,GOLF PRO Delivered,Medford,NY,Simulator,False,0,5,golf-pro-delivered-medford-ny,https://www.golfgpd.com/
+1,simulator lounge — website confirms no fitting,Golfzon Social - Palisades Center,West Nyack,NY,Simulator,False,0,5,golfzon-social-palisades-center-west-nyack-ny,https://golfzonsocial.com/locations/west-nyack/
+1,simulator lounge — website confirms no fitting,Greenside GOLF Academy @golf V.2 Tribeca,New York,NY,Simulator,False,0,4.9,greenside-golf-academy-golf-v2-tribeca-new-york-ny,https://www.greensidegolfacademy.com/
+1,simulator lounge — website confirms no fitting,Igolf By Space Nyc,New York,NY,Simulator,False,0,4.9,igolf-by-space-nyc-new-york-ny,https://igolf32.com/
+1,simulator lounge — website confirms no fitting,Konnectgolf,New York,NY,Simulator,False,0,4.9,konnectgolf-new-york-ny,https://konnectgolf.com/
+1,simulator lounge — website confirms no fitting,Sswing,New York,NY,Simulator,False,0,4.1,sswing-new-york-ny,https://www.sswing.com/
+1,simulator lounge — website confirms no fitting,Tee Time GOLF,New York,NY,Simulator,False,0,5,tee-time-golf-new-york-ny,https://www.teetimenyc.com/
+1,simulator lounge — website confirms no fitting,The Bridge GOLF Learning Center,New York,NY,Simulator,False,0,4,the-bridge-golf-learning-center-new-york-ny,https://bridgegolffoundation.org/
+1,simulator lounge — website confirms no fitting,The Hack Shack,New York,NY,Simulator,False,0,4.7,the-hack-shack-new-york-ny,https://www.thehackshack.com/
+1,simulator lounge — website confirms no fitting,X-golf Brooklyn,Brooklyn,NY,Simulator,False,0,4.8,x-golf-brooklyn-brooklyn-ny,https://www.xgolfbrooklyn.com/
+1,simulator lounge — website confirms no fitting,GOLF Performance 4 Life,Medina,OH,Simulator,False,0,3.7,golf-performance-4-life-medina-oh,https://www.golfperformance4life.com/
+1,simulator lounge — website confirms no fitting,Joe Giles Indoor GOLF,Newark,OH,Simulator,False,0,5,joe-giles-indoor-golf-newark-oh,https://joegilesindoorgolf.com/
+1,simulator lounge — website confirms no fitting,Andrew Decordre GOLF,Collegeville,PA,Simulator,False,0,4.3,andrew-decordre-golf-collegeville-pa,https://andrewdecordregolf.com/
+1,simulator lounge — website confirms no fitting,Imagen GOLF,Doylestown,PA,Simulator,False,0,5,imagen-golf-doylestown-pa,https://imagengolf.com/
+1,simulator lounge — website confirms no fitting,Indoor GOLF Club,Fort Washington,PA,Simulator,False,0,5,indoor-golf-club-fort-washington-pa,https://indoorgolfclub.com/
+1,simulator lounge — website confirms no fitting,Keystone GOLF Club,Hatfield,PA,Simulator,False,0,5,keystone-golf-club-hatfield-pa,https://www.keystonegolfclub.com/
+1,simulator lounge — website confirms no fitting,Park Hills GOLF Club PRO Shop,Altoona,PA,Simulator,False,0,4.4,park-hills-golf-club-pro-shop-altoona-pa,https://www.parkhillsgc.com/
+1,simulator lounge — website confirms no fitting,Scranton GOLF Center,South Abington Township,PA,Simulator,False,0,4.5,scranton-golf-center-south-abington-township-pa,https://www.scrantongolfcenter.com/index.html
+1,simulator lounge — website confirms no fitting,The GOLF Garage,Souderton,PA,Simulator,False,0,4,the-golf-garage-souderton-pa,https://andrewdecordregolf.com/
+1,simulator lounge — website confirms no fitting,The GOLF Loft,Hanover,PA,Simulator,False,0,5,the-golf-loft-hanover-pa,https://thegolfloft.us/
+1,simulator lounge — website confirms no fitting,The GOLF Fix,Greenwood,SC,Simulator,False,0,4.9,the-golf-fix-greenwood-sc,https://thegolffix.us/
+1,simulator lounge — website confirms no fitting,Hightee,Memphis,TN,Simulator,False,0,4.6,hightee-memphis-tn,https://hightee.org/
+1,simulator lounge — website confirms no fitting,Par GOLF Tn,Brentwood,TN,Simulator,False,0,5,par-golf-tn-brentwood-tn,https://www.pargolftn.com/
+1,simulator lounge — website confirms no fitting,Tennessee Grasslands GOLF And Tennis Performance Improvement Center,Gallatin,TN,Simulator,False,0,0,tennessee-grasslands-golf-and-tennis-performance-improvement-center-gallatin-tn,https://www.tngrasslands.com/
+1,simulator lounge — website confirms no fitting,1611 GOLF Club,Burleson,TX,Simulator,False,0,4.7,1611-golf-club-burleson-tx,https://1611golf.com/
+1,simulator lounge — website confirms no fitting,1611 GOLF Club,Fort Worth,TX,Simulator,False,0,4.9,1611-golf-club-fort-worth-tx,https://www.1611golf.com/
+1,simulator lounge — website confirms no fitting,GOLF Tee Performance,Southlake,TX,Simulator,False,0,5,golf-tee-performance-southlake-tx,https://golfteeperformance.com/
+1,simulator lounge — website confirms no fitting,James Parker GOLF Coaching,Allen,TX,Simulator,False,0,5,james-parker-golf-coaching-allen-tx,https://ethosgolf.net/
+1,simulator lounge — website confirms no fitting,Z. Max GOLF Studio,Houston,TX,Simulator,False,0,5,z-max-golf-studio-houston-tx,https://instagram.com/z.max_golf_studio?igshid=ZGUzMzM3NWJiOQ==
+1,simulator lounge — website confirms no fitting,Beehive GOLF Club,Pleasant Grove,UT,Simulator,False,0,5,beehive-golf-club-pleasant-grove-ut,https://beehivegolfclub.com/
+1,simulator lounge — website confirms no fitting,GOLF & Fitness Utah,Salt Lake City,UT,Simulator,False,0,5,golf-fitness-utah-salt-lake-city-ut,https://www.theranchesgolfclub.com/
+1,simulator lounge — website confirms no fitting,GOLF Lab,South Salt Lake,UT,Simulator,False,0,5,golf-lab-south-salt-lake-ut,https://www.golflab.net/
+1,simulator lounge — website confirms no fitting,The GOLF Forge - South Jordan,South Jordan,UT,Simulator,False,0,5,the-golf-forge-south-jordan-south-jordan-ut,https://www.thegolfforge.com/
+1,simulator lounge — website confirms no fitting,The Turn GOLF Club,Draper,UT,Simulator,False,0,5,the-turn-golf-club-draper-ut,https://theturngolfclub.com/
+1,simulator lounge — website confirms no fitting,Walnut GOLF Club - Provo,Provo,UT,Simulator,False,0,5,walnut-golf-club-provo-provo-ut,https://walnutgolfclub.com/
+1,simulator lounge — website confirms no fitting,Get Loose GOLF Club,Chesapeake,VA,Simulator,False,0,5,get-loose-golf-club-chesapeake-va,https://www.getloosegolf.com/
+1,simulator lounge — website confirms no fitting,Irish GOLF Academy,Warrenton,VA,Simulator,False,0,5,irish-golf-academy-warrenton-va,https://golfspot29.com/irish-golf-academy/
+1,simulator lounge — website confirms no fitting,Next Level GOLF,Herndon,VA,Simulator,False,0,5,next-level-golf-herndon-va,https://www.nextlevelgolfusa.com/
+1,simulator lounge — website confirms no fitting,Tee It Up,Midlothian,VA,Simulator,False,0,4.5,tee-it-up-midlothian-va,https://teeituprva.com/
+1,simulator lounge — website confirms no fitting,X-golf Richmond,Midlothian,VA,Simulator,False,0,4.8,x-golf-richmond-midlothian-va,https://www.xgolfrichmond.com/
+1,simulator lounge — website confirms no fitting,Gonzo's Hd Sports,South Burlington,VT,Simulator,False,0,4.5,gonzos-hd-sports-south-burlington-vt,https://www.gonzoshdsports.com/
+1,simulator lounge — website confirms no fitting,Whack Vermont,Shelburne,VT,Simulator,False,0,5,whack-vermont-shelburne-vt,https://whackvt.com/
+1,simulator lounge — website confirms no fitting,Anna Krieski GOLF LLC,Wisconsin Dells,WI,Simulator,False,0,5,anna-krieski-golf-llc-wisconsin-dells-wi,https://annakrieskigolf.com/
+1,simulator lounge — website confirms no fitting,Kohler Swing Studio & GOLF Shop,Kohler,WI,Simulator,False,0,4.3,kohler-swing-studio-golf-shop-kohler-wi,https://www.destinationkohler.com/golf/swing-studio
+1,simulator lounge — website confirms no fitting,"Simgolf, LLC",Peterstown,WV,Simulator,False,0,5,simgolf-llc-peterstown-wv,https://simgolfwv.com/
+1,simulator lounge — website dead/unreachable,Coombs GOLF Studio,Melbourne,FL,Simulator,False,0,5,coombs-golf-studio-melbourne-fl,https://www.321golfacademy.com/
+1,simulator lounge — website dead/unreachable,The GOLF House Of Maple Park,Maple Park,IL,Simulator,False,0,0,the-golf-house-of-maple-park-maple-park-il,https://www.thegolfhouseofmaplepark.com/
+1,simulator lounge — website dead/unreachable,The GOLF Hut,Derby,KS,Simulator,False,0,5,the-golf-hut-derby-ks,https://www.thegolfhutderby.squarespace.com/
+1,simulator lounge — website dead/unreachable,Todd Mcdaniel GOLF,Chesapeake,VA,Simulator,False,0,5,todd-mcdaniel-golf-chesapeake-va,https://www.toddmcdanielgolf.com/
+1,simulator lounge — website dead/unreachable,Blind Shot Social Club,Madison,WI,Simulator,False,0,4.4,blind-shot-social-club-madison-wi,https://www.blindshotsocialclub.com/
+2,general sporting-goods big box,Dick's House Of Sport,Durham,NC,Clubfitter,True,0,4,dicks-house-of-sport-durham-nc,https://stores.dickssportinggoods.com/nc/durham/1607/?seo=localpack
+2,general sporting-goods big box,Dick's House Of Sport,Jersey City,NJ,Clubfitter,True,0,3.8,dicks-house-of-sport-jersey-city-nj,https://stores.dickssportinggoods.com/nj/jersey-city/1567/?seo=localpack
+2,general sporting-goods big box,Dick's House Of Sport,Columbus,OH,Clubfitter,True,0,4.1,dicks-house-of-sport-columbus-oh,https://stores.dickssportinggoods.com/oh/columbus/1666/?seo=localpack
+2,general sporting-goods big box,Dick's House Of Sport,Charlottesville,VA,Retailer,False,0,3.9,dicks-house-of-sport-charlottesville-va,https://stores.dickssportinggoods.com/va/charlottesville/1665/?seo=localpack
+2,golf entertainment chain,X-golf Appleton,Appleton,WI,Simulator,False,0,4.9,x-golf-appleton-appleton-wi,https://www.xgolfappleton.com/
+2,golf entertainment chain,X-golf Brookfield,Brookfield,WI,Simulator,False,0,4.7,x-golf-brookfield-brookfield-wi,https://www.xgolfbrookfield.com/
+2,golf entertainment chain,X-golf Madison,Madison,WI,Simulator,False,0,4.7,x-golf-madison-madison-wi,https://playxgolf.com/locations/madison/
+2,retailer — website confirms NO fitting/repair mention,Your GOLF Superstore,Montgomery,AL,Retailer,False,0,4.5,your-golf-superstore-montgomery-al,https://yourgolfsuperstore.com/
+2,retailer — website confirms NO fitting/repair mention,Your GOLF Superstore,Tuscaloosa,AL,Retailer,False,0,3.3,your-golf-superstore-tuscaloosa-al,https://yourgolfsuperstore.com/
+2,retailer — website confirms NO fitting/repair mention,Elite GOLF Performance Ai,Paragould,AR,Retailer,False,0,0,elite-golf-performance-ai-paragould-ar,https://elitegolfperformance.ai/
+2,retailer — website confirms NO fitting/repair mention,GOLF USA Fayetteville,Fayetteville,AR,Retailer,False,0,4.7,golf-usa-fayetteville-fayetteville-ar,https://www.facebook.com/GolfUSAFayetteville
+2,retailer — website confirms NO fitting/repair mention,GOLF World,Little Rock,AR,Retailer,False,0,4.6,golf-world-little-rock-ar,https://www.golfworldlr.com/
+2,retailer — website confirms NO fitting/repair mention,Smith GOLF,Searcy,AR,Retailer,False,0,4.2,smith-golf-searcy-ar,https://www.smith-golf.com/
+2,retailer — website confirms NO fitting/repair mention,Sportstop INC,Little Rock,AR,Retailer,False,0,4.4,sportstop-inc-little-rock-ar,https://sportstopinc.com/
+2,retailer — website confirms NO fitting/repair mention,Trails End Western Wear & Tack LLC,Searcy,AR,Retailer,False,0,4.5,trails-end-western-wear-tack-llc-searcy-ar,https://trailsendwesternwear.com/pages/contact-us
+2,retailer — website confirms NO fitting/repair mention,Ejs GOLF - Coach Erik,Scottsdale,AZ,Retailer,False,0,5,ejs-golf-coach-erik-scottsdale-az,https://ejsgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Old Town GOLF,Mesa,AZ,Retailer,False,0,4.7,old-town-golf-mesa-az,https://www.oldtowngolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Scottsdale GOLF Lessons By Grip & Rip GOLF,Scottsdale,AZ,Retailer,False,0,5,scottsdale-golf-lessons-by-grip-rip-golf-scottsdale-az,https://azgolflessons.golf/
+2,retailer — website confirms NO fitting/repair mention,Shadetree GOLF & Pickleball,Mesa,AZ,Retailer,False,0,4.9,shadetree-golf-pickleball-mesa-az,https://shadetreegolf.com/
+2,retailer — website confirms NO fitting/repair mention,Two Friends GOLF,Scottsdale,AZ,Retailer,False,5,5,two-friends-golf-scottsdale-az,https://www.twofriendsgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Golden GOLF Mart,San Gabriel,CA,Retailer,False,0,4.5,golden-golf-mart-san-gabriel-ca,https://goldengolfmart.com/
+2,retailer — website confirms NO fitting/repair mention,Golfbuddy,Santa Fe Springs,CA,Retailer,False,0,3.1,golfbuddy-santa-fe-springs-ca,https://golfbuddyamerica.com/
+2,retailer — website confirms NO fitting/repair mention,Griffith Park GOLF Shop,Los Angeles,CA,Retailer,False,0,4.2,griffith-park-golf-shop-los-angeles-ca,https://golf.lacity.gov/wilson-golf-course/
+2,retailer — website confirms NO fitting/repair mention,Lady GOLF - The Fashion House,Palm Desert,CA,Retailer,False,0,3.4,lady-golf-the-fashion-house-palm-desert-ca,https://www.ladygolf.com/
+2,retailer — website confirms NO fitting/repair mention,Legal Limit Putters,Rancho Cordova,CA,Retailer,False,0,0,legal-limit-putters-rancho-cordova-ca,https://www.legallimitputters.com/Pages/contact_us.html
+2,retailer — website confirms NO fitting/repair mention,Malbon GOLF Carmel,Carmel-by-the-sea,CA,Retailer,False,0,4.7,malbon-golf-carmel-carmel-by-the-sea-ca,https://malbongolf.com/
+2,retailer — website confirms NO fitting/repair mention,Off-price GOLF,Carlsbad,CA,Retailer,False,0,0,off-price-golf-carlsbad-ca,https://offpricegolf.com/pages/contact-us
+2,retailer — website confirms NO fitting/repair mention,Quiet GOLF,Costa Mesa,CA,Retailer,False,0,5,quiet-golf-costa-mesa-ca,https://www.quietgolfclub.com/
+2,retailer — website confirms NO fitting/repair mention,Steve Carfano's Newport Beach GOLF Shop,Newport Beach,CA,Retailer,False,0,4.9,steve-carfanos-newport-beach-golf-shop-newport-beach-ca,https://newportbeachgolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Thegolfvault.shop,San Juan Capistrano,CA,Retailer,False,0,5,thegolfvaultshop-san-juan-capistrano-ca,https://thegolfvault.shop/
+2,retailer — website confirms NO fitting/repair mention,Elite GOLF Schools Of Colorado,Lone Tree,CO,Retailer,False,0,5,elite-golf-schools-of-colorado-lone-tree-co,https://elitegolfofco.com/
+2,retailer — website confirms NO fitting/repair mention,Nikki Adams GOLF Instructor,Centennial,CO,Retailer,False,0,5,nikki-adams-golf-instructor-centennial-co,https://linktr.ee/nikkiadamsgolf
+2,retailer — website confirms NO fitting/repair mention,Red Number GOLF,Colorado Springs,CO,Retailer,False,0,5,red-number-golf-colorado-springs-co,https://www.pga.com/coach/williamchristensen
+2,retailer — website confirms NO fitting/repair mention,Shaftshack,Denver,CO,Retailer,False,0,4.7,shaftshack-denver-co,https://www.shaftshack.com/
+2,retailer — website confirms NO fitting/repair mention,"Andy Svoboda, PGA PRO",Milford,CT,Retailer,False,0,5,andy-svoboda-pga-pro-milford-ct,https://www.andysvobodagolfinstructor.com/
+2,retailer — website confirms NO fitting/repair mention,Bigga Balls GOLF,Stratford,CT,Retailer,False,0,5,bigga-balls-golf-stratford-ct,https://biggaballs.com/
+2,retailer — website confirms NO fitting/repair mention,Dogleg Design Studio,Cromwell,CT,Retailer,False,0,5,dogleg-design-studio-cromwell-ct,https://www.doglegdesignstudio.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Shop At Burning Tree,Greenwich,CT,Retailer,False,0,5,golf-shop-at-burning-tree-greenwich-ct,https://www.burningtreecc.org/
+2,retailer — website confirms NO fitting/repair mention,Lg GOLF Instruction & Training,Fairfield,CT,Retailer,False,0,5,lg-golf-instruction-training-fairfield-ct,https://www.lg-golf.com/
+2,retailer — website confirms NO fitting/repair mention,Oak Hills Men's GOLF Association,Norwalk,CT,Retailer,False,0,0,oak-hills-mens-golf-association-norwalk-ct,https://www.oakhillsgc.com/organizations
+2,retailer — website confirms NO fitting/repair mention,Studio GOLF,Wilton,CT,Retailer,False,0,4.8,studio-golf-wilton-ct,https://studiogolf.com/
+2,retailer — website confirms NO fitting/repair mention,Swingsimtech,East Hampton,CT,Retailer,False,0,0,swingsimtech-east-hampton-ct,https://swingsimtech.com/
+2,retailer — website confirms NO fitting/repair mention,Becky Dengler GOLF,Wilmington,DE,Retailer,False,0,5,becky-dengler-golf-wilmington-de,https://beckydenglergolf.com/
+2,retailer — website confirms NO fitting/repair mention,"Mrb Golf, LLC",Newark,DE,Retailer,False,0,0,mrb-golf-llc-newark-de,https://www.facebook.com/profile.php?id=61556630592970&mibextid=ZbWKwL
+2,retailer — website confirms NO fitting/repair mention,Booyaa GOLF USA,Ocoee,FL,Retailer,False,0,5,booyaa-golf-usa-ocoee-fl,https://www.booyaagolf.com/
+2,retailer — website confirms NO fitting/repair mention,Jenkins Motorsports Avon Park,Avon Park,FL,Retailer,False,0,4.8,jenkins-motorsports-avon-park-avon-park-fl,https://www.jenkinsmotorsports.com/Shop-Our-Inventory/Avon-Park
+2,retailer — website confirms NO fitting/repair mention,Jessyjames GOLF,Altamonte Springs,FL,Retailer,False,0,4.7,jessyjames-golf-altamonte-springs-fl,https://www.jessyjamesgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Performance GOLF,Fort Lauderdale,FL,Retailer,False,0,4.8,performance-golf-fort-lauderdale-fl,https://www.performancegolf.com/contact
+2,retailer — website confirms NO fitting/repair mention,Pinecraft GOLF Shop,Sarasota,FL,Retailer,False,0,4.8,pinecraft-golf-shop-sarasota-fl,https://www.seenray.com/
+2,retailer — website confirms NO fitting/repair mention,The Biltmore Proshop,Coral Gables,FL,Retailer,False,0,5,the-biltmore-proshop-coral-gables-fl,https://biltmorehotel.com/miami-resort-shops/golf-pro-shop/
+2,retailer — website confirms NO fitting/repair mention,Center Stripe GOLF,Dacula,GA,Retailer,False,0,4.8,center-stripe-golf-dacula-ga,https://www.centerstripegolf.com/
+2,retailer — website confirms NO fitting/repair mention,City Club Marietta,Marietta,GA,Retailer,False,0,3.9,city-club-marietta-marietta-ga,https://www.cityclubmarietta.com/
+2,retailer — website confirms NO fitting/repair mention,Energy First GOLF Academy,Duluth,GA,Retailer,False,0,5,energy-first-golf-academy-duluth-ga,https://www.efilgolf.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Gallery,Columbus,GA,Retailer,False,0,4.7,golf-gallery-columbus-ga,https://www.golfgallery.org/
+2,retailer — website confirms NO fitting/repair mention,Tnt Custom GOLF,Augusta,GA,Retailer,False,0,0,tnt-custom-golf-augusta-ga,https://tntgolf.net/
+2,retailer — website confirms NO fitting/repair mention,Just Putterin' Around GOLF,Kailua-kona,HI,Retailer,False,0,4.8,just-putterin-around-golf-kailua-kona-hi,https://www.justputterinaround.com/
+2,retailer — website confirms NO fitting/repair mention,Ohana GOLF Shop Hawaii,Honolulu,HI,Retailer,False,0,4.1,ohana-golf-shop-hawaii-honolulu-hi,https://www.instagram.com/ohanagolfhawaii
+2,retailer — website confirms NO fitting/repair mention,Roger Dunn GOLF Hawaii,Pearl City,HI,Retailer,False,0,4.4,roger-dunn-golf-hawaii-pearl-city-hi,https://www.rdgolfhi.com/
+2,retailer — website confirms NO fitting/repair mention,Roger Dunn GOLF Hawaii,Honolulu,HI,Retailer,False,0,4.2,roger-dunn-golf-hawaii-honolulu-hi,https://www.rdgolfhi.com/ala-moana
+2,retailer — website confirms NO fitting/repair mention,Roger Dunn GOLF Hawaii,Lihue,HI,Retailer,False,0,4.9,roger-dunn-golf-hawaii-lihue-hi,https://www.rdgolfhi.com/
+2,retailer — website confirms NO fitting/repair mention,Royal Hawaiian GOLF Shop,Honolulu,HI,Retailer,False,0,4.8,royal-hawaiian-golf-shop-honolulu-hi,https://www.instagram.com/royalhawaiian_golf/
+2,retailer — website confirms NO fitting/repair mention,Wailua GOLF Shop,Kapaʻa,HI,Retailer,False,0,4.5,wailua-golf-shop-kapaʻa-hi,https://www.kauai.gov/Government/Departments-Agencies/Parks/Golf
+2,retailer — website confirms NO fitting/repair mention,Accretion Discs,Cedar Falls,IA,Retailer,False,0,4.9,accretion-discs-cedar-falls-ia,https://www.accretiondiscs.com/
+2,retailer — website confirms NO fitting/repair mention,Allison George,Pleasant Hill,IA,Retailer,False,0,0,allison-george-pleasant-hill-ia,https://theallisongeorge.com/contact-us/
+2,retailer — website confirms NO fitting/repair mention,Bump And Run GOLF Co.,Cedar Falls,IA,Retailer,False,0,5,bump-and-run-golf-co-cedar-falls-ia,https://www.bumprungolfco.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Cars Of Iowa,Pleasant Hill,IA,Retailer,False,0,4.4,golf-cars-of-iowa-pleasant-hill-ia,https://www.golfcarsofiowa.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Griffin,Cedar Falls,IA,Retailer,False,0,5,golf-griffin-cedar-falls-ia,https://golfgriffin.com/
+2,retailer — website confirms NO fitting/repair mention,Golfballs.net,Martensdale,IA,Retailer,False,0,4.8,golfballsnet-martensdale-ia,https://www.golfballs.net/
+2,retailer — website confirms NO fitting/repair mention,Lake House Sports,Coralville,IA,Retailer,False,0,5,lake-house-sports-coralville-ia,https://lakehousesports.com/
+2,retailer — website confirms NO fitting/repair mention,Lazrus GOLF,Boise,ID,Retailer,False,0,4.8,lazrus-golf-boise-id,https://lazrusgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Major GOLF PRO,Boise,ID,Retailer,False,0,0,major-golf-pro-boise-id,https://www.majorgolfpro.com/contact/
+2,retailer — website confirms NO fitting/repair mention,Mccall Sports,Mccall,ID,Retailer,False,0,4.6,mccall-sports-mccall-id,https://mccallsports.com/
+2,retailer — website confirms NO fitting/repair mention,Showcase GOLF,Coeur D'alene,ID,Retailer,False,0,5,showcase-golf-coeur-dalene-id,https://www.showcasegolf.com/contact/
+2,retailer — website confirms NO fitting/repair mention,Discount GOLF World,Quincy,IL,Retailer,False,0,3.9,discount-golf-world-quincy-il,https://www.discountgolfworld.com/
+2,retailer — website confirms NO fitting/repair mention,Par GOLF Supply,Schaumburg,IL,Retailer,False,0,4.9,par-golf-supply-schaumburg-il,https://pargolf.com/
+2,retailer — website confirms NO fitting/repair mention,Putter Stand,Plainfield,IL,Retailer,False,0,5,putter-stand-plainfield-il,https://www.putterstand.net/
+2,retailer — website confirms NO fitting/repair mention,Robogolfpro,Chicago,IL,Retailer,False,0,5,robogolfpro-chicago-il,https://www.robogolfpro.com/
+2,retailer — website confirms NO fitting/repair mention,Elevation GOLF Indianapolis,Carmel,IN,Retailer,False,0,4.4,elevation-golf-indianapolis-carmel-in,https://www.elevationus.com/
+2,retailer — website confirms NO fitting/repair mention,J & M GOLF Shop,St John,IN,Retailer,False,0,4.8,j-m-golf-shop-st-john-in,https://jandmgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Discs Unlimited,Herington,KS,Retailer,False,0,4.3,discs-unlimited-herington-ks,https://www.discsunlimited.net/
+2,retailer — website confirms NO fitting/repair mention,GOLF Ball Paul's,Kansas City,KS,Retailer,False,0,4.8,golf-ball-pauls-kansas-city-ks,https://www.golfballpauls.com/
+2,retailer — website confirms NO fitting/repair mention,Perfect Hands GOLF,Lenexa,KS,Retailer,False,0,5,perfect-hands-golf-lenexa-ks,https://www.perfecthandsgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Rolling Hills GOLF Shop,Wichita,KS,Retailer,False,0,0,rolling-hills-golf-shop-wichita-ks,https://rollinghillswichita.com/
+2,retailer — website confirms NO fitting/repair mention,Tgw - The GOLF Warehouse,Wichita,KS,Retailer,False,0,4.7,tgw-the-golf-warehouse-wichita-ks,https://www.tgw.com/
+2,retailer — website confirms NO fitting/repair mention,Bang A Chain,Lexington,KY,Retailer,False,0,4.7,bang-a-chain-lexington-ky,https://www.bangachain.com/
+2,retailer — website confirms NO fitting/repair mention,Disc 'n Dat,Florence,KY,Retailer,False,0,4.9,disc-n-dat-florence-ky,https://therealdiscndat.com/
+2,retailer — website confirms NO fitting/repair mention,John's GOLF Shop,Bowling Green,KY,Retailer,False,0,4.6,johns-golf-shop-bowling-green-ky,https://www.indianhills-bgky.com/
+2,retailer — website confirms NO fitting/repair mention,Golfballs.com Retail Center,Lafayette,LA,Retailer,False,0,4.5,golfballscom-retail-center-lafayette-la,https://www.golfballs.com/
+2,retailer — website confirms NO fitting/repair mention,Guidry GOLF And Sport,Mandeville,LA,Retailer,False,0,5,guidry-golf-and-sport-mandeville-la,https://www.guidrygolfandsport.com/
+2,retailer — website confirms NO fitting/repair mention,Louisiana GOLF Institute,Broussard,LA,Retailer,False,0,5,louisiana-golf-institute-broussard-la,https://www.louisianagolfinstitute.com/
+2,retailer — website confirms NO fitting/repair mention,Callaway GOLF Co,Chicopee,MA,Retailer,False,0,4,callaway-golf-co-chicopee-ma,https://www.callawaygolf.com/
+2,retailer — website confirms NO fitting/repair mention,Dan Berry's GOLF Shop,Gardner,MA,Retailer,False,0,0,dan-berrys-golf-shop-gardner-ma,https://www.facebook.com/DBGolfShop/
+2,retailer — website confirms NO fitting/repair mention,Granite Links,Quincy,MA,Retailer,False,0,4.6,granite-links-quincy-ma,https://www.granitelinks.com/
+2,retailer — website confirms NO fitting/repair mention,Ponkapoag GOLF Shop,Canton,MA,Retailer,False,0,5,ponkapoag-golf-shop-canton-ma,https://www.mass.gov/locations/ponkapoag-golf-course
+2,retailer — website confirms NO fitting/repair mention,R J Shepherd GOLF Co,Whitman,MA,Retailer,False,0,5,r-j-shepherd-golf-co-whitman-ma,https://rjshepherd.com/
+2,retailer — website confirms NO fitting/repair mention,Rooney's GOLF Shop,Lakeville,MA,Retailer,False,0,0,rooneys-golf-shop-lakeville-ma,https://www.facebook.com/pg/Rooneys-Golf-Shop-Open-to-public-1446629185358104/about/
+2,retailer — website confirms NO fitting/repair mention,Tom Irwin INC,Burlington,MA,Retailer,False,0,4.6,tom-irwin-inc-burlington-ma,https://tomirwin.com/
+2,retailer — website confirms NO fitting/repair mention,Whirlaway GOLF Shop,Methuen,MA,Retailer,False,0,4.7,whirlaway-golf-shop-methuen-ma,https://whirlawaygolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Whirlaway Sports Center,Methuen,MA,Retailer,False,0,4.8,whirlaway-sports-center-methuen-ma,https://www.whirlawaysports.com/
+2,retailer — website confirms NO fitting/repair mention,Millersville GOLF Shop,Millersville,MD,Retailer,False,0,0,millersville-golf-shop-millersville-md,https://www.powerstik.com/
+2,retailer — website confirms NO fitting/repair mention,Severna Park GOLF Center,Arnold,MD,Retailer,False,0,4.3,severna-park-golf-center-arnold-md,https://www.severnaparkgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Fogg Brook Resort - GOLF Course,Palmyra,ME,Retailer,False,0,4.5,fogg-brook-resort-golf-course-palmyra-me,https://www.foggbrookresort.com/
+2,retailer — website confirms NO fitting/repair mention,Hidden Meadows GOLF Course And Discount PRO Shop,Old Town,ME,Retailer,False,0,3.9,hidden-meadows-golf-course-and-discount-pro-shop-old-town-me,https://www.hiddenmeadowsgolf.com/
+2,retailer — website confirms NO fitting/repair mention,King Pine GOLF Company,Portland,ME,Retailer,False,0,4.7,king-pine-golf-company-portland-me,https://www.kingpinegolf.com/
+2,retailer — website confirms NO fitting/repair mention,Old Town Trading Post,Old Town,ME,Retailer,False,0,4.8,old-town-trading-post-old-town-me,https://www.oldtowntradingpost.net/
+2,retailer — website confirms NO fitting/repair mention,Ski Rack Sports,Bangor,ME,Retailer,False,0,4.6,ski-rack-sports-bangor-me,https://skiracksports.com/
+2,retailer — website confirms NO fitting/repair mention,Ace Of Clubs GOLF Company,Wyandotte,MI,Retailer,False,0,4.2,ace-of-clubs-golf-company-wyandotte-mi,https://www.aceofclubsgolfco.com/
+2,retailer — website confirms NO fitting/repair mention,Glasby GOLF Schools,Gaylord,MI,Retailer,False,0,5,glasby-golf-schools-gaylord-mi,https://glasbygolfschools.com/
+2,retailer — website confirms NO fitting/repair mention,Jordan Young GOLF,Ypsilanti,MI,Retailer,False,0,4.9,jordan-young-golf-ypsilanti-mi,https://www.jordanyounggolf.com/
+2,retailer — website confirms NO fitting/repair mention,Kowality GOLF,Superior Township,MI,Retailer,False,0,5,kowality-golf-superior-township-mi,https://www.kowalitygolf.com/
+2,retailer — website confirms NO fitting/repair mention,Mast GOLF,Jackson,MI,Retailer,False,0,4.9,mast-golf-jackson-mi,https://www.facebook.com/MastGolf
+2,retailer — website confirms NO fitting/repair mention,Measured GOLF,Ann Arbor,MI,Retailer,False,0,4.9,measured-golf-ann-arbor-mi,https://measuredgolf.com/
+2,retailer — website confirms NO fitting/repair mention,North Coast GOLF Shop,Traverse City,MI,Retailer,False,0,5,north-coast-golf-shop-traverse-city-mi,https://www.northcoastgolfco.com/
+2,retailer — website confirms NO fitting/repair mention,PGA Tour Shop,Detroit,MI,Retailer,False,0,3.8,pga-tour-shop-detroit-mi,https://www.pgatour.com/tournaments/2023/rocket-mortgage-classic/R2023524
+2,retailer — website confirms NO fitting/repair mention,Chelsea Pacifica Boutique,Battle Lake,MN,Retailer,False,0,5,chelsea-pacifica-boutique-battle-lake-mn,https://www.chelseapacifica.com/
+2,retailer — website confirms NO fitting/repair mention,Dan Simpson GOLF Shop INC,St Louis Park,MN,Retailer,False,0,5,dan-simpson-golf-shop-inc-st-louis-park-mn,https://www.minneapolisgolfclub.com/golf/dan-simpson-20c120.html
+2,retailer — website confirms NO fitting/repair mention,GOLF Stix Value Guide,Eden Prairie,MN,Retailer,False,0,5,golf-stix-value-guide-eden-prairie-mn,https://www.golfstixvalueguide.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF USA,Eden Prairie,MN,Retailer,False,0,4.9,golf-usa-eden-prairie-mn,https://www.facebook.com/Golf.USA.Eden.Prairie.Minnesota/
+2,retailer — website confirms NO fitting/repair mention,Minnesota GOLF & Outdoor,Madelia,MN,Retailer,False,0,4.8,minnesota-golf-outdoor-madelia-mn,https://www.mngolfandoutdoor.com/
+2,retailer — website confirms NO fitting/repair mention,Noonan GOLF Co,Minneapolis,MN,Retailer,False,0,0,noonan-golf-co-minneapolis-mn,https://noonangolfco.com/
+2,retailer — website confirms NO fitting/repair mention,Power Lodge Brainerd,Brainerd,MN,Retailer,False,0,4.6,power-lodge-brainerd-brainerd-mn,https://www.powerlodgebrainerd.com/
+2,retailer — website confirms NO fitting/repair mention,The Preserve At Grand View Lodge,Pequot Lakes,MN,Retailer,False,0,4.2,the-preserve-at-grand-view-lodge-pequot-lakes-mn,https://www.grandviewlodge.com/courses/the-preserve
+2,retailer — website confirms NO fitting/repair mention,Wedgewood GOLF,St Louis Park,MN,Retailer,False,0,4.4,wedgewood-golf-st-louis-park-mn,https://wedgewoodgolf.com/
+2,retailer — website confirms NO fitting/repair mention,24/7 GOLF Performance,Nixa,MO,Retailer,False,0,5,247-golf-performance-nixa-mo,https://247golfperformance.com/
+2,retailer — website confirms NO fitting/repair mention,Sws GOLF Performance,Nixa,MO,Retailer,False,0,5,sws-golf-performance-nixa-mo,https://www.swsgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Beech Mountain GOLF Shop,Beech Mountain,NC,Retailer,False,0,4.7,beech-mountain-golf-shop-beech-mountain-nc,https://beechmtn.club/the-course/
+2,retailer — website confirms NO fitting/repair mention,"Divots, Inc.",Sanford,NC,Retailer,False,0,5,divots-inc-sanford-nc,https://divotssand.com/index.php/about-us/
+2,retailer — website confirms NO fitting/repair mention,Elena's - Womens GOLF And Activewear,Highlands,NC,Retailer,False,0,0,elenas-womens-golf-and-activewear-highlands-nc,https://elenagolf.com/
+2,retailer — website confirms NO fitting/repair mention,"Going, Going, Gone!",Durham,NC,Retailer,False,0,3.9,going-going-gone-durham-nc,https://stores.dickssportinggoods.com/nc/durham/4454/?seo=localpack
+2,retailer — website confirms NO fitting/repair mention,Knights Play GOLF Center,Apex,NC,Retailer,False,0,4.3,knights-play-golf-center-apex-nc,https://www.knightsplay.com/
+2,retailer — website confirms NO fitting/repair mention,Nc GOLF Panel,Greensboro,NC,Retailer,False,0,5,nc-golf-panel-greensboro-nc,https://www.ncgolfpanel.com/
+2,retailer — website confirms NO fitting/repair mention,Old GOLF Shop,Pinehurst,NC,Retailer,False,0,4.9,old-golf-shop-pinehurst-nc,https://oldgolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Red Rooster GOLF USA,Holly Springs,NC,Retailer,False,0,4.9,red-rooster-golf-usa-holly-springs-nc,https://redroostergolf.com/
+2,retailer — website confirms NO fitting/repair mention,Mcintyre GOLF,Omaha,NE,Retailer,False,0,5,mcintyre-golf-omaha-ne,https://www.mcintyregolf.com/contact
+2,retailer — website confirms NO fitting/repair mention,Coach Club,North Hampton,NH,Retailer,False,0,5,coach-club-north-hampton-nh,https://coachclubnh.com/
+2,retailer — website confirms NO fitting/repair mention,Five Star GOLF Cars,Laconia,NH,Retailer,False,0,4.8,five-star-golf-cars-laconia-nh,https://www.fivestargolfcars.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Shop At Abenaqui,Rye Beach,NH,Retailer,False,0,5,golf-shop-at-abenaqui-rye-beach-nh,https://www.abenaquicc.com/golf
+2,retailer — website confirms NO fitting/repair mention,Live Free & GOLF,Litchfield,NH,Retailer,False,0,0,live-free-golf-litchfield-nh,https://livefreeandgolf.com/
+2,retailer — website confirms NO fitting/repair mention,New Hampshire GOLF,Concord,NH,Retailer,False,0,4,new-hampshire-golf-concord-nh,https://www.nhgolf.com/
+2,retailer — website confirms NO fitting/repair mention,On Course GOLF Academy,New Durham,NH,Retailer,False,0,5,on-course-golf-academy-new-durham-nh,https://oncourse.golf/
+2,retailer — website confirms NO fitting/repair mention,Ash Brook GOLF Course,Scotch Plains,NJ,Retailer,False,0,4,ash-brook-golf-course-scotch-plains-nj,https://www.ashbrookgolfcourse.com/
+2,retailer — website confirms NO fitting/repair mention,D1 GOLF Academy,Englewood,NJ,Retailer,False,0,5,d1-golf-academy-englewood-nj,https://www.thegolfnation.com/
+2,retailer — website confirms NO fitting/repair mention,Galloping Hill GOLF Course,Kenilworth,NJ,Retailer,False,0,4.4,galloping-hill-golf-course-kenilworth-nj,https://www.gallopinghillgolfcourse.com/
+2,retailer — website confirms NO fitting/repair mention,Hyatt Hills GOLF Complex,Clark,NJ,Retailer,False,0,4.3,hyatt-hills-golf-complex-clark-nj,https://www.hyatthills.com/
+2,retailer — website confirms NO fitting/repair mention,Jason Blonder - GOLF Lessons Nj,South Plainfield,NJ,Retailer,False,0,4.9,jason-blonder-golf-lessons-nj-south-plainfield-nj,https://www.swingplane.biz/
+2,retailer — website confirms NO fitting/repair mention,Louis Castel Nj,Little Ferry,NJ,Retailer,False,0,3.5,louis-castel-nj-little-ferry-nj,https://louiscastelusa.myshopify.com/
+2,retailer — website confirms NO fitting/repair mention,Maxs GOLF World,Glendora,NJ,Retailer,False,0,5,maxs-golf-world-glendora-nj,https://www.instagram.com/maxs_golfworld?igsh=MTllbTF5ODN2OWllYg==
+2,retailer — website confirms NO fitting/repair mention,Mt Freedom GOLF,Randolph,NJ,Retailer,False,0,4,mt-freedom-golf-randolph-nj,https://www.mtfreedomgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Nike Hoboken,Hoboken,NJ,Retailer,False,0,4.2,nike-hoboken-hoboken-nj,https://www.nike.com/retail/s/nike-well-collective-hoboken?cp=84620811901_seo_&y_source=1_NTExNjE4MzgtNzE1LWxvY2F0aW9uLndlYnNpdGU=
+2,retailer — website confirms NO fitting/repair mention,Dirty's GOLF Shop,Albuquerque,NM,Retailer,False,0,4.9,dirtys-golf-shop-albuquerque-nm,https://dirtysgolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Masek GOLF Cars Of New Mexico,Albuquerque,NM,Retailer,False,0,4.5,masek-golf-cars-of-new-mexico-albuquerque-nm,https://www.newmexicogolfcars.com/
+2,retailer — website confirms NO fitting/repair mention,Aloha GOLF Center Vegas,Las Vegas,NV,Retailer,False,0,4.4,aloha-golf-center-vegas-las-vegas-nv,https://www.alohagolfcenter.net/
+2,retailer — website confirms NO fitting/repair mention,D'angelo GOLF Instruction,Carson City,NV,Retailer,False,0,0,dangelo-golf-instruction-carson-city-nv,https://www.dangelogolf.com/
+2,retailer — website confirms NO fitting/repair mention,PGA Tour,Reno,NV,Retailer,False,0,3.8,pga-tour-reno-nv,https://www.pgatour.com/
+2,retailer — website confirms NO fitting/repair mention,Quick Grips L.l.c.,Mesquite,NV,Retailer,False,0,5,quick-grips-llc-mesquite-nv,https://quickgrips.net/
+2,retailer — website confirms NO fitting/repair mention,Reno Tahoe GOLF Academy,Reno,NV,Retailer,False,0,4.9,reno-tahoe-golf-academy-reno-nv,https://www.renotahoegolfacademy.com/
+2,retailer — website confirms NO fitting/repair mention,Swingpoint GOLF,Las Vegas,NV,Retailer,False,0,4.5,swingpoint-golf-las-vegas-nv,https://swingpoint.golf/
+2,retailer — website confirms NO fitting/repair mention,Actyve GOLF Warehouse,Garden City,NY,Retailer,False,0,4,actyve-golf-warehouse-garden-city-ny,https://www.actyvegolf.com/
+2,retailer — website confirms NO fitting/repair mention,Aviator GOLF Center,Brooklyn,NY,Retailer,False,0,3.3,aviator-golf-center-brooklyn-ny,https://aviatorsports.com/golf
+2,retailer — website confirms NO fitting/repair mention,Collin Woods GOLF - GOLF Lessons In Nyc,New York,NY,Retailer,False,0,5,collin-woods-golf-golf-lessons-in-nyc-new-york-ny,https://www.collinwoodsgolf.com/
+2,retailer — website confirms NO fitting/repair mention,G/fore Supply New York City,New York,NY,Retailer,False,0,4.2,gfore-supply-new-york-city-new-york-ny,https://www.gfore.com/stores/gfore-supply-new-york-ny.html
+2,retailer — website confirms NO fitting/repair mention,GOLF Shop At Blue Hill,Pearl River,NY,Retailer,False,0,5,golf-shop-at-blue-hill-pearl-river-ny,https://instagram.com/1924golfshop?igshid=Mzc1MmZhNjY=
+2,retailer — website confirms NO fitting/repair mention,Gumtree GOLF & Nature Club,Brooklyn,NY,Retailer,False,0,5,gumtree-golf-nature-club-brooklyn-ny,https://www.gumtreegolfandnature.com/
+2,retailer — website confirms NO fitting/repair mention,Nike Battery Park,New York,NY,Retailer,False,0,3.9,nike-battery-park-new-york-ny,https://www.nike.com/?cp=43917854821_seo_&y_source=1_NzM2OTE0OTMtNzE1LWxvY2F0aW9uLndlYnNpdGU=
+2,retailer — website confirms NO fitting/repair mention,Nike Factory Store - Staten Island,Staten Island,NY,Retailer,False,0,4.3,nike-factory-store-staten-island-staten-island-ny,https://www.nike.com/retail/s/nike-factory-store-staten-island?cp=84620811901_seo_&y_source=1_MTI4NjE1MjQtNzE1LWxvY2F0aW9uLndlYnNpdGU=
+2,retailer — website confirms NO fitting/repair mention,Nike Unite - East New York,Brooklyn,NY,Retailer,False,0,4.3,nike-unite-east-new-york-brooklyn-ny,https://www.nike.com/retail/s/nike-unite-east-new-york?cp=84620811901_seo_&y_source=1_MTg4MjM1MjItNzE1LWxvY2F0aW9uLndlYnNpdGU=
+2,retailer — website confirms NO fitting/repair mention,Orvis Ny 5th Avenue,New York,NY,Retailer,False,0,4.5,orvis-ny-5th-avenue-new-york-ny,https://www.orvis.com/newyork
+2,retailer — website confirms NO fitting/repair mention,Paragon Sports,New York,NY,Retailer,False,0,4.1,paragon-sports-new-york-ny,https://www.paragonsports.com/
+2,retailer — website confirms NO fitting/repair mention,Paris Saint-germain Store 5th Ave,New York,NY,Retailer,False,0,3.7,paris-saint-germain-store-5th-ave-new-york-ny,https://www.lids.com/stores?_s=bm-LIDS-RETAIL-GMB
+2,retailer — website confirms NO fitting/repair mention,Puttery,New York,NY,Retailer,False,0,4.6,puttery-new-york-ny,https://www.puttery.com/locations/new-york
+2,retailer — website confirms NO fitting/repair mention,Saxon Woods GOLF Shop,Scarsdale,NY,Retailer,False,0,5,saxon-woods-golf-shop-scarsdale-ny,https://www.saxonwoodsgolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Sleepy Hollow GOLF Shop,Briarcliff Manor,NY,Retailer,False,0,0,sleepy-hollow-golf-shop-briarcliff-manor-ny,https://www.sleepyhollowcc.org/
+2,retailer — website confirms NO fitting/repair mention,Sportiva GOLF Outlet Nyc,New York,NY,Retailer,False,0,4,sportiva-golf-outlet-nyc-new-york-ny,https://sportivagolfoutlet.com/
+2,retailer — website confirms NO fitting/repair mention,Summit GOLF Brands,New York,NY,Retailer,False,0,5,summit-golf-brands-new-york-ny,https://www.summitgolfbrands.com/
+2,retailer — website confirms NO fitting/repair mention,Superare Fight Shop,New York,NY,Retailer,False,0,4.7,superare-fight-shop-new-york-ny,https://superareshop.com/
+2,retailer — website confirms NO fitting/repair mention,Urban Angler,New York,NY,Retailer,False,0,4.7,urban-angler-new-york-ny,https://www.urbanangler.com/
+2,retailer — website confirms NO fitting/repair mention,Wilson - Columbus Circle,New York,NY,Retailer,False,0,4.1,wilson-columbus-circle-new-york-ny,https://www.wilson.com/en-us
+2,retailer — website confirms NO fitting/repair mention,Wilson Flagship - Soho,New York,NY,Retailer,False,0,4.1,wilson-flagship-soho-new-york-ny,https://www.wilson.com/en-us/explore/sportswear/the-new-york-flagship-store
+2,retailer — website confirms NO fitting/repair mention,Buckeye Performance GOLF,Dublin,OH,Retailer,False,0,3.5,buckeye-performance-golf-dublin-oh,https://www.buckeyeperformancegolf.com/
+2,retailer — website confirms NO fitting/repair mention,Cabela's,Columbus,OH,Retailer,False,0,4.3,cabelas-columbus-oh,https://stores.cabelas.com/us/oh/columbus/1650-gemini-pl.html?y_source=1_Mzk4Njc0Mi03MTUtbG9jYXRpb24ud2Vic2l0ZQ==
+2,retailer — website confirms NO fitting/repair mention,Egelhoff Sports,Columbus,OH,Retailer,False,0,4.8,egelhoff-sports-columbus-oh,https://www.egelhoffsports.com/
+2,retailer — website confirms NO fitting/repair mention,Fine Tune GOLF,Wadsworth,OH,Retailer,False,0,0,fine-tune-golf-wadsworth-oh,https://www.finetunegolfing.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Ball Manufacturers,Loudonville,OH,Retailer,False,0,4.7,golf-ball-manufacturers-loudonville-oh,https://anygolfball.com/
+2,retailer — website confirms NO fitting/repair mention,Gr GOLF,New Washington,OH,Retailer,False,0,0,gr-golf-new-washington-oh,https://www.grgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Marion Country Club,Marion,OH,Retailer,False,0,4.4,marion-country-club-marion-oh,https://www.marioncountryclub.com/
+2,retailer — website confirms NO fitting/repair mention,Mega GOLF Center,Batavia,OH,Retailer,False,0,4.6,mega-golf-center-batavia-oh,https://www.megagolfcenteroh.com/
+2,retailer — website confirms NO fitting/repair mention,Nike Easton,Columbus,OH,Retailer,False,0,4,nike-easton-columbus-oh,https://www.nike.com/retail/s/nike-well-collective-easton?cp=84620811901_seo_&y_source=1_MjUwNjcwMTItNzE1LWxvY2F0aW9uLndlYnNpdGU=
+2,retailer — website confirms NO fitting/repair mention,Renew GOLF Balls,Loudonville,OH,Retailer,False,0,0,renew-golf-balls-loudonville-oh,https://www.renewgolfballs.com/
+2,retailer — website confirms NO fitting/repair mention,Rons GOLF Shop,Cincinnati,OH,Retailer,False,0,4.7,rons-golf-shop-cincinnati-oh,https://www.ronsgolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Safari GOLF Club,Powell,OH,Retailer,False,0,4.2,safari-golf-club-powell-oh,https://safarigolf.columbuszoo.org/
+2,retailer — website confirms NO fitting/repair mention,Scorecards Unlimited,Columbus,OH,Retailer,False,0,5,scorecards-unlimited-columbus-oh,https://www.scorecardsunlimited.net/
+2,retailer — website confirms NO fitting/repair mention,Swing Rx - GOLF Performance,Bellbrook,OH,Retailer,False,0,5,swing-rx-golf-performance-bellbrook-oh,https://swingrxgolf.com/
+2,retailer — website confirms NO fitting/repair mention,The GOLF Shop,Napoleon,OH,Retailer,False,0,4.8,the-golf-shop-napoleon-oh,https://thegolfshopnow.com/
+2,retailer — website confirms NO fitting/repair mention,The Pro-shop,Westerville,OH,Retailer,False,0,4.8,the-pro-shop-westerville-oh,https://www.westervillegolf.com/
+2,retailer — website confirms NO fitting/repair mention,Westerville GOLF Center,Westerville,OH,Retailer,False,0,4.6,westerville-golf-center-westerville-oh,https://www.westervillegolf.com/
+2,retailer — website confirms NO fitting/repair mention,Eazy Day GOLF & Vintage,Oklahoma City,OK,Retailer,False,0,5,eazy-day-golf-vintage-oklahoma-city-ok,https://swingeazygolf.com/
+2,retailer — website confirms NO fitting/repair mention,Strictly GOLF,Oklahoma City,OK,Retailer,False,0,4.4,strictly-golf-oklahoma-city-ok,https://strictly-used-golf.poi.place/
+2,retailer — website confirms NO fitting/repair mention,Hacker GOLF,Portland,OR,Retailer,False,0,5,hacker-golf-portland-or,https://www.hackergolf.com/
+2,retailer — website confirms NO fitting/repair mention,Hit It Again GOLF,Salem,OR,Retailer,False,0,5,hit-it-again-golf-salem-or,https://hititagaingolf.com/
+2,retailer — website confirms NO fitting/repair mention,Mackenzie GOLF Bags,Beaverton,OR,Retailer,False,0,5,mackenzie-golf-bags-beaverton-or,https://www.mackenziegolfbags.com/
+2,retailer — website confirms NO fitting/repair mention,Matchstick GOLF,Portland,OR,Retailer,False,0,5,matchstick-golf-portland-or,https://www.matchstickgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Muni Kids,Portland,OR,Retailer,False,0,4,muni-kids-portland-or,https://munikids.com/
+2,retailer — website confirms NO fitting/repair mention,Barlettas GOLF Shop INC,Philadelphia,PA,Retailer,False,0,5,barlettas-golf-shop-inc-philadelphia-pa,https://balagolfclub.com/
+2,retailer — website confirms NO fitting/repair mention,Forwardgolf,Lafayette Hill,PA,Retailer,False,0,0,forwardgolf-lafayette-hill-pa,https://forwardgolf.com/pages/contact
+2,retailer — website confirms NO fitting/repair mention,Freddy Battaglia's Goods,Scranton,PA,Retailer,False,0,4.7,freddy-battaglias-goods-scranton-pa,https://www.battaglias.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Balls Everywhere,Linwood,PA,Retailer,False,0,5,golf-balls-everywhere-linwood-pa,https://www.golfballseverywhere.com/
+2,retailer — website confirms NO fitting/repair mention,Global GOLF Events - Tournament Showroom,Doylestown,PA,Retailer,False,0,5,global-golf-events-tournament-showroom-doylestown-pa,https://tournamentshowroom.com/
+2,retailer — website confirms NO fitting/repair mention,Inclubgolf Newtown,Newtown,PA,Retailer,False,0,5,inclubgolf-newtown-newtown-pa,https://www.inclubgolf.com/membership-newtown-pennsylvania
+2,retailer — website confirms NO fitting/repair mention,Jon Flint GOLF,Horsham,PA,Retailer,False,0,5,jon-flint-golf-horsham-pa,https://jonflintgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Paul C. Fischer PRO Shop,Philipsburg,PA,Retailer,False,0,5,paul-c-fischer-pro-shop-philipsburg-pa,https://philipsburgelks.org/pro-shop/
+2,retailer — website confirms NO fitting/repair mention,Phila Cricket Club GOLF Shop,Flourtown,PA,Retailer,False,0,4.9,phila-cricket-club-golf-shop-flourtown-pa,https://www.philacricket.com/
+2,retailer — website confirms NO fitting/repair mention,Ocean State GOLF Academy,East Providence,RI,Retailer,False,0,5,ocean-state-golf-academy-east-providence-ri,https://oceanstategolfacademy.com/
+2,retailer — website confirms NO fitting/repair mention,Rhode Island GOLF Association,Providence,RI,Retailer,False,0,5,rhode-island-golf-association-providence-ri,https://www.rigalinks.org/
+2,retailer — website confirms NO fitting/repair mention,Robert Mark GOLF,Pawtucket,RI,Retailer,False,0,2.3,robert-mark-golf-pawtucket-ri,https://www.robertmarkgolf.com/pages/contact
+2,retailer — website confirms NO fitting/repair mention,Swingjuice GOLF Shop,Pawtucket,RI,Retailer,False,0,4.7,swingjuice-golf-shop-pawtucket-ri,https://www.swingjuice.com/
+2,retailer — website confirms NO fitting/repair mention,Westerly GOLF Services,Westerly,RI,Retailer,False,0,5,westerly-golf-services-westerly-ri,https://www.westerlygolfservices.com/
+2,retailer — website confirms NO fitting/repair mention,By Pass GOLF Shop & Driving,Spartanburg,SC,Retailer,False,0,4.8,by-pass-golf-shop-driving-spartanburg-sc,https://295bypassgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Elite GOLF Performance,Wando,SC,Retailer,False,0,5,elite-golf-performance-wando-sc,https://elitegolfperformanceusa.com/
+2,retailer — website confirms NO fitting/repair mention,Mulligan GOLF Gift Store,North Myrtle Beach,SC,Retailer,False,0,5,mulligan-golf-gift-store-north-myrtle-beach-sc,https://mulliganhooligangolf.com/
+2,retailer — website confirms NO fitting/repair mention,Mulligan GOLF Gift Store,Myrtle Beach,SC,Retailer,False,0,5,mulligan-golf-gift-store-myrtle-beach-sc,https://mulliganhooligangolf.com/
+2,retailer — website confirms NO fitting/repair mention,Palmetto Leisure,Columbia,SC,Retailer,False,0,4.2,palmetto-leisure-columbia-sc,https://www.palmettoleisure.com/
+2,retailer — website confirms NO fitting/repair mention,The Golfhouse,Ladson,SC,Retailer,False,0,4.9,the-golfhouse-ladson-sc,https://www.golfhousesc.com/
+2,retailer — website confirms NO fitting/repair mention,Dakota Sports,Sioux Falls,SD,Retailer,False,0,4.6,dakota-sports-sioux-falls-sd,https://dakotasportsonline.com/
+2,retailer — website confirms NO fitting/repair mention,Midwest Disc Supply,Sioux Falls,SD,Retailer,False,0,5,midwest-disc-supply-sioux-falls-sd,https://www.facebook.com/MidwestDiscSupply
+2,retailer — website confirms NO fitting/repair mention,Sanford International,Sioux Falls,SD,Retailer,False,0,5,sanford-international-sioux-falls-sd,https://sanfordinternational.com/
+2,retailer — website confirms NO fitting/repair mention,South Dakota Outdoor Shop,Custer,SD,Retailer,False,0,5,south-dakota-outdoor-shop-custer-sd,https://southdakotaoutdoorshop.com/
+2,retailer — website confirms NO fitting/repair mention,"""we Buy Golf""",Chattanooga,TN,Retailer,False,0,4.5,we-buy-golf-chattanooga-tn,https://www.mikesgolfshop.com/
+2,retailer — website confirms NO fitting/repair mention,Brad Redding GOLF Instruction,Powell,TN,Retailer,False,0,5,brad-redding-golf-instruction-powell-tn,https://www.bradreddinggolf.com/
+2,retailer — website confirms NO fitting/repair mention,First Tee Of Tennessee - Chattanooga Region,Chattanooga,TN,Retailer,False,0,5,first-tee-of-tennessee-chattanooga-region-chattanooga-tn,https://firstteetennessee.org/
+2,retailer — website confirms NO fitting/repair mention,GOLF Ball Factory Outlet,Maryville,TN,Retailer,False,0,4.8,golf-ball-factory-outlet-maryville-tn,https://golfballfactoryoutlet.com/pages/contact-us
+2,retailer — website confirms NO fitting/repair mention,GOLF House Tennessee,Franklin,TN,Retailer,False,0,4.8,golf-house-tennessee-franklin-tn,https://www.tngolf.org/learning-center-3548.html
+2,retailer — website confirms NO fitting/repair mention,GOLF Unlimited,Kingsport,TN,Retailer,False,0,4.4,golf-unlimited-kingsport-tn,https://www.golfunlimitedkingsport.com/
+2,retailer — website confirms NO fitting/repair mention,Matt Walter GOLF,Murfreesboro,TN,Retailer,False,0,5,matt-walter-golf-murfreesboro-tn,https://mattwaltergolf.com/
+2,retailer — website confirms NO fitting/repair mention,Premium GOLF Shirts,Murfreesboro,TN,Retailer,False,0,0,premium-golf-shirts-murfreesboro-tn,https://www.premiumgolfshirts.com/
+2,retailer — website confirms NO fitting/repair mention,The Learning Center GOLF,Goodlettsville,TN,Retailer,False,0,5,the-learning-center-golf-goodlettsville-tn,https://www.thelearningcentergolf.com/
+2,retailer — website confirms NO fitting/repair mention,Valley GOLF Co.,Chattanooga,TN,Retailer,False,0,5,valley-golf-co-chattanooga-tn,https://valleygolfco.com/
+2,retailer — website confirms NO fitting/repair mention,Beyond GOLF Performance,Austin,TX,Retailer,False,0,5,beyond-golf-performance-austin-tx,https://beyondgolfperformance.com/
+2,retailer — website confirms NO fitting/repair mention,Fields Ranch GOLF Shop,Frisco,TX,Retailer,False,0,4.6,fields-ranch-golf-shop-frisco-tx,https://fieldsranch.com/dining-and-shopping#shopping
+2,retailer — website confirms NO fitting/repair mention,GOLF Swing Solutions,League City,TX,Retailer,False,0,4.6,golf-swing-solutions-league-city-tx,https://www.golfswingsolutionstx.com/
+2,retailer — website confirms NO fitting/repair mention,Golfroots,Farmers Branch,TX,Retailer,False,0,4.9,golfroots-farmers-branch-tx,https://www.golfroots.com/
+2,retailer — website confirms NO fitting/repair mention,Lou's GOLF Shop,Carrollton,TX,Retailer,False,0,4.6,lous-golf-shop-carrollton-tx,https://www.lous.golf/
+2,retailer — website confirms NO fitting/repair mention,Mg GOLF,Irving,TX,Retailer,False,0,2.7,mg-golf-irving-tx,https://www.mggolf.com/
+2,retailer — website confirms NO fitting/repair mention,Mike The Performance GOLF Coach,Houston,TX,Retailer,False,0,5,mike-the-performance-golf-coach-houston-tx,https://www.theperformancegolfcoach.com/
+2,retailer — website confirms NO fitting/repair mention,PGA Shop,Frisco,TX,Retailer,False,0,4.4,pga-shop-frisco-tx,https://pgafrisco.com/shop/
+2,retailer — website confirms NO fitting/repair mention,Patriot GOLF USA Longview,Tyler,TX,Retailer,False,0,5,patriot-golf-usa-longview-tyler-tx,https://patriotgolfusa.com/
+2,retailer — website confirms NO fitting/repair mention,Pg GOLF LLC,Sugar Land,TX,Retailer,False,0,3.5,pg-golf-llc-sugar-land-tx,https://www.pggolf.com/
+2,retailer — website confirms NO fitting/repair mention,Replay Sports Gear,Mckinney,TX,Retailer,False,0,4.8,replay-sports-gear-mckinney-tx,https://replaysportsgear.com/
+2,retailer — website confirms NO fitting/repair mention,Asher GOLF,Sandy,UT,Retailer,False,0,4.7,asher-golf-sandy-ut,https://ashergolf.com/
+2,retailer — website confirms NO fitting/repair mention,Asher GOLF Retail Store,Riverton,UT,Retailer,False,0,4.2,asher-golf-retail-store-riverton-ut,https://www.ashergolf.com/
+2,retailer — website confirms NO fitting/repair mention,Innovative GOLF Schools,Layton,UT,Retailer,False,0,4.5,innovative-golf-schools-layton-ut,https://www.innovativegolfschools.com/
+2,retailer — website confirms NO fitting/repair mention,Utah Ski & GOLF,Park City,UT,Retailer,False,0,4.7,utah-ski-golf-park-city-ut,https://www.utahskigolf.com/
+2,retailer — website confirms NO fitting/repair mention,Bad Bunny GOLF Shop,Richmond,VA,Retailer,False,0,5,bad-bunny-golf-shop-richmond-va,https://badbunnygolf.com/
+2,retailer — website confirms NO fitting/repair mention,Bogeys Sports Park,Richmond,VA,Retailer,False,0,4.7,bogeys-sports-park-richmond-va,https://bogeyssportspark.com/
+2,retailer — website confirms NO fitting/repair mention,Eisman GOLF Academy,Laurel Hill,VA,Retailer,False,0,4.8,eisman-golf-academy-laurel-hill-va,https://eismangolfacademy.com/
+2,retailer — website confirms NO fitting/repair mention,Fredericksburg GOLF Center,Fredericksburg,VA,Retailer,False,0,4.8,fredericksburg-golf-center-fredericksburg-va,https://www.fredericksburggolf.com/
+2,retailer — website confirms NO fitting/repair mention,Hot GOLF Equipment And Supplies,Burke,VA,Retailer,False,0,0,hot-golf-equipment-and-supplies-burke-va,https://hotgolfequipmentandsupplies.com/
+2,retailer — website confirms NO fitting/repair mention,Hot-z GOLF,Suffolk,VA,Retailer,False,0,0,hot-z-golf-suffolk-va,https://hotzgolf.com/
+2,retailer — website confirms NO fitting/repair mention,Mike Mcgetrick GOLF,Gainesville,VA,Retailer,False,0,5,mike-mcgetrick-golf-gainesville-va,https://mikemcgetrickgolf.com/
+2,retailer — website confirms NO fitting/repair mention,"Tag Golf, LLC",Alexandria,VA,Retailer,False,0,4.7,tag-golf-llc-alexandria-va,https://www.tagconsultinggroupllc.com/
+2,retailer — website confirms NO fitting/repair mention,Jonesy's GOLF Shop,Newport,VT,Retailer,False,0,0,jonesys-golf-shop-newport-vt,https://www.newportscountryclub.com/
+2,retailer — website confirms NO fitting/repair mention,Killington Sports,Killington,VT,Retailer,False,0,4.3,killington-sports-killington-vt,https://killingtonsports.com/
+2,retailer — website confirms NO fitting/repair mention,Onion River Outdoors,Montpelier,VT,Retailer,False,0,4.6,onion-river-outdoors-montpelier-vt,https://www.onionriver.com/
+2,retailer — website confirms NO fitting/repair mention,Power Play Sports,Morrisville,VT,Retailer,False,0,4.6,power-play-sports-morrisville-vt,https://www.powerplaysportsvt.com/
+2,retailer — website confirms NO fitting/repair mention,Vermont GOLF Association,Shelburne,VT,Retailer,False,0,5,vermont-golf-association-shelburne-vt,https://vtga.org/
+2,retailer — website confirms NO fitting/repair mention,PRO GOLF Discount,Yakima,WA,Retailer,False,66,4.9,pro-golf-discount-yakima-wa,https://progolfyakima.com/
+2,retailer — website confirms NO fitting/repair mention,Duckhook Customs,Milwaukee,WI,Retailer,False,0,5,duckhook-customs-milwaukee-wi,https://duckhookcustoms.com/
+2,retailer — website confirms NO fitting/repair mention,GOLF Central Wisconsin,Plover,WI,Retailer,False,0,3,golf-central-wisconsin-plover-wi,https://golfcentralwi.com/
+2,retailer — website confirms NO fitting/repair mention,Goal Line GOLF & Hockey,Schofield,WI,Retailer,False,0,4.9,goal-line-golf-hockey-schofield-wi,https://www.goallinegolf.com/
+2,retailer — website confirms NO fitting/repair mention,Hornungs,Fond Du Lac,WI,Retailer,False,0,0,hornungs-fond-du-lac-wi,https://www.hornungs.com/
+2,retailer — website confirms NO fitting/repair mention,Matt Lindberg GOLF,Waukesha,WI,Retailer,False,0,4.7,matt-lindberg-golf-waukesha-wi,https://mattlindberggolf.com/
+2,retailer — website confirms NO fitting/repair mention,Renew Sports And Fitness Supply,Wauwatosa,WI,Retailer,False,0,5,renew-sports-and-fitness-supply-wauwatosa-wi,https://www.renewsportsandfitness.com/
+2,retailer — website confirms NO fitting/repair mention,Summit GOLF Brands,Barneveld,WI,Retailer,False,0,3.8,summit-golf-brands-barneveld-wi,https://www.summitgolfbrands.com/
+2,retailer — website confirms NO fitting/repair mention,Swing Solutions,Appleton,WI,Retailer,False,0,4,swing-solutions-appleton-wi,https://www.swingsolutionsgolf.com/
+2,retailer — website confirms NO fitting/repair mention,The Pines GOLF Shop,Nekoosa,WI,Retailer,False,0,4.5,the-pines-golf-shop-nekoosa-wi,https://www.lakearrowheadgolf.com/golf
+2,retailer — website confirms NO fitting/repair mention,Two Guys With Balls,Milwaukee,WI,Retailer,False,0,5,two-guys-with-balls-milwaukee-wi,https://twoguyswithballs.com/
+2,retailer — website confirms NO fitting/repair mention,Sports Connection,Gassaway,WV,Retailer,False,0,4.6,sports-connection-gassaway-wv,https://www.sportsconnectionusa.com/
+2,retailer — website confirms NO fitting/repair mention,In The Hole GOLF,Jackson,WY,Retailer,False,0,3.6,in-the-hole-golf-jackson-wy,https://www.intheholegolf.com/
+3,regional golf retail chain (offers fitting),GOLF USA,Lake Havasu City,AZ,Clubfitter,True,0,4.5,golf-usa-lake-havasu-city-az,https://golfusa.com/
+3,regional golf retail chain (offers fitting),Roger Dunn GOLF,Arroyo Grande,CA,Clubfitter,True,0,4.7,roger-dunn-golf-arroyo-grande-ca,https://rogerdunngolfag.com/
+3,regional golf retail chain (offers fitting),Golfers' Warehouse,Hartford,CT,Clubfitter,True,0,4.3,golfers-warehouse-hartford-ct,https://stores.worldwidegolfshops.com/ct/hartford/golfers-warehouse-hfd.html
+3,regional golf retail chain (offers fitting),Austad's GOLF - Cedar Rapids,Marion,IA,Clubfitter,True,0,4.9,austads-golf-cedar-rapids-marion-ia,https://austads.com/pages/cedar-rapids-store
+3,regional golf retail chain (offers fitting),Austad's GOLF - Des Moines,West Des Moines,IA,Clubfitter,True,0,5,austads-golf-des-moines-west-des-moines-ia,https://austads.com/pages/des-moines-golf-store
+3,regional golf retail chain (offers fitting),Austad's GOLF Sioux City,Sioux City,IA,Clubfitter,True,0,4.8,austads-golf-sioux-city-sioux-city-ia,https://austads.com/pages/sioux-city-store
+3,regional golf retail chain (offers fitting),Golfers' Warehouse,Auburn,MA,Clubfitter,True,0,4.5,golfers-warehouse-auburn-ma,https://stores.worldwidegolfshops.com/ma/auburn/golfers-warehouse-aub.html
+3,regional golf retail chain (offers fitting),Golfers' Warehouse,Braintree,MA,Clubfitter,True,0,4.3,golfers-warehouse-braintree-ma,https://stores.worldwidegolfshops.com/ma/braintree/golfers-warehouse-brt.html
+3,regional golf retail chain (offers fitting),Golfers' Warehouse,Danvers,MA,Clubfitter,True,0,4.5,golfers-warehouse-danvers-ma,https://stores.worldwidegolfshops.com/ma/danvers/golfers-warehouse-dvr.html
+3,regional golf retail chain (offers fitting),Golfdom,Rockville,MD,Clubfitter,True,0,4.7,golfdom-rockville-md,https://stores.worldwidegolfshops.com/md/rockville/golfdom-rkv.html
+3,regional golf retail chain (offers fitting),Golfdom,Annapolis,MD,Clubfitter,True,0,4.7,golfdom-annapolis-md,https://stores.worldwidegolfshops.com/md/annapolis/golfdom-ann.html
+3,regional golf retail chain (offers fitting),Austad's GOLF Saint Cloud,St Cloud,MN,Clubfitter,True,0,4.7,austads-golf-saint-cloud-st-cloud-mn,https://austads.com/saint-cloud-store
+3,regional golf retail chain (offers fitting),PRO AM GOLF USA,St. Louis,MO,Clubfitter,True,0,4.5,pro-am-golf-usa-st-louis-mo,https://www.proamgolfusa.com/
+3,regional golf retail chain (offers fitting),PRO GOLF Discount,Tupelo,MS,Clubfitter,True,0,4.9,pro-golf-discount-tupelo-ms,https://progolftupelo.com/
+3,regional golf retail chain (offers fitting),Carolina GOLF Mart & Practice,Salisbury,NC,Clubfitter,True,0,4.7,carolina-golf-mart-practice-salisbury-nc,https://carolinagolfmart.com/
+3,regional golf retail chain (offers fitting),Austad's GOLF - Fargo,Fargo,ND,Clubfitter,True,0,4.8,austads-golf-fargo-fargo-nd,https://austads.com/pages/fargo-store
+3,regional golf retail chain (offers fitting),Austad's GOLF - Lincoln South,Lincoln,NE,Clubfitter,True,0,4.9,austads-golf-lincoln-south-lincoln-ne,https://austads.com/pages/lincoln-south-store
+3,regional golf retail chain (offers fitting),Austad's GOLF - West Maple,Omaha,NE,Golf Course / Pro Shop,True,0,4.9,austads-golf-west-maple-omaha-ne,https://austads.com/pages/omaha-west-maple-store
+3,regional golf retail chain (offers fitting),Austad's GOLF Omaha Westwood,Omaha,NE,Clubfitter,True,0,4.9,austads-golf-omaha-westwood-omaha-ne,https://austads.com/pages/omaha-westwood-store
+3,regional golf retail chain (offers fitting),GOLF USA,Omaha,NE,Clubfitter,True,0,4.9,golf-usa-omaha-ne,https://www.golfusaomaha.com/
+3,regional golf retail chain (offers fitting),GOLF USA,Oklahoma City,OK,Clubfitter,True,0,4.6,golf-usa-oklahoma-city-ok,https://golfusa.com/
+3,regional golf retail chain (offers fitting),GOLF USA,Limerick,PA,Simulator,True,0,3,golf-usa-limerick-pa,https://www.golfusalimerick.com/
+3,regional golf retail chain (offers fitting),Golfers' Warehouse,Cranston,RI,Clubfitter,True,0,4.2,golfers-warehouse-cranston-ri,https://stores.worldwidegolfshops.com/ri/cranston/golfers-warehouse-crn.html
+3,regional golf retail chain (offers fitting),Austad's GOLF - Rapid City,Rapid City,SD,Clubfitter,True,0,4.8,austads-golf-rapid-city-rapid-city-sd,https://austads.com/pages/rapid-city-store
+3,regional golf retail chain (offers fitting),Austad's GOLF - Sioux Falls,Sioux Falls,SD,Clubfitter,True,0,4.7,austads-golf-sioux-falls-sioux-falls-sd,https://austads.com/pages/sioux-falls-store
+3,regional golf retail chain (offers fitting),Uinta GOLF,Orem,UT,Clubfitter,True,0,4.5,uinta-golf-orem-ut,https://stores.worldwidegolfshops.com/ut/orem/uinta-golf-orm.html
+3,regional golf retail chain (offers fitting),Uinta GOLF,Salt Lake City,UT,Clubfitter,True,0,4.4,uinta-golf-salt-lake-city-ut,https://stores.worldwidegolfshops.com/ut/saltlakecity/uinta-golf-slc.html
+3,regional golf retail chain (offers fitting),Uinta GOLF,St. George,UT,Clubfitter,True,0,4.7,uinta-golf-st-george-ut,https://stores.worldwidegolfshops.com/ut/stgeorge/uinta-golf-stg.html
+3,regional golf retail chain (offers fitting),Uinta GOLF,Riverdale,UT,Clubfitter,True,0,4.2,uinta-golf-riverdale-ut,https://stores.worldwidegolfshops.com/ut/riverdale/uinta-golf-rdl.html
+3,regional golf retail chain (offers fitting),Uinta GOLF,Sandy,UT,Clubfitter,True,0,4.4,uinta-golf-sandy-ut,https://stores.worldwidegolfshops.com/ut/sandy/uinta-golf-sdy.html
+3,regional golf retail chain (offers fitting),Golfdom,Tysons,VA,Clubfitter,True,0,4.6,golfdom-tysons-va,https://stores.worldwidegolfshops.com/va/tysons/golfdom-tys.html
+3,regional golf retail chain (offers fitting),PRO GOLF Discount - Lynnwood,Lynnwood,WA,Retailer,False,0,4.4,pro-golf-discount-lynnwood-lynnwood-wa,https://www.progolfseattle.com/stores/lynnwood.shtml
+3,regional golf retail chain (offers fitting),PRO GOLF Discount - Southcenter,Tukwila,WA,Retailer,False,0,4.6,pro-golf-discount-southcenter-tukwila-wa,https://www.progolfseattle.com/
+3,regional golf retail chain (offers fitting),PRO GOLF Discount - Tacoma,Tacoma,WA,Retailer,False,268,4.6,pro-golf-discount-tacoma-tacoma-wa,https://www.progolfseattle.com/tacoma-golf-store/

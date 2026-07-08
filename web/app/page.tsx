@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   // homepage gets a tight, keyword-led title rather than a long suffixed one.
   title: { absolute: "Golf Club Fitting Near You | Club Fitting Directory" },
   description:
-    "Find independent golf club fitters, retailers, and simulators near you. Browse 1,000+ shops across all 50 states — compare ratings, services, and locations.",
+    "Find independent golf club fitters, retailers, and simulators near you. Browse 700+ hand-vetted shops across all 50 states — compare ratings, services, and locations.",
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: "Golf Club Fitting Near You | Club Fitting Directory",
