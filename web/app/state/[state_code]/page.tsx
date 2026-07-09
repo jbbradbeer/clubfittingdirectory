@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
-import { buildItemListSchema } from "@/lib/structured-data"
+import { buildItemListSchema, buildStateBreadcrumbSchema } from "@/lib/structured-data"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
@@ -91,10 +91,12 @@ export default async function StatePage({ params }: PageProps) {
   const otherStates = states.filter((s) => s.state_code !== code).slice(0, 10)
 
   const itemListSchema = buildItemListSchema(shops, `Top Golf Club Fitters in ${stateName} (${DIRECTORY_YEAR})`)
+  const breadcrumbSchema = buildStateBreadcrumbSchema(stateName, code)
 
   return (
     <>
       <JsonLd data={itemListSchema} />
+      <JsonLd data={breadcrumbSchema} />
       {/* Hero */}
       <PageHeader
         breadcrumb={[

@@ -1,6 +1,8 @@
 import { getAllGuides } from "@/lib/guides"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
+import { getAllShopSlugs } from "@/lib/supabase/queries/shops"
+import { logQueryError } from "@/lib/utils"
 
 /* ─────────────────────────────────────────────────────────
    /llms.txt — a machine-readable site guide for AI search
@@ -15,10 +17,17 @@ export const revalidate = 86400
 export async function GET(): Promise<Response> {
   const guides = getAllGuides()
 
+  // Live listing count so this file never drifts from the directory (it was
+  // previously hardcoded and went stale). Falls back to neutral copy on error.
+  const slugs = await getAllShopSlugs().catch((e) =>
+    logQueryError("llms.txt getAllShopSlugs", e, []),
+  )
+  const countPhrase = slugs.length > 0 ? `${slugs.length} hand-vetted` : "hundreds of hand-vetted"
+
   const lines: string[] = [
     `# ${SITE_NAME}`,
     "",
-    `> ${SITE_NAME} (${SITE_URL}) is an independent directory of roughly 1,267 golf club fitting shops, custom club builders, and repair shops across all 50 US states. Every listing includes services, hours, ratings, and location. It is not owned by any fitting chain or equipment maker.`,
+    `> ${SITE_NAME} (${SITE_URL}) is an independent directory of ${countPhrase} golf club fitting shops, custom club builders, and repair shops across all 50 US states. Every listing includes services, hours, ratings, and location. It is not owned by any fitting chain or equipment maker.`,
     "",
     "## Guides",
     "",
