@@ -46,6 +46,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description: `Compare ${shops.length} golf club ${shops.length === 1 ? "fitter" : "fitters"} in ${city}, ${state} — ratings, fitting prices, and launch monitor tech. Updated ${LAST_UPDATED_LABEL}.`,
     alternates: { canonical: `${SITE_URL}/city/${citySlug}` },
+    // One-shop city pages are thin (a single listing, no comparison table) and
+    // dilute the site's overall content quality in Google's eyes. Keep them
+    // for visitors and internal links, but don't ask Google to index them —
+    // the shop itself still ranks via its listing page. `follow` keeps link
+    // equity flowing through. Flips back to indexable once a 2nd shop exists.
+    ...(shops.length < 2 ? { robots: { index: false, follow: true } } : {}),
   }
 }
 

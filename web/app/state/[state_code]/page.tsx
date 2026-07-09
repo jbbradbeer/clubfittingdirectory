@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import {
   getShopsForStatePage,
@@ -121,6 +122,18 @@ export default async function StatePage({ params }: PageProps) {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
             {stateIntro(stateName, shops, cityCount)}
+          </p>
+          {/* Deep link into the flagship data report — routes authority to the
+              page we pitch for citations, and gives readers national context. */}
+          <p className="mt-3 text-sm text-[var(--color-charcoal-light)]">
+            For national pricing and technology benchmarks, see our{" "}
+            <Link
+              href="/guides/state-of-club-fitting-2026"
+              className="font-semibold text-[var(--color-forest)] hover:underline"
+            >
+              State of Club Fitting {DIRECTORY_YEAR} report
+            </Link>
+            .
           </p>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import type { Shop } from "@/types/shop"
 import type { Guide } from "@/lib/guides/types"
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants"
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, SITE_AUTHOR, SITE_AUTHOR_TITLE } from "@/lib/constants"
 import { toCitySlug } from "@/lib/slugs"
 
 /* ─────────────────────────────────────────────────────────
@@ -338,7 +338,12 @@ export function buildArticleSchema(guide: Guide): Record<string, unknown> {
     datePublished:   guide.datePublished,
     dateModified:    guide.dateModified,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    author:    { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    author: {
+      "@type":   "Person",
+      name:      SITE_AUTHOR,
+      jobTitle:  SITE_AUTHOR_TITLE,
+      url:       `${SITE_URL}/about`,
+    },
     publisher: {
       "@type": "Organization",
       name:    SITE_NAME,

@@ -26,14 +26,16 @@ export const LAST_UPDATED_LABEL = new Date().toLocaleDateString("en-US", {
    A clause only renders when the underlying data exists — no invented claims,
    and data-poor pages just get a shorter honest paragraph. */
 
-function monitorBrands(shops: CollectionShop[]): string[] {
+function monitorBrandCounts(shops: CollectionShop[]): [string, number][] {
   const counts: Record<string, number> = {}
   for (const s of shops) {
     for (const m of s.launch_monitors ?? []) counts[m] = (counts[m] ?? 0) + 1
   }
-  return Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([brand]) => brand)
+  return Object.entries(counts).sort((a, b) => b[1] - a[1])
+}
+
+function monitorBrands(shops: CollectionShop[]): string[] {
+  return monitorBrandCounts(shops).map(([brand]) => brand)
 }
 
 function priceRange(shops: CollectionShop[]): { min: number; max: number } | null {
@@ -79,8 +81,16 @@ export function stateIntro(stateName: string, shops: CollectionShop[], cityCount
     cityCount === 1 ? "city" : "cities"
   }, with fitting prices, launch monitor technology, and ownership shown where we've verified them.`
   const data = dataSentences(shops)
+  // Hard, state-specific statistic ("6 of the 33 shops run TrackMan") — the
+  // concrete number an AI answer engine can cite for this state.
+  const brandCounts = monitorBrandCounts(shops)
+  const withTech = shops.filter((s) => (s.launch_monitors?.length ?? 0) > 0).length
+  const techStat =
+    withTech > 0 && brandCounts.length
+      ? `${withTech} of the ${shops.length} ${stateName} shops publish their launch monitor setup, including ${brandCounts[0][1]} running ${brandCounts[0][0]}.`
+      : ""
   const closing = `Compare the listings below to find the right fit close to home.`
-  return [opening, data, closing].filter(Boolean).join(" ")
+  return [opening, data, techStat, closing].filter(Boolean).join(" ")
 }
 
 export function cityIntro(city: string, stateName: string, shops: CollectionShop[]): string {

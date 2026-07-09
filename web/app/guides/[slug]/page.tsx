@@ -1,13 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Clock, ArrowRight } from "lucide-react"
+import { Clock, ArrowRight, UserRound } from "lucide-react"
 import { getGuideBySlug, getAllGuideSlugs } from "@/lib/guides"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { GuideBody } from "@/components/guides/GuideBody"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { SectionHeader } from "@/components/ui/SectionHeader"
-import { SITE_URL } from "@/lib/constants"
+import { SITE_URL, SITE_AUTHOR } from "@/lib/constants"
 import {
   buildArticleSchema,
   buildGuideBreadcrumbSchema,
@@ -66,9 +66,25 @@ export default async function GuidePage({ params }: PageProps) {
         title={guide.h1}
         subtitle={guide.excerpt}
       >
-        <p className="mt-5 inline-flex items-center gap-1.5 text-sm text-[var(--color-charcoal-light)]">
-          <Clock size={14} className="text-[var(--color-gold)]" />
-          {guide.readMinutes} min read
+        {/* Byline + dates — visible E-E-A-T signals matching the Article
+            schema's Person author and datePublished/dateModified. */}
+        <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-[var(--color-charcoal-light)]">
+          <span className="inline-flex items-center gap-1.5">
+            <UserRound size={14} className="text-[var(--color-gold)]" />
+            By {SITE_AUTHOR}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Clock size={14} className="text-[var(--color-gold)]" />
+            {guide.readMinutes} min read
+          </span>
+          <span>
+            Updated{" "}
+            {new Date(guide.dateModified).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </span>
         </p>
       </PageHeader>
 
