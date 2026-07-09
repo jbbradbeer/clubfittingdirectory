@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [slugs, stateCodes, citySlugs, typeCounts] = await Promise.all([
     getAllShopSlugs().catch((e) => logQueryError("sitemap getAllShopSlugs", e, [] as { slug: string; updated_at: string }[])),
     getAllStateCodes().catch((e) => logQueryError("sitemap getAllStateCodes", e, [] as string[])),
-    getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string }[])),
+    getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string; shopCount: number }[])),
     getShopTypeCounts().catch((e) => logQueryError("sitemap getShopTypeCounts", e, {} as Record<string, number>)),
   ])
 
@@ -130,13 +130,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority:        0.9,
     }))
 
-  /* ── City pages (/city/austin-tx, …) ── */
-  const cityRoutes: MetadataRoute.Sitemap = citySlugs.map(({ citySlug }) => ({
-    url:             `${SITE_URL}/city/${citySlug}`,
-    lastModified:    now,
-    changeFrequency: "weekly" as const,
-    priority:        0.7,
-  }))
+  /* ── City pages (/city/austin-tx, …) ──
+     One-shop cities are excluded: those pages are noindexed as thin content,
+     and a sitemap entry for a noindexed page is a mixed signal to Google. */
+  const cityRoutes: MetadataRoute.Sitemap = citySlugs
+    .filter(({ shopCount }) => shopCount >= 2)
+    .map(({ citySlug }) => ({
+      url:             `${SITE_URL}/city/${citySlug}`,
+      lastModified:    now,
+      changeFrequency: "weekly" as const,
+      priority:        0.7,
+    }))
 
   /* ── Guide / content-hub articles (/guides/[slug]) ──
      Editorial pages that target informational keywords and funnel readers

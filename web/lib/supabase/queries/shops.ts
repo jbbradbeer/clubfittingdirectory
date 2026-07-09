@@ -288,7 +288,7 @@ export async function getAllShopTypes(): Promise<string[]> {
 export { toCitySlug } from "@/lib/slugs"
 
 /* ── All city slugs (for generateStaticParams on city page) ── */
-export async function getAllCitySlugs(): Promise<{ citySlug: string }[]> {
+export async function getAllCitySlugs(): Promise<{ citySlug: string; shopCount: number }[]> {
   const supabase = createStaticClient()
   const data = await fetchAllRows<{ city: string; state_code: string }>(() =>
     supabase
@@ -298,17 +298,15 @@ export async function getAllCitySlugs(): Promise<{ citySlug: string }[]> {
       .order("id", { ascending: true }),
   )
 
-  const seen = new Set<string>()
-  const result: { citySlug: string }[] = []
+  // shopCount lets the sitemap skip one-shop cities (those pages are noindexed
+  // as thin content; listing them in the sitemap would send a mixed signal).
+  const counts = new Map<string, number>()
   for (const row of data) {
     if (!row.city || !row.state_code) continue
     const slug = toCitySlug(row.city, row.state_code)
-    if (!seen.has(slug)) {
-      seen.add(slug)
-      result.push({ citySlug: slug })
-    }
+    counts.set(slug, (counts.get(slug) ?? 0) + 1)
   }
-  return result
+  return [...counts.entries()].map(([citySlug, shopCount]) => ({ citySlug, shopCount }))
 }
 
 /* ── City links for a state (city-page cross-linking) ──

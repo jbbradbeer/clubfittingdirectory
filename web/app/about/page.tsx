@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
 import { IconCircle } from "@/components/ui/IconCircle"
-import { SITE_NAME, SITE_URL } from "@/lib/constants"
+import { SITE_NAME, SITE_URL, SITE_AUTHOR } from "@/lib/constants"
 
 export const metadata: Metadata = {
   title: "About",
@@ -77,7 +77,13 @@ export default function AboutPage() {
             The right fit changes the game. We exist to connect golfers with the
             independent experts who make that happen.
           </p>
+          {/* Named founder — the guide bylines' Person schema links here, so
+              the author identity has to actually resolve on this page. */}
           <p className="mt-6 text-sm text-[var(--color-charcoal-light)]">
+            Founded and maintained by {SITE_AUTHOR}, who researches and
+            hand-vets every listing and writes the fitting guides.
+          </p>
+          <p className="mt-2 text-sm text-[var(--color-charcoal-light)]">
             A{" "}
             <a
               href="https://thetuxedocollective.com"

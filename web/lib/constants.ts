@@ -3,6 +3,12 @@ export const SITE_NAME = "Club Fitting Directory"
 export const SITE_DESCRIPTION =
   "Find independent golf club fitting shops near you. Browse 700+ hand-vetted fitters, simulators, and retailers across all 50 states — curated by The Tuxedo Collective."
 
+/* Named author for guides — a visible byline plus Person schema is an E-E-A-T
+   trust signal Google and AI engines weigh more than an anonymous Organization
+   author. "BTG" is the founder's public pen name (real name stays private). */
+export const SITE_AUTHOR = "BTG"
+export const SITE_AUTHOR_TITLE = "Founder, Club Fitting Directory"
+
 /* Cal.com booking link shown to shop owners after they claim their listing
    (thank-you screen + confirmation email). */
 export const CAL_FOUNDING_CALL_URL =
