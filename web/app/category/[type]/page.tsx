@@ -9,11 +9,12 @@ import { Button } from "@/components/ui/Button"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { SITE_URL } from "@/lib/constants"
 import { rethrowQueryError } from "@/lib/utils"
-import { buildItemListSchema } from "@/lib/structured-data"
+import { buildItemListSchema, buildCategoryBreadcrumbSchema } from "@/lib/structured-data"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { categoryIntro, categoryFaqs } from "@/lib/seo-content"
+import { categoryIntro, categoryFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
+import { TopFittersTable } from "@/components/seo/TopFittersTable"
 
 interface PageProps {
   params: Promise<{ type: string }>
@@ -32,8 +33,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const label = shopType.label
   return {
-    title: `${label} Directory`,
-    description: `Browse all ${label.toLowerCase()} in our directory. Find ratings, services, contact info, and more.`,
+    // Year-stamped comparison format — the same treatment as state/city pages
+    // (it's the format that wins both Google SERPs and AI citations).
+    title: { absolute: `Top ${label} in the US for ${DIRECTORY_YEAR} | Compare Tech & Pricing` },
+    description: `Compare ${label.toLowerCase()} across the US — ratings, fitting prices, launch monitor tech, and independent vs chain. Updated ${LAST_UPDATED_LABEL}.`,
     alternates: { canonical: `${SITE_URL}/category/${slug}` },
   }
 }
@@ -50,10 +53,12 @@ export default async function CategoryPage({ params }: PageProps) {
   const label = shopType.label
 
   const itemListSchema = buildItemListSchema(shops, `${label} Directory`)
+  const breadcrumbSchema = buildCategoryBreadcrumbSchema(label, slug)
 
   return (
     <>
       <JsonLd data={itemListSchema} />
+      <JsonLd data={breadcrumbSchema} />
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: label }]}
@@ -66,10 +71,13 @@ export default async function CategoryPage({ params }: PageProps) {
       <section className="bg-[var(--color-ivory)] pt-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
-            {categoryIntro(label, shops.length, stateBreakdown.length)}
+            {categoryIntro(label, shops, stateBreakdown.length)}
           </p>
         </div>
       </section>
+
+      {/* Ranked comparison table — the citable "top picks" answer block */}
+      <TopFittersTable shops={shops} place="the US" year={DIRECTORY_YEAR} noun={label} />
 
       {/* State breakdown */}
       {stateBreakdown.length > 1 && (
@@ -114,7 +122,7 @@ export default async function CategoryPage({ params }: PageProps) {
         </div>
       </section>
 
-      <FaqSection items={categoryFaqs(label)} heading={`${label} — FAQ`} />
+      <FaqSection items={categoryFaqs(label, shops)} heading={`${label} — FAQ`} />
 
       <RelatedGuides />
     </>

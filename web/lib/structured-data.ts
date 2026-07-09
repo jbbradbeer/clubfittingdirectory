@@ -216,6 +216,48 @@ export function buildCityBreadcrumbSchema(
 }
 
 /**
+ * BreadcrumbList schema for a STATE page: Home > States > State.
+ * Matches the visible 3-level breadcrumb on /state/[state_code].
+ */
+export function buildStateBreadcrumbSchema(
+  stateName: string,
+  stateCode: string,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home",   item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "States", item: `${SITE_URL}/states` },
+      {
+        "@type":  "ListItem",
+        position: 3,
+        name:     stateName,
+        item:     `${SITE_URL}/state/${stateCode.toLowerCase()}`,
+      },
+    ],
+  }
+}
+
+/**
+ * BreadcrumbList schema for a CATEGORY page: Home > Category.
+ * Matches the visible 2-level breadcrumb on /category/[type].
+ */
+export function buildCategoryBreadcrumbSchema(
+  label: string,
+  slug: string,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: label,  item: `${SITE_URL}/category/${slug}` },
+    ],
+  }
+}
+
+/**
  * ItemList schema for a COLLECTION page (state / city / category). Tells Google
  * the page is an ordered list of N businesses, each linking to its listing —
  * eligibility for richer results on these high-value local pages.
@@ -274,7 +316,7 @@ export function buildOrganizationSchema(): Record<string, unknown> {
     "@type":    "Organization",
     name:        SITE_NAME,
     url:         SITE_URL,
-    logo:        `${SITE_URL}/icon.png`,
+    logo:        `${SITE_URL}/logo.png`,
     description: SITE_DESCRIPTION,
   }
 }
@@ -291,6 +333,7 @@ export function buildArticleSchema(guide: Guide): Record<string, unknown> {
     "@type":    "Article",
     headline:        guide.h1,
     description:     guide.metaDescription,
+    image:           `${url}/opengraph-image`,
     ...(guide.keyTakeaways?.length ? { abstract: guide.keyTakeaways.join(" ") } : {}),
     datePublished:   guide.datePublished,
     dateModified:    guide.dateModified,
@@ -300,7 +343,7 @@ export function buildArticleSchema(guide: Guide): Record<string, unknown> {
       "@type": "Organization",
       name:    SITE_NAME,
       url:     SITE_URL,
-      logo:    { "@type": "ImageObject", url: `${SITE_URL}/icon.png` },
+      logo:    { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
     },
   }
 }

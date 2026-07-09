@@ -1,4 +1,6 @@
 import type { FaqItem } from "@/components/seo/FaqSection"
+import type { Shop } from "@/types/shop"
+import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
 
 /**
  * Generates location/category-specific intro copy and FAQs for collection pages.
@@ -90,10 +92,13 @@ export function cityIntro(city: string, stateName: string, shops: CollectionShop
   return [opening, data, closing].filter(Boolean).join(" ")
 }
 
-export function categoryIntro(label: string, shopCount: number, stateCount: number): string {
-  return `Browse ${shopCount} ${label.toLowerCase()} across ${stateCount} ${
+export function categoryIntro(label: string, shops: CollectionShop[], stateCount: number): string {
+  const opening = `Browse ${shops.length} ${label.toLowerCase()} across ${stateCount} ${
     stateCount === 1 ? "state" : "states"
-  }. Compare ratings, services, and locations to find the right option for your game.`
+  }, with fitting prices, launch monitor technology, and ownership shown where we've verified them.`
+  const data = dataSentences(shops)
+  const closing = `Compare ratings, services, and locations to find the right option for your game.`
+  return [opening, data, closing].filter(Boolean).join(" ")
 }
 
 /* ── Data-driven FAQ helpers ──
@@ -225,14 +230,137 @@ export function cityFaqs(city: string, stateName: string, shops: CollectionShop[
   ]
 }
 
-export function categoryFaqs(label: string): FaqItem[] {
+export function categoryFaqs(label: string, shops: CollectionShop[] = []): FaqItem[] {
+  const lower = label.toLowerCase()
+
+  // Category-scoped variants of the data-driven FAQs — same real data as the
+  // state/city helpers, phrased for a nationwide category page.
+  const price = priceRange(shops)
+  const priceFaq: FaqItem | null = price
+    ? {
+        question: `How much does a fitting cost at ${lower}?`,
+        answer: `Among the ${lower} in this directory that publish prices, ${
+          price.max > price.min
+            ? `fitting prices range from $${price.min} to $${price.max}`
+            : `fitting prices start at $${price.min}`
+        }. Nationally, a single-club fitting typically runs $50–$150 and a full-bag fitting more; many shops credit the fee toward clubs you buy.`,
+      }
+    : null
+
+  const brands = monitorBrands(shops)
+  const techFaq: FaqItem | null = brands.length
+    ? {
+        question: `What launch monitor technology do ${lower} use?`,
+        answer: `${label} with verified fitting technology in this directory use ${listWords(brands.slice(0, 5))}. Each listing shows the shop's equipment where we've confirmed it.`,
+      }
+    : null
+
+  const rated = shops.filter((s) => s.rating != null && s.rating >= 4)
+  const top = rated.length
+    ? rated.reduce((a, b) => ((b.rating ?? 0) > (a.rating ?? 0) ? b : a))
+    : null
+  const topFaq: FaqItem | null = top
+    ? {
+        question: `Who is the highest-rated of the ${lower} in this directory?`,
+        answer: `${top.name} is currently the highest-rated, with a ${top.rating}/5 rating. Ratings change as new reviews come in, so compare the listings above before you book.`,
+      }
+    : null
+
   return [
     {
-      question: `What should I look for when choosing ${label.toLowerCase()}?`,
+      question: `What should I look for when choosing ${lower}?`,
       answer: `Compare ratings, the specific services offered, and proximity to you. Listings that offer custom fitting, modern technology, and strong reviews are a good starting point.`,
     },
-    ...baseFittingFaqs(),
+    ...[priceFaq, techFaq, topFaq].filter((f): f is FaqItem => f !== null),
+    ...baseFittingFaqs({ skipCost: priceFaq !== null }),
   ]
+}
+
+/* ── Listing page (/listing/[slug]) ──
+   A "quick facts" paragraph and data-driven FAQs for each shop profile. The
+   paragraph is deliberately plain, self-contained prose — the sentence an AI
+   answer engine can lift verbatim when asked "who does club fitting in
+   {city}?" (tasks/research/geo-ai-search-2026-07.md, rec #5). Every clause
+   renders only when the underlying data exists. */
+
+/** Lowercase descriptor for the opening sentence, preferring the ownership
+    classification ("independent fitter") over the generic shop type. */
+function shopDescriptor(shop: Shop): string {
+  const ownership = ownershipLabel(shop.ownership_type)
+  if (ownership) return ownership.toLowerCase()
+  if (shop.shop_type) return shop.shop_type.toLowerCase()
+  return "golf shop"
+}
+
+export function listingQuickFacts(shop: Shop): string {
+  const parts: string[] = []
+
+  const place = [shop.city, shop.state].filter(Boolean).join(", ")
+  const descriptor = shopDescriptor(shop)
+  const article = /^[aeiou]/.test(descriptor) ? "an" : "a"
+  parts.push(`${shop.name} is ${article} ${descriptor}${place ? ` in ${place}` : ""}.`)
+
+  const price = formatFittingPrice(shop.fitting_price_min, shop.fitting_price_max)
+  if (shop.offers_fitting || price) {
+    const env = shop.fitting_environment ? ` ${shop.fitting_environment.toLowerCase()}` : ""
+    parts.push(
+      price
+        ? `The shop offers${env} club fitting with published prices of ${price.toLowerCase()}.`
+        : `The shop offers${env} custom club fitting.`,
+    )
+  }
+
+  if (shop.launch_monitors && shop.launch_monitors.length > 0) {
+    parts.push(`Fitting technology on record: ${listWords(shop.launch_monitors)}.`)
+  }
+
+  if (shop.rating && shop.rating > 0 && shop.reviews && shop.reviews > 0) {
+    parts.push(`Golfers rate it ${shop.rating}/5 across ${shop.reviews} reviews.`)
+  }
+
+  return parts.join(" ")
+}
+
+export function listingFaqs(shop: Shop): FaqItem[] {
+  const place = [shop.city, shop.state_code].filter(Boolean).join(", ")
+  const price = formatFittingPrice(shop.fitting_price_min, shop.fitting_price_max)
+  const items: (FaqItem | null)[] = [
+    shop.offers_fitting || price || (shop.launch_monitors?.length ?? 0) > 0
+      ? {
+          question: `Does ${shop.name} offer golf club fitting?`,
+          answer: `Yes — ${shop.name} in ${place} offers club fitting${
+            shop.fitting_environment ? ` (${shop.fitting_environment.toLowerCase()})` : ""
+          }${
+            (shop.launch_monitors?.length ?? 0) > 0
+              ? ` using ${listWords(shop.launch_monitors ?? [])}`
+              : ""
+          }. Contact the shop directly to book a session.`,
+        }
+      : null,
+    price
+      ? {
+          question: `How much does a club fitting cost at ${shop.name}?`,
+          answer: `${shop.name} lists fitting prices of ${price.toLowerCase()}, as reported from the shop's website. Nationally, a single-club fitting typically runs $50–$150 and a full-bag fitting more — confirm the current menu with the shop before booking.`,
+        }
+      : null,
+    (shop.launch_monitors?.length ?? 0) > 0
+      ? {
+          question: `What launch monitor technology does ${shop.name} use?`,
+          answer: `${shop.name} has ${listWords(shop.launch_monitors ?? [])} on record. The launch monitor drives the quality of your fitting data, so it's worth confirming the setup when you book.`,
+        }
+      : null,
+    shop.city
+      ? {
+          question: `Where is ${shop.name} located?`,
+          answer: `${shop.name} is located at ${[shop.street, shop.city, `${shop.state} ${shop.postal_code ?? ""}`.trim()]
+            .filter(Boolean)
+            .join(", ")}. See the map on this page for directions, or browse more fitters in ${shop.city} in this directory.`,
+        }
+      : null,
+  ]
+  const faqs = items.filter((f): f is FaqItem => f !== null)
+  // One lone question makes a thin FAQ block — skip the section entirely.
+  return faqs.length >= 2 ? faqs : []
 }
 
 /* ── Repair landing page (/repair) ── */

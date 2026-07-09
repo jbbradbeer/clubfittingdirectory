@@ -23,6 +23,8 @@ import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
 import { isTopRated, isVerified } from "@/lib/badges"
 import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
+import { listingQuickFacts, listingFaqs } from "@/lib/seo-content"
+import { FaqSection } from "@/components/seo/FaqSection"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 
@@ -189,6 +191,13 @@ export default async function ListingPage({ params }: PageProps) {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Left: main content */}
             <div className="flex-1 min-w-0 space-y-10">
+              {/* Quick facts — a plain, self-contained summary sentence that
+                  answer engines (Google snippets, ChatGPT, Perplexity) can
+                  quote verbatim. Built from the same data shown below. */}
+              <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
+                {listingQuickFacts(shop)}
+              </p>
+
               {/* Services */}
               {shop.services_array && shop.services_array.length > 0 && (
                 <div>
@@ -452,6 +461,8 @@ export default async function ListingPage({ params }: PageProps) {
           </div>
         </div>
       </section>
+
+      <FaqSection items={listingFaqs(shop)} heading={`${shop.name} — FAQ`} />
 
       {/* Nearby Fitters */}
       {nearby.length > 0 && (

@@ -61,11 +61,13 @@ interface TopFittersTableProps {
   year: number
   /** Hide the city column when every row is the same city. */
   showCity?: boolean
+  /** Heading noun — category pages pass their own label (e.g. "Retailers"). */
+  noun?: string
 }
 
 const MIN_ROWS = 3
 
-export function TopFittersTable({ shops, place, year, showCity = true }: TopFittersTableProps) {
+export function TopFittersTable({ shops, place, year, showCity = true, noun = "Club Fitters" }: TopFittersTableProps) {
   const top = rankTopFitters(shops)
   if (top.length < MIN_ROWS) return null
 
@@ -74,7 +76,7 @@ export function TopFittersTable({ shops, place, year, showCity = true }: TopFitt
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow={`Updated ${LAST_UPDATED_LABEL}`}
-          title={`Top ${top.length} Club Fitters in ${place} for ${year}`}
+          title={`Top ${top.length} ${noun} in ${place} for ${year}`}
           centered={false}
         />
         <div className="mt-6 overflow-x-auto rounded-xl border border-[var(--color-border)] bg-white">
@@ -123,8 +125,8 @@ export function TopFittersTable({ shops, place, year, showCity = true }: TopFitt
           </table>
         </div>
         <p className="mt-3 text-xs text-[var(--color-charcoal-light)]">
-          Methodology: ranked by Google rating from the {shops.length} {place} shops in our
-          directory, with ties broken by verified fitting details (published prices, launch
+          Methodology: ranked by Google rating from the {shops.length} shops listed on this
+          page, with ties broken by verified fitting details (published prices, launch
           monitor tech). Prices and launch monitor details come from each shop&apos;s own
           website; &ldquo;—&rdquo; means the shop hasn&rsquo;t published it yet. Last updated{" "}
           {LAST_UPDATED_LABEL}.
