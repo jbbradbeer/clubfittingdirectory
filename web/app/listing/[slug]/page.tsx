@@ -41,7 +41,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const shop = await getShopBySlug(slug).catch((e) => logQueryError("listing generateMetadata getShopBySlug", e, null))
+  const shop = await getShopBySlug(slug).catch((e) => logQueryError("listing generateMetadata getShopBySlug", e, undefined))
+  // notFound() here (not only in the page body) because generateMetadata runs
+  // before the response starts streaming — it's the only place that can still
+  // set a real 404 status (the root loading.tsx makes the body stream after a
+  // 200 is already sent). A thrown query error stays a soft fallback so a DB
+  // blip can't get a live page cached as a 404.
+  if (shop === null) notFound()
   if (!shop) return { title: "Fitter Not Found" }
 
   const title = `${shop.name} — ${shop.city}, ${shop.state_code}`

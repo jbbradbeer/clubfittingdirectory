@@ -37,6 +37,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const code = state_code.toUpperCase()
   const states = await getAllStatesWithShops().catch((e) => logQueryError("state generateMetadata getAllStatesWithShops", e, []))
   const stateInfo = states.find((s) => s.state_code === code)
+  // notFound() in generateMetadata is what sets a real 404 status — by the time
+  // the page body runs, streaming has already sent a 200. Only when the states
+  // list actually loaded (non-empty) can "not in it" mean the state is invalid;
+  // an empty list from a DB blip keeps the soft fallback below.
+  if (states.length > 0 && !stateInfo) notFound()
   const stateName = stateInfo?.state ?? code
 
   return {

@@ -27,7 +27,10 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const guide = getGuideBySlug(slug)
-  if (!guide) return { title: "Guide Not Found" }
+  // notFound() in generateMetadata is what sets a real 404 status — by the time
+  // the page body runs, streaming has already sent a 200. Guides are a local
+  // in-code registry, so a miss always means the URL is genuinely invalid.
+  if (!guide) notFound()
 
   const url = `${SITE_URL}/guides/${guide.slug}`
   return {
