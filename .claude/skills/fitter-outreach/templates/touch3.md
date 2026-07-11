@@ -11,4 +11,6 @@ Subject: Re: {{shop_name}} is listed on clubfittingdirectory.com
 
 No reply needed if it's a pass. This is the last one from me.
 
+PS — either way, your free listing stays live. Tip: linking to it from your website (footer or an "as featured in" spot) helps it rank on Google, which sends more golfers your way.
+
 {{SIGNATURE}}

@@ -28,6 +28,9 @@ What to do every time a Stripe payment email lands. Ten minutes, no code.
    > 2. Send any corrections (hours, services, photos) and I'll apply them.
    > 3. You're in the Gear Shelf rotation in The Tuxedo Collective newsletter
    >    (6,600 subscribers) — I'll let you know when your slot runs.
+   > 4. Add a link to your listing from your website — "Verified on Club
+   >    Fitting Directory" in the footer works. It helps your profile rank
+   >    on Google, which sends more golfers through it.
    >
    > Fitting requests golfers submit on your page go straight to this email.
    > Grandfathered at $349/yr as a founding partner. Questions, just reply.
