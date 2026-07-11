@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import {
   getShopsForCityPage,
@@ -126,6 +127,22 @@ export default async function CityPage({ params }: PageProps) {
           <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
             {cityIntro(city, state, shops)}
           </p>
+          {/* Deep link into the flagship data report — routes authority to the
+              page we pitch for citations, and gives readers national context.
+              Multi-shop pages only: one-shop city pages are noindexed and kept
+              deliberately lean. */}
+          {shops.length >= 2 && (
+            <p className="mt-3 text-sm text-[var(--color-charcoal-light)]">
+              For national pricing and technology benchmarks, see our{" "}
+              <Link
+                href="/guides/state-of-club-fitting-2026"
+                className="font-semibold text-[var(--color-forest)] hover:underline"
+              >
+                State of Club Fitting {DIRECTORY_YEAR} report
+              </Link>
+              .
+            </p>
+          )}
         </div>
       </section>
 

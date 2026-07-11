@@ -76,19 +76,25 @@ function dataSentences(shops: CollectionShop[]): string {
   return parts.join(" ")
 }
 
+/** Hard, place-specific statistic ("6 of the 33 shops run TrackMan") — the
+    concrete number an AI answer engine can cite for this place. Empty when
+    no shop on the page publishes its launch monitor setup, or when the page
+    has a single shop (a "1 of the 1 shops" stat reads as filler, not data). */
+function techStatSentence(place: string, shops: CollectionShop[]): string {
+  if (shops.length < 2) return ""
+  const brandCounts = monitorBrandCounts(shops)
+  const withTech = shops.filter((s) => (s.launch_monitors?.length ?? 0) > 0).length
+  return withTech > 0 && brandCounts.length
+    ? `${withTech} of the ${shops.length} ${place} shops publish their launch monitor setup, including ${brandCounts[0][1]} running ${brandCounts[0][0]}.`
+    : ""
+}
+
 export function stateIntro(stateName: string, shops: CollectionShop[], cityCount: number): string {
   const opening = `Comparing golf club fitters in ${stateName}? Browse ${shops.length} fitters, retailers, and simulators across ${cityCount} ${
     cityCount === 1 ? "city" : "cities"
   }, with fitting prices, launch monitor technology, and ownership shown where we've verified them.`
   const data = dataSentences(shops)
-  // Hard, state-specific statistic ("6 of the 33 shops run TrackMan") — the
-  // concrete number an AI answer engine can cite for this state.
-  const brandCounts = monitorBrandCounts(shops)
-  const withTech = shops.filter((s) => (s.launch_monitors?.length ?? 0) > 0).length
-  const techStat =
-    withTech > 0 && brandCounts.length
-      ? `${withTech} of the ${shops.length} ${stateName} shops publish their launch monitor setup, including ${brandCounts[0][1]} running ${brandCounts[0][0]}.`
-      : ""
+  const techStat = techStatSentence(stateName, shops)
   const closing = `Compare the listings below to find the right fit close to home.`
   return [opening, data, techStat, closing].filter(Boolean).join(" ")
 }
@@ -98,8 +104,9 @@ export function cityIntro(city: string, stateName: string, shops: CollectionShop
     shops.length === 1 ? "shop" : "shops"
   } offering custom club fitting, equipment retail, and simulator sessions.`
   const data = dataSentences(shops)
+  const techStat = techStatSentence(city, shops)
   const closing = `Compare ratings, prices, and services to book the fitting that suits your game.`
-  return [opening, data, closing].filter(Boolean).join(" ")
+  return [opening, data, techStat, closing].filter(Boolean).join(" ")
 }
 
 export function categoryIntro(label: string, shops: CollectionShop[], stateCount: number): string {
