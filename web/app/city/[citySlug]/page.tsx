@@ -32,7 +32,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { citySlug } = await params
-  const result = await getShopsForCityPage(citySlug).catch((e) => logQueryError("city generateMetadata getShopsForCityPage", e, null))
+  const result = await getShopsForCityPage(citySlug).catch((e) => logQueryError("city generateMetadata getShopsForCityPage", e, undefined))
+  // notFound() in generateMetadata is what sets a real 404 status — by the time
+  // the page body runs, streaming has already sent a 200. A thrown query error
+  // keeps the soft fallback so a DB blip can't cache a live page as a 404.
+  if (result === null) notFound()
   if (!result) return { title: "City Not Found" }
 
   const { city, state, shops } = result

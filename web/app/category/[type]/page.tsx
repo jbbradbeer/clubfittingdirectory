@@ -29,7 +29,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { type: slug } = await params
   const shopType = slugToShopType(slug)
-  if (!shopType) return { title: "Category Not Found" }
+  // notFound() in generateMetadata is what sets a real 404 status — by the time
+  // the page body runs, streaming has already sent a 200. slugToShopType is a
+  // pure lookup, so a miss always means the URL is genuinely invalid.
+  if (!shopType) notFound()
 
   const label = shopType.label
   return {
