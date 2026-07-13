@@ -30,7 +30,7 @@ export const clubChampionVsIndependentGuide: Guide = {
       type: "paragraph",
       text: [
         "Search any golf forum for \"is Club Champion worth it\" and you'll find the same argument running for years: some golfers swear by the national chains' process and inventory, others say they walked out with a quote for a $3,000 bag and found the same fitting for less at a local independent shop. What's been missing from the debate is data. In July 2026 we crawled the published prices of every shop in ",
-        { text: "our directory of 1,245 independent fitters and golf shops", href: "/directory" },
+        { text: "our directory of independent fitters and golf shops", href: "/directory" },
         " — here's how the two models actually compare.",
       ],
     },

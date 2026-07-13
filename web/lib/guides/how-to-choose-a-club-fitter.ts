@@ -182,7 +182,7 @@ export const howToChooseAClubFitterGuide: Guide = {
     {
       type: "cta",
       heading: "Find vetted fitters near you",
-      text: "Browse 1,268 listings across all 50 states — independent studios, retailers, and simulator shops — filtered by location, with ratings and services for each.",
+      text: "Browse 700+ hand-vetted listings across all 50 states — independent studios, retailers, and simulator shops — filtered by location, with ratings and services for each.",
       buttonLabel: "Search the directory",
       href: "/directory",
     },

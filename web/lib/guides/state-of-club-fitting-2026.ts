@@ -223,7 +223,7 @@ export const stateOfClubFitting2026: Guide = {
     {
       type: "cta",
       heading: "Find a club fitter near you",
-      text: "Search 1,268 independent fitters, retailers, and simulators across all 50 states.",
+      text: "Search 700+ hand-vetted independent fitters, retailers, and simulators across all 50 states.",
       buttonLabel: "Search the directory",
       href: "/directory",
     },
@@ -232,7 +232,7 @@ export const stateOfClubFitting2026: Guide = {
     {
       question: "How many golf club fitting shops are there in the US?",
       answer:
-        "This directory lists 1,268 independent golf shops across all 50 states, of which 568 (44.8%) explicitly offer club fitting. Including national chains and on-course pro shops that fit informally, the true number of fitting providers in the US is somewhat higher.",
+        "This report analyzed 1,268 independent golf shops across all 50 states as of June 2026, of which 568 (44.8%) explicitly offered club fitting. Including national chains and on-course pro shops that fit informally, the true number of fitting providers in the US is somewhat higher. The directory has since been curated down to 700+ hand-vetted shops.",
     },
     {
       question: "Which state has the most golf club fitters?",
