@@ -82,8 +82,7 @@ export default async function HomePage() {
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             {/* ── Left: headline + search command panel ── */}
             <div className={`min-w-0 ${hasStats ? "lg:col-span-7" : "lg:col-span-12 max-w-3xl"}`}>
-              <p className="section-label mb-5 inline-flex items-center gap-3 animate-fade-in-up">
-                <span className="gold-rule" />
+              <p className="section-label mb-5 animate-fade-in-up">
                 The Club Fitting Directory
               </p>
 
@@ -161,8 +160,7 @@ export default async function HomePage() {
                       </div>
                     ))}
                   </dl>
-                  <div className="flex items-center gap-2.5 px-5 py-3 border-t border-[var(--color-line)] bg-[var(--color-cream)] text-xs text-[var(--color-charcoal-light)]">
-                    <span className="gold-rule" />
+                  <div className="px-5 py-3 border-t border-[var(--color-line)] bg-[var(--color-cream)] text-xs text-[var(--color-charcoal-light)]">
                     Curated &amp; independent — every entry reviewed
                   </div>
                 </div>
@@ -181,7 +179,7 @@ export default async function HomePage() {
             className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
             data-reveal
           >
-            <SectionHeader eyebrow="Top Rated" title="Highest-rated fitters" centered={false} />
+            <SectionHeader title="Highest-rated fitters" centered={false} />
             <Button href="/directory" variant="outline" size="sm">
               View all {hasStats ? `${stats.total.toLocaleString()} ` : ""}shops
             </Button>
@@ -199,7 +197,14 @@ export default async function HomePage() {
             className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
             data-reveal
           >
-            <SectionHeader eyebrow="Explore" title="Browse by state" centered={false} />
+            {/* Number-led opening — the yardage-book "data" voice carries this
+                section head instead of another uppercase kicker. */}
+            <h2 className="font-display text-[2rem] sm:text-4xl md:text-[2.6rem] font-bold leading-[1.05] tracking-[-0.025em]">
+              <span className="data font-semibold text-[var(--color-gold-ink)]">
+                {hasStats ? stats.states : 50}
+              </span>{" "}
+              states, every one covered.
+            </h2>
             <Button href="/states" variant="outline" size="sm">
               View all states
             </Button>
@@ -236,9 +241,8 @@ export default async function HomePage() {
         >
           {/* Card A — what happens in a fitting */}
           <div className="bg-white rounded-2xl shadow-card p-8 flex flex-col">
-            <p className="section-label with-rule mb-4">New to fitting?</p>
             <h3 className="font-display text-2xl text-[var(--color-charcoal)]">
-              What happens in a fitting
+              New to fitting? Here&apos;s how it works.
             </h3>
             <ol className="mt-6 space-y-5 flex-1">
               {STEPS.map((step, i) => (
@@ -262,7 +266,6 @@ export default async function HomePage() {
 
           {/* Card B — submit a shop */}
           <div className="bg-[var(--color-forest)] grain text-white rounded-2xl p-8 flex flex-col">
-            <p className="section-label with-rule mb-4 text-[var(--color-gold)]!">Help us grow</p>
             <h3 className="font-display text-2xl text-white!">
               Know a fitter we&apos;re missing?
             </h3>
@@ -289,8 +292,10 @@ export default async function HomePage() {
           className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center"
           data-reveal
         >
-          <p className="section-label mb-5 text-[var(--color-gold)]!">
-            The Tuxedo Collective
+          {/* Normal-case sign-off, not another tracked-caps kicker — the hero
+              keeps the only uppercase label on the page. */}
+          <p className="mb-5 text-sm font-semibold text-[var(--color-gold)]">
+            The Tuxedo Collective — the free weekly newsletter
           </p>
           <h2 className="text-3xl md:text-[2.6rem] font-bold text-white! leading-[1.1]">
             Private club golf, explained.

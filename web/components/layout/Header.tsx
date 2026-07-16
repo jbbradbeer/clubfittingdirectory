@@ -32,7 +32,7 @@ export function Header() {
         <div className="flex items-center justify-between h-[72px]">
           {/* Logo */}
           <Link href="/" className="flex flex-col group leading-none">
-            <span className="font-display text-[1.5rem] font-extrabold tracking-[-0.03em] text-[var(--color-forest)]">
+            <span className="font-display text-[1.5rem] font-bold tracking-[-0.015em] text-[var(--color-forest)]">
               {SITE_NAME}
             </span>
             <span className="text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-[var(--color-gold-ink)] mt-0.5">

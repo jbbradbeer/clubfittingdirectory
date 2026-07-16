@@ -44,10 +44,8 @@ export default function NewsletterPage() {
           ═══════════════════════════════════════════════════ */}
       <section className="bg-[var(--color-forest-deep)] grain text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
-          <p className="section-label mb-5 inline-flex items-center gap-3" style={{ color: "var(--color-gold)" }}>
-            <span className="gold-rule" />
+          <p className="section-label mb-5" style={{ color: "var(--color-gold)" }}>
             The Tuxedo Collective
-            <span className="gold-rule rotate-180" />
           </p>
           <h1 className="display text-[clamp(2.4rem,6vw,4rem)] text-white! leading-[1.05]">
             Private club golf,
