@@ -79,10 +79,11 @@
   --color-border:         #e6e4dd;
   --color-line:           #ededea;
 
-  /* ── Fonts (next/font injects the family vars) ── */
-  --font-display: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+  /* ── Fonts (next/font injects --font-display / --font-body) ── */
+  --font-display: "Sentient", Georgia, "Times New Roman", serif;
   --font-body:    "Hanken Grotesk", system-ui, -apple-system, sans-serif;
-  --font-mono:    "Spline Sans Mono", ui-monospace, "SFMono-Regular", monospace;
+  /* Yardage-book data accent — the system mono stack, no download needed */
+  --font-mono:    ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
   --font-sans:    var(--font-body);
 
   /* ── shadcn semantic tokens → brand ── */
@@ -176,8 +177,8 @@ body {
    ───────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.12;
+  letter-spacing: -0.01em; /* serif needs less tightening than the old sans */
   color: var(--color-charcoal);
   font-weight: 700;
   text-wrap: balance;
@@ -198,12 +199,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 .tabular { font-variant-numeric: tabular-nums; }
 
-/* Oversized display — bold sans, tight leading */
+/* Oversized display — bold serif, tight leading.
+   Sentient tops out at 700; don't ask for 800 (browser would fake-embolden). */
 .display {
   font-family: var(--font-display);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
@@ -215,20 +217,6 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-gold-ink);
-}
-
-/* Left-aligned eyebrow with a leading gold hairline */
-.with-rule {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.with-rule::before {
-  content: "";
-  width: 2.5rem;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--color-gold), transparent);
 }
 
 /* Hairline rule */
@@ -303,15 +291,6 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Decorative gold hairline used under eyebrows / between sections */
-.gold-rule {
-  display: inline-block;
-  width: 2.5rem;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-gold), transparent);
-  border-radius: 2px;
 }
 
 /* ─────────────────────────────────────────────────────────

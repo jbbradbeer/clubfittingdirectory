@@ -130,10 +130,7 @@ export default async function ListingPage({ params }: PageProps) {
           <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div>
               {shop.shop_type && (
-                <p className="section-label mb-3 inline-flex items-center gap-3">
-                  <span className="gold-rule" />
-                  {shop.shop_type}
-                </p>
+                <p className="section-label mb-3">{shop.shop_type}</p>
               )}
               <h1 className="display text-[clamp(2.1rem,4.5vw,3.1rem)] text-[var(--color-charcoal)]">
                 {shop.name}

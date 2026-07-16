@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
-import { Bricolage_Grotesque, Hanken_Grotesk, Spline_Sans_Mono } from "next/font/google"
+import { Hanken_Grotesk } from "next/font/google"
+import localFont from "next/font/local"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Header } from "@/components/layout/Header"
@@ -10,12 +11,17 @@ import { cn } from "@/lib/utils"
 
 /* ─────────────────────────────────────────────────────────
    FONTS — self-hosted via next/font (no external requests)
-   Bricolage Grotesque: bold, characterful display sans
-   Hanken Grotesk: crisp, legible grotesque (body)
+   Sentient (Fontshare, FFL license — see app/fonts/FFL.txt):
+     warm editorial serif, the signature display face.
+   Hanken Grotesk: crisp, legible grotesque (body).
+   Data/mono numerals use the system mono stack (globals.css)
+   — no font download needed for the yardage-book accent.
    ───────────────────────────────────────────────────────── */
-const bricolage = Bricolage_Grotesque({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+const sentient = localFont({
+  src: [
+    { path: "./fonts/Sentient-Variable.woff2", weight: "200 700", style: "normal" },
+    { path: "./fonts/Sentient-VariableItalic.woff2", weight: "200 700", style: "italic" },
+  ],
   variable: "--font-display",
   display: "swap",
 })
@@ -24,15 +30,6 @@ const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
-  display: "swap",
-})
-
-/* Spline Sans Mono: the "yardage-book" accent — used only for data (ratings,
-   counts, distances, state codes, EST. labels), never for prose. */
-const splineMono = Spline_Sans_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-mono",
   display: "swap",
 })
 
@@ -75,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(bricolage.variable, hanken.variable, splineMono.variable, "font-sans")}
+      className={cn(sentient.variable, hanken.variable, "font-sans")}
     >
       <body className="flex flex-col min-h-screen">
         {/* Marks the document as JS-capable BEFORE paint, so scroll-reveal only

@@ -31,10 +31,7 @@ export default async function ClaimPage({
   return (
     <section className="bg-[var(--color-ivory)] min-h-screen py-14">
       <div className="max-w-xl mx-auto px-4 sm:px-6">
-        <p className="section-label mb-3 inline-flex items-center gap-3">
-          <span className="gold-rule" />
-          Claim your listing
-        </p>
+        <p className="section-label mb-3">Claim your listing</p>
         <h1 className="font-display text-3xl sm:text-4xl text-[var(--color-charcoal)]">
           {shop.name}
         </h1>

@@ -41,16 +41,7 @@ export function PageHeader({
   const titleBlock = (
     <div className={cn(centered ? "max-w-3xl mx-auto" : "max-w-3xl")}>
       {eyebrow && (
-        <p
-          className={cn(
-            "section-label mb-3 inline-flex items-center gap-3",
-            centered && "justify-center",
-          )}
-        >
-          <span className="gold-rule" />
-          {eyebrow}
-          {centered && <span className="gold-rule rotate-180" />}
-        </p>
+        <p className="section-label mb-3">{eyebrow}</p>
       )}
       <h1 className="display text-[clamp(2.1rem,5.2vw,3.6rem)] text-[var(--color-charcoal)]">
         {title}

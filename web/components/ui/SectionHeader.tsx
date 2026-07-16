@@ -16,7 +16,7 @@ export function SectionHeader({
   return (
     <div className={`${centered ? "text-center" : ""} ${className}`}>
       {eyebrow && (
-        <p className={`section-label mb-4 ${centered ? "" : "with-rule"}`}>{eyebrow}</p>
+        <p className="section-label mb-4">{eyebrow}</p>
       )}
       <h2 className="font-display text-[2rem] sm:text-4xl md:text-[2.6rem] font-bold leading-[1.05] tracking-[-0.025em]">
         {title}

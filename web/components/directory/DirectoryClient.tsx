@@ -281,10 +281,7 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
         <div className="hero-contours" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-5 max-w-2xl">
-            <p className="section-label mb-2 inline-flex items-center gap-3">
-              <span className="gold-rule" />
-              Find a Fitter
-            </p>
+            <p className="section-label mb-2">Find a Fitter</p>
             <h1 className="display text-[clamp(1.8rem,3.6vw,2.6rem)] text-[var(--color-charcoal)]">
               Search the directory
             </h1>
