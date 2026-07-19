@@ -8,8 +8,9 @@ import {
   toCitySlug,
 } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { SectionHeader } from "@/components/ui/SectionHeader"
+import { IndexHead } from "@/components/ui/IndexHead"
 import { ListingGrid } from "@/components/directory/ListingGrid"
+import { LedgerList } from "@/components/directory/LedgerList"
 import { Button } from "@/components/ui/Button"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
@@ -20,6 +21,7 @@ import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { stateIntro, stateFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
 import { TopFittersTable } from "@/components/seo/TopFittersTable"
+import { shopTypeCountPhrase } from "@/lib/shop-types"
 
 interface PageProps {
   params: Promise<{ state_code: string }>
@@ -116,7 +118,7 @@ export default async function StatePage({ params }: PageProps) {
           typeMap,
         )
           .slice(0, 3)
-          .map(([type, count]) => `${count} ${type.toLowerCase()}s`)
+          .map(([type, count]) => shopTypeCountPhrase(type, count))
           .join(", ")}.${independentCount > 0 ? ` ${independentCount} independently owned.` : ""}${
           launchMonitorCount > 0 ? ` ${launchMonitorCount} with launch monitor details.` : ""
         }`}
@@ -146,15 +148,11 @@ export default async function StatePage({ params }: PageProps) {
       {/* Ranked comparison table — the citable "top picks" answer block */}
       <TopFittersTable shops={shops} place={stateName} year={DIRECTORY_YEAR} />
 
-      {/* Cities */}
+      {/* Cities — number-led head, no eyebrow (PageHeader holds the page's one) */}
       {cities.length > 1 && (
         <section className="bg-[var(--color-cream)] py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader
-              eyebrow="Browse by City"
-              title={`Cities in ${stateName}`}
-              centered={false}
-            />
+            <IndexHead value={cities.length}>cities in {stateName}.</IndexHead>
             <div className="mt-6 flex flex-wrap gap-2">
               {cities.map((city) => (
                 <ChipLink
@@ -169,27 +167,28 @@ export default async function StatePage({ params }: PageProps) {
         </section>
       )}
 
-      {/* Listings */}
+      {/* Listings — the ledger for long lists, cards for short ones */}
       <section className="bg-[var(--color-ivory)] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow={`${shops.length} Listings`}
-            title={`All Fitters in ${stateName}`}
-            centered={false}
-          />
-          <ListingGrid shops={shops} />
+          <IndexHead value={shops.length}>
+            {shops.length === 1 ? "fitter" : "fitters"} in {stateName}, all on record.
+          </IndexHead>
+          {shops.length > 9 ? (
+            <LedgerList shops={shops} />
+          ) : (
+            <ListingGrid shops={shops} />
+          )}
         </div>
       </section>
 
-      {/* Browse Other States */}
+      {/* Browse Other States — quiet footer strip, not another display head */}
       {otherStates.length > 0 && (
-        <section className="bg-[var(--color-cream)] grain relative py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <SectionHeader
-              eyebrow="Explore More"
-              title="Browse Other States"
-            />
-            <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <section className="bg-[var(--color-cream)] py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="font-display text-2xl font-bold text-[var(--color-charcoal)]">
+              Browse other states
+            </h2>
+            <div className="mt-5 flex flex-wrap gap-2">
               {otherStates.map((s) => (
                 <ChipLink
                   key={s.state_code}
@@ -198,7 +197,7 @@ export default async function StatePage({ params }: PageProps) {
                 />
               ))}
             </div>
-            <div className="mt-6 text-center">
+            <div className="mt-6">
               <Button href="/states" variant="outline" size="sm">
                 View All States
               </Button>

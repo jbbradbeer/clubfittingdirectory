@@ -471,10 +471,7 @@ export default async function ListingPage({ params }: PageProps) {
       {nearby.length > 0 && (
         <section className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader
-              eyebrow="Also in this area"
-              title={`More Fitters in ${shop.state}`}
-            />
+            <SectionHeader title={`More Fitters in ${shop.state}`} />
             <ListingGrid shops={nearby} reveal />
           </div>
         </section>

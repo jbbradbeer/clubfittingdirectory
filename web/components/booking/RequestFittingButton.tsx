@@ -102,7 +102,7 @@ export function RequestFittingButton({ shopId, shopName, shopSlug, className }: 
 
           {/* Panel */}
           <div className="relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl">
-            <span aria-hidden="true" className="block h-1 w-full bg-gradient-to-r from-[var(--color-forest)] to-[var(--color-gold)]" />
+            <span aria-hidden="true" className="block h-1 w-full bg-[var(--color-forest)]" />
 
             <button
               type="button"

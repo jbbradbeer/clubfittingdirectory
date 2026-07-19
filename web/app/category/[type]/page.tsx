@@ -3,8 +3,9 @@ import { notFound } from "next/navigation"
 import { getShopsForCategoryPage } from "@/lib/supabase/queries/shops"
 import { SHOP_TYPES, slugToShopType } from "@/lib/shop-types"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { SectionHeader } from "@/components/ui/SectionHeader"
+import { IndexHead } from "@/components/ui/IndexHead"
 import { ListingGrid } from "@/components/directory/ListingGrid"
+import { LedgerList } from "@/components/directory/LedgerList"
 import { Button } from "@/components/ui/Button"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { SITE_URL } from "@/lib/constants"
@@ -65,7 +66,7 @@ export default async function CategoryPage({ params }: PageProps) {
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: label }]}
-        eyebrow="Category"
+        eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
         title={label}
         subtitle={`${shops.length} listings across ${stateBreakdown.length} states.`}
       />
@@ -104,15 +105,17 @@ export default async function CategoryPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* Listings */}
+      {/* Listings — ledger for long lists, cards for short ones */}
       <section className="bg-[var(--color-ivory)] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow={`${shops.length} Listings`}
-            title={`All ${label}`}
-            centered={false}
-          />
-          <ListingGrid shops={shops} />
+          <IndexHead value={shops.length}>
+            {label.toLowerCase()}, all on record.
+          </IndexHead>
+          {shops.length > 9 ? (
+            <LedgerList shops={shops} />
+          ) : (
+            <ListingGrid shops={shops} />
+          )}
         </div>
       </section>
 
