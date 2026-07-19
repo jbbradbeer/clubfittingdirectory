@@ -74,8 +74,9 @@ export function TopFittersTable({ shops, place, year, showCity = true, noun = "C
   return (
     <section className="bg-[var(--color-ivory)] pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* No eyebrow — the update date already lives in the PageHeader above and
+            the methodology note below; one gold kicker per page is the rule. */}
         <SectionHeader
-          eyebrow={`Updated ${LAST_UPDATED_LABEL}`}
           title={`Top ${top.length} ${noun} in ${place} for ${year}`}
           centered={false}
         />

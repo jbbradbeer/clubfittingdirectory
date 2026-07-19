@@ -8,8 +8,9 @@ import {
 } from "@/lib/supabase/queries/shops"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { SectionHeader } from "@/components/ui/SectionHeader"
+import { IndexHead } from "@/components/ui/IndexHead"
 import { ListingGrid } from "@/components/directory/ListingGrid"
+import { LedgerList } from "@/components/directory/LedgerList"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
 import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured-data"
@@ -19,6 +20,7 @@ import { RelatedGuides } from "@/components/seo/RelatedGuides"
 import { cityIntro, cityFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
 import { TopFittersTable } from "@/components/seo/TopFittersTable"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
+import { shopTypeCountPhrase } from "@/lib/shop-types"
 
 interface PageProps {
   params: Promise<{ citySlug: string }>
@@ -113,7 +115,7 @@ export default async function CityPage({ params }: PageProps) {
         subtitle={`${shops.length} ${shops.length === 1 ? "listing" : "listings"} — ${Object.entries(
           typeMap,
         )
-          .map(([type, count]) => `${count} ${type.toLowerCase()}${count > 1 ? "s" : ""}`)
+          .map(([type, count]) => shopTypeCountPhrase(type, count))
           .join(", ")}.${
           independentCount > 0
             ? ` ${independentCount === shops.length ? "All" : independentCount} independently owned.`
@@ -149,15 +151,17 @@ export default async function CityPage({ params }: PageProps) {
       {/* Ranked comparison table — renders only with 3+ rated shops */}
       <TopFittersTable shops={shops} place={`${city}, ${stateCode}`} year={DIRECTORY_YEAR} showCity={false} />
 
-      {/* Listings */}
+      {/* Listings — ledger for long lists, cards for short ones */}
       <section className="bg-[var(--color-cream)] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow={`${shops.length} Listings`}
-            title={`All Fitters in ${city}`}
-            centered={false}
-          />
-          <ListingGrid shops={shops} />
+          <IndexHead value={shops.length}>
+            {shops.length === 1 ? "fitter" : "fitters"} in {city}, all on record.
+          </IndexHead>
+          {shops.length > 9 ? (
+            <LedgerList shops={shops} showCity={false} />
+          ) : (
+            <ListingGrid shops={shops} />
+          )}
         </div>
       </section>
 
@@ -166,12 +170,10 @@ export default async function CityPage({ params }: PageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {siblingCities.length > 0 && (
             <>
-              <SectionHeader
-                eyebrow="Nearby"
-                title={`More cities in ${state}`}
-                centered={false}
-              />
-              <div className="mt-6 flex flex-wrap gap-2">
+              <h2 className="font-display text-2xl font-bold text-[var(--color-charcoal)]">
+                More cities in {state}
+              </h2>
+              <div className="mt-5 flex flex-wrap gap-2">
                 {siblingCities.slice(0, 16).map((c) => (
                   <ChipLink
                     key={c.slug}

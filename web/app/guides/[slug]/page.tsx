@@ -105,7 +105,7 @@ export default async function GuidePage({ params }: PageProps) {
       {guide.related.length > 0 && (
         <section className="bg-white py-14">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader eyebrow="Keep reading" title="Related guides" centered={false} />
+            <SectionHeader title="Keep reading" centered={false} />
             <ul className="mt-8 divide-y divide-[var(--color-border)]">
               {guide.related.map((link) => (
                 <li key={link.href}>

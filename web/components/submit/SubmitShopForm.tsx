@@ -34,7 +34,7 @@ export function SubmitShopForm() {
   if (status === "success") {
     return (
       <div className="relative overflow-hidden bg-white border border-[var(--color-border)] rounded-2xl shadow-card">
-        <span aria-hidden="true" className="block h-1 w-full bg-gradient-to-r from-[var(--color-forest)] to-[var(--color-gold)]" />
+        <span aria-hidden="true" className="block h-1 w-full bg-[var(--color-forest)]" />
         <div className="p-8 text-center">
           <CheckCircle size={44} className="mx-auto text-[var(--color-forest)] mb-4" />
           <h2 className="font-display text-2xl text-[var(--color-charcoal)]">
@@ -55,7 +55,7 @@ export function SubmitShopForm() {
       className="relative overflow-hidden bg-white border border-[var(--color-border)] rounded-2xl shadow-card"
     >
       {/* Brand accent strip */}
-      <span aria-hidden="true" className="block h-1 w-full bg-gradient-to-r from-[var(--color-forest)] to-[var(--color-gold)]" />
+      <span aria-hidden="true" className="block h-1 w-full bg-[var(--color-forest)]" />
 
       <div className="p-6 sm:p-8 space-y-5">
         <Honeypot />

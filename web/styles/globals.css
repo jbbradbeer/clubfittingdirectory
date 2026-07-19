@@ -370,6 +370,16 @@ html.js [data-reveal="in"] {
   transform: none;
 }
 
+/* Print / full-page capture: no scrolling happens, so the IntersectionObserver
+   never fires — force reveal-hidden content visible. */
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Respect users who ask for less motion: show everything, animate nothing. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

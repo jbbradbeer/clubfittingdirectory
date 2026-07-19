@@ -3,8 +3,9 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getShopsForServicePage } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { SectionHeader } from "@/components/ui/SectionHeader"
+import { IndexHead } from "@/components/ui/IndexHead"
 import { ListingGrid } from "@/components/directory/ListingGrid"
+import { LedgerList } from "@/components/directory/LedgerList"
 import { TrackedButton } from "@/components/ui/TrackedButton"
 import { SITE_URL } from "@/lib/constants"
 import { rethrowQueryError } from "@/lib/utils"
@@ -12,7 +13,7 @@ import { buildItemListSchema } from "@/lib/structured-data"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { repairIntro, repairFaqs } from "@/lib/seo-content"
+import { repairIntro, repairFaqs, LAST_UPDATED_LABEL } from "@/lib/seo-content"
 
 /* ─────────────────────────────────────────────────────────
    /repair — service landing page for "golf club repair" search
@@ -46,7 +47,7 @@ export default async function RepairPage() {
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Club Repair" }]}
-        eyebrow="Service"
+        eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
         title="Golf Club Repair"
         subtitle={`${shops.length} shops offering club repair across ${stateBreakdown.length} states.`}
       />
@@ -104,12 +105,14 @@ export default async function RepairPage() {
       {/* Listings */}
       <section className="bg-[var(--color-ivory)] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow={`${shops.length} Listings`}
-            title="All Shops Offering Club Repair"
-            centered={false}
-          />
-          <ListingGrid shops={shops} />
+          <IndexHead value={shops.length}>
+            shops offering club repair, all on record.
+          </IndexHead>
+          {shops.length > 9 ? (
+            <LedgerList shops={shops} />
+          ) : (
+            <ListingGrid shops={shops} />
+          )}
         </div>
       </section>
 

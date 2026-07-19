@@ -37,3 +37,18 @@ export function slugToShopType(slug: string): ShopTypeDef | undefined {
 export function dbTypeToShopType(dbType: string): ShopTypeDef | undefined {
   return SHOP_TYPES.find((t) => t.dbType === dbType)
 }
+
+/**
+ * Count phrase for hero subtitles: "3 club fitters", "1 pro shop".
+ * Uses the taxonomy's singular/plural labels instead of naive `+ "s"`,
+ * which produced artifacts like "golf course / pro shops" and "instructions".
+ */
+export function shopTypeCountPhrase(dbType: string, count: number): string {
+  const def = dbTypeToShopType(dbType)
+  const name = def
+    ? (count === 1 ? def.singular : def.label).toLowerCase()
+    : count === 1
+      ? "other listing"
+      : "other listings"
+  return `${count} ${name}`
+}
