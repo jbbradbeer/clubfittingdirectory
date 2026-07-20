@@ -23,7 +23,7 @@ import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
 import { isTopRated, isVerified } from "@/lib/badges"
 import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
-import { listingQuickFacts, listingFaqs } from "@/lib/seo-content"
+import { listingQuickFacts, listingFaqs, expandCityName } from "@/lib/seo-content"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
@@ -50,8 +50,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (shop === null) notFound()
   if (!shop) return { title: "Fitter Not Found" }
 
-  const title = `${shop.name} — ${shop.city}, ${shop.state_code}`
-  const description = `${shop.name} is a ${shop.shop_type ?? "golf shop"} in ${shop.city}, ${shop.state}. ${
+  const displayCity = expandCityName(shop.city ?? "")
+  const title = `${shop.name} — ${displayCity}, ${shop.state_code}`
+  const description = `${shop.name} is a ${shop.shop_type ?? "golf shop"} in ${displayCity}, ${shop.state}. ${
     shop.offers_fitting ? "Club fitting available. " : ""
   }${shop.rating ? `Rated ${shop.rating}/5.` : ""}`
 
@@ -122,7 +123,7 @@ export default async function ListingPage({ params }: PageProps) {
             items={[
               { label: "Home", href: "/" },
               { label: shop.state, href: `/state/${(shop.state_code ?? "").toLowerCase()}` },
-              { label: shop.city, href: `/city/${citySlug}` },
+              { label: expandCityName(shop.city ?? ""), href: `/city/${citySlug}` },
               { label: shop.name },
             ]}
           />
@@ -473,6 +474,20 @@ export default async function ListingPage({ params }: PageProps) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeader title={`More Fitters in ${shop.state}`} />
             <ListingGrid shops={nearby} reveal />
+            {/* Descriptive-anchor link up to the parent city page — the
+                breadcrumb alone doesn't tell Google the city page is the
+                canonical "fitters in {city}" result, and GSC shows listings
+                outranking their own city page for those queries. */}
+            {citySlug && shop.city && (
+              <p className="mt-8 text-center text-sm text-[var(--color-charcoal-light)]">
+                <Link
+                  href={`/city/${citySlug}`}
+                  className="font-semibold text-[var(--color-forest)] hover:underline"
+                >
+                  See all golf club fitters in {expandCityName(shop.city)}, {shop.state_code} &rarr;
+                </Link>
+              </p>
+            )}
           </div>
         </section>
       )}

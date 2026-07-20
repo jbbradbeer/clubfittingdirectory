@@ -26,6 +26,17 @@ export const LAST_UPDATED_LABEL = new Date().toLocaleDateString("en-US", {
    A clause only renders when the underlying data exists — no invented claims,
    and data-poor pages just get a shorter honest paragraph. */
 
+/* ── Display-name expansion ──
+   The database stores some city names abbreviated ("Mt Pleasant"), but
+   searchers overwhelmingly type the full form ("Mount Pleasant") — GSC shows
+   the full-name variants earning the most impressions. Expanding for display
+   (titles, H1s, copy) matches the query language without touching slugs or
+   canonical URLs. "Mt" always expands to "Mount" for US place names; "St" is
+   deliberately left alone ("St. Louis" is the official form). */
+export function expandCityName(city: string): string {
+  return city.replace(/^Mt\.? /, "Mount ")
+}
+
 function monitorBrandCounts(shops: CollectionShop[]): [string, number][] {
   const counts: Record<string, number> = {}
   for (const s of shops) {
@@ -105,8 +116,18 @@ export function cityIntro(city: string, stateName: string, shops: CollectionShop
   } offering custom club fitting, equipment retail, and simulator sessions.`
   const data = dataSentences(shops)
   const techStat = techStatSentence(city, shops)
+  // Repair demand lands on city pages (GSC: "golf repair shop", "golf club
+  // repair near me") but the copy never said the word — this sentence renders
+  // only where a listed shop actually offers the service.
+  const repairCount = repairShopCount(shops)
+  const repair =
+    repairCount === 0
+      ? ""
+      : shops.length === 1
+        ? `The shop listed also offers golf club repair — regripping, reshafting, and loft and lie adjustment.`
+        : `${repairCount === shops.length ? "All" : repairCount} of the ${shops.length} shops also offer golf club repair — regripping, reshafting, and loft and lie adjustment.`
   const closing = `Compare ratings, prices, and services to book the fitting that suits your game.`
-  return [opening, data, techStat, closing].filter(Boolean).join(" ")
+  return [opening, data, techStat, repair, closing].filter(Boolean).join(" ")
 }
 
 export function categoryIntro(label: string, shops: CollectionShop[], stateCount: number): string {
@@ -137,6 +158,11 @@ export interface CollectionShop extends ShopFact {
   fitting_price_min?: number | null
   fitting_price_max?: number | null
   ownership_type?: string | null
+  services_array?: string[] | null
+}
+
+function repairShopCount(shops: CollectionShop[]): number {
+  return shops.filter((s) => s.services_array?.includes("Club Repair")).length
 }
 
 function topRatedFaq(place: string, shops: ShopFact[]): FaqItem | null {
@@ -173,6 +199,23 @@ function localPriceFaq(place: string, shops: CollectionShop[]): FaqItem | null {
   return {
     question: `How much does a golf club fitting cost in ${place}?`,
     answer: `Among the ${place} shops in this directory that publish prices, ${spread}. Nationally, a single-club fitting typically runs $50–$150 and a full-bag fitting more; many shops credit the fee toward clubs you buy. Check each listing for its current menu.`,
+  }
+}
+
+/** Repair FAQ from this page's real service data — answers the "golf club
+    repair near me" queries that GSC shows landing on city pages. Null when no
+    listed shop offers the service, so the page never claims repair it can't
+    deliver. */
+function localRepairFaq(place: string, shops: CollectionShop[]): FaqItem | null {
+  const count = repairShopCount(shops)
+  if (!count) return null
+  return {
+    question: `Where can I get golf clubs repaired in ${place}?`,
+    answer: `${
+      shops.length === 1
+        ? `The ${place} shop in this directory offers`
+        : `${count} of the ${shops.length} ${place} shops in this directory ${count === 1 ? "offers" : "offer"}`
+    } golf club repair — services like regripping, reshafting, and loft and lie adjustment. Check each listing's services above, or browse our national club repair directory for typical prices and turnaround times.`,
   }
 }
 
@@ -240,6 +283,7 @@ export function cityFaqs(city: string, stateName: string, shops: CollectionShop[
     ...[
       priceFaq,
       localTechFaq(city, shops),
+      localRepairFaq(city, shops),
       topRatedFaq(city, shops),
       fittingCountFaq(city, shops),
     ].filter((f): f is FaqItem => f !== null),
@@ -312,7 +356,7 @@ function shopDescriptor(shop: Shop): string {
 export function listingQuickFacts(shop: Shop): string {
   const parts: string[] = []
 
-  const place = [shop.city, shop.state].filter(Boolean).join(", ")
+  const place = [shop.city && expandCityName(shop.city), shop.state].filter(Boolean).join(", ")
   const descriptor = shopDescriptor(shop)
   const article = /^[aeiou]/.test(descriptor) ? "an" : "a"
   parts.push(`${shop.name} is ${article} ${descriptor}${place ? ` in ${place}` : ""}.`)
@@ -339,7 +383,7 @@ export function listingQuickFacts(shop: Shop): string {
 }
 
 export function listingFaqs(shop: Shop): FaqItem[] {
-  const place = [shop.city, shop.state_code].filter(Boolean).join(", ")
+  const place = [shop.city && expandCityName(shop.city), shop.state_code].filter(Boolean).join(", ")
   const price = formatFittingPrice(shop.fitting_price_min, shop.fitting_price_max)
   const items: (FaqItem | null)[] = [
     shop.offers_fitting || price || (shop.launch_monitors?.length ?? 0) > 0

@@ -62,6 +62,29 @@ Re-reviewed queue order against the 2026-06-10 GSC export (most recent available
 - **"ping fitters near me"** showing 1 impression at pos 11 — supports item #17 (Ping Fitting guide) as a future priority once the core cluster is deeper.
 - No items moved. Existing order (3 → 8 → 4 → 5 → 6 → 7 → 9 …) reflects the current signal correctly.
 
+## Live-GSC cluster map — 2026-07-19 (OpenSEO MCP, last 3 months)
+
+First clustering run from the live Search Console connection (454 query-page
+rows, 893 impressions, 0 clicks — site is young; everything ranks pages 2–10).
+Full analysis in the 2026-07-19 session; changes shipped same day.
+
+| # | Cluster | Signal | Target | Priority | Status |
+|---|---|---|---|---|---|
+| 1 | Peoria IL repair ("golf repair shop" pos 12, 17 imp) | Best striking-distance query on site | Peoria listing + /repair (city page is 1-shop → noindexed) | P1 | ✅ repair intro sentence + FAQ added to all city pages with repair shops |
+| 2 | Mt Pleasant SC fitters (~60 imp, 9 variants; searchers type "Mount") | David Ayres listing pos 22–53 beats city page pos 65–88 | David Ayres listing page | P1 | ✅ `expandCityName()` — "Mt" → "Mount" in all display copy; listing → city descriptive link added |
+| 3 | Metro fitting (dallas / minneapolis / utah / houston) | Impressions scatter over 3–6 pages per metro | City pages (multi-shop, indexable) | P2 | Template improvements apply; watch GSC |
+| 4 | Shop-name navigational (~330 rows, 70% of impressions) | Already works (pos 5–20) | /listing/* | P3 | No action — rises with authority |
+| 5 | Fitting education ("golf club fitting chart" pos 76; "golf club fitting directory" pos 13 for homepage) | Category-defining term near page 1 | /guides + homepage | P2 | Article queue continues |
+| 6 | National "near me" (pos 72–88) | Too competitive for now | Homepage — later | Do-not-target | Wins itself as city pages strengthen |
+
+Cannibalization: Mt Pleasant real (fixed via link hierarchy + naming);
+"golf club fitting near me" over 11 pages is per-searcher geo-matching — normal
+for a directory, not cannibalization.
+
+**Key structural fact learned:** 1-shop city pages are noindexed by design
+(thin-content rule). Local intent for those towns must be won by the LISTING
+page — listing metadata/copy now uses the full city spelling for this reason.
+
 ## Structural projects (not articles — bigger levers)
 
 | Project | Target demand | Evidence |
