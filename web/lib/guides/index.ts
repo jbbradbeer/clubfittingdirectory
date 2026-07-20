@@ -9,6 +9,7 @@ import { howToChooseAClubFitterGuide } from "@/lib/guides/how-to-choose-a-club-f
 import { clubChampionVsIndependentGuide } from "@/lib/guides/club-champion-vs-independent-fitter"
 import { golfClubRepairCostGuide } from "@/lib/guides/golf-club-repair-cost"
 import { whatToExpectAtAGolfClubFittingGuide } from "@/lib/guides/what-to-expect-at-a-golf-club-fitting"
+import { onlineGolfClubFittingGuide } from "@/lib/guides/online-golf-club-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -30,6 +31,7 @@ export const GUIDES: Guide[] = [
   clubChampionVsIndependentGuide,
   golfClubRepairCostGuide,
   whatToExpectAtAGolfClubFittingGuide,
+  onlineGolfClubFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
