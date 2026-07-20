@@ -17,7 +17,7 @@ import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { cityIntro, cityFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
+import { cityIntro, cityFaqs, expandCityName, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
 import { TopFittersTable } from "@/components/seo/TopFittersTable"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import { shopTypeCountPhrase } from "@/lib/shop-types"
@@ -42,7 +42,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (result === null) notFound()
   if (!result) return { title: "City Not Found" }
 
-  const { city, state, shops } = result
+  const { state, shops } = result
+  const city = expandCityName(result.city)
   // "Top …" framing only when there's a real field to rank; a one-shop town
   // gets an honest year-stamped title instead.
   const title =
@@ -68,7 +69,8 @@ export default async function CityPage({ params }: PageProps) {
 
   if (!result) notFound()
 
-  const { shops, city, state, stateCode } = result
+  const { shops, state, stateCode } = result
+  const city = expandCityName(result.city)
 
   const siblingCities = (
     await getCityLinksForState(stateCode).catch((e) =>
@@ -178,7 +180,7 @@ export default async function CityPage({ params }: PageProps) {
                   <ChipLink
                     key={c.slug}
                     href={`/city/${c.slug}`}
-                    label={c.name}
+                    label={expandCityName(c.name)}
                     count={c.count}
                     size="sm"
                   />
