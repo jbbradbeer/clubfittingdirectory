@@ -27,7 +27,7 @@ export default function GuidesIndexPage() {
         align="center"
         eyebrow="The Fitting Library"
         title="Golf club fitting, explained"
-        subtitle="Clear, expert guides to getting the right clubs for your game — what fitting is, what it costs, and how to get it done right."
+        subtitle="What a fitting costs, what happens in the bay, and how to walk out with clubs that actually match your swing."
       />
 
       <section className="bg-[var(--color-ivory)] py-14 md:py-20">
@@ -44,11 +44,11 @@ export default function GuidesIndexPage() {
       <section className="bg-[var(--color-forest)] grain text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
           <h2 className="font-display text-3xl md:text-[2.4rem] font-bold text-white! leading-[1.1]">
-            Ready to get fitted?
+            You know the process. Now pick the fitter.
           </h2>
           <p className="mt-4 max-w-xl mx-auto text-white/70 leading-relaxed">
-            Browse independent club fitters, retailers, and simulators near you — every
-            listing on {SITE_NAME} shows services, ratings, and contact details.
+            Every listing on {SITE_NAME} shows services, ratings, published fitting
+            prices, and launch monitor tech — so you can compare before you book.
           </p>
           <div className="mt-8">
             <Button href="/directory" variant="secondary" size="lg">

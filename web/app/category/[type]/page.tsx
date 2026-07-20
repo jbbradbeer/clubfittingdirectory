@@ -121,8 +121,12 @@ export default async function CategoryPage({ params }: PageProps) {
 
       {/* CTA */}
       <section className="bg-[var(--color-cream)] py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Button href="/directory" variant="primary">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <p className="text-lg text-[var(--color-charcoal)]">
+            Need a different kind of shop? The full directory filters by service,
+            rating, and distance.
+          </p>
+          <Button href="/directory" variant="primary" className="shrink-0">
             Search the Full Directory
           </Button>
         </div>

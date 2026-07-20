@@ -40,8 +40,8 @@ export function Footer() {
               {SITE_NAME}
             </h3>
             <p className="text-sm leading-relaxed text-white/60 mb-6">
-              The most comprehensive directory of independent golf club fitters and
-              retailers across the United States. Curated with care.
+              Independent golf club fitters, retailers, and studios across all 50
+              states — every listing reviewed by hand, and culled when it goes stale.
             </p>
             <a
               href="https://thetuxedocollective.com"
@@ -59,7 +59,9 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-8 md:contents">
             {/* Quick Links */}
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)] mb-5">
+              {/* `!` needed: the global h1–h6 charcoal rule is unlayered and
+                  otherwise beats this utility (see CSS layer gotcha) */}
+              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)]! mb-5">
                 Quick Links
               </h4>
               <ul className="space-y-3">
@@ -78,7 +80,9 @@ export function Footer() {
 
             {/* Popular States */}
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)] mb-5">
+              {/* `!` needed: the global h1–h6 charcoal rule is unlayered and
+                  otherwise beats this utility (see CSS layer gotcha) */}
+              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)]! mb-5">
                 Popular States
               </h4>
               <ul className="space-y-3">
@@ -105,7 +109,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
           </p>
           <p className="text-xs text-white/40">
-            Independent fitters. Honest listings. Find your fit.
+            Independent fitters. Honest listings.
           </p>
         </div>
       </div>

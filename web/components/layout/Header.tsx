@@ -36,7 +36,7 @@ export function Header() {
               {SITE_NAME}
             </span>
             <span className="text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-[var(--color-gold-ink)] mt-0.5">
-              Find Your Fit
+              Every Fitter, On Record
             </span>
           </Link>
 

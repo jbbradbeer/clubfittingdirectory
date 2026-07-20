@@ -90,9 +90,9 @@ export default async function HomePage() {
                 className="display text-[clamp(2.6rem,6.2vw,4.75rem)] text-[var(--color-charcoal)] animate-fade-in-up"
                 style={{ animationDelay: "60ms" }}
               >
-                Find your{" "}
+                Golf&apos;s best fitters,{" "}
                 <span className="relative whitespace-nowrap text-[var(--color-forest)]">
-                  perfect fit
+                  on record
                   <svg
                     className="absolute -bottom-2 left-0 w-full"
                     height="10"
