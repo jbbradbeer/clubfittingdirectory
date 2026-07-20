@@ -6,5 +6,5 @@ export const alt = "Club Fitting Directory"
 
 /* Site-wide default social card (homepage + any page without its own image). */
 export default function Image() {
-  return renderOgImage("Find your perfect fit.", "The Club Fitting Directory")
+  return renderOgImage("Golf's best fitters, on record.", "The Club Fitting Directory")
 }

@@ -118,7 +118,11 @@ export default async function RepairPage() {
 
       {/* CTA */}
       <section className="bg-[var(--color-cream)] py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <p className="text-lg text-[var(--color-charcoal)]">
+            Want repair plus fitting, lessons, or a launch monitor? Filter the
+            full directory.
+          </p>
           <TrackedButton
             href="/directory?services=Club+Repair"
             variant="primary"
