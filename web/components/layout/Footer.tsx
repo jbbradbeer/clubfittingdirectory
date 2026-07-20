@@ -11,6 +11,8 @@ const QUICK_LINKS = [
   { label: "Fitting Guides", href: "/guides" },
   { label: "Club Length Calculator", href: "/tools/golf-club-length-calculator" },
   { label: "Distance Calculator", href: "/tools/golf-club-distance-calculator" },
+  { label: "Shaft Flex Calculator", href: "/tools/golf-shaft-flex-calculator" },
+  { label: "Grip Size Calculator", href: "/tools/golf-grip-size-calculator" },
   { label: "Submit a Shop", href: "/submit" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
