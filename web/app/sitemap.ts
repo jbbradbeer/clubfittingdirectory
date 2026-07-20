@@ -84,6 +84,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority:         0.8,
     },
     {
+      url:              `${SITE_URL}/tools/golf-club-length-calculator`,
+      lastModified:     now,
+      changeFrequency:  "monthly",
+      priority:         0.8,
+    },
+    {
+      url:              `${SITE_URL}/tools/golf-club-distance-calculator`,
+      lastModified:     now,
+      changeFrequency:  "monthly",
+      priority:         0.8,
+    },
+    {
       url:              `${SITE_URL}/submit`,
       lastModified:     now,
       changeFrequency:  "monthly",

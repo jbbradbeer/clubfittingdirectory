@@ -9,6 +9,8 @@ const QUICK_LINKS = [
   { label: "Golf Retailers", href: "/category/golf-retailers" },
   { label: "Club Repair", href: "/repair" },
   { label: "Fitting Guides", href: "/guides" },
+  { label: "Club Length Calculator", href: "/tools/golf-club-length-calculator" },
+  { label: "Distance Calculator", href: "/tools/golf-club-distance-calculator" },
   { label: "Submit a Shop", href: "/submit" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
