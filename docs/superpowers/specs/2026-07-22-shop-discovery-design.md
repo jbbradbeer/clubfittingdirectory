@@ -35,11 +35,12 @@ source identifier.
   2026-07-22, stored in `discovery/.env`, never committed). Many locators are JSON
   endpoints behind store-locator maps; Firecrawl handles the JS-heavy ones.
   Polite scraping: delays between requests, no hammering.
-- **`places.py`** — Google Places Text Search, queries like "club fitting" /
-  "golf club fitting" per metro in pilot states. Stores `place_id` for dedup and
-  future refresh. Pilot cost estimate: $2–5. Requires a Places API key (owner action).
-- **OpenSEO `search_local_businesses`** — MCP tool, used at review time as a
-  cross-check, not a batch source. Credits currently 0 — owner tops up first.
+- **OpenSEO `search_local_businesses`** — MCP tool, run per metro in pilot states
+  with queries like "club fitting" / "golf club fitting". Credits topped up
+  2026-07-22. Batches kept under the 2,000-credit confirmation threshold.
+
+Google Places was considered and dropped (founder decision 2026-07-22) — OpenSEO
+local search covers the same ground without a new API key or billing setup.
 
 Scrapers checkpoint per state (rerun-safe; same pattern as `outreach/checkpoints`).
 
@@ -75,7 +76,8 @@ without approval.
   completed ones.
 - Firecrawl failures: retry once, then log and skip; `firecrawl ask` with the failing
   jobId for diagnosis if a source consistently fails.
-- Places API: cap requests per run; abort run if error rate spikes (protects spend).
+- OpenSEO: track credit spend per run; stop and report if a state burns unexpectedly
+  many credits.
 
 ## Success criteria (pilot)
 
@@ -86,5 +88,4 @@ without approval.
 
 ## Owner actions needed
 
-1. Google Places API key (Google Cloud console, enable Places API, billing on).
-2. Top up OpenSEO credits (optional — cross-check only).
+None — OpenSEO credits topped up 2026-07-22; Firecrawl authenticated.
