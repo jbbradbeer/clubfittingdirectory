@@ -56,7 +56,7 @@ discovery/checkpoints/
 - [ ] **Step 3: Write `discovery/.env`**
 
 ```
-FIRECRAWL_API_KEY=<paste key from Firecrawl auth - see discovery/.env>
+FIRECRAWL_API_KEY=<paste key from Firecrawl auth — see discovery/.env>
 ```
 
 (Key obtained via Firecrawl auth 2026-07-22. If invalid at run time, re-auth per Firecrawl Path D and replace.)
