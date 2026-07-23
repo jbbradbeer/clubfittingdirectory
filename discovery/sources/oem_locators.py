@@ -130,11 +130,21 @@ def fetch_ping(state: str):
     return {"statusCode": 200, "statusMessage": "OK", "data": merged}
 
 
+PING_FITTING_BADGES = (
+    "badgeFitterOfTheYear",
+    "badgeCertifiedFitter",
+    "badgeFittingExperience",
+    "badgeCustomFittingExperience",
+)
+
+
 def parse_ping(payload, state: str):
     recs = []
     for item in payload.get("data", []):
         if item.get("state") != state:
             continue
+        if not any(item.get(b) for b in PING_FITTING_BADGES):
+            continue  # no fitting badge — a bare dealer/pro-shop listing, not a fitter
         r = _blank()
         r.update(
             name=(item.get("name") or "").strip(),
