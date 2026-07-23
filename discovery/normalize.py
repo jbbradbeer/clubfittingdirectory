@@ -31,7 +31,7 @@ def norm_city(s: str) -> str:
 def site_domain(url: str) -> str:
     if not url:
         return ""
-    if not url.startswith("http"):
+    if not url.lower().startswith(("http://", "https://")):
         url = "https://" + url
     netloc = urllib.parse.urlparse(url).netloc.lower()
     return netloc.removeprefix("www.")

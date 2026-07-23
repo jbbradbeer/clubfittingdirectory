@@ -23,6 +23,8 @@ class TestNormalize(unittest.TestCase):
         self.assertEqual(site_domain("https://www.truespecgolf.com/tx"), "truespecgolf.com")
         self.assertEqual(site_domain("truespecgolf.com"), "truespecgolf.com")
         self.assertEqual(site_domain(""), "")
+        self.assertEqual(site_domain("HTTPS://WWW.TrueSpecGolf.com/tx"), "truespecgolf.com")
+        self.assertEqual(site_domain("Http://example.com"), "example.com")
 
 
 if __name__ == "__main__":
