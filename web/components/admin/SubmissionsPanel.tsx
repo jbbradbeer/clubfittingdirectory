@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { approveSubmission, rejectSubmission, approveClaim, rejectClaim } from "@/app/admin/actions"
+import { approveSubmission, rejectSubmission, approveClaim, rejectClaim, sendPaymentLink } from "@/app/admin/actions"
 
 interface Submission {
   id: string
@@ -168,6 +168,19 @@ function ClaimCard({ c, pending }: { c: Claim; pending?: boolean }) {
               <input type="hidden" name="id" value={c.id} />
               <button className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer">
                 Reject
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Approved claim → next step in the funnel: email the owner their
+            Stripe payment link ($349/yr, /onboard/pay/[slug]). */}
+        {!pending && c.review_status === "approved" && c.shops && (
+          <div className="shrink-0">
+            <form action={sendPaymentLink}>
+              <input type="hidden" name="slug" value={c.shops.slug} />
+              <button className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-forest)] text-[var(--color-forest)] rounded-full hover:bg-[var(--color-forest-tint)] transition-colors cursor-pointer">
+                Send payment link
               </button>
             </form>
           </div>

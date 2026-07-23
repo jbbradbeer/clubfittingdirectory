@@ -60,7 +60,10 @@ export default async function ClaimPage({
             <p className="mt-4 mb-8 text-[var(--color-charcoal-light)] leading-relaxed">
               This listing is live in front of golfers searching for fitters. Claiming it is
               free: you get your details corrected, photos added, and the fitting requests
-              golfers submit through the page forwarded to you.
+              golfers submit through the page forwarded to you.{" "}
+              <Link href="/for-shops" className="text-[var(--color-forest)] font-semibold hover:underline">
+                See everything shop owners get →
+              </Link>
             </p>
             <ClaimShopForm shopSlug={shop.slug} shopName={shop.name} source={src === "outreach" ? "outreach" : "listing_page"} />
           </>

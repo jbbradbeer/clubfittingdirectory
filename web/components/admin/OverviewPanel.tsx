@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateVerified, lapseVerified } from "@/app/admin/actions"
+import { activateVerified, lapseVerified, sendPaymentLink } from "@/app/admin/actions"
 
 /**
  * The at-a-glance tab: everything needing the founder's attention today,
@@ -79,8 +79,10 @@ export async function OverviewPanel() {
       <div className="mt-8 bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
         <h2 className="font-display text-lg text-[var(--color-charcoal)]">Verified listings</h2>
         <p className="text-sm text-[var(--color-charcoal-light)] mt-1">
-          Stripe payment arrived? Paste the shop&apos;s URL slug (the part after /listing/) and
-          activate — badge goes live and the 1-year expiry is stamped automatically.
+          Stripe payments now activate automatically via the webhook. This manual
+          activation stays as the backstop — paste the shop&apos;s URL slug (the part
+          after /listing/) and activate; badge + 1-year expiry are stamped.
+          &ldquo;Renewal link&rdquo; emails the owner their payment page (~30 days before expiry).
         </p>
 
         <form action={activateVerified} className="mt-4 flex gap-2">
@@ -127,15 +129,27 @@ export async function OverviewPanel() {
                       {expired && " (past due)"}
                     </td>
                     <td className="py-2.5 text-right">
-                      <form action={lapseVerified}>
-                        <input type="hidden" name="slug" value={s.slug} />
-                        <button
-                          type="submit"
-                          className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-border)] rounded-lg text-[var(--color-charcoal)] hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
-                        >
-                          Lapse
-                        </button>
-                      </form>
+                      <div className="flex justify-end gap-1.5">
+                        <form action={sendPaymentLink}>
+                          <input type="hidden" name="slug" value={s.slug} />
+                          <input type="hidden" name="renewal" value="1" />
+                          <button
+                            type="submit"
+                            className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-forest)] rounded-lg text-[var(--color-forest)] hover:bg-[var(--color-forest-tint)] transition-colors cursor-pointer"
+                          >
+                            Renewal link
+                          </button>
+                        </form>
+                        <form action={lapseVerified}>
+                          <input type="hidden" name="slug" value={s.slug} />
+                          <button
+                            type="submit"
+                            className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-border)] rounded-lg text-[var(--color-charcoal)] hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
+                          >
+                            Lapse
+                          </button>
+                        </form>
+                      </div>
                     </td>
                   </tr>
                 )

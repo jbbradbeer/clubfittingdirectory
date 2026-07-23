@@ -7,6 +7,8 @@ import { log } from "@/lib/logger"
 import { revalidatePath } from "next/cache"
 import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { activateVerifiedShop } from "@/lib/verified"
+import { sendPaymentLinkEmail } from "@/lib/email"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { toCitySlug } from "@/lib/slugs"
@@ -178,26 +180,9 @@ export async function activateVerified(formData: FormData) {
   const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
   if (!slug) return
 
-  const now = new Date()
-  const expires = new Date(now)
-  expires.setFullYear(expires.getFullYear() + 1)
-
-  const supabase = createAdminClient()
-  const { data: shop, error } = await supabase
-    .from("shops")
-    .update({
-      listing_tier: "verified",
-      verified_at: now.toISOString(),
-      verified_expires_at: expires.toISOString(),
-    })
-    .eq("slug", slug)
-    .select("slug")
-    .single()
-  if (error || !shop) throw new Error(`Could not activate: ${error?.message ?? "shop not found"}`)
-
-  revalidatePath("/admin")
-  revalidatePath(`/listing/${slug}`)
-  revalidatePath("/") // badge shows on homepage carousel cards
+  // Shared with the Stripe webhook — one code path for badge activation
+  // (sets tier + stamps expiry + refreshes the cached pages).
+  await activateVerifiedShop(slug)
 }
 
 /* ── Lapse a Verified listing (subscription not renewed). Keeps verified_at /
@@ -230,5 +215,66 @@ export async function rejectClaim(formData: FormData) {
     .update({ review_status: "rejected" })
     .eq("id", id)
   if (error) throw new Error(`Could not reject claim: ${error.message}`)
+  revalidatePath("/admin")
+}
+
+/* ── Send the Stripe payment link to a claimed shop's owner.
+   The /onboard/pay/[slug] page is gated on claimed_at, so this button only
+   works (and only makes sense) after a claim is approved. Doubles as the
+   renewal-note sender from the Overview roster. ── */
+export async function sendPaymentLink(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
+  const renewal = String(formData.get("renewal") ?? "") === "1"
+  if (!slug) return
+
+  const supabase = createAdminClient()
+  const { data: shop, error } = await supabase
+    .from("shops")
+    .select("name, slug, owner_email, claimed_at")
+    .eq("slug", slug)
+    .single()
+  if (error || !shop) throw new Error(`Shop not found: ${error?.message ?? slug}`)
+  if (!shop.claimed_at || !shop.owner_email) {
+    throw new Error("Shop has no approved claim / owner email — approve the claim first.")
+  }
+
+  const sent = await sendPaymentLinkEmail({
+    shopName: shop.name,
+    slug: shop.slug,
+    ownerEmail: shop.owner_email,
+    renewal,
+  })
+  if (!sent) throw new Error("Email failed to send — check RESEND_API_KEY and Vercel logs.")
+  log.info("admin/actions", "payment link sent", { slug, renewal })
+}
+
+/* ── Listing update requests (Update Requests tab) ── */
+export async function markUpdateDone(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  const shopSlug = String(formData.get("shop_slug") ?? "")
+  if (!id) return
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from("listing_update_requests")
+    .update({ review_status: "done" })
+    .eq("id", id)
+  if (error) throw new Error(`Could not mark done: ${error.message}`)
+  revalidatePath("/admin")
+  // The founder just hand-applied edits to the listing — refresh its page.
+  if (/^[a-z0-9-]+$/.test(shopSlug)) revalidatePath(`/listing/${shopSlug}`)
+}
+
+export async function rejectUpdateRequest(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  if (!id) return
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from("listing_update_requests")
+    .update({ review_status: "rejected" })
+    .eq("id", id)
+  if (error) throw new Error(`Could not reject request: ${error.message}`)
   revalidatePath("/admin")
 }

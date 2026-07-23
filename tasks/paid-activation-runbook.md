@@ -1,8 +1,23 @@
 # Paid Activation Runbook — Founding Verified ($349/yr)
 
-What to do every time a Stripe payment email lands. Ten minutes, no code.
+> **UPDATED 2026-07-23:** payment → activation → welcome email is now
+> AUTOMATED via Stripe Checkout + webhook (see the onboarding flow build).
+> The manual steps below are the backstop for when a payment arrives outside
+> the flow (e.g. an old payment link).
 
-## When a payment arrives
+## The automated flow (normal path)
+
+1. Owner claims their listing (free) → you **Approve** in Admin → Submissions.
+2. Intro call happens → click **Send payment link** on the approved claim
+   card (Submissions tab). The owner gets an email with their payment page
+   (`/onboard/pay/<slug>`).
+3. They pay via Stripe Checkout → the webhook automatically: records the
+   payment, activates the badge (+1-year expiry), refreshes the pages, and
+   sends the welcome email (you're cc'd — that's your payment alert).
+4. **Your only remaining manual step: Gear Shelf.** Add the shop to the
+   newsletter rotation list in beehiiv.
+
+## Manual backstop (payment arrives outside the flow)
 
 1. **Find the shop's slug.** Search the site for the shop name; the slug is
    the part of the URL after `/listing/` (e.g.
@@ -43,8 +58,9 @@ What to do every time a Stripe payment email lands. Ten minutes, no code.
 
 - Admin → Overview → *Verified listings* card. Expiry dates are listed;
   **past-due rows show in red**.
-- ~30 days before a shop's expiry, email them a friendly renewal note with
-  the Stripe link.
+- ~30 days before a shop's expiry, click **Renewal link** on their roster row
+  — it emails them their payment page. Paying extends the expiry from the
+  current expiry date (no paid time lost on early renewal).
 - If a shop lapses (no renewal after a grace week or two):
   1. Click **Lapse** on their row (badge comes off; history is kept).
   2. Send the courteous note:
