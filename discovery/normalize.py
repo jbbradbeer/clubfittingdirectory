@@ -23,8 +23,8 @@ def norm_phone(s: str) -> str:
 
 def norm_city(s: str) -> str:
     s = _WS.sub(" ", _PUNCT.sub(" ", (s or "").lower())).strip()
-    s = re.sub(r"^ft\b", "fort", s)
-    s = re.sub(r"^saint\b", "st", s)
+    s = re.sub(r"\bft\b", "fort", s)
+    s = re.sub(r"\bsaint\b", "st", s)
     return s
 
 

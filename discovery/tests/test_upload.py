@@ -28,6 +28,15 @@ class TestTransforms(unittest.TestCase):
         self.assertNotIn("address", shop)
         self.assertNotIn("zip", shop)
 
+    def test_row_to_shop_missing_columns(self):
+        row = {"name": "Bomb Squad Golf", "city": "Plano",
+               "state_code": "TX", "phone": "9725550101",
+               "website": "bombsquadgolf.com", "sources": "titleist,openseo",
+               "verdict": "new", "reason": "", "approved": "yes"}
+        shop = row_to_shop(row, set())
+        self.assertEqual(shop["street"], "")
+        self.assertEqual(shop["postal_code"], "")
+
     def test_valid_row(self):
         good = {"name": "Bomb Squad Golf", "city": "Plano", "state_code": "TX"}
         self.assertEqual(valid_row(good), "")

@@ -18,6 +18,8 @@ class TestNormalize(unittest.TestCase):
     def test_norm_city(self):
         self.assertEqual(norm_city("Ft. Worth"), "fort worth")
         self.assertEqual(norm_city("Saint Petersburg"), "st petersburg")
+        self.assertEqual(norm_city("Port Saint Lucie"), norm_city("Port St. Lucie"))
+        self.assertEqual(norm_city("Old Ft. Myers"), "old fort myers")
 
     def test_site_domain(self):
         self.assertEqual(site_domain("https://www.truespecgolf.com/tx"), "truespecgolf.com")

@@ -59,17 +59,19 @@ def clean_website(url: str) -> str:
 
 
 def row_to_shop(row: dict, taken_slugs: set) -> dict:
-    sc = row["state_code"].upper()
+    name = (row.get("name") or "").strip()
+    city = (row.get("city") or "").strip()
+    sc = (row.get("state_code") or "").strip().upper()
     return {
-        "name": row["name"].strip(),
-        "street": row["address"].strip(),
-        "city": row["city"].strip(),
+        "name": name,
+        "street": (row.get("address") or "").strip(),
+        "city": city,
         "state_code": sc,
         "state": US_STATES.get(sc, sc),
-        "postal_code": row["zip"].strip(),
-        "phone": row["phone"].strip(),
-        "website": clean_website(row["website"]),
-        "slug": make_slug(row["name"], row["city"], sc, taken_slugs),
+        "postal_code": (row.get("zip") or "").strip(),
+        "phone": (row.get("phone") or "").strip(),
+        "website": clean_website(row.get("website") or ""),
+        "slug": make_slug(name, city, sc, taken_slugs),
         "status": "active",
         "shop_type": "Clubfitter",
         "offers_fitting": True,
