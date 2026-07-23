@@ -474,7 +474,7 @@ from discovery.common import RAW_DIR, REVIEW_DIR  # noqa: E402
 from discovery.normalize import norm_city, norm_name, norm_phone, site_domain  # noqa: E402
 
 FUZZY_DUP = 0.95      # >= this + same city → duplicate
-FUZZY_UNCERTAIN = 0.82  # >= this + same city → uncertain (manual eye)
+FUZZY_UNCERTAIN = 0.80  # >= this + same city → uncertain (manual eye)
 
 
 class ExistingIndex:
