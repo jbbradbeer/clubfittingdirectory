@@ -1,6 +1,6 @@
 import unittest
 
-from discovery.upload_new_shops import make_slug, row_to_shop
+from discovery.upload_new_shops import make_slug, row_to_shop, valid_row
 
 
 class TestTransforms(unittest.TestCase):
@@ -23,6 +23,23 @@ class TestTransforms(unittest.TestCase):
         self.assertEqual(shop["state_code"], "TX")
         self.assertEqual(shop["website"], "https://bombsquadgolf.com")
         self.assertEqual(shop["slug"], "bomb-squad-golf-plano-tx")
+        self.assertEqual(shop["street"], "1 Main St")
+        self.assertEqual(shop["postal_code"], "75023")
+        self.assertNotIn("address", shop)
+        self.assertNotIn("zip", shop)
+
+    def test_valid_row(self):
+        good = {"name": "Bomb Squad Golf", "city": "Plano", "state_code": "TX"}
+        self.assertEqual(valid_row(good), "")
+
+        no_name = {"name": "", "city": "Plano", "state_code": "TX"}
+        self.assertNotEqual(valid_row(no_name), "")
+
+        no_city = {"name": "Bomb Squad Golf", "city": "", "state_code": "TX"}
+        self.assertNotEqual(valid_row(no_city), "")
+
+        bad_state = {"name": "Bomb Squad Golf", "city": "Plano", "state_code": "ZZ"}
+        self.assertNotEqual(valid_row(bad_state), "")
 
 
 if __name__ == "__main__":
