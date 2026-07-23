@@ -1,10 +1,55 @@
 import json
 import unittest
+import urllib.error
 from pathlib import Path
+from unittest.mock import patch
 
-from discovery.sources.oem_locators import parse_ping
+from discovery.sources.oem_locators import _http_json, parse_ping
 
 FIXTURES = Path(__file__).parent / "fixtures"
+
+
+class FakeResponse:
+    """Minimal context-manager stand-in for urllib's HTTPResponse."""
+
+    def __init__(self, body: bytes):
+        self._body = body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def read(self):
+        return self._body
+
+
+class TestHttpJsonRetry(unittest.TestCase):
+    """No real network calls — urlopen is mocked throughout."""
+
+    @patch("discovery.sources.oem_locators.urllib.request.urlopen")
+    @patch("discovery.sources.oem_locators.time.sleep")
+    def test_retries_once_after_transient_failure_then_succeeds(self, mock_sleep, mock_urlopen):
+        mock_urlopen.side_effect = [
+            urllib.error.URLError("connection reset"),
+            FakeResponse(b'{"ok": true}'),
+        ]
+        result = _http_json("https://example.test/api", headers={})
+        self.assertEqual(result, {"ok": True})
+        self.assertEqual(mock_urlopen.call_count, 2)
+        mock_sleep.assert_called_once_with(3)
+
+    @patch("discovery.sources.oem_locators.urllib.request.urlopen")
+    @patch("discovery.sources.oem_locators.time.sleep")
+    def test_raises_after_second_failure(self, mock_sleep, mock_urlopen):
+        mock_urlopen.side_effect = [
+            urllib.error.URLError("connection reset"),
+            TimeoutError("timed out"),
+        ]
+        with self.assertRaises(TimeoutError):
+            _http_json("https://example.test/api", headers={})
+        self.assertEqual(mock_urlopen.call_count, 2)
 
 
 class TestPingParse(unittest.TestCase):
