@@ -344,7 +344,7 @@ export async function notifyUpdateRequest(args: {
       </table>
       <p style="margin-top:16px;font-size:13px;">
         ${listingUrl ? `<a href="${escapeHtml(listingUrl)}" style="color:#1B4332;">View the listing →</a> · ` : ""}
-        <a href="${SITE_URL}/admin?tab=updates" style="color:#1B4332;">Review in admin →</a>
+        <a href="${SITE_URL}/admin/updates" style="color:#1B4332;">Review in admin →</a>
       </p>
     </div>`
 

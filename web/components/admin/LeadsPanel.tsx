@@ -1,6 +1,10 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { sanitizeSearchTerm } from "@/lib/supabase/queries/shared"
 import { updateLeadStatus } from "@/app/admin/leads/actions"
+import { ActionButton } from "@/components/admin/ActionButton"
+import { FilterBar } from "@/components/admin/FilterBar"
+import { Pagination } from "@/components/admin/Pagination"
 
 interface Lead {
   id: string
@@ -19,6 +23,7 @@ interface Lead {
 }
 
 const STATUSES = ["new", "contacted", "booked", "closed"] as const
+const PAGE_SIZE = 25
 
 const FITTING_LABELS: Record<string, string> = {
   driver: "Driver", irons: "Irons", wedges: "Wedges",
@@ -44,20 +49,51 @@ const STATUS_STYLE: Record<string, string> = {
   closed: "bg-[var(--color-cream)] text-[var(--color-charcoal-light)]",
 }
 
-export async function LeadsPanel() {
+/**
+ * Fitting Requests tab — filtered + paginated server-side from the URL
+ * (?q=&status=&page=), so search survives refresh and the query never loads
+ * the whole table.
+ */
+export async function LeadsPanel({
+  q,
+  status,
+  page,
+}: {
+  q?: string
+  status?: string
+  page?: string
+}) {
   const supabase = createAdminClient()
-  const { data, error } = await supabase
-    .from("fitting_requests")
-    .select("*")
-    .order("created_at", { ascending: false })
+  const term = sanitizeSearchTerm(q ?? "")
+  const activeStatus = STATUSES.includes(status as (typeof STATUSES)[number]) ? status : ""
+  const pageNum = Math.max(1, parseInt(page ?? "1", 10) || 1)
 
+  // Status count tiles (head-only queries — cheap at any table size).
+  const counts = Object.fromEntries(
+    await Promise.all(
+      STATUSES.map(async (s) => {
+        const { count } = await supabase
+          .from("fitting_requests")
+          .select("id", { count: "exact", head: true })
+          .eq("status", s)
+        return [s, count ?? 0] as const
+      }),
+    ),
+  )
+
+  let query = supabase
+    .from("fitting_requests")
+    .select("*", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range((pageNum - 1) * PAGE_SIZE, pageNum * PAGE_SIZE - 1)
+  if (activeStatus) query = query.eq("status", activeStatus)
+  if (term.length >= 2) {
+    query = query.or(
+      `visitor_name.ilike.%${term}%,visitor_email.ilike.%${term}%,shop_name.ilike.%${term}%`,
+    )
+  }
+  const { data, count: total, error } = await query
   const leads = (data ?? []) as Lead[]
-  const counts = STATUSES.reduce<Record<string, number>>((acc, s) => {
-    acc[s] = leads.filter((l) => l.status === s).length
-    return acc
-  }, {})
-  const open = leads.filter((l) => l.status === "new" || l.status === "contacted")
-  const done = leads.filter((l) => l.status === "booked" || l.status === "closed")
 
   return (
     <div>
@@ -70,31 +106,26 @@ export async function LeadsPanel() {
         ))}
       </div>
 
+      <FilterBar
+        placeholder="Search by golfer, email, or shop…"
+        statusOptions={STATUSES.map((s) => ({ value: s, label: s }))}
+      />
+
       {error && (
         <p className="mb-6 text-sm text-red-600">Could not load requests: {error.message}</p>
       )}
 
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-        Active ({open.length})
-      </h3>
-      {open.length === 0 ? (
-        <p className="text-sm text-[var(--color-charcoal-light)] mb-10">No active requests right now.</p>
+      {leads.length === 0 ? (
+        <p className="text-sm text-[var(--color-charcoal-light)]">
+          {term || activeStatus ? "No requests match these filters." : "No requests yet."}
+        </p>
       ) : (
-        <div className="space-y-4 mb-12">
-          {open.map((l) => <LeadCard key={l.id} l={l} />)}
+        <div className="space-y-4">
+          {leads.map((l) => <LeadCard key={l.id} l={l} />)}
         </div>
       )}
 
-      {done.length > 0 && (
-        <>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-            Booked &amp; closed ({done.length})
-          </h3>
-          <div className="space-y-3">
-            {done.map((l) => <LeadCard key={l.id} l={l} />)}
-          </div>
-        </>
-      )}
+      <Pagination page={pageNum} pageSize={PAGE_SIZE} total={total ?? 0} />
     </div>
   )
 }
@@ -141,21 +172,22 @@ function LeadCard({ l }: { l: Lead }) {
           <div className="flex flex-wrap gap-1.5">
             {STATUSES.map((s) => {
               const active = l.status === s
-              return (
-                <form key={s} action={updateLeadStatus}>
-                  <input type="hidden" name="id" value={l.id} />
-                  <input type="hidden" name="status" value={s} />
-                  <button
-                    className={`px-3 py-1 text-xs font-semibold rounded-full transition-colors cursor-pointer capitalize ${
-                      active
-                        ? STATUS_STYLE[s]
-                        : "border border-[var(--color-border)] text-[var(--color-charcoal-light)] hover:bg-[var(--color-cream)]"
-                    }`}
-                    disabled={active}
-                  >
-                    {s}
-                  </button>
-                </form>
+              return active ? (
+                <span
+                  key={s}
+                  className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${STATUS_STYLE[s]}`}
+                >
+                  {s}
+                </span>
+              ) : (
+                <ActionButton
+                  key={s}
+                  action={updateLeadStatus}
+                  fields={{ id: l.id, status: s }}
+                  className="px-3 py-1 text-xs font-semibold rounded-full transition-colors cursor-pointer capitalize border border-[var(--color-border)] text-[var(--color-charcoal-light)] hover:bg-[var(--color-cream)]"
+                >
+                  {s}
+                </ActionButton>
               )
             })}
           </div>

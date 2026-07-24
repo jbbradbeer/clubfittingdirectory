@@ -7,8 +7,11 @@ import { createAdminClient } from "@/lib/supabase/admin"
 
 const VALID_STATUSES = new Set(["new", "contacted", "booked", "closed"])
 
-/* ── Move a fitting request along the workflow (new → contacted → booked → closed) ── */
-export async function updateLeadStatus(formData: FormData) {
+/* ── Move a fitting request along the workflow (new → contacted → booked → closed).
+   Returns { error } instead of throwing — see ActionResult in ../actions.ts. ── */
+export async function updateLeadStatus(
+  formData: FormData,
+): Promise<{ error?: string } | void> {
   if (!(await isAdmin())) redirect("/admin/login")
 
   const id = String(formData.get("id") ?? "")
@@ -20,6 +23,6 @@ export async function updateLeadStatus(formData: FormData) {
     .from("fitting_requests")
     .update({ status })
     .eq("id", id)
-  if (error) throw new Error(`Could not update lead status: ${error.message}`)
-  revalidatePath("/admin")
+  if (error) return { error: `Could not update lead status: ${error.message}` }
+  revalidatePath("/admin", "layout")
 }

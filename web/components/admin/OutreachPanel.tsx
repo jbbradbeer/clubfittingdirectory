@@ -1,17 +1,25 @@
-import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { fetchAllRows } from "@/lib/supabase/queries/shared"
+import { Pagination } from "@/components/admin/Pagination"
 
 interface OutreachRow {
   id: string
   segment: string | null
   status: string
   contact_email: string | null
-  email_verified: string
-  email_search_status: string
   touches: number
   last_touch_at: string | null
   notes: string | null
   shops: { name: string; slug: string; city: string; state_code: string } | null
+}
+
+/* Funnel math only needs these three columns — fetching just them keeps the
+   payload tiny even with thousands of outreach rows (the old version pulled
+   every column plus the shops join for all 5,000). */
+interface FunnelRow {
+  segment: string | null
+  status: string
+  touches: number
 }
 
 const STATUSES = [
@@ -23,6 +31,7 @@ const REPLIED_LIKE = new Set(["replied", "call_booked", "closed_won"])
 
 const KILL_MIN_COMPLETED = 100
 const KILL_RATE = 0.04
+const PAGE_SIZE = 50
 
 function fmtDate(iso: string | null): string {
   if (!iso) return "—"
@@ -33,15 +42,35 @@ function fmtDate(iso: string | null): string {
   }
 }
 
-export async function OutreachPanel() {
+export async function OutreachPanel({ page }: { page?: string }) {
   const supabase = createAdminClient()
-  const { data, error } = await supabase
-    .from("outreach")
-    .select("id,segment,status,contact_email,email_verified,email_search_status,touches,last_touch_at,notes,shops(name,slug,city,state_code)")
-    .order("last_touch_at", { ascending: false, nullsFirst: false })
-    .limit(5000)
+  const pageNum = Math.max(1, parseInt(page ?? "1", 10) || 1)
 
-  const rows = (data ?? []) as unknown as OutreachRow[]
+  // Two focused queries instead of one 5,000-row full-column pull:
+  // slim columns for the funnel math (fetchAllRows pages past PostgREST's
+  // silent 1,000-row cap), full rows only for the paginated
+  // "needs your reply" list.
+  const [funnelRes, repliedRes] = await Promise.all([
+    fetchAllRows<FunnelRow>(() =>
+      supabase.from("outreach").select("segment,status,touches").order("id"),
+    ).then(
+      (data) => ({ data, error: null as { message: string } | null }),
+      (e) => ({
+        data: [] as FunnelRow[],
+        error: { message: e instanceof Error ? e.message : String(e) },
+      }),
+    ),
+    supabase
+      .from("outreach")
+      .select("id,segment,status,contact_email,touches,last_touch_at,notes,shops(name,slug,city,state_code)", { count: "exact" })
+      .eq("status", "replied")
+      .order("last_touch_at", { ascending: false, nullsFirst: false })
+      .range((pageNum - 1) * PAGE_SIZE, pageNum * PAGE_SIZE - 1),
+  ])
+
+  const rows = funnelRes.data
+  const error = funnelRes.error ?? repliedRes.error
+  const needsAction = (repliedRes.data ?? []) as unknown as OutreachRow[]
 
   const funnel: Record<string, Record<string, number>> = {}
   for (const r of rows) {
@@ -63,14 +92,10 @@ export async function OutreachPanel() {
   ).length
   const killTripped = completedT3 >= KILL_MIN_COMPLETED && abRate.pct !== null && abRate.pct < KILL_RATE
 
-  const needsAction = rows.filter((r) => r.status === "replied")
-  const emailsFound = rows.filter((r) => r.contact_email).length
-  const emailsValid = rows.filter((r) => r.email_verified === "valid").length
-
   return (
     <div>
       <p className="text-sm text-[var(--color-charcoal-light)] mb-8">
-        Founding Verified campaign · {rows.length} shops queued · {emailsFound} emails found · {emailsValid} verified valid
+        Verified campaign · {rows.length} shops queued
       </p>
 
       {error && (
@@ -114,12 +139,12 @@ export async function OutreachPanel() {
       </div>
 
       <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-        Replied — needs your reply ({needsAction.length})
+        Replied — needs your reply ({repliedRes.count ?? 0})
       </h3>
       {needsAction.length === 0 ? (
         <p className="text-sm text-[var(--color-charcoal-light)] mb-10">Nothing waiting on you.</p>
       ) : (
-        <div className="space-y-3 mb-10">
+        <div className="space-y-3 mb-4">
           {needsAction.map((r) => (
             <div key={r.id} className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-4">
               <p className="font-semibold text-[var(--color-charcoal)]">
@@ -142,8 +167,9 @@ export async function OutreachPanel() {
           ))}
         </div>
       )}
+      <Pagination page={pageNum} pageSize={PAGE_SIZE} total={repliedRes.count ?? 0} />
 
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3 mt-10">
         Funnel by segment
       </h3>
       <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5 overflow-x-auto">
@@ -170,11 +196,6 @@ export async function OutreachPanel() {
           </tbody>
         </table>
       </div>
-
-      <p className="mt-6 text-xs text-[var(--color-charcoal-light)]">
-        Full listing links appear on the <Link href="/admin?tab=submissions" className="text-[var(--color-forest)] hover:underline">claims queue</Link> when
-        outreach recipients claim their shop.
-      </p>
     </div>
   )
 }
