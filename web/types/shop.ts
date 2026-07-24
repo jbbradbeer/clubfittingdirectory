@@ -61,6 +61,7 @@ export interface Shop {
   owner_email?: string | null
   verified_at?: string | null
   verified_expires_at?: string | null
+  verified_plan?: "monthly" | "annual" | null
 
   // Meta
   business_status: string

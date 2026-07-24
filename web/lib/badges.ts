@@ -2,7 +2,7 @@
  * Badge logic — the single source of truth for which tag a shop earns.
  *
  * Three badges, strictly ranked:
- *   Verified (paid, listing_tier='verified')  — the $39/mo / $349/yr product
+ *   Verified (paid, listing_tier='verified')  — the $49/mo / $499/yr product
  *   Featured (is_featured)                    — legacy/premium placement flag
  *   Top Rated (computed)                      — EARNED, never bought. Computed
  *     at render time from live rating data so it can't go stale; the old

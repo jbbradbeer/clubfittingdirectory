@@ -1,4 +1,6 @@
 import Stripe from "stripe"
+import type { PlanKey } from "@/lib/plans"
+import { PLANS } from "@/lib/plans"
 
 /**
  * Lazy Stripe client singleton.
@@ -21,31 +23,39 @@ export function getStripe(): Stripe {
 }
 
 /**
- * Resolve the Founding Verified price for Checkout.
+ * Resolve the Verified price for a plan (monthly $49 or annual $499).
  *
- * STRIPE_PRICE_ID accepts either a price id (price_…) or a product id
- * (prod_…) — the founder's existing product from the outreach plan is a
- * prod_ id. For a product id, active prices are listed and a one-time price
- * is preferred (simplest renewal story); otherwise the first active price is
- * used. The result also carries whether the price is recurring, so checkout
- * can pick mode "payment" vs "subscription" to match.
+ * STRIPE_PRICE_ID_MONTHLY / STRIPE_PRICE_ID_ANNUAL each accept either a price
+ * id (price_…) or a product id (prod_…). For a product id, active prices are
+ * listed and a recurring price whose interval matches the plan is preferred;
+ * otherwise the first active price is used. The result also carries whether
+ * the price is recurring, so checkout can pick mode "payment" vs
+ * "subscription" to match.
  *
- * Cached per instance — the price only changes with a config change.
+ * Cached per plan per instance — a price only changes with a config change.
  * Returns null when unset or unresolvable; callers surface a clear error.
  */
 export type VerifiedPrice = { id: string; recurring: boolean }
 
-let cachedPrice: VerifiedPrice | null = null
+const PLAN_ENV: Record<PlanKey, string> = {
+  monthly: "STRIPE_PRICE_ID_MONTHLY",
+  annual: "STRIPE_PRICE_ID_ANNUAL",
+}
 
-export async function getVerifiedPrice(): Promise<VerifiedPrice | null> {
-  const configured = process.env.STRIPE_PRICE_ID
+const cachedPrices = new Map<PlanKey, VerifiedPrice>()
+
+export async function getVerifiedPrice(plan: PlanKey): Promise<VerifiedPrice | null> {
+  const configured = process.env[PLAN_ENV[plan]]
   if (!configured) return null
-  if (cachedPrice) return cachedPrice
+
+  const cached = cachedPrices.get(plan)
+  if (cached) return cached
 
   if (configured.startsWith("price_")) {
     const price = await getStripe().prices.retrieve(configured)
-    cachedPrice = { id: price.id, recurring: price.type === "recurring" }
-    return cachedPrice
+    const resolved = { id: price.id, recurring: price.type === "recurring" }
+    cachedPrices.set(plan, resolved)
+    return resolved
   }
 
   if (configured.startsWith("prod_")) {
@@ -55,9 +65,13 @@ export async function getVerifiedPrice(): Promise<VerifiedPrice | null> {
       limit: 10,
     })
     if (prices.length === 0) return null
-    const chosen = prices.find((p) => p.type === "one_time") ?? prices[0]
-    cachedPrice = { id: chosen.id, recurring: chosen.type === "recurring" }
-    return cachedPrice
+    const chosen =
+      prices.find(
+        (p) => p.type === "recurring" && p.recurring?.interval === PLANS[plan].interval,
+      ) ?? prices[0]
+    const resolved = { id: chosen.id, recurring: chosen.type === "recurring" }
+    cachedPrices.set(plan, resolved)
+    return resolved
   }
 
   return null

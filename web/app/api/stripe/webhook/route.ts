@@ -4,6 +4,7 @@ import { getStripe } from "@/lib/stripe"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { activateVerifiedShop } from "@/lib/verified"
 import { sendPaymentReceivedEmail } from "@/lib/email"
+import { isPlanKey, type PlanKey } from "@/lib/plans"
 import { log } from "@/lib/logger"
 
 /**
@@ -16,7 +17,8 @@ import { log } from "@/lib/logger"
  *
  * On invoice.paid with billing_reason "subscription_cycle" (only fires when
  * the configured Stripe price is recurring): a renewal auto-charge — record
- * it and extend the badge another year. The first subscription invoice
+ * it and extend the badge one billing interval (month or year, from the plan
+ * in the subscription metadata). The first subscription invoice
  * (billing_reason "subscription_create") is skipped; the session handler
  * covers it.
  *
@@ -72,6 +74,10 @@ export async function POST(request: Request) {
 
   const shopId = session.metadata?.shop_id
   const shopSlug = session.metadata?.shop_slug
+  // Sessions created before the plan split carry no plan → annual (correct
+  // for every pre-split customer).
+  const rawPlan = session.metadata?.plan
+  const plan: PlanKey = isPlanKey(rawPlan) ? rawPlan : "annual"
   if (!shopId || !shopSlug) {
     // A session we didn't create (or created without metadata) — log loudly;
     // returning 200 stops Stripe from retrying something we can't handle.
@@ -104,9 +110,10 @@ export async function POST(request: Request) {
       throw insertErr
     }
 
-    const slug = await activateVerifiedShop(shopSlug)
+    const slug = await activateVerifiedShop(shopSlug, plan)
     log.info("api/stripe-webhook", "payment processed, badge activated", {
       slug,
+      plan,
       session: session.id,
       amount: session.amount_total,
     })
@@ -148,6 +155,9 @@ async function handleRenewalInvoice(invoice: Stripe.Invoice) {
   const meta = invoice.parent?.subscription_details?.metadata
   const shopId = meta?.shop_id
   const shopSlug = meta?.shop_slug
+  // Pre-split subscriptions carry no plan metadata → annual.
+  const rawPlan = meta?.plan
+  const plan: PlanKey = isPlanKey(rawPlan) ? rawPlan : "annual"
   if (!shopId || !shopSlug || !invoice.id) {
     log.error("api/stripe-webhook", "renewal invoice missing shop metadata", {
       invoice: invoice.id,
@@ -174,9 +184,10 @@ async function handleRenewalInvoice(invoice: Stripe.Invoice) {
       throw insertErr
     }
 
-    const slug = await activateVerifiedShop(shopSlug)
+    const slug = await activateVerifiedShop(shopSlug, plan)
     log.info("api/stripe-webhook", "renewal processed, badge extended", {
       slug,
+      plan,
       invoice: invoice.id,
       amount: invoice.amount_paid,
     })

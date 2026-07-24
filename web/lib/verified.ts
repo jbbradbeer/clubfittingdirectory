@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { log } from "@/lib/logger"
 import { nextExpiry } from "@/lib/verified-math"
+import type { PlanKey } from "@/lib/plans"
 
 /**
  * Shared Verified-tier activation — the single code path that turns the paid
@@ -17,10 +18,15 @@ import { nextExpiry } from "@/lib/verified-math"
  */
 
 /**
- * Activate (or extend) the Verified tier for a shop.
+ * Activate (or extend) the Verified tier for a shop. The plan drives the
+ * expiry extension: monthly = +1 month, annual = +1 year. Webhook events
+ * from before the plan split carry no plan metadata and default to annual.
  * Returns the shop's slug, or throws with a clear message.
  */
-export async function activateVerifiedShop(slug: string): Promise<string> {
+export async function activateVerifiedShop(
+  slug: string,
+  plan: PlanKey = "annual",
+): Promise<string> {
   const cleanSlug = slug.trim().toLowerCase()
   if (!cleanSlug) throw new Error("Missing shop slug.")
 
@@ -36,7 +42,7 @@ export async function activateVerifiedShop(slug: string): Promise<string> {
   }
 
   const now = new Date()
-  const expires = nextExpiry(existing.verified_expires_at, now)
+  const expires = nextExpiry(existing.verified_expires_at, now, plan)
 
   const { error } = await supabase
     .from("shops")
@@ -44,6 +50,7 @@ export async function activateVerifiedShop(slug: string): Promise<string> {
       listing_tier: "verified",
       verified_at: now.toISOString(),
       verified_expires_at: expires.toISOString(),
+      verified_plan: plan,
     })
     .eq("slug", cleanSlug)
   if (error) throw new Error(`Could not activate: ${error.message}`)
@@ -54,6 +61,10 @@ export async function activateVerifiedShop(slug: string): Promise<string> {
   revalidatePath(`/listing/${cleanSlug}`)
   revalidatePath("/")
 
-  log.info("verified", "activated", { slug: cleanSlug, expires: expires.toISOString() })
+  log.info("verified", "activated", {
+    slug: cleanSlug,
+    plan,
+    expires: expires.toISOString(),
+  })
   return cleanSlug
 }

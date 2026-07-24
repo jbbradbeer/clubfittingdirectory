@@ -26,4 +26,28 @@ describe("nextExpiry", () => {
       "2027-07-23T12:00:00.000Z",
     )
   })
+
+  it("monthly plan: first activation extends one month from now", () => {
+    expect(nextExpiry(null, NOW, "monthly").toISOString()).toBe(
+      "2026-08-23T12:00:00.000Z",
+    )
+  })
+
+  it("monthly plan: renewal extends one month from the CURRENT expiry", () => {
+    expect(nextExpiry("2026-08-01T00:00:00Z", NOW, "monthly").toISOString()).toBe(
+      "2026-09-01T00:00:00.000Z",
+    )
+  })
+
+  it("monthly plan: lapsed shop extends one month from now", () => {
+    expect(nextExpiry("2026-01-01T00:00:00Z", NOW, "monthly").toISOString()).toBe(
+      "2026-08-23T12:00:00.000Z",
+    )
+  })
+
+  it("explicit annual plan matches the default", () => {
+    expect(nextExpiry(null, NOW, "annual").toISOString()).toBe(
+      nextExpiry(null, NOW).toISOString(),
+    )
+  })
 })
