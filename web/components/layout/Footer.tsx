@@ -13,6 +13,7 @@ const QUICK_LINKS = [
   { label: "Distance Calculator", href: "/tools/golf-club-distance-calculator" },
   { label: "Shaft Flex Calculator", href: "/tools/golf-shaft-flex-calculator" },
   { label: "Grip Size Calculator", href: "/tools/golf-grip-size-calculator" },
+  { label: "For Shop Owners", href: "/for-shops" },
   { label: "Submit a Shop", href: "/submit" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },

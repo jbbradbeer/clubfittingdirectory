@@ -7,6 +7,7 @@ import { OverviewPanel } from "@/components/admin/OverviewPanel"
 import { LeadsPanel } from "@/components/admin/LeadsPanel"
 import { SubmissionsPanel } from "@/components/admin/SubmissionsPanel"
 import { OutreachPanel } from "@/components/admin/OutreachPanel"
+import { UpdatesPanel } from "@/components/admin/UpdatesPanel"
 
 export const metadata: Metadata = {
   title: "Admin — Dashboard",
@@ -20,6 +21,7 @@ const TABS = [
   { key: "overview", label: "Overview" },
   { key: "leads", label: "Fitting Requests" },
   { key: "submissions", label: "Submissions & Claims" },
+  { key: "updates", label: "Update Requests" },
   { key: "outreach", label: "Outreach" },
 ] as const
 
@@ -67,6 +69,7 @@ export default async function AdminPage({
         {active === "overview" && <OverviewPanel />}
         {active === "leads" && <LeadsPanel />}
         {active === "submissions" && <SubmissionsPanel />}
+        {active === "updates" && <UpdatesPanel />}
         {active === "outreach" && <OutreachPanel />}
       </div>
     </section>
