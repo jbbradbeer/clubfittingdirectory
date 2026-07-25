@@ -3,13 +3,22 @@
 import { useState } from "react"
 import { Loader2, Lock } from "lucide-react"
 import { Button } from "@/components/ui/Button"
+import { PLANS, type PlanKey } from "@/lib/plans"
 
 /**
  * "Pay with Stripe" button for /onboard/pay/[slug]. Creates a fresh Checkout
  * Session on click (Checkout URLs expire after 24h, so they're never emailed
  * directly) and redirects the owner to Stripe's hosted payment page.
  */
-export function PayButton({ shopSlug, renewal }: { shopSlug: string; renewal?: boolean }) {
+export function PayButton({
+  shopSlug,
+  plan,
+  renewal,
+}: {
+  shopSlug: string
+  plan: PlanKey
+  renewal?: boolean
+}) {
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle")
   const [errorMsg, setErrorMsg] = useState("")
 
@@ -20,7 +29,7 @@ export function PayButton({ shopSlug, renewal }: { shopSlug: string; renewal?: b
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ shop_slug: shopSlug }),
+        body: JSON.stringify({ shop_slug: shopSlug, plan }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok || !data.url) {
@@ -48,13 +57,13 @@ export function PayButton({ shopSlug, renewal }: { shopSlug: string; renewal?: b
         {status === "loading" ? (
           <><Loader2 size={18} className="animate-spin" /> Opening secure checkout…</>
         ) : (
-          <><Lock size={16} /> {renewal ? "Renew" : "Activate"} Founding Verified — $349/yr</>
+          <><Lock size={16} /> {renewal ? "Renew" : "Activate"} Verified — {PLANS[plan].label}</>
         )}
       </Button>
       {status === "error" && <p className="mt-3 text-sm text-red-600 text-center">{errorMsg}</p>}
       <p className="mt-3 text-xs text-[var(--color-charcoal-light)] text-center">
-        Secure payment by Stripe. Billed yearly — cancel anytime and the badge
-        stays through your paid year.
+        Secure payment by Stripe. Billed {plan === "monthly" ? "monthly" : "yearly"} — cancel
+        anytime and the badge stays through your paid {plan === "monthly" ? "month" : "year"}.
       </p>
     </div>
   )

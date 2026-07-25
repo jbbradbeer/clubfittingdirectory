@@ -174,7 +174,7 @@ function ClaimCard({ c, pending }: { c: Claim; pending?: boolean }) {
         )}
 
         {/* Approved claim → next step in the funnel: email the owner their
-            Stripe payment link ($349/yr, /onboard/pay/[slug]). */}
+            Stripe payment link ($49/mo or $499/yr, /onboard/pay/[slug]). */}
         {!pending && c.review_status === "approved" && c.shops && (
           <div className="shrink-0">
             <form action={sendPaymentLink}>

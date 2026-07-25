@@ -171,10 +171,11 @@ export async function sendClaimConfirmation(claim: {
 const SLUG_RE = /^[a-z0-9-]+$/
 
 /**
- * Send a claimed shop's owner the payment link for Founding Verified
- * ($349/yr). Triggered by the admin "Send payment link" button — after the
- * claim is approved (and usually after the intro call). With renewal=true the
- * copy shifts to the friendly renewal note from the runbook.
+ * Send a claimed shop's owner the payment link for Verified ($49/mo or
+ * $499/yr — they pick the plan on the pay page). Triggered by the admin
+ * "Send payment link" button — after the claim is approved (and usually
+ * after the intro call). With renewal=true the copy shifts to the friendly
+ * renewal note from the runbook.
  */
 export async function sendPaymentLinkEmail(args: {
   shopName: string
@@ -194,23 +195,23 @@ export async function sendPaymentLinkEmail(args: {
 
   const payUrl = `${SITE_URL}/onboard/pay/${args.slug}`
   const intro = args.renewal
-    ? `Your Founding Verified year for <strong>${escapeHtml(args.shopName)}</strong> is
-       coming up for renewal. Same founding price holds for you — $349 for the
-       year, badge and Gear Shelf rotation carry straight on.`
+    ? `Your Verified membership for <strong>${escapeHtml(args.shopName)}</strong> is
+       coming up for renewal. Renew and the badge and Gear Shelf rotation carry
+       straight on — $49/month or $499/year, whichever suits.`
     : `You're verified — the last step is payment, and the
        <strong>${escapeHtml(args.shopName)}</strong> badge goes live within minutes.
-       Founding partner rate: $349 for the year, grandfathered for as long as
-       you stay.`
+       $49/month or $499/year (two months free on annual) — pick your plan on
+       the payment page.`
 
   const html = `
     <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
       <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">
-        ${args.renewal ? "Time to renew — Founding Verified" : "You're verified — activate your listing"}
+        ${args.renewal ? "Time to renew — Verified" : "You're verified — activate your listing"}
       </p>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:16px 0;">${intro}</p>
       <p style="margin:0 0 24px;">
         <a href="${payUrl}" style="display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;">
-          ${args.renewal ? "Renew Founding Verified — $349/yr" : "Activate Founding Verified — $349/yr"} →
+          ${args.renewal ? "Renew Verified" : "Activate Verified"} →
         </a>
       </p>
       <p style="font-size:12px;color:#9b9b9b;">
@@ -226,8 +227,8 @@ export async function sendPaymentLinkEmail(args: {
       cc: NOTIFY_TO,
       replyTo: NOTIFY_TO,
       subject: args.renewal
-        ? `Renew Founding Verified — ${args.shopName}`
-        : `Activate Founding Verified — ${args.shopName}`,
+        ? `Renew Verified — ${args.shopName}`
+        : `Activate Verified — ${args.shopName}`,
       html,
     })
     if (error) throw error
@@ -265,7 +266,7 @@ export async function sendPaymentReceivedEmail(args: {
   const html = `
     <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
       <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">
-        You're in — Founding Verified
+        You're in — Verified
       </p>
       <p style="font-size:14px;color:#6b6b6b;margin:0 0 16px;">
         <strong>${escapeHtml(args.shopName)}</strong> is now Verified on the directory.
@@ -286,7 +287,7 @@ export async function sendPaymentReceivedEmail(args: {
       </ol>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 16px;">
         Fitting requests golfers submit on your page go straight to this email.
-        Grandfathered at $349/yr as a founding partner. Questions, just reply.
+        Questions, just reply.
       </p>
     </div>`
 
@@ -297,7 +298,7 @@ export async function sendPaymentReceivedEmail(args: {
       to: args.ownerEmail,
       cc: NOTIFY_TO,
       replyTo: NOTIFY_TO,
-      subject: `You're in — Founding Verified on Club Fitting Directory`,
+      subject: `You're in — Verified on Club Fitting Directory`,
       html,
     })
     if (error) throw error

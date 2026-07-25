@@ -28,14 +28,23 @@ export async function OverviewPanel() {
         .not("claimed_at", "is", null).then(({ count: n, error }) => (error ? null : (n ?? 0))),
     ])
 
-  const mrr = verifiedShops === null ? null : Math.round((verifiedShops * 349) / 12)
-
-  // Current Verified roster with expiry — the renewal control surface.
+  // Current Verified roster with expiry + plan — the renewal control surface.
   const { data: verifiedList } = await supabase
     .from("shops")
-    .select("name,slug,verified_at,verified_expires_at")
+    .select("name,slug,verified_at,verified_expires_at,verified_plan")
     .eq("listing_tier", "verified")
     .order("verified_expires_at", { ascending: true, nullsFirst: true })
+
+  // MRR from unexpired badges: monthly $49 counts whole, annual $499 ÷ 12.
+  // Shops activated before the plan column existed (null) count as annual.
+  const now = new Date()
+  const paying = (verifiedList ?? []).filter(
+    (s) => !s.verified_expires_at || new Date(s.verified_expires_at) > now,
+  )
+  const monthlyCount = paying.filter((s) => s.verified_plan === "monthly").length
+  const annualCount = paying.length - monthlyCount
+  const mrr =
+    verifiedList === null ? null : monthlyCount * 49 + Math.round((annualCount * 499) / 12)
 
   const cards: { label: string; value: number | null; tab: string; urgent?: boolean }[] = [
     { label: "New fitting requests", value: newLeads, tab: "leads", urgent: (newLeads ?? 0) > 0 },
@@ -66,12 +75,12 @@ export async function OverviewPanel() {
       </div>
 
       <div className="bg-[var(--color-forest)] text-white rounded-2xl shadow-card p-6">
-        <p className="text-xs uppercase tracking-wider text-white/70">Recurring revenue (annual plans ÷ 12)</p>
+        <p className="text-xs uppercase tracking-wider text-white/70">Recurring revenue (monthly + annual ÷ 12)</p>
         <p className="text-3xl font-display mt-1">
           {mrr === null ? "—" : `$${mrr.toLocaleString()} MRR`}
         </p>
         <p className="text-sm text-white/70 mt-1">
-          {verifiedShops ?? 0} Verified shops · target $10,000 by year end
+          {verifiedShops ?? 0} Verified shops ({monthlyCount} monthly · {annualCount} annual) · target $10,000 by year end
         </p>
       </div>
 
@@ -105,6 +114,7 @@ export async function OverviewPanel() {
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-[var(--color-charcoal-light)] border-b border-[var(--color-border)]">
                 <th className="py-2 pr-3">Shop</th>
+                <th className="py-2 pr-3">Plan</th>
                 <th className="py-2 pr-3">Verified</th>
                 <th className="py-2 pr-3">Expires</th>
                 <th className="py-2" />
@@ -120,6 +130,9 @@ export async function OverviewPanel() {
                       <Link href={`/listing/${s.slug}`} className="font-medium text-[var(--color-forest)] hover:underline">
                         {s.name}
                       </Link>
+                    </td>
+                    <td className="py-2.5 pr-3 text-[var(--color-charcoal-light)]">
+                      {s.verified_plan === "monthly" ? "$49/mo" : "$499/yr"}
                     </td>
                     <td className="py-2.5 pr-3 text-[var(--color-charcoal-light)]">
                       {s.verified_at ? new Date(s.verified_at).toLocaleDateString() : "—"}

@@ -4,11 +4,13 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 import { str, parseJsonBody, invalidBodyResponse } from "@/lib/api/validation"
+import { isPlanKey, type PlanKey } from "@/lib/plans"
 import { SITE_URL } from "@/lib/constants"
 
 /**
- * Create a Stripe Checkout Session for the Founding Verified annual payment.
- * POST /api/checkout { shop_slug } → { url }
+ * Create a Stripe Checkout Session for the Verified badge.
+ * POST /api/checkout { shop_slug, plan? } → { url }
+ * plan is "monthly" ($49/mo) or "annual" ($499/yr); defaults to annual.
  *
  * Gate: the shop must be active AND claimed (claimed_at is only ever stamped
  * by the admin approveClaim action, so "claimed" means the founder has
@@ -35,11 +37,15 @@ export async function POST(request: Request) {
   const slug = str(body.shop_slug, 200).toLowerCase()
   if (!slug) return NextResponse.json({ error: "Missing shop." }, { status: 400 })
 
+  // Plan is optional (older links carry none) and must be one of ours —
+  // never trust an arbitrary string from the browser.
+  const plan: PlanKey = isPlanKey(body.plan) ? body.plan : "annual"
+
   try {
     // Accepts price_… or prod_… (resolved to the product's active price).
-    const price = await getVerifiedPrice()
+    const price = await getVerifiedPrice(plan)
     if (!price) {
-      log.error("api/checkout", "STRIPE_PRICE_ID unset or has no active price")
+      log.error("api/checkout", "Stripe price env unset or has no active price", { plan })
       return NextResponse.json(
         { error: "Payments aren't configured yet. Please reply to our email instead." },
         { status: 500 },
@@ -51,7 +57,9 @@ export async function POST(request: Request) {
     const supabase = createAdminClient()
     const { data: shop, error } = await supabase
       .from("shops")
-      .select("id, name, slug, status, claimed_at, owner_email, listing_tier, verified_expires_at")
+      .select(
+        "id, name, slug, status, claimed_at, owner_email, listing_tier, verified_expires_at, verified_plan",
+      )
       .eq("slug", slug)
       .single()
 
@@ -65,11 +73,19 @@ export async function POST(request: Request) {
       )
     }
 
-    // Currently Verified with plenty of runway → block accidental double-pay.
+    // Currently Verified → block accidental double-pay. A monthly subscriber
+    // renews automatically via Stripe, so any unexpired monthly badge blocks a
+    // second subscription outright; annual keeps the 60-day early-renew window.
     if (shop.listing_tier === "verified" && shop.verified_expires_at) {
       const daysLeft =
         (new Date(shop.verified_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      if (daysLeft > EARLY_RENEW_WINDOW_DAYS) {
+      if (shop.verified_plan === "monthly" && daysLeft > 0) {
+        return NextResponse.json(
+          { error: "This shop is already Verified on the monthly plan — it renews automatically." },
+          { status: 400 },
+        )
+      }
+      if (shop.verified_plan !== "monthly" && daysLeft > EARLY_RENEW_WINDOW_DAYS) {
         return NextResponse.json(
           { error: "This shop is already Verified. Renewal opens 60 days before expiry." },
           { status: 400 },
@@ -87,15 +103,15 @@ export async function POST(request: Request) {
       mode: price.recurring ? "subscription" : "payment",
       line_items: [{ price: price.id, quantity: 1 }],
       ...(shop.owner_email ? { customer_email: shop.owner_email } : {}),
-      metadata: { shop_id: shop.id, shop_slug: shop.slug },
+      metadata: { shop_id: shop.id, shop_slug: shop.slug, plan },
       ...(price.recurring
-        ? { subscription_data: { metadata: { shop_id: shop.id, shop_slug: shop.slug } } }
+        ? { subscription_data: { metadata: { shop_id: shop.id, shop_slug: shop.slug, plan } } }
         : {}),
       success_url: `${origin}/onboard/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/onboard/pay/${shop.slug}`,
     })
 
-    log.info("api/checkout", "session created", { slug: shop.slug, session: session.id })
+    log.info("api/checkout", "session created", { slug: shop.slug, plan, session: session.id })
     return NextResponse.json({ url: session.url })
   } catch (e) {
     log.error("api/checkout", "session creation failed", { error: e, slug })

@@ -11,12 +11,12 @@ import { CAL_FOUNDING_CALL_URL, SITE_URL } from "@/lib/constants"
 export const metadata: Metadata = {
   title: "For Shop Owners — Get Verified on Club Fitting Directory",
   description:
-    "Claim your free listing, then join Founding Verified: the badge golfers trust, fitting requests forwarded to your inbox, and a newsletter audience of 6,600 golfers. $349/yr, grandfathered.",
+    "Claim your free listing, then get Verified: the badge golfers trust, fitting requests forwarded to your inbox, and a newsletter audience of 6,600 golfers. $49/month or $499/year.",
   alternates: { canonical: `${SITE_URL}/for-shops` },
   openGraph: {
     title: "For Shop Owners — Get Verified on Club Fitting Directory",
     description:
-      "Claim your free listing, get verified, and put the badge golfers trust on your shop. Founding partner rate: $349/yr.",
+      "Claim your free listing, get verified, and put the badge golfers trust on your shop. $49/month or $499/year.",
     url: `${SITE_URL}/for-shops`,
   },
 }
@@ -59,7 +59,7 @@ const STEPS = [
   },
   {
     title: "Pay & the badge goes live",
-    body: "You get a secure Stripe payment link. Pay the founding rate and the Verified badge is live within minutes.",
+    body: "You get a secure Stripe payment link. Pick monthly or annual and the Verified badge is live within minutes.",
   },
 ]
 
@@ -72,7 +72,7 @@ const FAQS: FaqItem[] = [
   {
     question: "Is claiming my listing really free?",
     answer:
-      "Yes — claiming is free and always will be. A claimed shop gets fitting requests forwarded to its inbox at no cost. Founding Verified is the optional paid layer on top: the badge, the newsletter rotation, and priority updates.",
+      "Yes — claiming is free and always will be. A claimed shop gets fitting requests forwarded to its inbox at no cost. Verified is the optional paid layer on top: the badge, the newsletter rotation, and priority updates.",
   },
   {
     question: "My listing has wrong hours or services. Can that be fixed?",
@@ -80,9 +80,9 @@ const FAQS: FaqItem[] = [
       "Yes. Claim the listing and tell us what's wrong — corrections are applied by hand, usually within a day or two. Verified shops get priority, but we fix genuine errors for every shop.",
   },
   {
-    question: "How much does Founding Verified cost, and does the price go up?",
+    question: "How much does Verified cost?",
     answer:
-      "It's $349 per year, handled securely by Stripe. As a founding partner you're grandfathered: your rate stays $349/yr for as long as you stay, even after the public price rises.",
+      "It's $49 per month or $499 per year (two months free on the annual plan), handled securely by Stripe. Cancel anytime — the badge stays live through the period you've paid for.",
   },
   {
     question: "What if my shop isn't listed yet?",
@@ -92,12 +92,12 @@ const FAQS: FaqItem[] = [
   {
     question: "What happens if I don't renew?",
     answer:
-      "The badge and newsletter rotation pause, but your free listing and lead forwarding stay live. You can come back at your founding rate any time.",
+      "The badge and newsletter rotation pause, but your free listing and lead forwarding stay live. You can come back any time.",
   },
 ]
 
 /**
- * The shop-owner onboarding page: what Founding Verified is, what it costs,
+ * The shop-owner onboarding page: what Verified is, what it costs,
  * and the claim-first funnel entrance. Indexable (unlike the /claim and
  * /onboard transactional pages) — it targets "get listed" searches.
  */
@@ -121,11 +121,11 @@ export default function ForShopsPage() {
         </div>
       </PageHeader>
 
-      {/* ── What Founding Verified includes ── */}
+      {/* ── What Verified includes ── */}
       <section className="bg-[var(--color-ivory)] py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            title="What Founding Verified includes"
+            title="What Verified includes"
             subtitle="One membership, four things working for your shop all year."
           />
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -151,14 +151,16 @@ export default function ForShopsPage() {
             <div className="p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
                 <p className="text-xs uppercase tracking-[0.25em] text-[var(--color-gold)] font-semibold">
-                  Founding partner rate
+                  Simple pricing
                 </p>
                 <p className="mt-2 font-display text-4xl">
-                  $349<span className="text-lg text-white/70">/year</span>
+                  $49<span className="text-lg text-white/70">/month</span>
+                  <span className="mx-3 text-lg text-white/50">or</span>
+                  $499<span className="text-lg text-white/70">/year</span>
                 </p>
                 <p className="mt-2 text-sm text-white/70 max-w-md leading-relaxed">
-                  Billed yearly, secured by Stripe. Grandfathered for as long as
-                  you stay — the founding price never rises on you.
+                  Secured by Stripe. Two months free on the annual plan — cancel
+                  anytime and the badge stays through your paid period.
                 </p>
               </div>
               <div className="shrink-0">
