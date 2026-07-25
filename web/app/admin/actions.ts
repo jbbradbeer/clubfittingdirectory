@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache"
 import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { activateVerifiedShop } from "@/lib/verified"
-import { sendPaymentLinkEmail } from "@/lib/email"
+import { sendClaimApprovedEmail, sendPaymentLinkEmail } from "@/lib/email"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { toCitySlug } from "@/lib/slugs"
@@ -163,7 +163,7 @@ export async function approveClaim(formData: FormData) {
     .from("shops")
     .update({ claimed_at: new Date().toISOString(), owner_email: claim.claimant_email })
     .eq("id", claim.shop_id)
-    .select("slug")
+    .select("slug, name")
     .single()
   if (shopErr) return { error: `Could not mark shop claimed: ${shopErr.message}` }
 
@@ -174,7 +174,20 @@ export async function approveClaim(formData: FormData) {
   if (updErr) return { error: `Could not update claim: ${updErr.message}` }
 
   revalidatePath("/admin", "layout")
-  if (shop?.slug) revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed"
+  if (shop?.slug) {
+    revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed"
+
+    // Best-effort upsell email: "you're approved, leads now forward to you" +
+    // the Verified pitch with the payment-page link (valid immediately — the
+    // pay page is gated on claimed_at, which was just stamped). Never fails
+    // the approval; the founder is cc'd so a silent miss is visible.
+    const sent = await sendClaimApprovedEmail({
+      shopName: shop.name ?? shop.slug,
+      slug: shop.slug,
+      ownerEmail: claim.claimant_email,
+    })
+    if (!sent) log.warn("admin/actions", "claim approved email not sent", { slug: shop.slug })
+  }
 }
 
 /* ── Activate the paid Verified tier (replaces the manual-SQL step).
@@ -198,7 +211,8 @@ export async function activateVerified(formData: FormData): Promise<ActionResult
 }
 
 /* ── Lapse a Verified listing (subscription not renewed). Keeps verified_at /
-   verified_expires_at as history; only the tier goes back to free. ── */
+   verified_expires_at as history; tier goes back to free and the paid
+   featured placement comes off with it. ── */
 export async function lapseVerified(formData: FormData) {
   if (!(await isAdmin())) redirect("/admin/login")
   const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
@@ -207,7 +221,7 @@ export async function lapseVerified(formData: FormData) {
   const supabase = createAdminClient()
   const { error } = await supabase
     .from("shops")
-    .update({ listing_tier: "free" })
+    .update({ listing_tier: "free", is_featured: false })
     .eq("slug", slug)
   if (error) return { error: `Could not lapse: ${error.message}` }
 

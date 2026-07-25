@@ -51,6 +51,9 @@ export async function activateVerifiedShop(
       verified_at: now.toISOString(),
       verified_expires_at: expires.toISOString(),
       verified_plan: plan,
+      // Featured placement is part of the paid plan: featured shops sort to
+      // the top of state/city/category/directory lists. Cleared on lapse.
+      is_featured: true,
     })
     .eq("slug", cleanSlug)
   if (error) throw new Error(`Could not activate: ${error.message}`)

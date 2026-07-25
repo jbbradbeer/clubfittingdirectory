@@ -1,12 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { BadgeCheck, CalendarCheck, Inbox, Mail, Newspaper, PenLine } from "lucide-react"
+import { BadgeCheck, CalendarCheck, Mail, Newspaper, PenLine, Sparkles, TrendingUp } from "lucide-react"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
 import { ShopFinder } from "@/components/submit/ShopFinder"
 import { FaqSection, type FaqItem } from "@/components/seo/FaqSection"
 import { CAL_FOUNDING_CALL_URL, SITE_URL } from "@/lib/constants"
+import { VERIFIED_PERKS } from "@/lib/plans"
 
 export const metadata: Metadata = {
   title: "For Shop Owners — Get Verified on Club Fitting Directory",
@@ -21,28 +22,10 @@ export const metadata: Metadata = {
   },
 }
 
-const INCLUDED = [
-  {
-    icon: BadgeCheck,
-    title: "The Verified badge",
-    body: "The only paid marker on the directory — a green badge on your listing and on every card golfers scan. It signals a real, vetted fitting operation.",
-  },
-  {
-    icon: Inbox,
-    title: "Fitting requests to your inbox",
-    body: "Golfers request fittings straight from your listing. Claimed shops get every lead forwarded instantly — reply and the booking is yours.",
-  },
-  {
-    icon: Newspaper,
-    title: "Gear Shelf newsletter rotation",
-    body: "A featured slot in The Tuxedo Collective newsletter — 6,600 golf subscribers who care about playing better equipment.",
-  },
-  {
-    icon: PenLine,
-    title: "Priority listing updates",
-    body: "Hours, services, pricing, photos, your booking link — send corrections any time and we apply them by hand, fast.",
-  },
-]
+/* Copy comes from the shared VERIFIED_PERKS source (lib/plans.ts) so the
+   pitch matches the claim page, pay page, and emails; icons are page-local. */
+const PERK_ICONS = [BadgeCheck, TrendingUp, Sparkles, Newspaper, PenLine]
+const INCLUDED = VERIFIED_PERKS.map((perk, i) => ({ icon: PERK_ICONS[i], ...perk }))
 
 const STEPS = [
   {
@@ -72,7 +55,7 @@ const FAQS: FaqItem[] = [
   {
     question: "Is claiming my listing really free?",
     answer:
-      "Yes — claiming is free and always will be. A claimed shop gets fitting requests forwarded to its inbox at no cost. Verified is the optional paid layer on top: the badge, the newsletter rotation, and priority updates.",
+      "Yes — claiming is free and always will be. A claimed shop gets fitting requests forwarded to its inbox at no cost. Verified is the optional paid layer on top: the badge, featured placement at the top of your local pages, AI search optimization, the newsletter rotation, and priority updates.",
   },
   {
     question: "My listing has wrong hours or services. Can that be fixed?",
@@ -126,7 +109,7 @@ export default function ForShopsPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             title="What Verified includes"
-            subtitle="One membership, four things working for your shop all year."
+            subtitle="One membership, five things working for your shop all year."
           />
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
             {INCLUDED.map((item) => (
