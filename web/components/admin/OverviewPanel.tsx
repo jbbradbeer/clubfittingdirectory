@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateVerified, lapseVerified, sendPaymentLink } from "@/app/admin/actions"
+import { lapseVerified, sendPaymentLink } from "@/app/admin/actions"
+import { ActionButton } from "@/components/admin/ActionButton"
+import { ShopSearchSelect } from "@/components/admin/ShopSearchSelect"
 
 /**
  * The at-a-glance tab: everything needing the founder's attention today,
@@ -46,13 +48,13 @@ export async function OverviewPanel() {
   const mrr =
     verifiedList === null ? null : monthlyCount * 49 + Math.round((annualCount * 499) / 12)
 
-  const cards: { label: string; value: number | null; tab: string; urgent?: boolean }[] = [
-    { label: "New fitting requests", value: newLeads, tab: "leads", urgent: (newLeads ?? 0) > 0 },
-    { label: "Pending submissions", value: pendingSubs, tab: "submissions", urgent: (pendingSubs ?? 0) > 0 },
-    { label: "Pending claims", value: pendingClaims, tab: "submissions", urgent: (pendingClaims ?? 0) > 0 },
-    { label: "Outreach replies waiting", value: outreachReplied, tab: "outreach", urgent: (outreachReplied ?? 0) > 0 },
-    { label: "Claimed shops", value: claimedShops, tab: "submissions" },
-    { label: "Verified (paying) shops", value: verifiedShops, tab: "outreach" },
+  const cards: { label: string; value: number | null; href: string; urgent?: boolean }[] = [
+    { label: "New fitting requests", value: newLeads, href: "/admin/leads?status=new", urgent: (newLeads ?? 0) > 0 },
+    { label: "Pending submissions", value: pendingSubs, href: "/admin/submissions?status=new", urgent: (pendingSubs ?? 0) > 0 },
+    { label: "Pending claims", value: pendingClaims, href: "/admin/submissions?status=new", urgent: (pendingClaims ?? 0) > 0 },
+    { label: "Outreach replies waiting", value: outreachReplied, href: "/admin/outreach", urgent: (outreachReplied ?? 0) > 0 },
+    { label: "Claimed shops", value: claimedShops, href: "/admin/submissions" },
+    { label: "Verified (paying) shops", value: verifiedShops, href: "/admin/outreach" },
   ]
 
   return (
@@ -61,7 +63,7 @@ export async function OverviewPanel() {
         {cards.map((c) => (
           <Link
             key={c.label}
-            href={`/admin?tab=${c.tab}`}
+            href={c.href}
             className={`bg-white border rounded-xl p-4 transition-colors hover:border-[var(--color-forest)] ${
               c.urgent ? "border-[var(--color-gold)]" : "border-[var(--color-border)]"
             }`}
@@ -89,25 +91,12 @@ export async function OverviewPanel() {
         <h2 className="font-display text-lg text-[var(--color-charcoal)]">Verified listings</h2>
         <p className="text-sm text-[var(--color-charcoal-light)] mt-1">
           Stripe payments now activate automatically via the webhook. This manual
-          activation stays as the backstop — paste the shop&apos;s URL slug (the part
-          after /listing/) and activate; badge + 1-year expiry are stamped.
+          activation stays as the backstop — search for the shop, pick the plan,
+          activate; badge + expiry are stamped.
           &ldquo;Renewal link&rdquo; emails the owner their payment page (~30 days before expiry).
         </p>
 
-        <form action={activateVerified} className="mt-4 flex gap-2">
-          <input
-            name="slug"
-            required
-            placeholder="e.g. mcgolf-custom-clubs-waverly-oh"
-            className="flex-1 px-3 py-2 text-sm border border-[var(--color-border)] rounded-lg focus:outline-none focus:border-[var(--color-forest)]"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-lg hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
-          >
-            Activate Verified
-          </button>
-        </form>
+        <ShopSearchSelect />
 
         {verifiedList && verifiedList.length > 0 && (
           <table className="mt-5 w-full text-sm">
@@ -143,25 +132,21 @@ export async function OverviewPanel() {
                     </td>
                     <td className="py-2.5 text-right">
                       <div className="flex justify-end gap-1.5">
-                        <form action={sendPaymentLink}>
-                          <input type="hidden" name="slug" value={s.slug} />
-                          <input type="hidden" name="renewal" value="1" />
-                          <button
-                            type="submit"
-                            className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-forest)] rounded-lg text-[var(--color-forest)] hover:bg-[var(--color-forest-tint)] transition-colors cursor-pointer"
-                          >
-                            Renewal link
-                          </button>
-                        </form>
-                        <form action={lapseVerified}>
-                          <input type="hidden" name="slug" value={s.slug} />
-                          <button
-                            type="submit"
-                            className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-border)] rounded-lg text-[var(--color-charcoal)] hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
-                          >
-                            Lapse
-                          </button>
-                        </form>
+                        <ActionButton
+                          action={sendPaymentLink}
+                          fields={{ slug: s.slug, renewal: "1" }}
+                          successLabel="Sent ✓"
+                          className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-forest)] rounded-lg text-[var(--color-forest)] hover:bg-[var(--color-forest-tint)] transition-colors cursor-pointer"
+                        >
+                          Renewal link
+                        </ActionButton>
+                        <ActionButton
+                          action={lapseVerified}
+                          fields={{ slug: s.slug }}
+                          className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-border)] rounded-lg text-[var(--color-charcoal)] hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
+                        >
+                          Lapse
+                        </ActionButton>
                       </div>
                     </td>
                   </tr>

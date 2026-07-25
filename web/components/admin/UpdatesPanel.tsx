@@ -1,12 +1,16 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { sanitizeSearchTerm } from "@/lib/supabase/queries/shared"
 import { markUpdateDone, rejectUpdateRequest } from "@/app/admin/actions"
+import { ActionButton } from "@/components/admin/ActionButton"
+import { FilterBar } from "@/components/admin/FilterBar"
+import { Pagination } from "@/components/admin/Pagination"
 
 /**
  * Update Requests tab — the owner self-serve "fix my listing" queue
  * (listing_update_requests, migration 013). The founder applies approved
  * changes by hand, then marks the request done (which also refreshes the
- * listing page).
+ * listing page). Filtered + paginated server-side from the URL.
  */
 
 interface UpdateRequest {
@@ -20,6 +24,13 @@ interface UpdateRequest {
   created_at: string
   shops: { name: string; slug: string; city: string; state_code: string; owner_email: string | null } | null
 }
+
+const STATUS_OPTIONS = [
+  { value: "new", label: "pending" },
+  { value: "done", label: "done" },
+  { value: "rejected", label: "rejected" },
+]
+const PAGE_SIZE = 25
 
 const PAYLOAD_LABELS: Record<string, string> = {
   hours: "Hours",
@@ -36,44 +47,60 @@ function fmtDate(iso: string): string {
   }
 }
 
-export async function UpdatesPanel() {
+export async function UpdatesPanel({
+  q,
+  status,
+  page,
+}: {
+  q?: string
+  status?: string
+  page?: string
+}) {
   const supabase = createAdminClient()
-  const { data, error } = await supabase
-    .from("listing_update_requests")
-    .select("*, shops(name,slug,city,state_code,owner_email)")
-    .order("created_at", { ascending: false })
+  const term = sanitizeSearchTerm(q ?? "")
+  const activeStatus = STATUS_OPTIONS.some((s) => s.value === status) ? status : ""
+  const pageNum = Math.max(1, parseInt(page ?? "1", 10) || 1)
 
+  let query = supabase
+    .from("listing_update_requests")
+    .select("*, shops(name,slug,city,state_code,owner_email)", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range((pageNum - 1) * PAGE_SIZE, pageNum * PAGE_SIZE - 1)
+  if (activeStatus) query = query.eq("review_status", activeStatus)
+  if (term.length >= 2) {
+    query = query.or(`requester_name.ilike.%${term}%,requester_email.ilike.%${term}%`)
+  }
+  const { data, count: total, error } = await query
   const requests = (data ?? []) as unknown as UpdateRequest[]
-  const pending = requests.filter((r) => r.review_status === "new")
-  const handled = requests.filter((r) => r.review_status !== "new")
 
   return (
     <div>
+      <FilterBar
+        placeholder="Search by requester name or email…"
+        statusOptions={STATUS_OPTIONS}
+      />
+
       <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-        Update requests — pending ({pending.length})
+        Update requests ({total ?? 0})
       </h3>
       {error && (
         <p className="mb-6 text-sm text-red-600">
           Could not load update requests: {error.message} (has migration 013 been run?)
         </p>
       )}
-      {pending.length === 0 ? (
-        <p className="text-sm text-[var(--color-charcoal-light)] mb-10">No pending requests.</p>
+      {requests.length === 0 ? (
+        <p className="text-sm text-[var(--color-charcoal-light)]">
+          {term || activeStatus ? "No requests match these filters." : "No requests yet."}
+        </p>
       ) : (
-        <div className="space-y-4 mb-10">
-          {pending.map((r) => <RequestCard key={r.id} r={r} pending />)}
+        <div className="space-y-4">
+          {requests.map((r) => (
+            <RequestCard key={r.id} r={r} pending={r.review_status === "new"} />
+          ))}
         </div>
       )}
-      {handled.length > 0 && (
-        <>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-            Already handled ({handled.length})
-          </h3>
-          <div className="space-y-3">
-            {handled.map((r) => <RequestCard key={r.id} r={r} />)}
-          </div>
-        </>
-      )}
+
+      <Pagination page={pageNum} pageSize={PAGE_SIZE} total={total ?? 0} />
     </div>
   )
 }
@@ -136,19 +163,20 @@ function RequestCard({ r, pending }: { r: UpdateRequest; pending?: boolean }) {
 
         {pending && (
           <div className="flex flex-col gap-2 shrink-0">
-            <form action={markUpdateDone}>
-              <input type="hidden" name="id" value={r.id} />
-              <input type="hidden" name="shop_slug" value={r.shops?.slug ?? ""} />
-              <button className="px-4 py-1.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer">
-                Applied — done
-              </button>
-            </form>
-            <form action={rejectUpdateRequest}>
-              <input type="hidden" name="id" value={r.id} />
-              <button className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer">
-                Reject
-              </button>
-            </form>
+            <ActionButton
+              action={markUpdateDone}
+              fields={{ id: r.id, shop_slug: r.shops?.slug ?? "" }}
+              className="px-4 py-1.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
+            >
+              Applied — done
+            </ActionButton>
+            <ActionButton
+              action={rejectUpdateRequest}
+              fields={{ id: r.id }}
+              className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
+            >
+              Reject
+            </ActionButton>
           </div>
         )}
       </div>

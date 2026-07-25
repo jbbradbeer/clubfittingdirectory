@@ -1,6 +1,10 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { sanitizeSearchTerm } from "@/lib/supabase/queries/shared"
 import { approveSubmission, rejectSubmission, approveClaim, rejectClaim, sendPaymentLink } from "@/app/admin/actions"
+import { ActionButton } from "@/components/admin/ActionButton"
+import { FilterBar } from "@/components/admin/FilterBar"
+import { Pagination } from "@/components/admin/Pagination"
 
 interface Submission {
   id: string
@@ -31,6 +35,13 @@ interface Claim {
   shops: { name: string; slug: string; city: string; state_code: string } | null
 }
 
+const STATUS_OPTIONS = [
+  { value: "new", label: "pending" },
+  { value: "approved", label: "approved" },
+  { value: "rejected", label: "rejected" },
+]
+const PAGE_SIZE = 25
+
 function fmtDate(iso: string): string {
   try {
     return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
@@ -39,76 +50,100 @@ function fmtDate(iso: string): string {
   }
 }
 
-export async function SubmissionsPanel() {
+/**
+ * Submissions & Claims tab — both queues filtered + paginated server-side
+ * from the URL. One search box covers both lists (claims match on claimant
+ * name/email, submissions on shop name/city); each list paginates
+ * independently (?cpage= / ?spage=). Pending rows sort first in both.
+ */
+export async function SubmissionsPanel({
+  q,
+  status,
+  cpage,
+  spage,
+}: {
+  q?: string
+  status?: string
+  cpage?: string
+  spage?: string
+}) {
   const supabase = createAdminClient()
-  const [subsRes, claimsRes] = await Promise.all([
-    supabase.from("shop_submissions").select("*").order("created_at", { ascending: false }),
-    supabase.from("shop_claims")
-      .select("*, shops(name,slug,city,state_code)")
-      .order("created_at", { ascending: false }),
-  ])
+  const term = sanitizeSearchTerm(q ?? "")
+  const activeStatus = STATUS_OPTIONS.some((s) => s.value === status) ? status : ""
+  const claimPage = Math.max(1, parseInt(cpage ?? "1", 10) || 1)
+  const subPage = Math.max(1, parseInt(spage ?? "1", 10) || 1)
 
-  const subs = (subsRes.data ?? []) as Submission[]
-  const pending = subs.filter((s) => s.review_status === "new")
-  const handled = subs.filter((s) => s.review_status !== "new")
+  let claimsQuery = supabase
+    .from("shop_claims")
+    .select("*, shops(name,slug,city,state_code)", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range((claimPage - 1) * PAGE_SIZE, claimPage * PAGE_SIZE - 1)
+  let subsQuery = supabase
+    .from("shop_submissions")
+    .select("*", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range((subPage - 1) * PAGE_SIZE, subPage * PAGE_SIZE - 1)
+
+  if (activeStatus) {
+    claimsQuery = claimsQuery.eq("review_status", activeStatus)
+    subsQuery = subsQuery.eq("review_status", activeStatus)
+  }
+  if (term.length >= 2) {
+    claimsQuery = claimsQuery.or(
+      `claimant_name.ilike.%${term}%,claimant_email.ilike.%${term}%`,
+    )
+    subsQuery = subsQuery.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
+  }
+
+  const [claimsRes, subsRes] = await Promise.all([claimsQuery, subsQuery])
 
   const claims = (claimsRes.data ?? []) as unknown as Claim[]
-  const newClaims = claims.filter((c) => c.review_status === "new")
-  const handledClaims = claims.filter((c) => c.review_status !== "new")
+  const subs = (subsRes.data ?? []) as Submission[]
 
   return (
     <div>
+      <FilterBar
+        placeholder="Search claims (name/email) & submissions (shop/city)…"
+        statusOptions={STATUS_OPTIONS}
+      />
+
       {/* ── Ownership claims ── */}
       <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-        Ownership claims — pending ({newClaims.length})
+        Ownership claims ({claimsRes.count ?? 0})
       </h3>
       {claimsRes.error && (
         <p className="mb-6 text-sm text-red-600">
           Could not load claims: {claimsRes.error.message} (has migration 009 been run?)
         </p>
       )}
-      {newClaims.length === 0 ? (
-        <p className="text-sm text-[var(--color-charcoal-light)] mb-10">No pending claims.</p>
+      {claims.length === 0 ? (
+        <p className="text-sm text-[var(--color-charcoal-light)] mb-10">
+          {term || activeStatus ? "No claims match these filters." : "No claims yet."}
+        </p>
       ) : (
-        <div className="space-y-4 mb-10">
-          {newClaims.map((c) => <ClaimCard key={c.id} c={c} pending />)}
+        <div className="space-y-4 mb-4">
+          {claims.map((c) => <ClaimCard key={c.id} c={c} pending={c.review_status === "new"} />)}
         </div>
       )}
-      {handledClaims.length > 0 && (
-        <>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-            Claims already handled ({handledClaims.length})
-          </h3>
-          <div className="space-y-3 mb-12">
-            {handledClaims.map((c) => <ClaimCard key={c.id} c={c} />)}
-          </div>
-        </>
-      )}
+      <Pagination page={claimPage} pageSize={PAGE_SIZE} total={claimsRes.count ?? 0} paramName="cpage" />
 
       {/* ── New-shop submissions ── */}
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3 pt-6 border-t border-[var(--color-border)]">
-        New-shop submissions — pending ({pending.length})
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3 mt-10 pt-6 border-t border-[var(--color-border)]">
+        New-shop submissions ({subsRes.count ?? 0})
       </h3>
       {subsRes.error && (
         <p className="mb-6 text-sm text-red-600">Could not load submissions: {subsRes.error.message}</p>
       )}
-      {pending.length === 0 ? (
-        <p className="text-sm text-[var(--color-charcoal-light)] mb-10">No new submissions. 🎉</p>
+      {subs.length === 0 ? (
+        <p className="text-sm text-[var(--color-charcoal-light)]">
+          {term || activeStatus ? "No submissions match these filters." : "No submissions yet. 🎉"}
+        </p>
       ) : (
-        <div className="space-y-4 mb-12">
-          {pending.map((s) => <SubmissionCard key={s.id} s={s} pending />)}
+        <div className="space-y-4">
+          {subs.map((s) => <SubmissionCard key={s.id} s={s} pending={s.review_status === "new"} />)}
         </div>
       )}
-      {handled.length > 0 && (
-        <>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
-            Submissions already handled ({handled.length})
-          </h3>
-          <div className="space-y-3">
-            {handled.map((s) => <SubmissionCard key={s.id} s={s} />)}
-          </div>
-        </>
-      )}
+      <Pagination page={subPage} pageSize={PAGE_SIZE} total={subsRes.count ?? 0} paramName="spage" />
     </div>
   )
 }
@@ -158,18 +193,20 @@ function ClaimCard({ c, pending }: { c: Claim; pending?: boolean }) {
 
         {pending && (
           <div className="flex flex-col gap-2 shrink-0">
-            <form action={approveClaim}>
-              <input type="hidden" name="id" value={c.id} />
-              <button className="px-4 py-1.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer">
-                Approve
-              </button>
-            </form>
-            <form action={rejectClaim}>
-              <input type="hidden" name="id" value={c.id} />
-              <button className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer">
-                Reject
-              </button>
-            </form>
+            <ActionButton
+              action={approveClaim}
+              fields={{ id: c.id }}
+              className="px-4 py-1.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
+            >
+              Approve
+            </ActionButton>
+            <ActionButton
+              action={rejectClaim}
+              fields={{ id: c.id }}
+              className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
+            >
+              Reject
+            </ActionButton>
           </div>
         )}
 
@@ -177,12 +214,14 @@ function ClaimCard({ c, pending }: { c: Claim; pending?: boolean }) {
             Stripe payment link ($49/mo or $499/yr, /onboard/pay/[slug]). */}
         {!pending && c.review_status === "approved" && c.shops && (
           <div className="shrink-0">
-            <form action={sendPaymentLink}>
-              <input type="hidden" name="slug" value={c.shops.slug} />
-              <button className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-forest)] text-[var(--color-forest)] rounded-full hover:bg-[var(--color-forest-tint)] transition-colors cursor-pointer">
-                Send payment link
-              </button>
-            </form>
+            <ActionButton
+              action={sendPaymentLink}
+              fields={{ slug: c.shops.slug }}
+              successLabel="Sent ✓"
+              className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-forest)] text-[var(--color-forest)] rounded-full hover:bg-[var(--color-forest-tint)] transition-colors cursor-pointer"
+            >
+              Send payment link
+            </ActionButton>
           </div>
         )}
       </div>
@@ -224,18 +263,20 @@ function SubmissionCard({ s, pending }: { s: Submission; pending?: boolean }) {
 
         {pending && (
           <div className="flex flex-col gap-2 shrink-0">
-            <form action={approveSubmission}>
-              <input type="hidden" name="id" value={s.id} />
-              <button className="px-4 py-1.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer">
-                Approve
-              </button>
-            </form>
-            <form action={rejectSubmission}>
-              <input type="hidden" name="id" value={s.id} />
-              <button className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer">
-                Reject
-              </button>
-            </form>
+            <ActionButton
+              action={approveSubmission}
+              fields={{ id: s.id }}
+              className="px-4 py-1.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
+            >
+              Approve
+            </ActionButton>
+            <ActionButton
+              action={rejectSubmission}
+              fields={{ id: s.id }}
+              className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
+            >
+              Reject
+            </ActionButton>
           </div>
         )}
       </div>
