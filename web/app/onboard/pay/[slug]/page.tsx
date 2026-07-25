@@ -6,10 +6,10 @@ import { getShopBySlug } from "@/lib/supabase/queries/shops"
 import { daysUntil } from "@/lib/verified-math"
 import { PlanSelector } from "@/components/submit/PlanSelector"
 import { Button } from "@/components/ui/Button"
-import { VERIFIED_PERKS } from "@/lib/plans"
+import { FEATURED_PERKS } from "@/lib/plans"
 
 export const metadata: Metadata = {
-  title: "Activate Verified — Club Fitting Directory",
+  title: "Activate Featured — Club Fitting Directory",
   robots: { index: false, follow: false },
 }
 
@@ -22,7 +22,7 @@ const EARLY_RENEW_WINDOW_DAYS = 60
 
 /* One-line perks from the shared offer source — keeps this page's pitch
    identical to the claim page, /for-shops, and the upsell emails. */
-const INCLUDED = VERIFIED_PERKS.map((p) => p.short)
+const INCLUDED = FEATURED_PERKS.map((p) => p.short)
 
 /**
  * The payment page owners land on from the "Send payment link" email.
@@ -41,19 +41,19 @@ export default async function PayPage({
   const claimed = Boolean(shop.claimed_at)
   const expiresAt = shop.verified_expires_at ? new Date(shop.verified_expires_at) : null
   const daysLeft = shop.verified_expires_at ? daysUntil(shop.verified_expires_at) : null
-  // Monthly subscribers renew automatically — any unexpired monthly badge means
+  // Monthly subscribers renew automatically — any unexpired monthly plan means
   // "nothing to do here" (mirrors the /api/checkout gate). Annual keeps the
   // 60-day early-renew window.
   const verifiedWithRunway =
-    shop.listing_tier === "verified" &&
+    shop.listing_tier === "featured" &&
     daysLeft !== null &&
     (shop.verified_plan === "monthly" ? daysLeft > 0 : daysLeft > EARLY_RENEW_WINDOW_DAYS)
-  const renewal = shop.listing_tier === "verified" || Boolean(shop.verified_at)
+  const renewal = shop.listing_tier === "featured" || Boolean(shop.verified_at)
 
   return (
     <section className="bg-[var(--color-ivory)] min-h-screen py-14">
       <div className="max-w-xl mx-auto px-4 sm:px-6">
-        <p className="section-label mb-3">Verified</p>
+        <p className="section-label mb-3">Featured</p>
         <h1 className="font-display text-3xl sm:text-4xl text-[var(--color-charcoal)]">
           {shop.name}
         </h1>
@@ -77,7 +77,8 @@ export default async function PayPage({
             </h2>
             <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
               We verify every owner before payment — claim the listing (free, two
-              minutes) and we&apos;ll approve it, usually within a day.
+              minutes) and we&apos;ll approve it, usually within a day. Approval also
+              turns on your free Verified badge and lead forwarding.
             </p>
             <Button href={`/claim/${shop.slug}`} variant="primary" size="lg" className="mt-6">
               Claim {shop.name} — free
@@ -88,10 +89,10 @@ export default async function PayPage({
           <div className="mt-8 bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-8 text-center">
             <BadgeCheck size={44} className="mx-auto text-[var(--color-forest)] mb-4" />
             <h2 className="font-display text-2xl text-[var(--color-charcoal)]">
-              You&apos;re already Verified
+              You&apos;re already Featured
             </h2>
             <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
-              {shop.name} is Verified
+              {shop.name} is Featured
               {expiresAt ? ` through ${expiresAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}` : ""}.
               {shop.verified_plan === "monthly"
                 ? " Your monthly plan renews automatically — nothing to do today."
@@ -104,7 +105,7 @@ export default async function PayPage({
             <span aria-hidden="true" className="block h-1 w-full bg-[var(--color-forest)]" />
             <div className="p-6 sm:p-8">
               <h2 className="font-display text-2xl text-[var(--color-charcoal)]">
-                {renewal ? "Renew Verified" : "Get Verified"}
+                {renewal ? "Renew Featured" : "Go Featured"}
               </h2>
               <p className="mt-1 text-sm text-[var(--color-charcoal-light)]">
                 $49/month or $499/year — pick what suits your shop.

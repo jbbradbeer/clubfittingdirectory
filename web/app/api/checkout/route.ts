@@ -8,7 +8,7 @@ import { isPlanKey, type PlanKey } from "@/lib/plans"
 import { SITE_URL } from "@/lib/constants"
 
 /**
- * Create a Stripe Checkout Session for the Verified badge.
+ * Create a Stripe Checkout Session for the Featured tier.
  * POST /api/checkout { shop_slug, plan? } → { url }
  * plan is "monthly" ($49/mo) or "annual" ($499/yr); defaults to annual.
  *
@@ -73,21 +73,21 @@ export async function POST(request: Request) {
       )
     }
 
-    // Currently Verified → block accidental double-pay. A monthly subscriber
-    // renews automatically via Stripe, so any unexpired monthly badge blocks a
+    // Currently Featured → block accidental double-pay. A monthly subscriber
+    // renews automatically via Stripe, so any unexpired monthly plan blocks a
     // second subscription outright; annual keeps the 60-day early-renew window.
-    if (shop.listing_tier === "verified" && shop.verified_expires_at) {
+    if (shop.listing_tier === "featured" && shop.verified_expires_at) {
       const daysLeft =
         (new Date(shop.verified_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
       if (shop.verified_plan === "monthly" && daysLeft > 0) {
         return NextResponse.json(
-          { error: "This shop is already Verified on the monthly plan — it renews automatically." },
+          { error: "This shop is already Featured on the monthly plan — it renews automatically." },
           { status: 400 },
         )
       }
       if (shop.verified_plan !== "monthly" && daysLeft > EARLY_RENEW_WINDOW_DAYS) {
         return NextResponse.json(
-          { error: "This shop is already Verified. Renewal opens 60 days before expiry." },
+          { error: "This shop is already Featured. Renewal opens 60 days before expiry." },
           { status: 400 },
         )
       }

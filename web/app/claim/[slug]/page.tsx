@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import { BadgeCheck, MapPin, ShieldCheck } from "lucide-react"
 import { getShopBySlug } from "@/lib/supabase/queries/shops"
 import { ClaimShopForm } from "@/components/submit/ClaimShopForm"
-import { VERIFIED_PERKS } from "@/lib/plans"
+import { FEATURED_PERKS } from "@/lib/plans"
 
 export const metadata: Metadata = {
   title: "Claim your listing — Club Fitting Directory",
@@ -60,14 +60,15 @@ export default async function ClaimPage({
           <>
             <p className="mt-4 mb-8 text-[var(--color-charcoal-light)] leading-relaxed">
               This listing is live in front of golfers searching for fitters. Claiming it is
-              free — and always will be: your details corrected, photos added, and every
-              fitting request golfers submit through the page forwarded straight to your
-              inbox.
+              free — and always will be. Once we approve your claim, the Verified badge
+              goes on your listing at no charge, your details get corrected, and every
+              fitting request golfers submit through the page is forwarded straight to
+              your inbox.
             </p>
             <ClaimShopForm shopSlug={shop.slug} shopName={shop.name} source={src === "outreach" ? "outreach" : "listing_page"} />
 
             {/* ── The paid offer — shown below the free claim so the free/paid
-                line stays clean: claiming = free forever, Verified = growth. ── */}
+                line stays clean: claim + badge = free forever, Featured = growth. ── */}
             <div className="mt-10 relative overflow-hidden bg-[var(--color-forest)] text-white rounded-2xl shadow-card">
               <span aria-hidden="true" className="block h-1 w-full bg-[var(--color-gold)]" />
               <div className="p-6 sm:p-8">
@@ -75,14 +76,15 @@ export default async function ClaimPage({
                   When you&apos;re ready to grow
                 </p>
                 <h2 className="mt-2 font-display text-2xl">
-                  Verified — make {shop.name} the shop golfers pick
+                  Featured — put {shop.name} at the top
                 </h2>
                 <p className="mt-2 text-sm text-white/70 leading-relaxed">
-                  Claiming gets you the leads. Verified makes sure more golfers land on
-                  your listing in the first place:
+                  The Verified badge and the leads are yours free once your claim is
+                  approved. Featured makes sure more golfers land on your listing in
+                  the first place:
                 </p>
                 <ul className="mt-5 space-y-3">
-                  {VERIFIED_PERKS.map((perk) => (
+                  {FEATURED_PERKS.map((perk) => (
                     <li key={perk.title} className="flex gap-2.5 text-sm leading-relaxed">
                       <BadgeCheck size={18} className="text-[var(--color-gold)] shrink-0 mt-0.5" />
                       <span>

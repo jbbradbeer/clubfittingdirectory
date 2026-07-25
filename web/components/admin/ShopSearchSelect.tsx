@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { BadgeCheck, Loader2, Search, X } from "lucide-react"
-import { activateVerified } from "@/app/admin/actions"
+import { activateFeatured } from "@/app/admin/actions"
 import type { PlanKey } from "@/lib/plans"
 
 /**
- * Verified activation via search — replaces the old paste-a-slug input.
+ * Featured activation via search — replaces the old paste-a-slug input.
  * Type a shop name or city, pick from the dropdown (same /api/search endpoint
  * the public site uses), choose the plan, activate. Debounced 250ms.
  */
@@ -58,7 +58,7 @@ export function ShopSearchSelect() {
     const fd = new FormData()
     fd.set("slug", selected.slug)
     fd.set("plan", plan)
-    const result = await activateVerified(fd)
+    const result = await activateFeatured(fd)
     setBusy(false)
     if (result && "error" in result && result.error) {
       setError(result.error)
@@ -140,14 +140,14 @@ export function ShopSearchSelect() {
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-lg hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer disabled:opacity-60"
           >
             {busy ? <Loader2 size={14} className="animate-spin" /> : <BadgeCheck size={14} />}
-            Activate Verified
+            Activate Featured
           </button>
         </div>
       )}
       {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
       {activated && (
         <p className="mt-2 text-xs text-[var(--color-forest)] font-medium">
-          ✓ {activated} is now Verified.
+          ✓ {activated} is now Featured.
         </p>
       )}
     </div>

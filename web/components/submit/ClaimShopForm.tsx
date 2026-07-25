@@ -5,7 +5,7 @@ import Link from "next/link"
 import { fieldClass, labelClass } from "@/lib/form-styles"
 import { Button } from "@/components/ui/Button"
 import { CAL_FOUNDING_CALL_URL } from "@/lib/constants"
-import { VERIFIED_PERKS } from "@/lib/plans"
+import { FEATURED_PERKS } from "@/lib/plans"
 import { useFormSubmit } from "@/lib/hooks/useFormSubmit"
 import { Honeypot, Req } from "@/components/forms/FormBits"
 
@@ -45,19 +45,20 @@ export function ClaimShopForm({ shopSlug, shopName, source }: {
           </h2>
           <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
             We verify every claim by hand, usually within a day or two. Once approved,
-            fitting requests golfers send through your page are forwarded straight to
-            the email you provided — check your inbox for a confirmation.
+            the Verified badge goes live on your listing — free — and fitting requests
+            golfers send through your page are forwarded straight to the email you
+            provided. Check your inbox for a confirmation.
           </p>
           <div className="mt-6 pt-6 border-t border-[var(--color-border)] text-left">
             <p className="font-display text-lg text-[var(--color-charcoal)] text-center">
-              While you wait — what Verified adds
+              While you wait — what Featured adds
             </p>
             <p className="mt-2 text-sm text-[var(--color-charcoal-light)] leading-relaxed text-center">
-              Approval usually takes a day. Once you&apos;re in, Verified is the
-              growth layer most claimed shops add:
+              Approval usually takes a day. The badge is free forever; Featured is
+              the optional growth layer on top:
             </p>
             <ul className="mt-4 space-y-2 max-w-md mx-auto">
-              {VERIFIED_PERKS.map((perk) => (
+              {FEATURED_PERKS.map((perk) => (
                 <li key={perk.title} className="flex gap-2 text-sm text-[var(--color-charcoal)] leading-relaxed">
                   <BadgeCheck size={16} className="text-[var(--color-forest)] shrink-0 mt-0.5" />
                   {perk.short}
@@ -76,7 +77,7 @@ export function ClaimShopForm({ shopSlug, shopName, source }: {
                 verify you on the call and fix anything on your listing while we talk.
               </p>
               <Button href={CAL_FOUNDING_CALL_URL} external variant="primary" size="lg" className="mt-4">
-                Book your intro call
+                Begin verification on a call
               </Button>
             </div>
           </div>

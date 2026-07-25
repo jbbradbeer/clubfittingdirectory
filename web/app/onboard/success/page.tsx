@@ -24,7 +24,7 @@ export default function OnboardSuccessPage() {
               Payment received — welcome aboard
             </h1>
             <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
-              Your Verified badge goes live within a few minutes, and a welcome
+              Your Featured placement goes live within a few minutes, and a welcome
               email with everything included is on its way to your inbox.
             </p>
 
@@ -33,7 +33,7 @@ export default function OnboardSuccessPage() {
                 What happens next
               </p>
               <ol className="mt-4 space-y-2.5 text-sm text-[var(--color-charcoal-light)] leading-relaxed list-decimal pl-5">
-                <li>The green Verified badge appears on your listing.</li>
+                <li>Your shop moves to the top of its state, city, and category pages with the gold Featured tag.</li>
                 <li>
                   Anything to fix or add — hours, services, photos, booking link?{" "}
                   <Link href="/onboard/request-changes" className="text-[var(--color-forest)] font-semibold hover:underline">

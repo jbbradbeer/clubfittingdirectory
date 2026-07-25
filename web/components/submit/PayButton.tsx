@@ -57,7 +57,7 @@ export function PayButton({
         {status === "loading" ? (
           <><Loader2 size={18} className="animate-spin" /> Opening secure checkout…</>
         ) : (
-          <><Lock size={16} /> {renewal ? "Renew" : "Activate"} Verified — {PLANS[plan].label}</>
+          <><Lock size={16} /> {renewal ? "Renew" : "Activate"} Featured — {PLANS[plan].label}</>
         )}
       </Button>
       {status === "error" && <p className="mt-3 text-sm text-red-600 text-center">{errorMsg}</p>}

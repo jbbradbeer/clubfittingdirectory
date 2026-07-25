@@ -14,7 +14,7 @@ export const CARD_FIELDS = [
   "rating", "rating_tier", "reviews", "photos_count", "has_photos",
   "offers_fitting", "fitting_environment", "services", "services_array",
   "num_services", "verified", "location_link", "is_featured", "listing_tier",
-  "verified_expires_at", "latitude", "longitude",
+  "verified_expires_at", "claimed_at", "latitude", "longitude",
   "launch_monitors", "ownership_type", "fitting_price_min", "fitting_price_max",
 ].join(", ")
 

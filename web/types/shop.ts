@@ -3,7 +3,7 @@ export interface Shop {
   slug: string
   status: "pending" | "active" | "inactive"
   is_featured: boolean
-  listing_tier: "free" | "basic" | "featured" | "verified"
+  listing_tier: "free" | "basic" | "featured"
 
   // Identity
   name: string

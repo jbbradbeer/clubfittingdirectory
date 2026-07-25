@@ -1,7 +1,7 @@
 import { Resend } from "resend"
 import { log } from "@/lib/logger"
 import { CAL_FOUNDING_CALL_URL, SITE_URL } from "@/lib/constants"
-import { VERIFIED_PERKS } from "@/lib/plans"
+import { FEATURED_PERKS } from "@/lib/plans"
 
 /**
  * Transactional email via Resend.
@@ -135,16 +135,16 @@ export async function sendClaimConfirmation(claim: {
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 16px;">
         Hi ${escapeHtml(claim.claimantName)} — thanks for claiming your listing on
         Club Fitting Directory. We verify every claim by hand, usually within a
-        day or two. Once approved, fitting requests from golfers go straight to
-        this email address.
+        day or two. Once approved, the free Verified badge goes live on your
+        listing and fitting requests from golfers go straight to this email
+        address.
       </p>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 20px;">
         Want to skip the queue? Grab 15 minutes with the founder — we'll verify
-        you on the call, fix anything on your listing, and walk through what
-        founding partner shops get.
+        you on the call and fix anything on your listing while we talk.
       </p>
       <p style="margin:0 0 24px;">
-        <a href="${CAL_FOUNDING_CALL_URL}" style="display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;">Book your intro call →</a>
+        <a href="${CAL_FOUNDING_CALL_URL}" style="display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;">Begin verification on a call →</a>
       </p>
       <p style="font-size:12px;color:#9b9b9b;">Or just reply to this email — it reaches us directly.</p>
     </div>`
@@ -173,9 +173,10 @@ const SLUG_RE = /^[a-z0-9-]+$/
 
 /**
  * Sent automatically when the founder approves a claim (admin approveClaim).
- * Two jobs: confirm the free part is live (leads now forward to the owner),
- * and pitch Verified while interest is at its peak — perks + a payment-page
- * link, which works immediately because /onboard/pay is gated on claimed_at.
+ * Two jobs: confirm the free part is live (the Verified badge + leads now
+ * forward to the owner), and pitch Featured while interest is at its peak —
+ * perks + a payment-page link, which works immediately because /onboard/pay
+ * is gated on claimed_at.
  */
 export async function sendClaimApprovedEmail(args: {
   shopName: string
@@ -194,22 +195,23 @@ export async function sendClaimApprovedEmail(args: {
 
   const payUrl = `${SITE_URL}/onboard/pay/${args.slug}`
   const listingUrl = `${SITE_URL}/listing/${args.slug}`
-  const perksHtml = VERIFIED_PERKS.map(
+  const perksHtml = FEATURED_PERKS.map(
     (p) => `<li style="margin:0 0 8px;">${escapeHtml(p.short)}</li>`,
   ).join("")
 
   const html = `
     <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
       <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">
-        You're approved — ${escapeHtml(args.shopName)} is yours
+        You're Verified — ${escapeHtml(args.shopName)} is yours
       </p>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:16px 0;">
-        Your claim is verified. From now on, every fitting request golfers send
-        through <a href="${listingUrl}" style="color:#1B4332;">your listing</a>
-        lands straight in this inbox — free, always.
+        Your claim is approved. The green Verified badge is now live on
+        <a href="${listingUrl}" style="color:#1B4332;">your listing</a> — free,
+        permanently — and every fitting request golfers send through the page
+        lands straight in this inbox.
       </p>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 8px;">
-        <strong>Want more golfers landing on that listing?</strong> Verified is
+        <strong>Want more golfers landing on that listing?</strong> Featured is
         the growth layer on top:
       </p>
       <ul style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 16px;padding-left:20px;">
@@ -217,7 +219,7 @@ export async function sendClaimApprovedEmail(args: {
       </ul>
       <p style="margin:0 0 8px;">
         <a href="${payUrl}" style="display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;">
-          Get Verified — $49/mo or $499/yr →
+          Go Featured — $49/mo or $499/yr →
         </a>
       </p>
       <p style="font-size:12px;color:#9b9b9b;margin:0 0 16px;">
@@ -235,7 +237,7 @@ export async function sendClaimApprovedEmail(args: {
       to: args.ownerEmail,
       cc: NOTIFY_TO,
       replyTo: NOTIFY_TO,
-      subject: `You're approved — leads from ${args.shopName} now come to you`,
+      subject: `You're Verified — leads from ${args.shopName} now come to you`,
       html,
     })
     if (error) throw error
@@ -247,7 +249,7 @@ export async function sendClaimApprovedEmail(args: {
 }
 
 /**
- * Send a claimed shop's owner the payment link for Verified ($49/mo or
+ * Send a claimed shop's owner the payment link for Featured ($49/mo or
  * $499/yr — they pick the plan on the pay page). Triggered by the admin
  * "Send payment link" button — after the claim is approved (and usually
  * after the intro call). With renewal=true the copy shifts to the friendly
@@ -271,11 +273,12 @@ export async function sendPaymentLinkEmail(args: {
 
   const payUrl = `${SITE_URL}/onboard/pay/${args.slug}`
   const intro = args.renewal
-    ? `Your Verified membership for <strong>${escapeHtml(args.shopName)}</strong> is
-       coming up for renewal. Renew and the badge and Gear Shelf rotation carry
-       straight on — $49/month or $499/year, whichever suits.`
-    : `You're verified — the last step is payment. Within minutes the
-       <strong>${escapeHtml(args.shopName)}</strong> badge goes live, your shop
+    ? `Your Featured membership for <strong>${escapeHtml(args.shopName)}</strong> is
+       coming up for renewal. Renew and the top placement and Gear Shelf rotation
+       carry straight on — $49/month or $499/year, whichever suits. (Your free
+       Verified badge is never affected.)`
+    : `Your Verified badge is already live, free. Featured is the growth layer:
+       within minutes of payment, <strong>${escapeHtml(args.shopName)}</strong>
        moves to the top of its state and city pages, and we start your AI
        search tune-up. $49/month or $499/year (two months free on annual) —
        pick your plan on the payment page.`
@@ -283,12 +286,12 @@ export async function sendPaymentLinkEmail(args: {
   const html = `
     <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
       <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">
-        ${args.renewal ? "Time to renew — Verified" : "You're verified — activate your listing"}
+        ${args.renewal ? "Time to renew — Featured" : "Go Featured — put your shop at the top"}
       </p>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:16px 0;">${intro}</p>
       <p style="margin:0 0 24px;">
         <a href="${payUrl}" style="display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;">
-          ${args.renewal ? "Renew Verified" : "Activate Verified"} →
+          ${args.renewal ? "Renew Featured" : "Activate Featured"} →
         </a>
       </p>
       <p style="font-size:12px;color:#9b9b9b;">
@@ -304,8 +307,8 @@ export async function sendPaymentLinkEmail(args: {
       cc: NOTIFY_TO,
       replyTo: NOTIFY_TO,
       subject: args.renewal
-        ? `Renew Verified — ${args.shopName}`
-        : `Activate Verified — ${args.shopName}`,
+        ? `Renew Featured — ${args.shopName}`
+        : `Go Featured — ${args.shopName}`,
       html,
     })
     if (error) throw error
@@ -343,15 +346,16 @@ export async function sendPaymentReceivedEmail(args: {
   const html = `
     <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
       <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">
-        You're in — Verified
+        You're in — Featured
       </p>
       <p style="font-size:14px;color:#6b6b6b;margin:0 0 16px;">
-        <strong>${escapeHtml(args.shopName)}</strong> is now Verified on the directory.
+        <strong>${escapeHtml(args.shopName)}</strong> is now Featured on the directory.
       </p>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 12px;">
-        Payment received — the badge is live on
+        Payment received — your shop now sits at the top of its state, city, and
+        category pages, with the gold Featured tag on
         <a href="${listingUrl}" style="color:#1B4332;">your listing</a>
-        (give it a minute; the page refreshes automatically).
+        (give it a minute; the pages refresh automatically).
       </p>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 8px;">
         Four things to make the most of it:
@@ -360,7 +364,7 @@ export async function sendPaymentReceivedEmail(args: {
         <li>Reply with your booking link and we'll put it on your profile.</li>
         <li><a href="${changesUrl}" style="color:#1B4332;">Send any corrections</a> (hours, services, photos) and we'll apply them.</li>
         <li>You're in the Gear Shelf rotation in The Tuxedo Collective newsletter (6,600 subscribers) — we'll let you know when your slot runs.</li>
-        <li>Add a link to your listing from your website — "Verified on Club Fitting Directory" in the footer works. It helps your profile rank on Google, which sends more golfers through it.</li>
+        <li>Add a link to your listing from your website — "Featured on Club Fitting Directory" in the footer works. It helps your profile rank on Google, which sends more golfers through it.</li>
       </ol>
       <p style="font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 16px;">
         Fitting requests golfers submit on your page go straight to this email.
@@ -375,7 +379,7 @@ export async function sendPaymentReceivedEmail(args: {
       to: args.ownerEmail,
       cc: NOTIFY_TO,
       replyTo: NOTIFY_TO,
-      subject: `You're in — Verified on Club Fitting Directory`,
+      subject: `You're in — Featured on Club Fitting Directory`,
       html,
     })
     if (error) throw error

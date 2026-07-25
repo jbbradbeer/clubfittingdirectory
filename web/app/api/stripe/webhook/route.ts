@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type Stripe from "stripe"
 import { getStripe } from "@/lib/stripe"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateVerifiedShop } from "@/lib/verified"
+import { activateFeaturedShop } from "@/lib/verified"
 import { sendPaymentReceivedEmail } from "@/lib/email"
 import { isPlanKey, type PlanKey } from "@/lib/plans"
 import { log } from "@/lib/logger"
@@ -12,7 +12,7 @@ import { log } from "@/lib/logger"
  * POST /api/stripe/webhook
  *
  * On checkout.session.completed (paid): record the payment in shop_payments,
- * activate/extend the Verified badge, and send the welcome email (founder
+ * activate/extend the Featured tier, and send the welcome email (founder
  * cc'd = payment alert).
  *
  * On invoice.paid with billing_reason "subscription_cycle" (only fires when
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
       throw insertErr
     }
 
-    const slug = await activateVerifiedShop(shopSlug, plan)
+    const slug = await activateFeaturedShop(shopSlug, plan)
     log.info("api/stripe-webhook", "payment processed, badge activated", {
       slug,
       plan,
@@ -184,7 +184,7 @@ async function handleRenewalInvoice(invoice: Stripe.Invoice) {
       throw insertErr
     }
 
-    const slug = await activateVerifiedShop(shopSlug, plan)
+    const slug = await activateFeaturedShop(shopSlug, plan)
     log.info("api/stripe-webhook", "renewal processed, badge extended", {
       slug,
       plan,
