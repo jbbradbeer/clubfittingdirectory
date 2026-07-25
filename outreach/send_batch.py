@@ -33,6 +33,7 @@ Usage:
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -67,6 +68,31 @@ def render_signature(cfg: dict) -> str:
                .replace("{{MAILING_ADDRESS}}", cfg["MAILING_ADDRESS"])
 
 
+def display_name(name: str) -> str:
+    """Shop names come from the scraper with shouty tokens ("Total Fit GOLF")
+    or flattened case ("Mcgolf"). Recase any all-caps alphabetic word of 3+
+    letters; leave short tokens (state codes, acronyms like "PGA" or "USA")
+    and other mixed-case words alone. Then restore Mc/Mac capitalization."""
+    cleaned = " ".join(
+        w.capitalize() if w.isalpha() and w.isupper() and len(w) >= 4 else w
+        for w in (name or "").split()
+    )
+    return re.sub(r"\b(Mc|Mac)([a-z])", lambda m: m.group(1) + m.group(2).upper(), cleaned)
+
+
+def has_mx(email: str) -> bool:
+    """True if the address's domain publishes MX records (or dig is unavailable
+    — never let a missing tool block the batch). A domain with no MX can't
+    receive mail, so sending would bounce and burn sender reputation."""
+    domain = email.rsplit("@", 1)[-1]
+    try:
+        out = subprocess.run(["dig", "+short", "MX", domain],
+                             capture_output=True, text=True, timeout=10)
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return True
+    return bool(out.stdout.strip())
+
+
 def render_touch(touch: int, row: dict, cfg: dict, hook: dict) -> tuple[str, str]:
     """Returns (subject, body) with every placeholder resolved."""
     shop = row["shops"]
@@ -86,7 +112,7 @@ def render_touch(touch: int, row: dict, cfg: dict, hook: dict) -> tuple[str, str
 
     for k, v in {
         "{{greeting}}": greeting,
-        "{{shop_name}}": shop["name"],
+        "{{shop_name}}": display_name(shop["name"]),
         "{{listing_url}}": f"{SITE}/listing/{shop['slug']}",
         "{{claim_url}}": f"{SITE}/claim/{shop['slug']}?src=outreach",
         "{{hook_line}}": hook_line,
@@ -112,16 +138,13 @@ def closing_angle_for(shop: dict, cfg: dict) -> str:
     sp = cfg.get("SOCIAL_PROOF") or {}
     if sp.get("founding_spots_sold"):
         example = f", including {sp['example_shop']}" if sp.get("example_shop") else ""
-        return f"{sp['founding_spots_sold']} founding spots are gone{example}."
-    state = shop.get("state") or shop.get("state_code") or "your state"
-    return (f"Your listing is live and getting traffic. Verified profiles get top "
-            f"placement in {state}.")
+        return f"{sp['founding_spots_sold']} shops have claimed their listing{example}."
+    return ("Your listing is live and getting traffic. Claiming it is free and "
+            "puts the Verified badge on it.")
 
 
-def get_batch(limit: int, allow_c: bool) -> list[dict]:
+def get_batch(limit: int) -> list[dict]:
     cmd = [sys.executable, str(ROOT / "outreach" / "outreach_db.py"), "batch", "--limit", str(limit)]
-    if allow_c:
-        cmd.append("--allow-c")
     out = subprocess.run(cmd, capture_output=True, text=True, check=True)
     return json.loads(out.stdout)
 
@@ -151,8 +174,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--limit", type=int, default=10)
-    p.add_argument("--allow-c", action="store_true")
     p.add_argument("--hooks-file", help="JSON: {outreach_id: {hook_line, greeting}}")
+    p.add_argument("--allow-generic", action="store_true",
+                   help="permit touch-1 sends WITHOUT a per-shop hook (founder review 2026-07-08: generic first touches read as mail merge, so they are blocked by default)")
     p.add_argument("--commit", action="store_true", help="actually send (default: dry run)")
     p.add_argument("--test-to", help="send ONE touch-1 test email to this address and exit")
     args = p.parse_args()
@@ -181,25 +205,52 @@ def main():
         print(json.dumps({"sent": 0, "note": "daily budget exhausted"}))
         return
 
-    batch = get_batch(budget, args.allow_c)
+    batch = get_batch(budget)
 
     seen_emails: set[str] = set()
     results = []
     for row in batch:
         email = (row["contact_email"] or "").lower()
         touch = row["touch_number"]
-        if not email or email in seen_emails:
-            results.append({"id": row["id"], "skipped": "no/duplicate email"})
+        # Founder-driven flow: a fresh shop with no email still renders — the
+        # founder hunts the address himself and reports it back (`email <id>`).
+        # Commit-mode (unused; skill forbids it) still refuses null emails.
+        if email and email in seen_emails:
+            results.append({"id": row["id"], "skipped": "duplicate email"})
             continue
-        seen_emails.add(email)
+        if not email and (args.commit or touch > 1):
+            results.append({"id": row["id"], "shop": row["shops"]["name"],
+                            "touch": touch, "skipped": "no email on file"})
+            continue
+        if email:
+            seen_emails.add(email)
 
         hook = hooks.get(row["id"], {})
         subject, body = render_touch(touch, row, cfg, hook)
 
-        if not args.commit:
+        # A first touch with no researched hook reads as a mail merge — block
+        # it (founder review of the 2026-07-07 batch). Dry runs still render
+        # so the skill can see the batch it needs to write hooks for.
+        needs_hook = touch == 1 and not (hook.get("hook_line") and hook.get("greeting"))
+        if needs_hook and args.commit and not args.allow_generic:
             results.append({"id": row["id"], "touch": touch, "to": email,
+                            "shop": row["shops"]["name"],
+                            "skipped": "touch 1 without hook/greeting (build hooks.json or pass --allow-generic)"})
+            continue
+
+        if args.commit and not has_mx(email):
+            results.append({"id": row["id"], "touch": touch, "to": email,
+                            "shop": row["shops"]["name"],
+                            "skipped": "domain has no MX records — would bounce"})
+            continue
+
+        if not args.commit:
+            results.append({"id": row["id"], "touch": touch,
+                            "to": email or "[FIND EMAIL — founder]",
                             "shop": row["shops"]["name"], "subject": subject,
-                            "body": body, "dry_run": True})
+                            "body": body, "dry_run": True,
+                            "needs_hook": needs_hook, "needs_email": not email,
+                            "mx_ok": has_mx(email) if email else None})
             continue
 
         # Send — as an in-thread reply for touches 2/3 when we have the

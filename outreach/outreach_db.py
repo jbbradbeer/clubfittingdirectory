@@ -5,18 +5,23 @@ outreach_db.py — the single DB contract for the fitter outreach engine.
 Every script (and the fitter-outreach Claude Code skill) reads/writes the
 outreach tables THROUGH this module, so invariants live in one place:
   * every status change also inserts an outreach_events row
-  * follow-up cadence (+4d after touch 1, +8d after touch 2) is computed here
+  * follow-up cadence (+3d after touch 1, +3d after touch 2) is computed here
   * follow-ups landing on Sat/Sun are pushed to Monday
   * do_not_contact is terminal — batch selection excludes it unconditionally
+  * fresh prospects are worked ALPHABETICALLY BY STATE, then shop name —
+    the founder's 2026-07-25 plan: every shop gets 3 touches, he fit-checks
+    and finds the email himself, no-fit/no-email shops are removed
 
 Reads SUPABASE_SERVICE_ROLE_KEY from the environment, falling back to
 web/.env.local so the founder never has to export anything.
 
 CLI (all output is JSON on stdout):
-  python3 outreach/outreach_db.py batch --limit 20 [--allow-c] [--include-unknown]
+  python3 outreach/outreach_db.py batch --limit 10
   python3 outreach/outreach_db.py mark-drafted <id> --gmail-draft-id X [--hook "..."]
   python3 outreach/outreach_db.py mark-sent <id>
   python3 outreach/outreach_db.py mark-replied <id> [--do-not-contact] [--note "..."]
+  python3 outreach/outreach_db.py set-email <id> <email>
+  python3 outreach/outreach_db.py remove <id> [--reason "..."]
   python3 outreach/outreach_db.py set-status <id> <status> [--note "..."]
   python3 outreach/outreach_db.py contacted-emails
   python3 outreach/outreach_db.py close-stale [--grace-days 10]
@@ -41,7 +46,8 @@ SENT_STATUSES = ("sent_1", "sent_2", "sent_3")
 REPLIED_LIKE = ("replied", "call_booked", "closed_won")
 
 # Follow-up cadence: days until next touch, keyed by the touch just sent.
-CADENCE_DAYS = {1: 4, 2: 8}
+# Founder plan 2026-07-25: follow-up every 3 days until 3 total touches.
+CADENCE_DAYS = {1: 3, 2: 3}
 MAX_TOUCHES = 3
 
 
@@ -125,20 +131,28 @@ def next_touch_after(touch_just_sent: int) -> str | None:
     return due.isoformat()
 
 
-SHOP_EMBED = "shops(name,slug,website,city,state,state_code,shop_type,is_chain)"
+# !inner + the shops.status filter in cmd_batch drop the whole outreach row
+# when the shop is no longer active — a removed listing must never be pitched
+# ("claim your listing" would link to a Fitter Not Found page). Added after
+# the 2026-07 directory cleanup deactivated 544 queued prospects.
+SHOP_EMBED = "shops!inner(name,slug,website,city,state,state_code,shop_type,is_chain,status,claimed_at)"
 
 
 # ── Subcommands ──────────────────────────────────────────────
 
 
 def cmd_batch(args):
-    """Today's work list: due follow-ups first, then fresh segment A → B (→ C)."""
+    """Today's work list: due follow-ups first, then fresh shops alphabetically
+    by state (then shop name). No email gate — the founder fit-checks each new
+    shop and hunts the email himself; drafts render with a [FIND EMAIL]
+    placeholder when contact_email is null. Claimed shops are never pitched."""
     out = []
 
     followups = get_all("outreach", {
         "select": f"*,{SHOP_EMBED}",
         "status": "in.(sent_1,sent_2)",
         "next_touch_at": f"lte.{now_iso()}",
+        "shops.status": "eq.active",
         "order": "next_touch_at.asc",
     })
     for r in followups[: args.limit]:
@@ -147,24 +161,22 @@ def cmd_batch(args):
         out.append(r)
 
     remaining = args.limit - len(out)
-    segments = ["A", "B"] + (["C"] if args.allow_c else [])
-    verified_ok = "in.(valid,unknown)" if args.include_unknown else "eq.valid"
-    for seg in segments:
-        if remaining <= 0:
-            break
+    if remaining > 0:
+        # PostgREST can't order a parent query by an embedded column, so pull
+        # every uncontacted row (~1.2k, two pages) and sort client-side.
         fresh = get_all("outreach", {
             "select": f"*,{SHOP_EMBED}",
             "status": "eq.not_contacted",
-            "segment": f"eq.{seg}",
-            "contact_email": "not.is.null",
-            "email_verified": verified_ok,
+            "shops.status": "eq.active",
             "order": "created_at.asc",
         })
+        fresh = [r for r in fresh if not (r.get("shops") or {}).get("claimed_at")]
+        fresh.sort(key=lambda r: ((r["shops"].get("state") or "~").lower(),
+                                  (r["shops"].get("name") or "~").lower()))
         for r in fresh[:remaining]:
             r["touch_number"] = 1
             r["touch_kind"] = "first"
             out.append(r)
-        remaining = args.limit - len(out)
 
     print(json.dumps(out, indent=2))
 
@@ -211,6 +223,50 @@ def cmd_mark_replied(args):
     log_event(args.id, "reply_received",
               {"status": new_status, "note": args.note})
     print(json.dumps({"ok": True, "id": args.id, "status": new_status}))
+
+
+def cmd_set_email(args):
+    """Record an email the founder found by hand for a shop."""
+    email = args.email.strip().lower()
+    if "@" not in email or "." not in email.split("@")[-1]:
+        sys.exit(f"ERROR: '{args.email}' doesn't look like an email address")
+    rows = request("GET", "outreach", {"id": f"eq.{args.id}", "select": "contact_email"})
+    if not rows:
+        sys.exit(f"ERROR: outreach row {args.id} not found")
+    patch_row(args.id, {
+        "contact_email": email,
+        "email_source": "founder_manual",
+        "email_search_status": "found",
+        "email_verified": "unknown",
+    })
+    log_event(args.id, "email_discovered",
+              {"email": email, "source": "founder_manual",
+               "previous": rows[0]["contact_email"]})
+    print(json.dumps({"ok": True, "id": args.id, "contact_email": email}))
+
+
+def cmd_remove(args):
+    """Founder verdict: not a fit / no email findable. Terminal for outreach
+    (do_not_contact) AND deactivates the shop listing itself — the founder's
+    rule: if he can't confirm fit or find an email, the shop leaves the
+    directory. The live page disappears on the next revalidate/deploy."""
+    rows = request("GET", "outreach",
+                   {"id": f"eq.{args.id}", "select": f"shop_id,status,{SHOP_EMBED}"})
+    if not rows:
+        sys.exit(f"ERROR: outreach row {args.id} not found")
+    row = rows[0]
+    if (row.get("shops") or {}).get("claimed_at"):
+        sys.exit("ERROR: shop is owner-claimed — refusing to deactivate. Handle manually.")
+    reason = args.reason or "founder: no fit / no email found"
+    patch_row(args.id, {"status": "do_not_contact", "next_touch_at": None,
+                        "notes": reason})
+    request("PATCH", "shops", params={"id": f"eq.{row['shop_id']}"},
+            body={"status": "inactive"}, prefer="return=minimal")
+    log_event(args.id, "status_changed",
+              {"status": "do_not_contact", "shop_deactivated": True, "reason": reason})
+    print(json.dumps({"ok": True, "id": args.id, "shop": row["shops"]["slug"],
+                      "outreach_status": "do_not_contact", "shop_status": "inactive",
+                      "note": "revalidate the shop's pages so the listing drops off the live site"}))
 
 
 def cmd_set_status(args):
@@ -299,10 +355,7 @@ def main():
     sub = p.add_subparsers(dest="cmd", required=True)
 
     b = sub.add_parser("batch")
-    b.add_argument("--limit", type=int, default=20)
-    b.add_argument("--allow-c", action="store_true")
-    b.add_argument("--include-unknown", action="store_true",
-                   help="also queue catch-all/unknown verification results")
+    b.add_argument("--limit", type=int, default=10)
     b.set_defaults(fn=cmd_batch)
 
     d = sub.add_parser("mark-drafted")
@@ -320,6 +373,16 @@ def main():
     r.add_argument("--do-not-contact", action="store_true")
     r.add_argument("--note")
     r.set_defaults(fn=cmd_mark_replied)
+
+    se = sub.add_parser("set-email")
+    se.add_argument("id")
+    se.add_argument("email")
+    se.set_defaults(fn=cmd_set_email)
+
+    rm = sub.add_parser("remove")
+    rm.add_argument("id")
+    rm.add_argument("--reason")
+    rm.set_defaults(fn=cmd_remove)
 
     st = sub.add_parser("set-status")
     st.add_argument("id")
