@@ -12,6 +12,12 @@ import { sendPaymentLinkEmail } from "@/lib/email"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { toCitySlug } from "@/lib/slugs"
+import { isPlanKey } from "@/lib/plans"
+
+/* Mutating actions return { error } instead of throwing: they're invoked from
+   client components (ActionButton), where a thrown server-action error renders
+   the opaque error boundary instead of an inline message. */
+export type ActionResult = { error?: string } | void
 
 /* ── Login ── */
 export async function login(formData: FormData) {
@@ -71,7 +77,7 @@ export async function approveSubmission(formData: FormData) {
     .select("*")
     .eq("id", id)
     .single()
-  if (subErr || !sub) throw new Error("Submission not found.")
+  if (subErr || !sub) return { error: "Submission not found." }
 
   const stateName = US_STATES.find((s) => s.code === sub.state_code)?.name ?? sub.state_code
   let slug = buildShopSlug(sub.name, sub.city, sub.state_code)
@@ -89,11 +95,11 @@ export async function approveSubmission(formData: FormData) {
   // Validate shop_type and state_code before inserting
   const validShopType = SHOP_TYPES.find((t) => t.dbType === sub.shop_type)
   if (!validShopType) {
-    throw new Error(`Invalid shop_type "${sub.shop_type}". Must be one of: ${SHOP_TYPES.map((t) => t.dbType).join(", ")}.`)
+    return { error: `Invalid shop_type "${sub.shop_type}". Must be one of: ${SHOP_TYPES.map((t) => t.dbType).join(", ")}.` }
   }
   const validState = US_STATES.find((s) => s.code === sub.state_code)
   if (!validState) {
-    throw new Error(`Invalid state_code "${sub.state_code}". Must be a valid two-letter US state code.`)
+    return { error: `Invalid state_code "${sub.state_code}". Must be a valid two-letter US state code.` }
   }
 
   // Insert into live shops as active
@@ -109,7 +115,7 @@ export async function approveSubmission(formData: FormData) {
     phone: sub.phone,
     offers_fitting: sub.offers_fitting ?? false,
   })
-  if (insErr) throw new Error(`Could not create listing: ${insErr.message}`)
+  if (insErr) return { error: `Could not create listing: ${insErr.message}` }
 
   // Mark submission approved
   await supabase.from("shop_submissions").update({ review_status: "approved" }).eq("id", id)
@@ -118,7 +124,7 @@ export async function approveSubmission(formData: FormData) {
   // counts. Revalidate precisely those — the new listing, its city/state/category
   // index pages, plus the count-driven aggregates (homepage stats, directory,
   // states index). We deliberately do NOT touch every listing page.
-  revalidatePath("/admin")                                       // submissions queue
+  revalidatePath("/admin", "layout")                                       // submissions queue
   revalidatePath(`/listing/${slug}`)                             // the new shop's own page
   revalidatePath(`/state/${sub.state_code.toLowerCase()}`)       // its state page
   revalidatePath(`/city/${toCitySlug(sub.city, sub.state_code)}`) // its city page
@@ -135,7 +141,7 @@ export async function rejectSubmission(formData: FormData) {
   if (!id) return
   const supabase = createAdminClient()
   await supabase.from("shop_submissions").update({ review_status: "rejected" }).eq("id", id)
-  revalidatePath("/admin")
+  revalidatePath("/admin", "layout")
 }
 
 /* ── Approve a claim: stamp the shop owner-claimed + capture owner_email.
@@ -151,7 +157,7 @@ export async function approveClaim(formData: FormData) {
     .select("id, shop_id, claimant_email")
     .eq("id", id)
     .single()
-  if (claimErr || !claim) throw new Error("Claim not found.")
+  if (claimErr || !claim) return { error: "Claim not found." }
 
   const { data: shop, error: shopErr } = await supabase
     .from("shops")
@@ -159,15 +165,15 @@ export async function approveClaim(formData: FormData) {
     .eq("id", claim.shop_id)
     .select("slug")
     .single()
-  if (shopErr) throw new Error(`Could not mark shop claimed: ${shopErr.message}`)
+  if (shopErr) return { error: `Could not mark shop claimed: ${shopErr.message}` }
 
   const { error: updErr } = await supabase
     .from("shop_claims")
     .update({ review_status: "approved" })
     .eq("id", id)
-  if (updErr) throw new Error(`Could not update claim: ${updErr.message}`)
+  if (updErr) return { error: `Could not update claim: ${updErr.message}` }
 
-  revalidatePath("/admin")
+  revalidatePath("/admin", "layout")
   if (shop?.slug) revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed"
 }
 
@@ -175,14 +181,20 @@ export async function approveClaim(formData: FormData) {
    Run when a Stripe payment email arrives — see tasks/paid-activation-runbook.md.
    Sets the badge live and stamps a 1-year expiry so a lapsed subscription
    can't stay "Verified" forever. ── */
-export async function activateVerified(formData: FormData) {
+export async function activateVerified(formData: FormData): Promise<ActionResult> {
   if (!(await isAdmin())) redirect("/admin/login")
   const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
   if (!slug) return
+  const rawPlan = String(formData.get("plan") ?? "")
+  const plan = isPlanKey(rawPlan) ? rawPlan : "annual"
 
   // Shared with the Stripe webhook — one code path for badge activation
   // (sets tier + stamps expiry + refreshes the cached pages).
-  await activateVerifiedShop(slug)
+  try {
+    await activateVerifiedShop(slug, plan)
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Could not activate." }
+  }
 }
 
 /* ── Lapse a Verified listing (subscription not renewed). Keeps verified_at /
@@ -197,9 +209,9 @@ export async function lapseVerified(formData: FormData) {
     .from("shops")
     .update({ listing_tier: "free" })
     .eq("slug", slug)
-  if (error) throw new Error(`Could not lapse: ${error.message}`)
+  if (error) return { error: `Could not lapse: ${error.message}` }
 
-  revalidatePath("/admin")
+  revalidatePath("/admin", "layout")
   revalidatePath(`/listing/${slug}`)
   revalidatePath("/")
 }
@@ -214,8 +226,8 @@ export async function rejectClaim(formData: FormData) {
     .from("shop_claims")
     .update({ review_status: "rejected" })
     .eq("id", id)
-  if (error) throw new Error(`Could not reject claim: ${error.message}`)
-  revalidatePath("/admin")
+  if (error) return { error: `Could not reject claim: ${error.message}` }
+  revalidatePath("/admin", "layout")
 }
 
 /* ── Send the Stripe payment link to a claimed shop's owner.
@@ -234,9 +246,9 @@ export async function sendPaymentLink(formData: FormData) {
     .select("name, slug, owner_email, claimed_at")
     .eq("slug", slug)
     .single()
-  if (error || !shop) throw new Error(`Shop not found: ${error?.message ?? slug}`)
+  if (error || !shop) return { error: `Shop not found: ${error?.message ?? slug}` }
   if (!shop.claimed_at || !shop.owner_email) {
-    throw new Error("Shop has no approved claim / owner email — approve the claim first.")
+    return { error: "Shop has no approved claim / owner email — approve the claim first." }
   }
 
   const sent = await sendPaymentLinkEmail({
@@ -245,7 +257,7 @@ export async function sendPaymentLink(formData: FormData) {
     ownerEmail: shop.owner_email,
     renewal,
   })
-  if (!sent) throw new Error("Email failed to send — check RESEND_API_KEY and Vercel logs.")
+  if (!sent) return { error: "Email failed to send — check RESEND_API_KEY and Vercel logs." }
   log.info("admin/actions", "payment link sent", { slug, renewal })
 }
 
@@ -260,8 +272,8 @@ export async function markUpdateDone(formData: FormData) {
     .from("listing_update_requests")
     .update({ review_status: "done" })
     .eq("id", id)
-  if (error) throw new Error(`Could not mark done: ${error.message}`)
-  revalidatePath("/admin")
+  if (error) return { error: `Could not mark done: ${error.message}` }
+  revalidatePath("/admin", "layout")
   // The founder just hand-applied edits to the listing — refresh its page.
   if (/^[a-z0-9-]+$/.test(shopSlug)) revalidatePath(`/listing/${shopSlug}`)
 }
@@ -275,6 +287,6 @@ export async function rejectUpdateRequest(formData: FormData) {
     .from("listing_update_requests")
     .update({ review_status: "rejected" })
     .eq("id", id)
-  if (error) throw new Error(`Could not reject request: ${error.message}`)
-  revalidatePath("/admin")
+  if (error) return { error: `Could not reject request: ${error.message}` }
+  revalidatePath("/admin", "layout")
 }
