@@ -1,9 +1,11 @@
 "use client"
 
-import { CheckCircle, Loader2 } from "lucide-react"
+import { BadgeCheck, CheckCircle, Loader2 } from "lucide-react"
+import Link from "next/link"
 import { fieldClass, labelClass } from "@/lib/form-styles"
 import { Button } from "@/components/ui/Button"
 import { CAL_FOUNDING_CALL_URL } from "@/lib/constants"
+import { VERIFIED_PERKS } from "@/lib/plans"
 import { useFormSubmit } from "@/lib/hooks/useFormSubmit"
 import { Honeypot, Req } from "@/components/forms/FormBits"
 
@@ -46,18 +48,37 @@ export function ClaimShopForm({ shopSlug, shopName, source }: {
             fitting requests golfers send through your page are forwarded straight to
             the email you provided — check your inbox for a confirmation.
           </p>
-          <div className="mt-6 pt-6 border-t border-[var(--color-border)]">
-            <p className="font-display text-lg text-[var(--color-charcoal)]">
-              Want to skip the queue?
+          <div className="mt-6 pt-6 border-t border-[var(--color-border)] text-left">
+            <p className="font-display text-lg text-[var(--color-charcoal)] text-center">
+              While you wait — what Verified adds
             </p>
-            <p className="mt-2 text-sm text-[var(--color-charcoal-light)] leading-relaxed">
-              Book 15 minutes with the founder — we&apos;ll verify you on the call,
-              fix anything on your listing, and walk through what founding
-              partner shops get.
+            <p className="mt-2 text-sm text-[var(--color-charcoal-light)] leading-relaxed text-center">
+              Approval usually takes a day. Once you&apos;re in, Verified is the
+              growth layer most claimed shops add:
             </p>
-            <Button href={CAL_FOUNDING_CALL_URL} external variant="primary" size="lg" className="mt-4">
-              Book your intro call
-            </Button>
+            <ul className="mt-4 space-y-2 max-w-md mx-auto">
+              {VERIFIED_PERKS.map((perk) => (
+                <li key={perk.title} className="flex gap-2 text-sm text-[var(--color-charcoal)] leading-relaxed">
+                  <BadgeCheck size={16} className="text-[var(--color-forest)] shrink-0 mt-0.5" />
+                  {perk.short}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-sm text-[var(--color-charcoal-light)] text-center">
+              $49/month or $499/year (two months free).{" "}
+              <Link href="/for-shops" className="font-semibold text-[var(--color-forest)] hover:underline">
+                Full details →
+              </Link>
+            </p>
+            <div className="mt-5 text-center">
+              <p className="text-sm text-[var(--color-charcoal-light)] leading-relaxed">
+                Want to skip the queue? Book 15 minutes with the founder — we&apos;ll
+                verify you on the call and fix anything on your listing while we talk.
+              </p>
+              <Button href={CAL_FOUNDING_CALL_URL} external variant="primary" size="lg" className="mt-4">
+                Book your intro call
+              </Button>
+            </div>
           </div>
         </div>
       </div>

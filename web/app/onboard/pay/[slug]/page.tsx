@@ -6,6 +6,7 @@ import { getShopBySlug } from "@/lib/supabase/queries/shops"
 import { daysUntil } from "@/lib/verified-math"
 import { PlanSelector } from "@/components/submit/PlanSelector"
 import { Button } from "@/components/ui/Button"
+import { VERIFIED_PERKS } from "@/lib/plans"
 
 export const metadata: Metadata = {
   title: "Activate Verified — Club Fitting Directory",
@@ -19,12 +20,9 @@ export const dynamic = "force-dynamic"
 /* Renewals open this many days before expiry (mirrors /api/checkout). */
 const EARLY_RENEW_WINDOW_DAYS = 60
 
-const INCLUDED = [
-  "Verified badge on your listing — the only paid marker on the directory",
-  "Fitting requests from golfers forwarded straight to your inbox",
-  "Gear Shelf rotation in The Tuxedo Collective newsletter (6,600 subscribers)",
-  "Priority listing corrections — hours, services, photos, booking link",
-]
+/* One-line perks from the shared offer source — keeps this page's pitch
+   identical to the claim page, /for-shops, and the upsell emails. */
+const INCLUDED = VERIFIED_PERKS.map((p) => p.short)
 
 /**
  * The payment page owners land on from the "Send payment link" email.
