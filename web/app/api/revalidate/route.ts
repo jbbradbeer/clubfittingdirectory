@@ -38,6 +38,7 @@ type ShopRow = {
   rating?: number | null
   is_featured?: boolean | null
   listing_tier?: string | null
+  claimed_at?: string | null
 }
 
 function pathsForShop(row: ShopRow): string[] {
@@ -113,9 +114,11 @@ export async function POST(request: Request) {
   if (type === "UPDATE" && record && oldRecord) {
     const ratingChanged = record.rating !== oldRecord.rating
     const featuredChanged = record.is_featured !== oldRecord.is_featured
-    // listing_tier drives the paid Verified badge + card tag priority.
+    // listing_tier drives the paid Featured badge + card tag priority;
+    // claimed_at drives the free Verified badge.
     const tierChanged = record.listing_tier !== oldRecord.listing_tier
-    if (ratingChanged || featuredChanged || tierChanged) paths.add("/")
+    const claimedChanged = record.claimed_at !== oldRecord.claimed_at
+    if (ratingChanged || featuredChanged || tierChanged || claimedChanged) paths.add("/")
   }
 
   if (paths.size === 0) {

@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { lapseVerified, sendPaymentLink } from "@/app/admin/actions"
+import { lapseFeatured, sendPaymentLink } from "@/app/admin/actions"
 import { ActionButton } from "@/components/admin/ActionButton"
 import { ShopSearchSelect } from "@/components/admin/ShopSearchSelect"
 
 /**
  * The at-a-glance tab: everything needing the founder's attention today,
- * plus the number that matters (Verified shops ≈ revenue). Head-only count
+ * plus the number that matters (Featured shops ≈ revenue). Head-only count
  * queries — cheap regardless of table size.
  */
 export async function OverviewPanel() {
@@ -25,16 +25,16 @@ export async function OverviewPanel() {
       count("shop_submissions", { review_status: "new" }),
       count("shop_claims", { review_status: "new" }),
       count("outreach", { status: "replied" }),
-      count("shops", { listing_tier: "verified" }),
+      count("shops", { listing_tier: "featured" }),
       supabase.from("shops").select("id", { count: "exact", head: true })
         .not("claimed_at", "is", null).then(({ count: n, error }) => (error ? null : (n ?? 0))),
     ])
 
-  // Current Verified roster with expiry + plan — the renewal control surface.
+  // Current Featured roster with expiry + plan — the renewal control surface.
   const { data: verifiedList } = await supabase
     .from("shops")
     .select("name,slug,verified_at,verified_expires_at,verified_plan")
-    .eq("listing_tier", "verified")
+    .eq("listing_tier", "featured")
     .order("verified_expires_at", { ascending: true, nullsFirst: true })
 
   // MRR from unexpired badges: monthly $49 counts whole, annual $499 ÷ 12.
@@ -54,7 +54,7 @@ export async function OverviewPanel() {
     { label: "Pending claims", value: pendingClaims, href: "/admin/submissions?status=new", urgent: (pendingClaims ?? 0) > 0 },
     { label: "Outreach replies waiting", value: outreachReplied, href: "/admin/outreach", urgent: (outreachReplied ?? 0) > 0 },
     { label: "Claimed shops", value: claimedShops, href: "/admin/submissions" },
-    { label: "Verified (paying) shops", value: verifiedShops, href: "/admin/outreach" },
+    { label: "Featured (paying) shops", value: verifiedShops, href: "/admin/outreach" },
   ]
 
   return (
@@ -82,17 +82,17 @@ export async function OverviewPanel() {
           {mrr === null ? "—" : `$${mrr.toLocaleString()} MRR`}
         </p>
         <p className="text-sm text-white/70 mt-1">
-          {verifiedShops ?? 0} Verified shops ({monthlyCount} monthly · {annualCount} annual) · target $10,000 by year end
+          {verifiedShops ?? 0} Featured shops ({monthlyCount} monthly · {annualCount} annual) · target $10,000 by year end
         </p>
       </div>
 
-      {/* Verified listings — activation + renewals (see tasks/paid-activation-runbook.md) */}
+      {/* Featured listings — activation + renewals (see tasks/paid-activation-runbook.md) */}
       <div className="mt-8 bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
-        <h2 className="font-display text-lg text-[var(--color-charcoal)]">Verified listings</h2>
+        <h2 className="font-display text-lg text-[var(--color-charcoal)]">Featured listings</h2>
         <p className="text-sm text-[var(--color-charcoal-light)] mt-1">
           Stripe payments now activate automatically via the webhook. This manual
           activation stays as the backstop — search for the shop, pick the plan,
-          activate; badge + expiry are stamped.
+          activate; placement + expiry are stamped.
           &ldquo;Renewal link&rdquo; emails the owner their payment page (~30 days before expiry).
         </p>
 
@@ -104,7 +104,7 @@ export async function OverviewPanel() {
               <tr className="text-left text-xs uppercase tracking-wider text-[var(--color-charcoal-light)] border-b border-[var(--color-border)]">
                 <th className="py-2 pr-3">Shop</th>
                 <th className="py-2 pr-3">Plan</th>
-                <th className="py-2 pr-3">Verified</th>
+                <th className="py-2 pr-3">Activated</th>
                 <th className="py-2 pr-3">Expires</th>
                 <th className="py-2" />
               </tr>
@@ -141,7 +141,7 @@ export async function OverviewPanel() {
                           Renewal link
                         </ActionButton>
                         <ActionButton
-                          action={lapseVerified}
+                          action={lapseFeatured}
                           fields={{ slug: s.slug }}
                           className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-border)] rounded-lg text-[var(--color-charcoal)] hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
                         >

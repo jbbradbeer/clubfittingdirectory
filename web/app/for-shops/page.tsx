@@ -1,48 +1,55 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { BadgeCheck, CalendarCheck, Mail, Newspaper, PenLine, Sparkles, TrendingUp } from "lucide-react"
+import { BadgeCheck, Inbox, Mail, PenLine } from "lucide-react"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
 import { ShopFinder } from "@/components/submit/ShopFinder"
+import { PlanComparison } from "@/components/for-shops/PlanComparison"
+import { HowItWorksSteps, type HowItWorksStep } from "@/components/for-shops/HowItWorksSteps"
 import { FaqSection, type FaqItem } from "@/components/seo/FaqSection"
+import { Reveal } from "@/lib/useReveal"
 import { CAL_FOUNDING_CALL_URL, SITE_URL } from "@/lib/constants"
-import { VERIFIED_PERKS } from "@/lib/plans"
+import { FREE_PERKS } from "@/lib/plans"
 
 export const metadata: Metadata = {
-  title: "For Shop Owners — Get Verified on Club Fitting Directory",
+  title: "For Shop Owners — Free Verified Listing & Featured Placement",
   description:
-    "Claim your free listing, then get Verified: the badge golfers trust, fitting requests forwarded to your inbox, and a newsletter audience of 6,600 golfers. $49/month or $499/year.",
+    "Claim your listing free, get hand-verified, and the Verified badge golfers trust goes on your shop — no charge. Upgrade to Featured for top placement, AI search optimization, and a 6,600-golfer newsletter. $49/month or $499/year.",
   alternates: { canonical: `${SITE_URL}/for-shops` },
   openGraph: {
-    title: "For Shop Owners — Get Verified on Club Fitting Directory",
+    title: "For Shop Owners — Free Verified Listing & Featured Placement",
     description:
-      "Claim your free listing, get verified, and put the badge golfers trust on your shop. $49/month or $499/year.",
+      "Claim your listing free and earn the Verified badge — no charge. Featured placement is there when you want more. $49/month or $499/year.",
     url: `${SITE_URL}/for-shops`,
   },
 }
 
-/* Copy comes from the shared VERIFIED_PERKS source (lib/plans.ts) so the
-   pitch matches the claim page, pay page, and emails; icons are page-local. */
-const PERK_ICONS = [BadgeCheck, TrendingUp, Sparkles, Newspaper, PenLine]
-const INCLUDED = VERIFIED_PERKS.map((perk, i) => ({ icon: PERK_ICONS[i], ...perk }))
+/* Copy comes from the shared FREE_PERKS source (lib/plans.ts) so the pitch
+   matches the claim page, pay page, and emails; icons are page-local. */
+const FREE_PERK_ICONS = [BadgeCheck, Inbox, PenLine]
+const FREE_INCLUDED = FREE_PERKS.map((perk, i) => ({ icon: FREE_PERK_ICONS[i], ...perk }))
 
-const STEPS = [
+const STEPS: HowItWorksStep[] = [
   {
     title: "Claim your listing",
-    body: "Find your shop below and claim it — free, two minutes. Claiming alone turns on lead forwarding once approved.",
+    summary: "Free, two minutes.",
+    body: "Find your shop below and claim it. No card, no commitment — just tell us who you are and how you're connected to the shop.",
   },
   {
-    title: "Quick intro call",
-    body: "Fifteen minutes with the founder. We confirm you're the real owner and fix anything wrong on your listing while we talk.",
+    title: "We verify you by hand",
+    summary: "Usually done within a day.",
+    body: "Every owner is verified personally — a short call or a couple of emails to confirm you actually own or run the shop. That's why the badge means something to golfers: it can't be bought, only earned.",
   },
   {
-    title: "We verify you",
-    body: "Every owner is verified by hand — that's why the badge means something to golfers. Usually done within a day.",
+    title: "Badge + leads go live",
+    summary: "Free — and it stays free.",
+    body: "The green Verified badge appears on your listing and on every card golfers scan, and every fitting request submitted through your page forwards straight to your inbox. Neither ever costs a dollar.",
   },
   {
-    title: "Pay & the badge goes live",
-    body: "You get a secure Stripe payment link. Pick monthly or annual and the Verified badge is live within minutes.",
+    title: "Optional: go Featured",
+    summary: "When you want more golfers.",
+    body: "Featured puts your shop at the top of your state, city, and category pages, tunes your listing so AI search engines cite you, and adds you to the Gear Shelf newsletter rotation — $49/month or $499/year, secured by Stripe.",
   },
 ]
 
@@ -50,22 +57,22 @@ const FAQS: FaqItem[] = [
   {
     question: "What does verification involve?",
     answer:
-      "You claim your listing, then we confirm you actually own or run the shop — usually on a short intro call, sometimes over email. No paperwork; we just make sure the badge only ever sits on real, owner-managed shops.",
+      "You claim your listing, then we confirm you actually own or run the shop — usually on a short call, sometimes over email. No paperwork; we just make sure the badge only ever sits on real, owner-managed shops. Once approved, the Verified badge is yours — free.",
   },
   {
-    question: "Is claiming my listing really free?",
+    question: "Is the Verified badge really free?",
     answer:
-      "Yes — claiming is free and always will be. A claimed shop gets fitting requests forwarded to its inbox at no cost. Verified is the optional paid layer on top: the badge, featured placement at the top of your local pages, AI search optimization, the newsletter rotation, and priority updates.",
+      "Yes — the badge, lead forwarding, and listing corrections are free and always will be. Verification is about ownership, not payment. Featured is the optional paid layer on top: top placement on your local pages, AI search optimization, the newsletter rotation, and priority updates.",
   },
   {
     question: "My listing has wrong hours or services. Can that be fixed?",
     answer:
-      "Yes. Claim the listing and tell us what's wrong — corrections are applied by hand, usually within a day or two. Verified shops get priority, but we fix genuine errors for every shop.",
+      "Yes. Claim the listing and tell us what's wrong — corrections are applied by hand, usually within a day or two. Featured shops go first in the queue, but we fix genuine errors for every shop.",
   },
   {
-    question: "How much does Verified cost?",
+    question: "How much does Featured cost?",
     answer:
-      "It's $49 per month or $499 per year (two months free on the annual plan), handled securely by Stripe. Cancel anytime — the badge stays live through the period you've paid for.",
+      "It's $49 per month or $499 per year (two months free on the annual plan), handled securely by Stripe. Cancel anytime — the placement stays live through the period you've paid for, and your free Verified badge is never affected.",
   },
   {
     question: "What if my shop isn't listed yet?",
@@ -73,48 +80,51 @@ const FAQS: FaqItem[] = [
       "Submit it through the Submit a Shop page. Every submission is reviewed by hand; once it's live you can claim it and get verified like any other listing.",
   },
   {
-    question: "What happens if I don't renew?",
+    question: "What happens if I don't renew Featured?",
     answer:
-      "The badge and newsletter rotation pause, but your free listing and lead forwarding stay live. You can come back any time.",
+      "The top placement and newsletter rotation pause — but your Verified badge, your listing, and lead forwarding all stay live, free. Featured is a growth lever you can turn on and off; verification is yours for good.",
   },
 ]
 
 /**
- * The shop-owner onboarding page: what Verified is, what it costs,
- * and the claim-first funnel entrance. Indexable (unlike the /claim and
- * /onboard transactional pages) — it targets "get listed" searches.
+ * The shop-owner onboarding page: the free Verified plan, the paid Featured
+ * upgrade, and the claim-first funnel entrance. Indexable (unlike the /claim
+ * and /onboard transactional pages) — it targets "get listed" searches.
  */
 export default function ForShopsPage() {
   return (
     <>
+      <Reveal />
       <PageHeader
         eyebrow="For shop owners"
         title={<>Golfers are already finding your shop. <span className="text-[var(--color-forest)]">Make it yours.</span></>}
-        subtitle="Your listing is live in front of golfers searching for a fitter. Claim it free, get verified, and put the badge they trust next to your name."
+        subtitle="Claim your listing free, get hand-verified, and the badge golfers trust goes next to your name — no charge. Featured placement is there when you want more."
         align="center"
       >
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Button href="#find-your-shop" variant="primary" size="lg">
-            Find your shop
+            <BadgeCheck size={18} />
+            Begin verification
           </Button>
-          <Button href={CAL_FOUNDING_CALL_URL} external variant="outline" size="lg">
-            <CalendarCheck size={18} />
-            Book an intro call
+          <Button href="/contact" variant="outline" size="lg">
+            <Mail size={18} />
+            Contact for inquiries
           </Button>
         </div>
       </PageHeader>
 
-      {/* ── What Verified includes ── */}
+      {/* ── Free plan + the Featured comparison ── */}
       <section className="bg-[var(--color-ivory)] py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            title="What Verified includes"
-            subtitle="One membership, five things working for your shop all year."
+            title="Free for every claimed shop"
+            subtitle="Verification is about ownership, not payment. Claim your shop and these are yours — forever."
           />
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {INCLUDED.map((item) => (
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5" data-reveal-group>
+            {FREE_INCLUDED.map((item) => (
               <div
                 key={item.title}
+                data-reveal
                 className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6"
               >
                 <item.icon size={26} className="text-[var(--color-forest)]" />
@@ -128,30 +138,9 @@ export default function ForShopsPage() {
             ))}
           </div>
 
-          {/* ── Pricing ── */}
-          <div className="mt-12 relative overflow-hidden bg-[var(--color-forest)] text-white rounded-2xl shadow-card">
-            <span aria-hidden="true" className="block h-1 w-full bg-[var(--color-gold)]" />
-            <div className="p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-[var(--color-gold)] font-semibold">
-                  Simple pricing
-                </p>
-                <p className="mt-2 font-display text-4xl">
-                  $49<span className="text-lg text-white/70">/month</span>
-                  <span className="mx-3 text-lg text-white/50">or</span>
-                  $499<span className="text-lg text-white/70">/year</span>
-                </p>
-                <p className="mt-2 text-sm text-white/70 max-w-md leading-relaxed">
-                  Secured by Stripe. Two months free on the annual plan — cancel
-                  anytime and the badge stays through your paid period.
-                </p>
-              </div>
-              <div className="shrink-0">
-                <Button href="#find-your-shop" variant="secondary" size="lg">
-                  Start with your free claim
-                </Button>
-              </div>
-            </div>
+          {/* ── Interactive free-vs-Featured comparison with billing toggle ── */}
+          <div data-reveal>
+            <PlanComparison />
           </div>
         </div>
       </section>
@@ -161,23 +150,11 @@ export default function ForShopsPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             title="How it works"
-            subtitle="Claim first, pay after — you're verified before a dollar changes hands."
+            subtitle="Verified is free — you only ever pay if you want Featured."
           />
-          <ol className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {STEPS.map((step, i) => (
-              <li key={step.title} className="relative bg-[var(--color-ivory)] border border-[var(--color-border)] rounded-2xl p-6">
-                <span className="font-display text-3xl text-[var(--color-gold-ink)]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-3 font-display text-lg text-[var(--color-charcoal)]">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-sm text-[var(--color-charcoal-light)] leading-relaxed">
-                  {step.body}
-                </p>
-              </li>
-            ))}
-          </ol>
+          <div data-reveal>
+            <HowItWorksSteps steps={STEPS} />
+          </div>
         </div>
       </section>
 
@@ -199,7 +176,7 @@ export default function ForShopsPage() {
             — free, reviewed by hand.{" "}
             Prefer to talk first?{" "}
             <a href={CAL_FOUNDING_CALL_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-[var(--color-forest)] hover:underline">
-              Book the intro call
+              Book a call
             </a>
             .
           </p>
@@ -216,17 +193,15 @@ export default function ForShopsPage() {
             Questions before you claim?
           </h2>
           <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
-            Reply to any email from the directory or book the intro call — both
-            reach the founder directly.
+            Send a message or book a call — both reach the founder directly.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button href={CAL_FOUNDING_CALL_URL} external variant="primary">
-              <CalendarCheck size={16} />
-              Book the intro call
-            </Button>
-            <Button href="/contact" variant="outline">
+            <Button href="/contact" variant="primary">
               <Mail size={16} />
-              Contact us
+              Contact for inquiries
+            </Button>
+            <Button href={CAL_FOUNDING_CALL_URL} external variant="outline">
+              Book a call
             </Button>
           </div>
         </div>

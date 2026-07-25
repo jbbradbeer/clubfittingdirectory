@@ -5,9 +5,11 @@ import { nextExpiry } from "@/lib/verified-math"
 import type { PlanKey } from "@/lib/plans"
 
 /**
- * Shared Verified-tier activation — the single code path that turns the paid
- * badge on. Called from two places:
- *   1. The admin "Activate Verified" button (app/admin/actions.ts) — manual.
+ * Shared Featured-tier activation — the single code path that turns the paid
+ * placement on. (File name is legacy from when the paid tier was called
+ * Verified; the free Verified badge now lives in lib/badges.ts and keys off
+ * claimed_at.) Called from two places:
+ *   1. The admin "Activate Featured" button (app/admin/actions.ts) — manual.
  *   2. The Stripe webhook (app/api/stripe/webhook/route.ts) — automatic on
  *      payment. The webhook can't import admin actions (they're "use server"
  *      + admin-cookie-gated), which is why this lives in lib/.
@@ -18,12 +20,12 @@ import type { PlanKey } from "@/lib/plans"
  */
 
 /**
- * Activate (or extend) the Verified tier for a shop. The plan drives the
+ * Activate (or extend) the Featured tier for a shop. The plan drives the
  * expiry extension: monthly = +1 month, annual = +1 year. Webhook events
  * from before the plan split carry no plan metadata and default to annual.
  * Returns the shop's slug, or throws with a clear message.
  */
-export async function activateVerifiedShop(
+export async function activateFeaturedShop(
   slug: string,
   plan: PlanKey = "annual",
 ): Promise<string> {
@@ -47,7 +49,7 @@ export async function activateVerifiedShop(
   const { error } = await supabase
     .from("shops")
     .update({
-      listing_tier: "verified",
+      listing_tier: "featured",
       verified_at: now.toISOString(),
       verified_expires_at: expires.toISOString(),
       verified_plan: plan,
@@ -64,7 +66,7 @@ export async function activateVerifiedShop(
   revalidatePath(`/listing/${cleanSlug}`)
   revalidatePath("/")
 
-  log.info("verified", "activated", {
+  log.info("featured", "activated", {
     slug: cleanSlug,
     plan,
     expires: expires.toISOString(),

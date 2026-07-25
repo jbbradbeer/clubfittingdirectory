@@ -7,7 +7,7 @@ import { log } from "@/lib/logger"
 import { revalidatePath } from "next/cache"
 import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateVerifiedShop } from "@/lib/verified"
+import { activateFeaturedShop } from "@/lib/verified"
 import { sendClaimApprovedEmail, sendPaymentLinkEmail } from "@/lib/email"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
@@ -145,7 +145,9 @@ export async function rejectSubmission(formData: FormData) {
 }
 
 /* ── Approve a claim: stamp the shop owner-claimed + capture owner_email.
-     Claimed ≠ Verified — the paid tier is set separately when they buy. ── */
+     Approval also grants the FREE Verified badge (badge logic keys off
+     claimed_at), so it flips public pages — revalidate the card surfaces.
+     The paid Featured tier is set separately when they buy. ── */
 export async function approveClaim(formData: FormData) {
   if (!(await isAdmin())) redirect("/admin/login")
   const id = String(formData.get("id") ?? "")
@@ -163,7 +165,7 @@ export async function approveClaim(formData: FormData) {
     .from("shops")
     .update({ claimed_at: new Date().toISOString(), owner_email: claim.claimant_email })
     .eq("id", claim.shop_id)
-    .select("slug, name")
+    .select("slug, name, city, state_code, shop_type")
     .single()
   if (shopErr) return { error: `Could not mark shop claimed: ${shopErr.message}` }
 
@@ -175,7 +177,14 @@ export async function approveClaim(formData: FormData) {
 
   revalidatePath("/admin", "layout")
   if (shop?.slug) {
-    revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed"
+    revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed" + badge
+    // The free Verified badge just went live on this shop's cards — refresh
+    // every index page that renders them (same set approveSubmission uses).
+    if (shop.state_code) revalidatePath(`/state/${shop.state_code.toLowerCase()}`)
+    if (shop.city && shop.state_code) revalidatePath(`/city/${toCitySlug(shop.city, shop.state_code)}`)
+    const claimShopType = SHOP_TYPES.find((t) => t.dbType === shop.shop_type)
+    if (claimShopType) revalidatePath(`/category/${claimShopType.slug}`)
+    revalidatePath("/") // homepage carousel cards
 
     // Best-effort upsell email: "you're approved, leads now forward to you" +
     // the Verified pitch with the payment-page link (valid immediately — the
@@ -190,30 +199,31 @@ export async function approveClaim(formData: FormData) {
   }
 }
 
-/* ── Activate the paid Verified tier (replaces the manual-SQL step).
+/* ── Activate the paid Featured tier (replaces the manual-SQL step).
    Run when a Stripe payment email arrives — see tasks/paid-activation-runbook.md.
-   Sets the badge live and stamps a 1-year expiry so a lapsed subscription
-   can't stay "Verified" forever. ── */
-export async function activateVerified(formData: FormData): Promise<ActionResult> {
+   Sets the placement live and stamps an expiry so a lapsed subscription
+   can't stay Featured forever. ── */
+export async function activateFeatured(formData: FormData): Promise<ActionResult> {
   if (!(await isAdmin())) redirect("/admin/login")
   const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
   if (!slug) return
   const rawPlan = String(formData.get("plan") ?? "")
   const plan = isPlanKey(rawPlan) ? rawPlan : "annual"
 
-  // Shared with the Stripe webhook — one code path for badge activation
+  // Shared with the Stripe webhook — one code path for Featured activation
   // (sets tier + stamps expiry + refreshes the cached pages).
   try {
-    await activateVerifiedShop(slug, plan)
+    await activateFeaturedShop(slug, plan)
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Could not activate." }
   }
 }
 
-/* ── Lapse a Verified listing (subscription not renewed). Keeps verified_at /
+/* ── Lapse a Featured listing (subscription not renewed). Keeps verified_at /
    verified_expires_at as history; tier goes back to free and the paid
-   featured placement comes off with it. ── */
-export async function lapseVerified(formData: FormData) {
+   placement comes off. The free Verified badge stays — it's tied to
+   claimed_at, not payment. ── */
+export async function lapseFeatured(formData: FormData) {
   if (!(await isAdmin())) redirect("/admin/login")
   const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
   if (!slug) return

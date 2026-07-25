@@ -21,7 +21,7 @@ import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
 import { ProvenanceBadge } from "@/components/shop-profile/ProvenanceBadge"
 import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
-import { isTopRated, isVerified } from "@/lib/badges"
+import { isFeaturedPaid, isTopRated, isVerified } from "@/lib/badges"
 import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
 import { listingQuickFacts, listingFaqs, expandCityName } from "@/lib/seo-content"
 import { FaqSection } from "@/components/seo/FaqSection"
@@ -149,10 +149,11 @@ export default async function ListingPage({ params }: PageProps) {
                   <RatingStars rating={shop.rating} reviews={shop.reviews} />
                 )}
                 <div className="flex flex-wrap items-center gap-2">
-                  {/* Paid Verified tier — the product. The scraped `verified`
-                      boolean is deliberately not shown (free lookalike). */}
+                  {/* Featured = the paid tier; Verified = free, owner-claimed.
+                      The scraped `verified` boolean is deliberately not shown
+                      (lookalike of the owner-verified badge). */}
+                  {(isFeaturedPaid(shop) || shop.is_featured) && <Badge variant="gold">Featured</Badge>}
                   {isVerified(shop) && <Badge variant="forest">Verified</Badge>}
-                  {shop.is_featured && <Badge variant="gold">Featured</Badge>}
                   {isTopRated(shop.rating, shop.reviews) && (
                     <Badge variant="verified">Top Rated</Badge>
                   )}
