@@ -36,9 +36,9 @@ root.
    rows sent when handing him the batch.
 6. Hooks must be TRUE and verifiable (their website, or our own directory
    data). Never invent a claim about a shop.
-7. Touch 1 emails: plain text, NO links. Links (listing URL / claim URL)
-   belong in touch 2–3 or after a reply. CAN-SPAM footer (mailing address +
-   opt-out line) stays in every email.
+7. Touch 1 emails: plain text, ONE link only (the claim URL — founder-approved
+   template). No other links until touch 2–3 or a reply. CAN-SPAM footer
+   (mailing address + opt-out line) stays in every email.
 8. Weekdays only — if it's Saturday or Sunday, say so and stop (the cadence
    scheduler already pushes weekend follow-ups to Monday).
 
