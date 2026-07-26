@@ -89,6 +89,13 @@ export default function LengthCalculatorPage() {
             >
               See our golf club fitting chart guide
             </Link>
+            . Wondering what a real fitting runs?{" "}
+            <Link
+              href="/guides/golf-club-fitting-cost"
+              className="font-semibold text-[var(--color-forest)] hover:underline"
+            >
+              Fitting prices from 71 shops
+            </Link>
             .
           </p>
         </div>
