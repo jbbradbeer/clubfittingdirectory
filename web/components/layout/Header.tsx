@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: "Browse by State", href: "/states" },
   { label: "Guides", href: "/guides" },
   { label: "Submit a Shop", href: "/submit" },
+  { label: "Claim Your Shop", href: "/for-shops" },
 ]
 
 export function Header() {

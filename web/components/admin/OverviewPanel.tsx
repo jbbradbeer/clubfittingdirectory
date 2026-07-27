@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateVerified, lapseVerified } from "@/app/admin/actions"
+import { lapseVerified, sendPaymentLink } from "@/app/admin/actions"
+import { ActionButton } from "@/components/admin/ActionButton"
+import { ShopSearchSelect } from "@/components/admin/ShopSearchSelect"
 
 /**
  * The at-a-glance tab: everything needing the founder's attention today,
@@ -28,22 +30,31 @@ export async function OverviewPanel() {
         .not("claimed_at", "is", null).then(({ count: n, error }) => (error ? null : (n ?? 0))),
     ])
 
-  const mrr = verifiedShops === null ? null : Math.round((verifiedShops * 349) / 12)
-
-  // Current Verified roster with expiry — the renewal control surface.
+  // Current Verified roster with expiry + plan — the renewal control surface.
   const { data: verifiedList } = await supabase
     .from("shops")
-    .select("name,slug,verified_at,verified_expires_at")
+    .select("name,slug,verified_at,verified_expires_at,verified_plan")
     .eq("listing_tier", "verified")
     .order("verified_expires_at", { ascending: true, nullsFirst: true })
 
-  const cards: { label: string; value: number | null; tab: string; urgent?: boolean }[] = [
-    { label: "New fitting requests", value: newLeads, tab: "leads", urgent: (newLeads ?? 0) > 0 },
-    { label: "Pending submissions", value: pendingSubs, tab: "submissions", urgent: (pendingSubs ?? 0) > 0 },
-    { label: "Pending claims", value: pendingClaims, tab: "submissions", urgent: (pendingClaims ?? 0) > 0 },
-    { label: "Outreach replies waiting", value: outreachReplied, tab: "outreach", urgent: (outreachReplied ?? 0) > 0 },
-    { label: "Claimed shops", value: claimedShops, tab: "submissions" },
-    { label: "Verified (paying) shops", value: verifiedShops, tab: "outreach" },
+  // MRR from unexpired badges: monthly $49 counts whole, annual $499 ÷ 12.
+  // Shops activated before the plan column existed (null) count as annual.
+  const now = new Date()
+  const paying = (verifiedList ?? []).filter(
+    (s) => !s.verified_expires_at || new Date(s.verified_expires_at) > now,
+  )
+  const monthlyCount = paying.filter((s) => s.verified_plan === "monthly").length
+  const annualCount = paying.length - monthlyCount
+  const mrr =
+    verifiedList === null ? null : monthlyCount * 49 + Math.round((annualCount * 499) / 12)
+
+  const cards: { label: string; value: number | null; href: string; urgent?: boolean }[] = [
+    { label: "New fitting requests", value: newLeads, href: "/admin/leads?status=new", urgent: (newLeads ?? 0) > 0 },
+    { label: "Pending submissions", value: pendingSubs, href: "/admin/submissions?status=new", urgent: (pendingSubs ?? 0) > 0 },
+    { label: "Pending claims", value: pendingClaims, href: "/admin/submissions?status=new", urgent: (pendingClaims ?? 0) > 0 },
+    { label: "Outreach replies waiting", value: outreachReplied, href: "/admin/outreach", urgent: (outreachReplied ?? 0) > 0 },
+    { label: "Claimed shops", value: claimedShops, href: "/admin/submissions" },
+    { label: "Verified (paying) shops", value: verifiedShops, href: "/admin/outreach" },
   ]
 
   return (
@@ -52,7 +63,7 @@ export async function OverviewPanel() {
         {cards.map((c) => (
           <Link
             key={c.label}
-            href={`/admin?tab=${c.tab}`}
+            href={c.href}
             className={`bg-white border rounded-xl p-4 transition-colors hover:border-[var(--color-forest)] ${
               c.urgent ? "border-[var(--color-gold)]" : "border-[var(--color-border)]"
             }`}
@@ -66,12 +77,12 @@ export async function OverviewPanel() {
       </div>
 
       <div className="bg-[var(--color-forest)] text-white rounded-2xl shadow-card p-6">
-        <p className="text-xs uppercase tracking-wider text-white/70">Recurring revenue (annual plans ÷ 12)</p>
+        <p className="text-xs uppercase tracking-wider text-white/70">Recurring revenue (monthly + annual ÷ 12)</p>
         <p className="text-3xl font-display mt-1">
           {mrr === null ? "—" : `$${mrr.toLocaleString()} MRR`}
         </p>
         <p className="text-sm text-white/70 mt-1">
-          {verifiedShops ?? 0} Verified shops · target $10,000 by year end
+          {verifiedShops ?? 0} Verified shops ({monthlyCount} monthly · {annualCount} annual) · target $10,000 by year end
         </p>
       </div>
 
@@ -79,30 +90,20 @@ export async function OverviewPanel() {
       <div className="mt-8 bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
         <h2 className="font-display text-lg text-[var(--color-charcoal)]">Verified listings</h2>
         <p className="text-sm text-[var(--color-charcoal-light)] mt-1">
-          Stripe payment arrived? Paste the shop&apos;s URL slug (the part after /listing/) and
-          activate — badge goes live and the 1-year expiry is stamped automatically.
+          Stripe payments now activate automatically via the webhook. This manual
+          activation stays as the backstop — search for the shop, pick the plan,
+          activate; badge + expiry are stamped.
+          &ldquo;Renewal link&rdquo; emails the owner their payment page (~30 days before expiry).
         </p>
 
-        <form action={activateVerified} className="mt-4 flex gap-2">
-          <input
-            name="slug"
-            required
-            placeholder="e.g. mcgolf-custom-clubs-waverly-oh"
-            className="flex-1 px-3 py-2 text-sm border border-[var(--color-border)] rounded-lg focus:outline-none focus:border-[var(--color-forest)]"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-lg hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
-          >
-            Activate Verified
-          </button>
-        </form>
+        <ShopSearchSelect />
 
         {verifiedList && verifiedList.length > 0 && (
           <table className="mt-5 w-full text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-[var(--color-charcoal-light)] border-b border-[var(--color-border)]">
                 <th className="py-2 pr-3">Shop</th>
+                <th className="py-2 pr-3">Plan</th>
                 <th className="py-2 pr-3">Verified</th>
                 <th className="py-2 pr-3">Expires</th>
                 <th className="py-2" />
@@ -120,6 +121,9 @@ export async function OverviewPanel() {
                       </Link>
                     </td>
                     <td className="py-2.5 pr-3 text-[var(--color-charcoal-light)]">
+                      {s.verified_plan === "monthly" ? "$49/mo" : "$499/yr"}
+                    </td>
+                    <td className="py-2.5 pr-3 text-[var(--color-charcoal-light)]">
                       {s.verified_at ? new Date(s.verified_at).toLocaleDateString() : "—"}
                     </td>
                     <td className={`py-2.5 pr-3 ${expired ? "text-red-600 font-semibold" : "text-[var(--color-charcoal-light)]"}`}>
@@ -127,15 +131,23 @@ export async function OverviewPanel() {
                       {expired && " (past due)"}
                     </td>
                     <td className="py-2.5 text-right">
-                      <form action={lapseVerified}>
-                        <input type="hidden" name="slug" value={s.slug} />
-                        <button
-                          type="submit"
+                      <div className="flex justify-end gap-1.5">
+                        <ActionButton
+                          action={sendPaymentLink}
+                          fields={{ slug: s.slug, renewal: "1" }}
+                          successLabel="Sent ✓"
+                          className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-forest)] rounded-lg text-[var(--color-forest)] hover:bg-[var(--color-forest-tint)] transition-colors cursor-pointer"
+                        >
+                          Renewal link
+                        </ActionButton>
+                        <ActionButton
+                          action={lapseVerified}
+                          fields={{ slug: s.slug }}
                           className="px-3 py-1.5 text-xs font-semibold border border-[var(--color-border)] rounded-lg text-[var(--color-charcoal)] hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
                         >
                           Lapse
-                        </button>
-                      </form>
+                        </ActionButton>
+                      </div>
                     </td>
                   </tr>
                 )
