@@ -81,3 +81,8 @@ venv/
 # Installed third-party Claude skills — only the project's own skill is tracked
 .claude/skills/*
 !.claude/skills/fitter-outreach/
+
+# Discovery pipeline — secrets and raw scrape output (review/ IS committed)
+discovery/.env
+discovery/raw/
+discovery/checkpoints/
