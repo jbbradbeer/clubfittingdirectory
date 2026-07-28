@@ -39,8 +39,8 @@ voice-of-customer frequency.
 | 5 | What to Expect at a Golf Club Fitting (First-Timer's Guide) | what to expect at a golf club fitting | S: Q-heavy cluster · V: MED-HIGH first-fitting nerves · C: PGA TSS's ranking guide 404s — open SERP slot. Address embarrassment anxiety; bring/wear/tip FAQs. — ✅ drafted 2026-07-13 |
 | 6 | Online Golf Club Fitting: Does It Actually Work? | online golf club fitting | A: **Easy**, >100 · C: ALL existing content is self-promotional; zero neutral reviews · V: growing skepticism (Takomo/LAB). Honest verdict funnels to in-person → directory. — ✅ drafted 2026-07-20 |
 | 7 | Custom Golf Club Fitting, Explained | custom golf club fitting | A: Hard but >1000 vol · G: pos 26 already · Calendar's old #2. Covers "custom fit golf clubs" too (3.2K combined). — ✅ drafted 2026-07-20 |
-| 9 | Driver Fitting: What Happens and Is It Worth It? | driver fitting (+ worth it) | S: own suggest family · C: crowded (MyGolfSpy/GOLFTEC) but mandatory for cluster completeness · V: "driver or irons first" debate. |
-| 10 | Iron Fitting Guide | iron fitting (+ worth it) | Same as #9; forum lean "irons ≥ driver" is the fresh angle. |
+| 9 | Driver Fitting: What Happens and Is It Worth It? | driver fitting (+ worth it) | S: own suggest family · C: crowded (MyGolfSpy/GOLFTEC) but mandatory for cluster completeness · V: "driver or irons first" debate. — ✅ drafted 2026-07-27 |
+| 10 | Iron Fitting Guide | iron fitting (+ worth it) | Same as #9; forum lean "irons ≥ driver" is the fresh angle. — ✅ drafted 2026-07-27 |
 | 11 | Lessons or Club Fitting First? | golf lessons or club fitting first | V: HIGH, the standard thread debate · C: only Club Champion covers it (self-servingly). Include the "Phantom Miss" bent-lie story archetype. |
 | 12 | Golf Shaft Flex, Explained (+ Swing-Speed Chart) | golf shaft flex chart / what shaft flex do I need | S: deep (per-mph variants: 80/85/90/100) · C: MyGolfSpy chart ranks — beatable with a cleaner consumer table · Chart format earns links/snippets. |
 | 13 | Putter Fitting: Worth It? What Happens? | putter fitting (+ worth it) | S: own family · V: "even at $125 worth it" · C: True Spec x3 but thin/dated. |

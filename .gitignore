@@ -82,8 +82,10 @@ venv/
 .claude/skills/*
 !.claude/skills/fitter-outreach/
 
-# Shop-discovery pipeline scratch (contains .env secrets + raw scrape data)
-discovery/
+# Discovery pipeline — secrets and raw scrape output (review/ IS committed)
+discovery/.env
+discovery/raw/
+discovery/checkpoints/
 
 # Hyperframes launch-video output (binary media, regenerable)
 brag-output*/
