@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { BadgeCheck, Inbox, Mail, PenLine } from "lucide-react"
+import { BadgeCheck, Globe, Inbox, Mail, PenLine } from "lucide-react"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Button } from "@/components/ui/Button"
@@ -10,7 +10,7 @@ import { HowItWorksSteps, type HowItWorksStep } from "@/components/for-shops/How
 import { FaqSection, type FaqItem } from "@/components/seo/FaqSection"
 import { Reveal } from "@/lib/useReveal"
 import { CAL_FOUNDING_CALL_URL, SITE_URL } from "@/lib/constants"
-import { FREE_PERKS } from "@/lib/plans"
+import { FREE_PERKS, SERVICE_TIERS } from "@/lib/plans"
 
 export const metadata: Metadata = {
   title: "For Shop Owners — Free Verified Listing & Featured Placement",
@@ -180,6 +180,49 @@ export default function ForShopsPage() {
             </a>
             .
           </p>
+        </div>
+      </section>
+
+      {/* ── Web-presence services — for shops with broken or missing sites ── */}
+      <section id="web-services" className="bg-white border-t border-[var(--color-border)] py-16 md:py-20 scroll-mt-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            title="Need a website, not just a listing?"
+            subtitle="We build and run this directory — and we build websites for fitting shops whose site is down, insecure, or living on a Facebook page. Small, fast, and made for how golfers actually find you."
+          />
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5" data-reveal-group>
+            {SERVICE_TIERS.map((tier) => (
+              <div
+                key={tier.name}
+                data-reveal
+                className="bg-[var(--color-ivory)] border border-[var(--color-border)] rounded-2xl shadow-card p-6 md:p-8 flex flex-col"
+              >
+                <Globe size={26} className="text-[var(--color-forest)]" />
+                <h3 className="mt-4 font-display text-2xl text-[var(--color-charcoal)]">{tier.name}</h3>
+                <p className="mt-1 text-sm text-[var(--color-charcoal-light)]">{tier.tagline}</p>
+                <p className="mt-4 font-display text-xl text-[var(--color-forest)]">
+                  {tier.price}
+                  <span className="ml-2 font-sans text-sm text-[var(--color-charcoal-light)]">{tier.cadence}</span>
+                </p>
+                <ul className="mt-5 space-y-2.5">
+                  {tier.bullets.map((bullet) => (
+                    <li key={bullet} className="flex gap-2.5 text-sm text-[var(--color-charcoal-light)] leading-relaxed">
+                      <BadgeCheck size={16} className="shrink-0 mt-0.5 text-[var(--color-forest)]" />
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Button href={CAL_FOUNDING_CALL_URL} external variant="primary" size="lg">
+              Book a 15-minute call
+            </Button>
+            <p className="mt-3 text-sm text-[var(--color-charcoal-light)]">
+              No pitch deck — we look at your current site together and you decide.
+            </p>
+          </div>
         </div>
       </section>
 

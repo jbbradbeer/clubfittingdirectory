@@ -90,3 +90,18 @@
   regeneration → needless writes. Anchor to a data value (max `updated_at`) or a fixed constant.
 - **Never `git add -A` in this repo.** It sweeps in `.claude/worktrees/` (embedded git repos) and
   stray downloads in the root. Stage explicit paths instead.
+
+## 2026-07-10 — Verify the server you're curling is the server you built
+When checking a fix with `npm run start`, a previous server instance can still
+hold the port (`EADDRINUSE` hides in the log; curl silently hits the OLD build).
+Burned 2 build cycles concluding a fix "didn't work". Rule: `lsof -ti :PORT |
+xargs kill -9` before every restart, and check the start log for EADDRINUSE
+before trusting any curl result.
+
+## 2026-07-10 — Soft 404s: streamed responses always return 200
+Next.js sends HTTP 200 the moment streaming starts; `notFound()` thrown later
+only swaps the body. A root `app/loading.tsx` forces every dynamic render to
+stream, so ALL unknown slugs returned 200 "Not Found" (soft 404). Fix pattern:
+no root loading.tsx on SEO-critical routes + call `notFound()` in
+`generateMetadata` (pre-stream). Check with `curl -o /dev/null -w "%{http_code}"`
+on a fake slug after any change to loading/Suspense structure.

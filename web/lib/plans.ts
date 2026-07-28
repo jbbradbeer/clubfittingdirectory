@@ -72,6 +72,39 @@ export const FREE_PERKS = [
 ] as const
 
 /**
+ * Web-presence services — the productized "we build and run your shop's
+ * website" offer pitched to shops with broken or missing sites (see
+ * scripts/website_audit.py). Prices stay "from …" until validated on the
+ * first sales calls — never print a firmer number anywhere public.
+ */
+export const SERVICE_TIERS = [
+  {
+    name: "Shop Site",
+    price: "from $750",
+    cadence: "one-time build, plus a small monthly care plan",
+    tagline: "A real website for your shop — built, hosted, and kept alive.",
+    bullets: [
+      "A fast 1–3 page site: services, pricing, hours, Google reviews, map",
+      "A \"request a fitting\" form that lands straight in your inbox",
+      "Domain and security (SSL) sorted — no more browser warnings",
+      "Hosting, edits, and uptime handled on the care plan",
+    ],
+  },
+  {
+    name: "Shop Site + Growth",
+    price: "from $250/month",
+    cadence: "monthly, cancel anytime",
+    tagline: "The site plus the local-search basics that bring golfers in.",
+    bullets: [
+      "Everything in Shop Site",
+      "Google Business Profile posts and cleanup",
+      "A review-request flow so happy golfers actually leave reviews",
+      "Featured placement on clubfittingdirectory.com included",
+    ],
+  },
+] as const
+
+/**
  * The Featured offer — the four perks a paying shop gets on top of the free
  * plan. Single source for the claim page, /for-shops, the pay page, and the
  * upsell emails. `short` is the one-line version for tight layouts and

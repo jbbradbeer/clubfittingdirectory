@@ -81,3 +81,9 @@ venv/
 # Installed third-party Claude skills — only the project's own skill is tracked
 .claude/skills/*
 !.claude/skills/fitter-outreach/
+
+# Shop-discovery pipeline scratch (contains .env secrets + raw scrape data)
+discovery/
+
+# Hyperframes launch-video output (binary media, regenerable)
+brag-output*/

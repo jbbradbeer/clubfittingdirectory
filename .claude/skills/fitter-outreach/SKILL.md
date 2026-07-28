@@ -69,6 +69,30 @@ root.
    go overall").
 8. Do NOT mark anything sent yet.
 
+### Services angle (touch 2/3 swap — never touch 1)
+Some shops have a broken web presence and are also website-rebuild prospects
+(`tasks/services-prospects.csv`, produced by `scripts/website_audit.py`).
+There is NO separate services campaign — same inboxes, same cadence, same
+rules. The only change: when a shop in today's TOUCH 2 or 3 rows also appears
+in that CSV, offer the founder the services variant:
+
+1. During batch prep, check each touch-2/3 shop's name/slug against the CSV.
+2. On a match, render BOTH the normal follow-up and
+   `templates/services-touch.md` (fill `{{problem_line}}` from the CSV
+   `problem` column per the mapping in the template header) and mark the shop
+   `[SERVICES CANDIDATE — verify site still broken before sending]`.
+3. The founder picks which to send. He MUST hand-check the site is still
+   broken first (dead sites revive). If it now works, the services variant is
+   off the table — normal follow-up only.
+4. Optional deeper artifact: `python3 scripts/audit_report.py "<shop name>"`
+   generates a personalized one-page report (it re-probes live and refuses if
+   the site now checks out) at `tasks/reports/<slug>.md`.
+5. When he confirms a services-variant send, record it so `status` can report
+   the services pipeline: `mark-sent` as usual, and put `services-pitch` in
+   the touch's note/personalization field via outreach_db.py's sanctioned
+   flags (never write tables directly).
+Touch 1 is NEVER swapped: the claim ask, one link, comes first for every shop.
+
 ### `sent <ids|all>` — after the founder confirms sending
 For each confirmed id: `python3 outreach/outreach_db.py mark-sent <id>`.
 `all` = every id from the most recent `today` batch (skip any still marked
