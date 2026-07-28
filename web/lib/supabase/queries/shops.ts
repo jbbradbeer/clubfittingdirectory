@@ -66,6 +66,38 @@ export async function getAllShopSlugs(): Promise<{ slug: string; updated_at: str
   )
 }
 
+/* ── Lightweight rows for the national /map page ──
+   Only the columns the map markers/popups need — the full Shop row would make
+   the server-rendered payload several times larger for no benefit. */
+export interface MapShop {
+  slug: string
+  name: string
+  city: string
+  state_code: string
+  latitude: number
+  longitude: number
+  rating: number | null
+  offers_fitting: boolean | null
+  verified: boolean | null
+  is_featured: boolean | null
+  shop_type: string | null
+}
+
+export async function getMapShops(): Promise<MapShop[]> {
+  const supabase = createStaticClient()
+  return fetchAllRows<MapShop>(() =>
+    supabase
+      .from("shops")
+      .select(
+        "slug, name, city, state_code, latitude, longitude, rating, offers_fitting, verified, is_featured, shop_type",
+      )
+      .eq("status", "active")
+      .not("latitude", "is", null)
+      .not("longitude", "is", null)
+      .order("id", { ascending: true }),
+  )
+}
+
 /* ── All states that have at least one listing ──
    cache()'d: state pages call this in both generateMetadata and the body. */
 export const getAllStatesWithShops = cache(async (): Promise<
@@ -378,4 +410,66 @@ export const getShopsForCityPage = cache(async (
 
   // Display name comes from a shop in this city (not an arbitrary state shop).
   return { shops, city: shops[0].city, state: shops[0].state, stateCode }
+})
+
+/* ── Nearby shops by real-world distance ──
+   Powers the "Other fitters near {city}" module on city pages. A thin one-shop
+   city page is worthless to Google on its own; surrounding it with the genuinely
+   nearest fitters turns it into a real comparison page (and lets us flip it from
+   noindex to indexable — see city/[citySlug]/page.tsx).
+
+   No PostGIS RPC needed: we range-filter on lat/lng (a cheap, index-friendly
+   bounding box) to fetch a small candidate set, then refine with an exact
+   haversine distance in JS. Anchor shops without coordinates simply get an empty
+   list (the caller keeps the page noindexed). cache()'d because the city page
+   asks for this in both generateMetadata and the body within one request. */
+function haversineMiles(aLat: number, aLng: number, bLat: number, bLng: number): number {
+  const R = 3958.8 // Earth radius, miles
+  const toRad = (d: number) => (d * Math.PI) / 180
+  const dLat = toRad(bLat - aLat)
+  const dLng = toRad(bLng - aLng)
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dLng / 2) ** 2
+  return 2 * R * Math.asin(Math.sqrt(s))
+}
+
+export const getNearbyShopsByDistance = cache(async (
+  lat: number,
+  lng: number,
+  excludeCitySlug: string,
+  limit = 6,
+  radiusMi = 60,
+): Promise<(Shop & { distanceMi: number })[]> => {
+  const supabase = createStaticClient()
+  // Bounding box around the anchor. ~69 miles per degree of latitude; longitude
+  // degrees shrink with latitude, so divide by cos(lat) (clamped so a near-pole
+  // value can't blow the box up). This is a generous SUPERSET — the haversine
+  // pass below trims it to the true radius.
+  const latDelta = radiusMi / 69
+  const lngDelta = radiusMi / (69 * Math.max(0.2, Math.cos((lat * Math.PI) / 180)))
+
+  const candidates = await fetchAllRows<Shop>(() => {
+    const q = supabase
+      .from("shops")
+      .select(CARD_FIELDS)
+      .eq("status", "active")
+      .not("latitude", "is", null)
+      .not("longitude", "is", null)
+      .gte("latitude", lat - latDelta)
+      .lte("latitude", lat + latDelta)
+      .gte("longitude", lng - lngDelta)
+      .lte("longitude", lng + lngDelta)
+      .order("id", { ascending: true })
+    return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
+  })
+
+  return candidates
+    .filter((s) => s.latitude != null && s.longitude != null)
+    // Drop the anchor city's own shops — those already render on the page.
+    .filter((s) => !(s.city && toCitySlug(s.city, s.state_code) === excludeCitySlug))
+    .map((s) => ({ ...s, distanceMi: haversineMiles(lat, lng, s.latitude!, s.longitude!) }))
+    .filter((s) => s.distanceMi <= radiusMi)
+    .sort((a, b) => a.distanceMi - b.distanceMi || String(a.id).localeCompare(String(b.id)))
+    .slice(0, limit)
 })

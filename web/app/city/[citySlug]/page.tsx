@@ -5,6 +5,7 @@ import {
   getShopsForCityPage,
   getAllCitySlugs,
   getCityLinksForState,
+  getNearbyShopsByDistance,
 } from "@/lib/supabase/queries/shops"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -21,12 +22,28 @@ import { cityIntro, cityFaqs, expandCityName, DIRECTORY_YEAR, LAST_UPDATED_LABEL
 import { TopFittersTable } from "@/components/seo/TopFittersTable"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import { shopTypeCountPhrase } from "@/lib/shop-types"
+import type { Shop } from "@/types/shop"
 
 interface PageProps {
   params: Promise<{ citySlug: string }>
 }
 
 export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
+
+/* Nearest fitters in neighboring towns, anchored on the city's own first shop.
+   Returns [] when that shop has no coordinates (≈31% of listings) — the caller
+   then keeps a thin one-shop page noindexed. cache()'d underneath, so calling it
+   in both generateMetadata and the body costs one query per request. */
+async function nearbyForCity(
+  citySlug: string,
+  shops: Shop[],
+): Promise<(Shop & { distanceMi: number })[]> {
+  const anchor = shops[0]
+  if (!anchor || anchor.latitude == null || anchor.longitude == null) return []
+  return getNearbyShopsByDistance(anchor.latitude, anchor.longitude, citySlug).catch((e) =>
+    logQueryError("city getNearbyShopsByDistance", e, []),
+  )
+}
 
 export async function generateStaticParams() {
   const slugs = await getAllCitySlugs().catch((e) => logQueryError("city generateStaticParams getAllCitySlugs", e, []))
@@ -44,6 +61,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const { state, shops } = result
   const city = expandCityName(result.city)
+  // A thin one-shop page only earns indexing if the "Other fitters near {city}"
+  // module can lift it to a real comparison (≥3 total fitters). Fetch nearby
+  // only when we'd need it — multi-shop cities are already indexable.
+  const nearby = shops.length < 2 ? await nearbyForCity(citySlug, shops) : []
+  const totalFitters = shops.length + nearby.length
   // "Top …" framing only when there's a real field to rank; a one-shop town
   // gets an honest year-stamped title instead.
   const title =
@@ -54,12 +76,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description: `Compare ${shops.length} golf club ${shops.length === 1 ? "fitter" : "fitters"} in ${city}, ${state} — ratings, fitting prices, and launch monitor tech. Updated ${LAST_UPDATED_LABEL}.`,
     alternates: { canonical: `${SITE_URL}/city/${citySlug}` },
-    // One-shop city pages are thin (a single listing, no comparison table) and
-    // dilute the site's overall content quality in Google's eyes. Keep them
-    // for visitors and internal links, but don't ask Google to index them —
-    // the shop itself still ranks via its listing page. `follow` keeps link
-    // equity flowing through. Flips back to indexable once a 2nd shop exists.
-    ...(shops.length < 2 ? { robots: { index: false, follow: true } } : {}),
+    // A lone-shop city page is thin and dilutes site quality in Google's eyes,
+    // so we keep it noindexed — UNLESS the nearby-fitters module makes it a
+    // genuine comparison page (≥3 total fitters shown). Multi-shop cities stay
+    // indexable as before. `follow` always keeps link equity flowing, and the
+    // single shop still ranks via its own listing page regardless.
+    ...(shops.length >= 2 || totalFitters >= 3
+      ? {}
+      : { robots: { index: false, follow: true } }),
   }
 }
 
@@ -71,6 +95,11 @@ export default async function CityPage({ params }: PageProps) {
 
   const { shops, state, stateCode } = result
   const city = expandCityName(result.city)
+
+  // Closest fitters in neighboring towns — real, unique, internally-linked
+  // content that turns a sparse city page into a useful comparison (and is what
+  // lets a one-shop page shed its noindex; see generateMetadata above).
+  const nearby = await nearbyForCity(citySlug, shops)
 
   const siblingCities = (
     await getCityLinksForState(stateCode).catch((e) =>
@@ -167,8 +196,25 @@ export default async function CityPage({ params }: PageProps) {
         </div>
       </section>
 
+      {/* Other fitters nearby — genuine comparison content + internal links to
+          neighboring-town listings. Renders only when the anchor shop has
+          coordinates and real fitters sit within ~60 miles. */}
+      {nearby.length > 0 && (
+        <section className="bg-[var(--color-ivory)] py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="font-display text-2xl font-bold text-[var(--color-charcoal)]">
+              Other fitters near {city}
+            </h2>
+            <p className="mt-2 text-[var(--color-charcoal-light)]">
+              The closest club fitters in neighboring towns, by distance.
+            </p>
+            <ListingGrid shops={nearby} />
+          </div>
+        </section>
+      )}
+
       {/* Sibling cities — sideways links so city pages aren't crawl dead-ends */}
-      <section className="bg-[var(--color-ivory)] py-10">
+      <section className="bg-[var(--color-cream)] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {siblingCities.length > 0 && (
             <>
