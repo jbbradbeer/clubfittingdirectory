@@ -105,26 +105,47 @@ def classify(website: str | None) -> tuple[str, str]:
     return "custom", host
 
 
-def probe(website: str) -> str:
-    """Health-check one site: ok / dead / ssl_error / redirects_to_social."""
+def seo_gaps(html: str) -> list[str]:
+    """Cheap on-page checks a shop owner would recognize as real gaps.
+    Only ever run on HTML we actually fetched — never guess."""
+    gaps = []
+    m = re.search(r"<title[^>]*>(.*?)</title>", html, re.I | re.S)
+    title = (m.group(1).strip() if m else "")
+    if not title:
+        gaps.append("no-title")
+    elif len(title) < 15:
+        gaps.append("thin-title")
+    if not re.search(r'<meta[^>]*name=["\']description["\']', html, re.I):
+        gaps.append("no-meta-description")
+    if not re.search(r'<meta[^>]*name=["\']viewport["\']', html, re.I):
+        gaps.append("no-viewport")
+    if not re.search(r"<h1[\s>]", html, re.I):
+        gaps.append("no-h1")
+    return gaps
+
+
+def probe(website: str) -> tuple[str, list[str]]:
+    """Health-check one site: (ok/dead/ssl_error/redirects_to_social, seo gaps).
+    Gaps are only reported for pages that returned real HTML."""
     try:
         resp = requests.get(
             website, headers=PROBE_HEADERS, timeout=12, allow_redirects=True
         )
         final_host = (urlparse(resp.url).hostname or "").lower().removeprefix("www.")
         if any(final_host == h or final_host.endswith("." + h) for h in SOCIAL_HOSTS):
-            return "redirects_to_social"
+            return "redirects_to_social", []
         # 403/401/429 even with a browser UA is almost always a bot wall in
         # front of a working site, not a broken site — don't call it dead.
+        # The wall's HTML isn't theirs, so no SEO verdict either.
         if resp.status_code in (401, 403, 429):
-            return "ok"
+            return "ok", []
         if resp.status_code >= 400:
-            return f"dead_http_{resp.status_code}"
-        return "ok"
+            return f"dead_http_{resp.status_code}", []
+        return "ok", seo_gaps(resp.text[:200_000])
     except requests.exceptions.SSLError:
-        return "ssl_error"
+        return "ssl_error", []
     except requests.exceptions.RequestException:
-        return "dead"
+        return "dead", []
 
 
 # Why each web-presence problem is worth points: bigger score = easier pitch.
@@ -136,6 +157,7 @@ CATEGORY_POINTS = {
     "ssl_error": 22,      # browser scares visitors away
     "redirects_to_social": 30,
     "http_only": 14,      # works, but "Not Secure" in the address bar
+    "seo_basics": 10,     # site loads, but misses title/description/mobile basics
     "custom": 0,
 }
 
@@ -153,7 +175,7 @@ def score(shop: dict, category: str) -> int:
     if reviews >= 100: pts += 20
     elif reviews >= 50: pts += 14
     elif reviews >= 20: pts += 8
-    elif reviews < 5: pts -= 10   # too small/quiet to buy
+    elif reviews < 5: pts -= 4    # small/quiet shops rank lower, not out
     if shop.get("offers_fitting"): pts += 5   # our core audience
     if shop.get("claimed_at"): pts += 15      # already engaged with us!
     return pts
@@ -162,7 +184,7 @@ def score(shop: dict, category: str) -> int:
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--probe", action="store_true", help="live-check custom-domain sites")
-    p.add_argument("--top", type=int, default=100, help="rows in the output CSV")
+    p.add_argument("--top", type=int, default=200, help="rows in the output CSV")
     args = p.parse_args()
 
     shops = fetch_all_shops()
@@ -180,10 +202,17 @@ def main() -> None:
             futures = {pool.submit(probe, s["website"]): s for s in custom}
             for i, fut in enumerate(as_completed(futures), 1):
                 s = futures[fut]
-                result = fut.result()
+                result, gaps = fut.result()
                 if result != "ok":
                     # dead_http_404 etc. all score as "dead"
                     s["category"] = "dead" if result.startswith("dead") else result
+                elif gaps:
+                    # Site works but misses on-page basics — a real, nameable
+                    # pitch for the SEO/design offer. http_only keeps its own
+                    # (higher-scoring) category; gaps ride along as details.
+                    if s["category"] == "custom":
+                        s["category"] = "seo_basics"
+                    s["details"] = ",".join(gaps)
                 if i % 100 == 0:
                     print(f"  …{i}/{len(custom)}")
 
@@ -208,12 +237,13 @@ def main() -> None:
     with open(OUT_FILE, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow([
-            "score", "problem", "name", "city", "state", "rating", "reviews",
-            "phone", "website", "listing",
+            "score", "problem", "details", "name", "city", "state", "rating",
+            "reviews", "phone", "website", "listing",
         ])
         for s in ranked[: args.top]:
             w.writerow([
-                s["score"], s["category"], s["name"], s.get("city") or "",
+                s["score"], s["category"], s.get("details") or "",
+                s["name"], s.get("city") or "",
                 s.get("state_code") or "", s.get("rating") or "",
                 s.get("reviews") or "", s.get("phone") or "",
                 s.get("website") or "",

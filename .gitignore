@@ -86,3 +86,6 @@ venv/
 discovery/.env
 discovery/raw/
 discovery/checkpoints/
+
+# Hyperframes launch-video output (binary media, regenerable)
+brag-output*/

@@ -7,6 +7,7 @@ import { SITE_NAME } from "@/lib/constants"
 
 const NAV_ITEMS = [
   { label: "Find a Fitter", href: "/directory" },
+  { label: "Map", href: "/map" },
   { label: "Browse by State", href: "/states" },
   { label: "Guides", href: "/guides" },
   { label: "Submit a Shop", href: "/submit" },

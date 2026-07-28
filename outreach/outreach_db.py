@@ -18,7 +18,7 @@ web/.env.local so the founder never has to export anything.
 CLI (all output is JSON on stdout):
   python3 outreach/outreach_db.py batch --limit 10
   python3 outreach/outreach_db.py mark-drafted <id> --gmail-draft-id X [--hook "..."]
-  python3 outreach/outreach_db.py mark-sent <id>
+  python3 outreach/outreach_db.py mark-sent <id> [--note "services-pitch"]
   python3 outreach/outreach_db.py mark-replied <id> [--do-not-contact] [--note "..."]
   python3 outreach/outreach_db.py set-email <id> <email>
   python3 outreach/outreach_db.py remove <id> [--reason "..."]
@@ -203,13 +203,19 @@ def cmd_mark_sent(args):
     touch = rows[0]["touches"] + 1
     if touch > MAX_TOUCHES:
         sys.exit(f"ERROR: row already has {rows[0]['touches']} touches (max {MAX_TOUCHES})")
-    patch_row(args.id, {
+    fields = {
         "status": f"sent_{touch}",
         "touches": touch,
         "last_touch_at": now_iso(),
         "next_touch_at": next_touch_after(touch),
-    })
-    log_event(args.id, "send_detected", {"touch": touch})
+    }
+    if args.note:
+        fields["notes"] = args.note
+    patch_row(args.id, fields)
+    detail = {"touch": touch}
+    if args.note:
+        detail["note"] = args.note
+    log_event(args.id, "send_detected", detail)
     print(json.dumps({"ok": True, "id": args.id, "status": f"sent_{touch}",
                       "next_touch_at": next_touch_after(touch)}))
 
@@ -366,6 +372,7 @@ def main():
 
     s = sub.add_parser("mark-sent")
     s.add_argument("id")
+    s.add_argument("--note", help='e.g. "services-pitch" when the services variant was sent')
     s.set_defaults(fn=cmd_mark_sent)
 
     r = sub.add_parser("mark-replied")

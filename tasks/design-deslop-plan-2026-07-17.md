@@ -48,7 +48,11 @@ Directory, state, city, homepage all resolve to the identical 3-col ListingCard 
 - [ ] Directory keeps cards (search-results grid is appropriately conventional) — no change.
 - [ ] Optional: one editorial interlude (cream grain "moment") mid-scroll on very long state pages.
 
-## Phase 4 — About + Contact redesign
+## Phase 4 — ✅ DONE 2026-07-19 (PR #39, deployed)
+
+About rebuilt: hero "A directory kept by hand"; asymmetric editorial — manifesto prose (specific: no national list existed, 500+ stale entries culled, prices recorded not guessed) + the live "Index" almanac panel with real DB counts (getHomepageStats, 30-day ISR). Founder note kept for Person schema. Quiet closing CTA row. Contact rebuilt: plain divided reason rows, forest email card ("One inbox, read daily.") as the single bold element. IconCircle now used only by /newsletter. Gotcha hit: local `.next` fetch-cache served pre-cut stats (1,245); cleared cache → 727. Deployed manually via `vercel --prod` (git integration still not auto-deploying — owner should check Vercel Git settings). Noticed: footer column headings near-invisible on dark green — fix in Phase 5.
+
+## Phase 4 (original notes) — About + Contact redesign
 
 Most generic pages on the site: centered hero + 3 IconCircle feature cards ("Nationwide Coverage / Curated & Verified / Built for Golfers") is the textbook slop layout (`about:44-70`, `contact:70-106`).
 
@@ -56,7 +60,13 @@ Most generic pages on the site: centered hero + 3 IconCircle feature cards ("Nat
 - [ ] Contact: single-column editorial form page; drop the vertical feature trio.
 - [ ] `IconCircle` likely deletable after this.
 
-## Phase 5 — Copy pass
+## Phase 5 — ✅ DONE 2026-07-19 (PR #40, deployed)
+
+Hero → "Golf's best fitters, on record." (OG image + header tagline "Every Fitter, On Record" match). Footer heading bug fixed (unlayered global h1–h6 charcoal rule beat the gold utility — trailing `!`; computed color verified). Newsletter band copy now context-matched (listing / guides / default). Guides hub subtitle + closing band, category/repair CTA framing, footer blurb + tagline de-cliched. Kept: "6,500 members read it. Free.", repair prices, methodology notes.
+
+## Phase 6 — ✅ effectively complete: the ledger + "on record" language + Index panel on About form the signature motif across home/collection/about pages.
+
+## Phase 5 (original notes) — Copy pass
 
 - [ ] Replace filler: hero "Find your perfect fit." (archetypal directory cliché — beautifully set, still a cliché), footer "Curated with care." / "Independent fitters. Honest listings.", About "The right fit changes the game.", guides hub subtitle, "Ready to get fitted?" CTA.
 - [ ] Vary the newsletter band. Same dark-green band + same copy closes nearly every page — reads as boilerplate. Write 2–3 context-specific variants (listing page vs guides vs state pages) or drop it on some page types.
