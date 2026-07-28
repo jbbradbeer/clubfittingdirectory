@@ -205,9 +205,14 @@ export default async function HomePage() {
               </span>{" "}
               states, every one covered.
             </h2>
-            <Button href="/states" variant="outline" size="sm">
-              View all states
-            </Button>
+            <div className="flex gap-3">
+              <Button href="/map" variant="outline" size="sm">
+                Explore the map
+              </Button>
+              <Button href="/states" variant="outline" size="sm">
+                View all states
+              </Button>
+            </div>
           </div>
           <div
             className="mt-12 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3"
