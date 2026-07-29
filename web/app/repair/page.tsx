@@ -25,7 +25,7 @@ import { repairIntro, repairFaqs, LAST_UPDATED_LABEL } from "@/lib/seo-content"
 export const revalidate = 2592000 // 30 days — matches category pages; edits propagate via on-demand revalidation
 
 export const metadata: Metadata = {
-  title: "Golf Club Repair Near You — Regrips, Reshafts & Loft/Lie",
+  title: "Golf Club Repair Near You",
   description:
     "Find golf club repair near you. Browse 250+ US shops offering regripping, reshafting, and loft & lie adjustment, with ratings and contact details.",
   alternates: { canonical: `${SITE_URL}/repair` },

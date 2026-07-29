@@ -9,9 +9,9 @@ import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "Interactive Map of Every Golf Club Fitting Shop in America",
+  title: "Golf Club Fitting Shop Map",
   description:
-    "Explore an interactive map of golf club fitting shops and retailers across all 50 US states — from a directory of 1,000+ listings. Zoom to your area, filter for club fitting, and find verified fitters near you.",
+    "Explore an interactive map of 1,000+ golf club fitting shops and retailers across all 50 US states. Zoom to your area and find verified fitters near you.",
   alternates: { canonical: `${SITE_URL}/map` },
 }
 

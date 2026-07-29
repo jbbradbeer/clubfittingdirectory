@@ -41,9 +41,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           {/* Column 1: Branding */}
           <div>
-            <h3 className="font-display text-2xl text-white! mb-4 tracking-[-0.01em]">
+            {/* Not a heading: footer labels aren't document structure, and a
+                stray H3/H4 here caused heading-level skips on every page. */}
+            <p className="font-display text-2xl text-white! mb-4 tracking-[-0.01em]">
               {SITE_NAME}
-            </h3>
+            </p>
             <p className="text-sm leading-relaxed text-white/60 mb-6">
               Independent golf club fitters, retailers, and studios across all 50
               states — every listing reviewed by hand, and culled when it goes stale.
@@ -64,11 +66,9 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-8 md:contents">
             {/* Quick Links */}
             <div>
-              {/* `!` needed: the global h1–h6 charcoal rule is unlayered and
-                  otherwise beats this utility (see CSS layer gotcha) */}
-              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)]! mb-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)]! mb-5">
                 Quick Links
-              </h4>
+              </p>
               <ul className="space-y-3">
                 {QUICK_LINKS.map((link) => (
                   <li key={link.href}>
@@ -85,11 +85,9 @@ export function Footer() {
 
             {/* Popular States */}
             <div>
-              {/* `!` needed: the global h1–h6 charcoal rule is unlayered and
-                  otherwise beats this utility (see CSS layer gotcha) */}
-              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)]! mb-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-gold)]! mb-5">
                 Popular States
-              </h4>
+              </p>
               <ul className="space-y-3">
                 {POPULAR_STATES.map((link) => (
                   <li key={link.href}>

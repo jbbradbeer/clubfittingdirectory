@@ -11,9 +11,9 @@ import { DIRECTORY_YEAR } from "@/lib/seo-content"
 const TITLE = `Golf Club Distance Calculator & Chart (${DIRECTORY_YEAR})`
 
 export const metadata: Metadata = {
-  title: { absolute: `${TITLE} | Club Fitting Directory` },
+  title: { absolute: TITLE },
   description:
-    "Free golf club distance calculator. Enter your driver swing speed to estimate carry distances for every club in the bag, compare against tour and amateur averages, and check your gapping.",
+    "Free golf club distance calculator. Enter your driver swing speed to estimate carry distances for every club and check your gapping against tour averages.",
   alternates: { canonical: `${SITE_URL}/tools/golf-club-distance-calculator` },
 }
 

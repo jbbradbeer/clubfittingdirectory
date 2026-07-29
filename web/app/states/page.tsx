@@ -7,7 +7,7 @@ import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Browse by State",
-  description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with over 700 hand-vetted shop listings.`,
+  description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with over 1,000 hand-vetted shop listings.`,
   alternates: { canonical: `${SITE_URL}/states` },
 }
 
@@ -45,6 +45,31 @@ export default async function StatesPage() {
                 </span>
               </Link>
             ))}
+          </div>
+
+          {/* Supporting copy — gives this index page real content for readers
+              and crawlers (it was flagged as thin: state tiles alone). */}
+          <div className="mt-16 max-w-3xl mx-auto text-center">
+            <h2 className="font-display text-2xl text-[var(--color-charcoal)]">
+              Find a club fitter in your state
+            </h2>
+            <p className="mt-4 text-[var(--color-charcoal-light)] leading-relaxed">
+              The directory covers every US state plus Washington, DC —{" "}
+              {states.length > 0 ? (
+                <>over {Math.floor(states.reduce((n, s) => n + s.count, 0) / 100) * 100} </>
+              ) : (
+                <>over 1,000 </>
+              )}
+              independent club fitters, golf retailers, simulator studios, and repair
+              specialists, each listing reviewed by hand. Pick your state above to see
+              every shop near you, with ratings, services, and fitting details.
+            </p>
+            <p className="mt-4 text-[var(--color-charcoal-light)] leading-relaxed">
+              Each state page compares the top-rated fitters side by side — who offers
+              full-bag fittings, who runs TrackMan or GCQuad launch monitors, and which
+              shops are independent rather than big-box chains — so you can choose a
+              fitter before you ever pick up the phone.
+            </p>
           </div>
         </div>
       </section>

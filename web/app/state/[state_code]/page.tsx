@@ -49,8 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     // Absolute: the year-stamped comparison format needs the full 60-char
     // budget, so we skip the "| Club Fitting Directory" template suffix here.
-    title: { absolute: `Top Golf Club Fitters in ${stateName} for ${DIRECTORY_YEAR} | Compare Tech & Pricing` },
-    description: `Compare ${stateInfo?.count ?? ""} golf club fitters in ${stateName} — fitting prices, launch monitor tech (TrackMan, GCQuad & more), and independent vs chain. Updated ${LAST_UPDATED_LABEL}.`,
+    title: { absolute: `Top Golf Club Fitters in ${stateName} for ${DIRECTORY_YEAR}` },
+    description: `Compare ${stateInfo?.count ?? ""} golf club fitters in ${stateName} — fitting prices, launch monitor tech, and independent vs chain. Updated ${LAST_UPDATED_LABEL}.`,
     // Always lowercase: /state/TX renders too (dynamicParams), and a raw-param
     // canonical would let Google index both casings as separate pages.
     alternates: { canonical: `${SITE_URL}/state/${state_code.toLowerCase()}` },

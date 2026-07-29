@@ -5,11 +5,20 @@ import type { Shop } from "@/types/shop"
 import {
   CARD_FIELDS,
   fetchAllRows,
+  queryListings,
   sanitizeSearchTerm,
   tallyStates,
   tallyTypes,
+  type DirectoryResult,
   type PagedQuery,
 } from "./shared"
+
+/* ── First page of the unfiltered directory (server-rendered /directory) ──
+   Same query the browser runs on /directory with no filters, so the crawlable
+   server HTML and the hydrated client grid show identical results. */
+export async function getDirectoryFirstPage(): Promise<DirectoryResult> {
+  return queryListings(createStaticClient(), { page: 1, perPage: 24 })
+}
 
 /* ── Top-rated shops for the homepage ── */
 export async function getTopRatedShops(limit = 6): Promise<Shop[]> {

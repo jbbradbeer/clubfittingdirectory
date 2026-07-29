@@ -15,6 +15,11 @@ import { NewsletterCaptureBlock } from "@/components/newsletter/NewsletterCaptur
 interface DirectoryClientProps {
   stateOptions: { state_code: string; state: string; count: number }[]
   shopTypeOptions: string[]
+  /* First page of unfiltered results, fetched server-side. Seeds the grid so
+     the default view needs no client fetch (and matches the SSR fallback). */
+  initialShops: Shop[]
+  initialTotal: number
+  initialTotalPages: number
 }
 
 type ViewMode = "grid" | "map"
@@ -34,9 +39,20 @@ function parseSort(v: string | null): SortMode {
   return v === "name" ? "name" : "rating"
 }
 
-export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClientProps) {
+export function DirectoryClient({
+  stateOptions,
+  shopTypeOptions,
+  initialShops,
+  initialTotal,
+  initialTotalPages,
+}: DirectoryClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+
+  /* With no URL params, the server-seeded first page is already correct —
+     skip the mount fetch entirely. Any params (filters, search, near=1, page)
+     mean the seed may not match, so fetch as before. */
+  const skipFirstFetch = useRef(searchParams.toString() === "" && initialShops.length > 0)
 
   /* ── State from URL params ── */
   const [query, setQuery] = useState(searchParams.get("q") ?? "")
@@ -61,10 +77,10 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
 
   /* ── Results ── */
-  const [shops, setShops] = useState<Shop[]>([])
-  const [total, setTotal] = useState(0)
-  const [totalPages, setTotalPages] = useState(1)
-  const [loading, setLoading] = useState(true)
+  const [shops, setShops] = useState<Shop[]>(initialShops)
+  const [total, setTotal] = useState(initialTotal)
+  const [totalPages, setTotalPages] = useState(initialTotalPages)
+  const [loading, setLoading] = useState(!skipFirstFetch.current)
   const [loadError, setLoadError] = useState(false)
 
   /* ── Near Me ── */
@@ -165,6 +181,12 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
   }, [debouncedQuery, selectedState, selectedShopTypes, selectedServices, selectedOwnership, fittingOnly, minRating, sort, page, nearMeActive])
 
   useEffect(() => {
+    if (skipFirstFetch.current) {
+      // Server-seeded default view — no fetch needed. Any later filter/sort/
+      // page change re-runs this effect with the flag cleared and fetches.
+      skipFirstFetch.current = false
+      return
+    }
     fetchResults()
     syncUrl()
   }, [fetchResults, syncUrl])
@@ -276,16 +298,11 @@ export function DirectoryClient({ stateOptions, shopTypeOptions }: DirectoryClie
 
   return (
     <div>
-      {/* Top bar: search + controls */}
+      {/* Top bar: search + controls. The page header (H1 + intro) is rendered
+          by the server component in app/directory/page.tsx, outside the
+          Suspense boundary, so crawlers always see it. */}
       <div className="hero-surface grain border-b border-[var(--color-border)]">
-        <div className="hero-contours" aria-hidden="true" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-5 max-w-2xl">
-            <p className="section-label mb-2">Find a Fitter</p>
-            <h1 className="display text-[clamp(1.8rem,3.6vw,2.6rem)] text-[var(--color-charcoal)]">
-              Search the directory
-            </h1>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="flex-1">
               <SearchBar value={query} onChange={setQuery} onSubmit={handleSearchSubmit} />

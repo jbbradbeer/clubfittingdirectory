@@ -8,7 +8,7 @@ import { SITE_URL, SITE_NAME } from "@/lib/constants"
 export const revalidate = 2592000 // 30 days — long window keeps ISR writes low; edits propagate via on-demand revalidation (app/api/revalidate)
 
 export const metadata: Metadata = {
-  title: "Golf Club Fitting Guides — Charts, Costs & How-Tos",
+  title: "Golf Club Fitting Guides",
   description:
     "Plain-English guides to golf club fitting: what it is, how much it costs, fitting charts, and where to get fitted. Then find a fitter near you.",
   alternates: { canonical: `${SITE_URL}/guides` },
