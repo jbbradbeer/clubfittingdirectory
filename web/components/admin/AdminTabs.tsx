@@ -13,6 +13,7 @@ export const ADMIN_TABS = [
   { href: "/admin/leads", label: "Fitting Requests" },
   { href: "/admin/submissions", label: "Submissions & Claims" },
   { href: "/admin/updates", label: "Update Requests" },
+  { href: "/admin/owner-edits", label: "Owner Edits" },
   { href: "/admin/outreach", label: "Outreach" },
 ] as const
 
