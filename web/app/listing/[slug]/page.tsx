@@ -18,6 +18,8 @@ import { ListingGrid } from "@/components/directory/ListingGrid"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { TuxedoInlineLink } from "@/components/newsletter/TuxedoInlineLink"
 import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
+import { FittingAssistant } from "@/components/shop-profile/FittingAssistant"
+import { assistantEnabledFor } from "@/lib/assistant"
 import { ProvenanceBadge } from "@/components/shop-profile/ProvenanceBadge"
 import { Reveal } from "@/lib/useReveal"
 import { getCover } from "@/lib/cover"
@@ -491,6 +493,12 @@ export default async function ListingPage({ params }: PageProps) {
             )}
           </div>
         </section>
+      )}
+
+      {/* AI fitting assistant — demo for the web-services Growth tier; renders
+          only on allowlisted listings (lib/assistant.ts). */}
+      {assistantEnabledFor(shop.slug) && (
+        <FittingAssistant shopId={shop.id} shopName={shop.name} shopSlug={shop.slug} />
       )}
     </>
   )

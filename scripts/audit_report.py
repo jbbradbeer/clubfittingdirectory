@@ -170,9 +170,11 @@ hours, Google reviews, a map, and a "request a fitting" form that lands in
 your inbox. Domain and security sorted. From $750 to build, then a small
 monthly care plan so it never breaks again.
 
-**Shop Site + Growth** — everything above, plus the local-SEO basics
-(Google Business Profile posts, a review-request flow, local citations) and
-Featured placement on clubfittingdirectory.com.
+**Shop Site + Growth** — everything above, plus an AI booking assistant on
+your site that answers fitting questions and captures bookings 24/7, a
+review-request flow with AI-drafted responses you approve, monthly Google
+Business Profile posts written for you, and Featured placement on
+clubfittingdirectory.com.
 
 We build and run clubfittingdirectory.com — the directory your listing is
 already on — so your site gets built by people who work with fitting shops

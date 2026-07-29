@@ -20,7 +20,7 @@ Subject: Re: {{shop_name}} is listed on clubfittingdirectory.com
 
 Different note this time. While updating your listing I noticed {{problem_line}}
 
-I build websites for fitting shops on the side of running the directory — small, fast sites with your services, reviews, and a fitting-request form, built and looked after so they never break again. Given the reputation {{shop_name}} has, the website is the only weak link I can see.
+I build websites for fitting shops on the side of running the directory — small, fast sites with your services, reviews, and a fitting-request form, built and looked after so they never break again. The Growth plan adds an AI assistant on your site that answers golfers' fitting questions and books them in while you're on the bay. Given the reputation {{shop_name}} has, the website is the only weak link I can see.
 
 Worth a 15-minute look together? {{CALENDLY_URL}}
 

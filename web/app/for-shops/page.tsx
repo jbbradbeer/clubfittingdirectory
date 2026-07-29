@@ -187,8 +187,8 @@ export default function ForShopsPage() {
       <section id="web-services" className="bg-white border-t border-[var(--color-border)] py-16 md:py-20 scroll-mt-8">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            title="Need a website, not just a listing?"
-            subtitle="We build and run this directory — and we build websites for fitting shops whose site is down, insecure, or living on a Facebook page. Small, fast, and made for how golfers actually find you."
+            title="Need a website — and an AI front desk?"
+            subtitle="We build and run this directory — and we build websites for fitting shops whose site is down, insecure, or living on a Facebook page. Small, fast, and with an AI assistant that answers golfers' fitting questions and books them in while you're on the bay."
           />
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5" data-reveal-group>
             {SERVICE_TIERS.map((tier) => (

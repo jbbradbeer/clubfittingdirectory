@@ -1,10 +1,11 @@
 score,problem,details,name,city,state,rating,reviews,phone,website,listing
 77,dead,,A To Z GOLF Coaching & Fitting Center,Hampton,GA,4.9,61,(770) 477-2099,https://atozgolfpro.com/,https://clubfittingdirectory.com/listing/a-to-z-golf-coaching-fitting-center-hampton-ga
+59,dead,,Purestrike GOLF - Wake Forest,Wake Forest,NC,5.0,,(919) 274-6880,https://purestrikegolf.co/,https://clubfittingdirectory.com/listing/purestrike-golf-wake-forest-wake-forest-nc
 59,dead,,Savannah Indoor GOLF Club,Savannah,GA,5.0,,(912) 655-9119,https://savannahindoorgolfclub.com/,https://clubfittingdirectory.com/listing/savannah-indoor-golf-club-savannah-ga
-59,dead,,Robogolf PRO,Las Vegas,NV,5.0,,(702) 715-9651,https://www.robogolfprolasvegas.com/,https://clubfittingdirectory.com/listing/robogolf-pro-las-vegas-nv
 59,dead,,Golph Co.,Carrollton,GA,4.9,,(770) 687-9738,https://golphco.com/,https://clubfittingdirectory.com/listing/golph-co-carrollton-ga
 59,dead,,Freedom GOLF Lab,Columbia,TN,5.0,,(931) 374-6023,https://www.freedomgolflab.com/,https://clubfittingdirectory.com/listing/freedom-golf-lab-columbia-tn
 55,seo_basics,"thin-title,no-meta-description",No Bogeys Golf,Laguna Beach,CA,4.8,102,(949) 595-4405,https://nobogeysgolf.com/,https://clubfittingdirectory.com/listing/no-bogeys-golf-laguna-beach-ca
+54,dead,,Sellinger's GOLF Shop,Spring,TX,5.0,,(832) 721-5108,https://saulsellingersgolfshop.com/,https://clubfittingdirectory.com/listing/sellingers-golf-shop-spring-tx
 54,dead,,The North GOLF Clothing,Edina,MN,5.0,,(612) 816-5299,https://www.thenorthgolf.com/contact,https://clubfittingdirectory.com/listing/the-north-golf-clothing-edina-mn
 53,social_only,,GOLF Fit USA,Kearney,NE,4.9,,(308) 455-3371,https://www.facebook.com/GolfFitUSA/,https://clubfittingdirectory.com/listing/golf-fit-usa-kearney-ne
 53,dead,,PRO AM GOLF USA,St. Louis,MO,4.5,,(314) 647-8054,https://www.proamgolfusa.com/,https://clubfittingdirectory.com/listing/pro-am-golf-usa-st-louis-mo
@@ -13,7 +14,6 @@ score,problem,details,name,city,state,rating,reviews,phone,website,listing
 50,seo_basics,no-h1,Morton GOLF Sales,Sacramento,CA,4.8,138,(888) 988-3673,https://www.mortongolfsales.com/,https://clubfittingdirectory.com/listing/morton-golf-sales-sacramento-ca
 48,social_only,,Fincastle GOLF Academy,Bluefield,VA,4.9,,(304) 972-2739,https://www.facebook.com/profile.php?id=100078312873173,https://clubfittingdirectory.com/listing/fincastle-golf-academy-bluefield-va
 48,social_only,,Oliver's Lessons & Club Repairs,Lancaster,MO,5.0,,(660) 216-9270,https://m.facebook.com/OliversLessonsandClubRepairs,https://clubfittingdirectory.com/listing/olivers-lessons-club-repairs-lancaster-mo
-48,dead,,The Grounds Driving Range & PRO Shop,Flushing,MI,4.6,,(810) 820-4530,https://thegroundsgolf.com/,https://clubfittingdirectory.com/listing/the-grounds-driving-range-pro-shop-flushing-mi
 48,dead,,The GOLF Lab,Chantilly,VA,4.7,,(571) 469-8077,https://www.thegolflabva.com/,https://clubfittingdirectory.com/listing/the-golf-lab-chantilly-va
 47,free_builder,,Remarcable GOLF,Kernersville,NC,5.0,,(336) 690-8944,https://remarcablegolf.wordpress.com/,https://clubfittingdirectory.com/listing/remarcable-golf-kernersville-nc
 47,social_only,,Cajun Made GOLF Products INC,Monroe,LA,4.7,,(318) 387-0738,https://www.facebook.com/p/Cajun-Made-Golf-Products-100057160642241/,https://clubfittingdirectory.com/listing/cajun-made-golf-products-inc-monroe-la
@@ -29,173 +29,173 @@ score,problem,details,name,city,state,rating,reviews,phone,website,listing
 43,ssl_error,,Condor GOLF Custom Clubs & Repair,Sun City,AZ,5.0,,(623) 581-2986,https://www.condorgolf.com/,https://clubfittingdirectory.com/listing/condor-golf-custom-clubs-repair-sun-city-az
 43,seo_basics,no-h1,Augusta Custom Clubs And Swing Analysis,Augusta,GA,4.8,20,(706) 910-2614,https://www.augustacustomclubs.com/,https://clubfittingdirectory.com/listing/augusta-custom-clubs-and-swing-analysis-augusta-ga
 43,ssl_error,,GOLF Care Center INC,Bethesda,MD,4.9,,(301) 652-6094,https://www.golfcarecenter.com/,https://clubfittingdirectory.com/listing/golf-care-center-inc-bethesda-md
+41,none,,GolfTEC Santa Monica,SANTA MONICA,CA,,,,,https://clubfittingdirectory.com/listing/golftec-santa-monica-santa-monica-ca
+41,none,,Club Champion,Newport Beach,CA,,,,,https://clubfittingdirectory.com/listing/club-champion-newport-beach-ca
+41,none,,True Spec Golf - Atlanta,Atlanta,GA,,,,,https://clubfittingdirectory.com/listing/true-spec-golf-atlanta-atlanta-ga
+41,none,,Vans - Tucson (oracle),TUCSON,AZ,,,,,https://clubfittingdirectory.com/listing/vans-tucson-oracle-tucson-az
+41,none,,Golf Headquarters,MCALLEN,TX,,,,,https://clubfittingdirectory.com/listing/golf-headquarters-mcallen-tx
+41,none,,Roger Dunn - Canoga Park,CANOGA PARK,CA,,,,,https://clubfittingdirectory.com/listing/roger-dunn-canoga-park-canoga-park-ca
+41,none,,Golf Trader,TAMARAC,FL,,,,,https://clubfittingdirectory.com/listing/golf-trader-tamarac-fl
+41,none,,Edwin Watts - Jacksonville Beach,JAX BCH,FL,,,,,https://clubfittingdirectory.com/listing/edwin-watts-jacksonville-beach-jax-bch-fl
+41,none,,GolfTEC Clearwater Mall,CLEARWATER,FL,,,,,https://clubfittingdirectory.com/listing/golftec-clearwater-mall-clearwater-fl
+41,none,,Club Champion,Tucson,AZ,,,,,https://clubfittingdirectory.com/listing/club-champion-tucson-az
+41,none,,Vans - North Scottsdale,SCOTTSDALE,AZ,,,,,https://clubfittingdirectory.com/listing/vans-north-scottsdale-scottsdale-az
+41,none,,The Golf Center,CARROLLTON,TX,,,,,https://clubfittingdirectory.com/listing/the-golf-center-carrollton-tx
+41,none,,Hornacek's Golf - Scottsdale,SCOTTSDALE,AZ,,,,,https://clubfittingdirectory.com/listing/hornacek-s-golf-scottsdale-scottsdale-az
+41,none,,Club Champion,Roseville,CA,,,,,https://clubfittingdirectory.com/listing/club-champion-roseville-ca
+41,none,,Golf Galaxy - Lutz,LUTZ,FL,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-lutz-lutz-fl
+41,none,,PGA Tour Superstore San Antonio,San Antonio,TX,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-san-antonio-san-antonio-tx
+41,none,,GolfTEC Mission Viejo,MISSION VIEJO,CA,,,,,https://clubfittingdirectory.com/listing/golftec-mission-viejo-mission-viejo-ca
+41,none,,Golf Galaxy - Northpark,DALLAS,TX,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-northpark-dallas-tx
+41,none,,Golf Galaxy - Pembroke Crossing,PEMBROKE PINES,FL,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-pembroke-crossing-pembroke-pines-fl
+41,none,,Club Champion,Corona,CA,,,,,https://clubfittingdirectory.com/listing/club-champion-corona-ca
+41,none,,The Golf And Casual Shop,FORT MYERS,FL,,,239-936-8753,,https://clubfittingdirectory.com/listing/the-golf-and-casual-shop-fort-myers-fl
+41,none,,Club Champion,Glendale,AZ,,,,,https://clubfittingdirectory.com/listing/club-champion-glendale-az
+41,none,,PGA Tour Superstore Plano (accent),PLANO,TX,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-plano-accent-plano-tx
+41,none,,Club Masters LLC - Custom Golf Clubs Fitting,Lake Park,FL,,,+1561-622-9445,,https://clubfittingdirectory.com/listing/club-masters-llc-custom-golf-clubs-fitting-lake-park-fl
+41,none,,GolfTEC Buckhead Station,ATLANTA,GA,,,,,https://clubfittingdirectory.com/listing/golftec-buckhead-station-atlanta-ga
 41,seo_basics,no-h1,Tyler GOLF,Tyler,TX,5.0,,(430) 444-2487,https://tylergolfshop.com/,https://clubfittingdirectory.com/listing/tyler-golf-tyler-tx
+41,none,,GolfTEC Tempe,TEMPE,AZ,,,,,https://clubfittingdirectory.com/listing/golftec-tempe-tempe-az
+41,none,,GolfTEC Fox Creek,SMYRNA,GA,,,,,https://clubfittingdirectory.com/listing/golftec-fox-creek-smyrna-ga
+41,none,,Ifit Golf,RANCHO CORDOVA,CA,,,,,https://clubfittingdirectory.com/listing/ifit-golf-rancho-cordova-ca
+41,none,,Rwk golf,Smyrna,GA,,,+1470-345-8414,,https://clubfittingdirectory.com/listing/rwk-golf-smyrna-ga
+41,none,,GolfTEC North Dallas,DALLAS,TX,,,,,https://clubfittingdirectory.com/listing/golftec-north-dallas-dallas-tx
+41,none,,Cool Clubs,Foster City,CA,,,,,https://clubfittingdirectory.com/listing/cool-clubs-foster-city-ca
+41,none,,Edwin Watts - Savannah,SAVANNAH,GA,,,,,https://clubfittingdirectory.com/listing/edwin-watts-savannah-savannah-ga
+41,none,,PGA Tour Superstore Irvine,IRVINE,CA,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-irvine-irvine-ca
+41,none,,Edwin Watts - Pensacola,PENSACOLA,FL,,,850-477-0519,,https://clubfittingdirectory.com/listing/edwin-watts-pensacola-pensacola-fl
+41,none,,Edwin Watts - Atlanta,ATLANTA,GA,,,,,https://clubfittingdirectory.com/listing/edwin-watts-atlanta-atlanta-ga
+41,none,,Golf Mart - San Rafael,SAN RAFAEL,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-san-rafael-san-rafael-ca
+41,none,,Granbury Golf Etc,GRANBURY,TX,,,,,https://clubfittingdirectory.com/listing/granbury-golf-etc-granbury-tx
+41,none,,Golf Galaxy - Austin Aroboretum,AUSTIN,TX,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-austin-aroboretum-austin-tx
+41,none,,Golf Mart - Escondido,ESCONDIDO,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-escondido-escondido-ca
+41,none,,GOLFTEC Midtown Atlanta,Atlanta,GA,,,470 298 7091,,https://clubfittingdirectory.com/listing/golftec-midtown-atlanta-atlanta-ga
+41,none,,Vans - East Mesa (apache),MESA,AZ,,,,,https://clubfittingdirectory.com/listing/vans-east-mesa-apache-mesa-az
+41,none,,Superstition Mountain Golf,GOLD CANYON,AZ,,,,,https://clubfittingdirectory.com/listing/superstition-mountain-golf-gold-canyon-az
+41,none,,Golf Guru,MESA,AZ,,,4806603830,,https://clubfittingdirectory.com/listing/golf-guru-mesa-az
+41,none,,Club Champion,Orlando,FL,,,,,https://clubfittingdirectory.com/listing/club-champion-orlando-fl
+41,none,,True Spec Golf - Palm Desert,Palm Desert,CA,,,,,https://clubfittingdirectory.com/listing/true-spec-golf-palm-desert-palm-desert-ca
+41,none,,The Range At Leon Springs,BOERNE,TX,,,,,https://clubfittingdirectory.com/listing/the-range-at-leon-springs-boerne-tx
+41,none,,Golf Fore Less,ROME,GA,,,(706) 252-0664,,https://clubfittingdirectory.com/listing/golf-fore-less-rome-ga
+41,none,,GolfTEC Ft Myers,FORT MYERS,FL,,,,,https://clubfittingdirectory.com/listing/golftec-ft-myers-fort-myers-fl
+41,none,,GolfTEC Sugar Land,Sugar Land,TX,,,,,https://clubfittingdirectory.com/listing/golftec-sugar-land-sugar-land-tx
+41,none,,Montclair Golf Ent,Oakland,CA,,,15104820422,,https://clubfittingdirectory.com/listing/montclair-golf-ent-oakland-ca
+41,none,,K Pro Golf,LA MIRADA,CA,,,657-243-0233,,https://clubfittingdirectory.com/listing/k-pro-golf-la-mirada-ca
+41,none,,PGA Tour Superstore Pbg,PALM BEACH GARDENS,FL,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-pbg-palm-beach-gardens-fl
+41,none,,PGA Tour Superstore East Palo Alto,EAST PALO ALTO,CA,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-east-palo-alto-east-palo-alto-ca
+41,none,,Golf Mart - Santa Rosa (rohnert),SANTA ROSA,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-santa-rosa-rohnert-santa-rosa-ca
+41,none,,GolfTEC Houston Heights,HOUSTON,TX,,,,,https://clubfittingdirectory.com/listing/golftec-houston-heights-houston-tx
+41,none,,GolfTEC Las Colinas,IRVING,TX,,,,,https://clubfittingdirectory.com/listing/golftec-las-colinas-irving-tx
+41,none,,Orange Golf & Sports,Garden Grove,CA,,,,,https://clubfittingdirectory.com/listing/orange-golf-sports-garden-grove-ca
 41,free_builder,,Hunt GOLF,Burlington,NC,4.7,,(336) 524-6686,https://sites.google.com/view/huntgolfshop,https://clubfittingdirectory.com/listing/hunt-golf-burlington-nc
-41,none,,Bernie Dunne Custom Clubs,Pitman,NJ,,,(856) 589-8131,,https://clubfittingdirectory.com/listing/bernie-dunne-custom-clubs-pitman-nj
-41,none,,Garner Golf,Fairfield,CT,,,(203) 319-1200,,https://clubfittingdirectory.com/listing/garner-golf-fairfield-ct
-38,ssl_error,,Mw GOLF,Rochester,MI,5.0,,(248) 709-2231,https://www.mwgolfclubs.com/,https://clubfittingdirectory.com/listing/mw-golf-rochester-mi
-38,ssl_error,,Trevor Parkinson,Rochester,MI,5.0,,(248) 709-6417,https://www.trevorparkinson.com/,https://clubfittingdirectory.com/listing/trevor-parkinson-rochester-mi
-38,ssl_error,,GOLF Central,Fort Dodge,IA,4.8,,(515) 576-4653,https://hansonsgolf.com/,https://clubfittingdirectory.com/listing/golf-central-fort-dodge-ia
-38,ssl_error,,Bisbee GOLF Center,Green Bay,WI,4.8,,(920) 863-8344,https://bisbeegolf.com/,https://clubfittingdirectory.com/listing/bisbee-golf-center-green-bay-wi
-37,ssl_error,,Tri-fit Custom GOLF,Darien,CT,4.7,,(203) 202-9640,https://www.trifitgolf.com/,https://clubfittingdirectory.com/listing/tri-fit-custom-golf-darien-ct
-37,ssl_error,,Trader GOLF,Alpharetta,GA,4.5,,(770) 569-2005,https://www.tradergolf.com/,https://clubfittingdirectory.com/listing/trader-golf-alpharetta-ga
-36,free_builder,,J GOLF,Fort Lee,NJ,4.5,,(201) 492-3434,https://sites.google.com/view/jgolfinfo,https://clubfittingdirectory.com/listing/j-golf-fort-lee-nj
-34,dead,,Jax GOLF Shop,Sequim,WA,3.0,2,(360) 461-1843,https://jaxgolfshopllc.com/,https://clubfittingdirectory.com/listing/jax-golf-shop-sequim-wa
-31,seo_basics,no-h1,Collindale GOLF Academy & Club Fitting Center,Fort Collins,CO,5.0,,(970) 223-4653,https://www.collindalegolfacademy.com/,https://clubfittingdirectory.com/listing/collindale-golf-academy-club-fitting-center-fort-collins-co
-31,seo_basics,no-h1,GOLF With Gil,Chandler,AZ,4.9,,(480) 527-8731,https://www.golfwithgil.com/,https://clubfittingdirectory.com/listing/golf-with-gil-chandler-az
-31,seo_basics,no-h1,Stripe Show Club Fitters Swh,Missouri City,TX,5.0,,(281) 793-9643,https://www.stripeshowhtx.com/,https://clubfittingdirectory.com/listing/stripe-show-club-fitters-swh-missouri-city-tx
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF - Lincoln South,Lincoln,NE,4.9,,(531) 289-1394,https://austads.com/pages/lincoln-south-store,https://clubfittingdirectory.com/listing/austads-golf-lincoln-south-lincoln-ne
-31,seo_basics,no-h1,Birdiefinish GOLF,Oregon City,OR,4.9,,(503) 518-0085,https://www.birdiefinishgolf.com/,https://clubfittingdirectory.com/listing/birdiefinish-golf-oregon-city-or
-31,seo_basics,"no-title,no-meta-description,no-h1",Purestrike GOLF - Wake Forest,Wake Forest,NC,5.0,,(919) 274-6880,https://purestrikegolf.co/,https://clubfittingdirectory.com/listing/purestrike-golf-wake-forest-wake-forest-nc
-31,seo_basics,no-h1,Bob Vansweden GOLF,St. Petersburg,FL,5.0,,(727) 321-4653,https://www.bobvanswedengolf.com/,https://clubfittingdirectory.com/listing/bob-vansweden-golf-st-petersburg-fl
-31,seo_basics,"no-meta-description,no-viewport,no-h1",The Swing Bays,Parker,CO,5.0,,(720) 524-4999,https://theswingbays.com/,https://clubfittingdirectory.com/listing/the-swing-bays-parker-co
-31,seo_basics,no-h1,Inverness GOLF & Repair,Birmingham,AL,4.8,,(205) 991-1008,https://invernessgolfbham.com/,https://clubfittingdirectory.com/listing/inverness-golf-repair-birmingham-al
-31,seo_basics,no-meta-description,Steve Dresser GOLF Academy,Pawleys Island,SC,4.9,,(843) 237-7908,https://stevedressergolfacademy.com/,https://clubfittingdirectory.com/listing/steve-dresser-golf-academy-pawleys-island-sc
-31,seo_basics,no-h1,Barton Creek Fitting Studio,Austin,TX,4.9,,(737) 280-8665,https://bartoncreekfittingstudio.com/,https://clubfittingdirectory.com/listing/barton-creek-fitting-studio-austin-tx
-31,seo_basics,"no-title,no-meta-description,no-h1",229 GOLF,Albany,GA,5.0,,(229) 573-7023,https://www.229golf.com/,https://clubfittingdirectory.com/listing/229-golf-albany-ga
-31,seo_basics,no-meta-description,Baltimore GOLF INC,Timonium,MD,4.9,,(410) 252-2959,https://baltimoregolfinc.com/,https://clubfittingdirectory.com/listing/baltimore-golf-inc-timonium-md
-31,seo_basics,no-h1,Avian GOLF,Seattle,WA,5.0,,(206) 725-7872,https://www.avian-golf.com/,https://clubfittingdirectory.com/listing/avian-golf-seattle-wa
-31,seo_basics,no-h1,The GOLF Stable,Prairie Village,KS,5.0,,(913) 269-1300,https://www.thegolfstable.com/,https://clubfittingdirectory.com/listing/the-golf-stable-prairie-village-ks
-31,seo_basics,no-h1,PRO GOLF Discount,Tupelo,MS,4.9,,(662) 844-9233,https://progolftupelo.com/,https://clubfittingdirectory.com/listing/pro-golf-discount-tupelo-ms
-31,seo_basics,no-h1,P 45 Knuckle Down GOLF,Warner Robins,GA,5.0,,(478) 230-3324,https://www.p45knuckledowngolf.com/,https://clubfittingdirectory.com/listing/p-45-knuckle-down-golf-warner-robins-ga
-31,seo_basics,"thin-title,no-meta-description,no-h1",Makefield Putters,Bensalem,PA,5.0,,(215) 245-5570,https://makefieldgolf.com/,https://clubfittingdirectory.com/listing/makefield-putters-bensalem-pa
-31,seo_basics,"no-title,no-meta-description,no-viewport,no-h1",Mitchell GOLF Equipment Company,Albion,MI,4.8,,(800) 437-1314,https://www.mitchellgolf.com/,https://clubfittingdirectory.com/listing/mitchell-golf-equipment-company-albion-mi
-31,seo_basics,no-h1,Chris Cote's GOLF Shop - Southington,Southington,CT,4.9,,(860) 621-3663,https://www.chriscotegolf.com/,https://clubfittingdirectory.com/listing/chris-cotes-golf-shop-southington-southington-ct
-31,seo_basics,no-h1,Pinehurst GOLF Course Proshop,Pinehurst,NC,4.9,,(855) 235-8507,https://pinehurst.com/,https://clubfittingdirectory.com/listing/pinehurst-golf-course-proshop-pinehurst-nc
-31,seo_basics,"no-meta-description,no-h1",Midland GOLF Hq,Midland,MI,4.8,,(989) 750-7117,https://midlandgolfhq.com/,https://clubfittingdirectory.com/listing/midland-golf-hq-midland-mi
-31,seo_basics,no-h1,Kirkpatrick GOLF,Nashville,TN,5.0,,(615) 760-5810,https://kirkpatrickgolf.net/,https://clubfittingdirectory.com/listing/kirkpatrick-golf-nashville-tn
-31,seo_basics,no-h1,Morris GOLF Shop,Lake Hiawatha,NJ,4.9,,(973) 775-2242,https://www.morrisgolfshop.com/,https://clubfittingdirectory.com/listing/morris-golf-shop-lake-hiawatha-nj
-31,seo_basics,no-h1,Bill Flood GOLF At Newtown GOLF Lab,Newtown,CT,5.0,,(203) 509-5789,https://www.billfloodgolfacademy.com/,https://clubfittingdirectory.com/listing/bill-flood-golf-at-newtown-golf-lab-newtown-ct
-31,seo_basics,no-h1,Gott GOLF Custom Club Fitting,Denver,CO,4.8,,(303) 345-5442,https://www.gottgolf.com/,https://clubfittingdirectory.com/listing/gott-golf-custom-club-fitting-denver-co
-31,seo_basics,no-h1,Growth GOLF,Littleton,CO,5.0,,(320) 491-6494,https://www.growthgolf.com/,https://clubfittingdirectory.com/listing/growth-golf-littleton-co
-31,seo_basics,no-h1,Jeremy Head GOLF Shop & Academy,Murfreesboro,TN,4.9,,(615) 410-7129,https://www.jeremyheadgolfshopandacademy.com/,https://clubfittingdirectory.com/listing/jeremy-head-golf-shop-academy-murfreesboro-tn
-31,seo_basics,no-meta-description,Ultimate Fit GOLF LLC,Columbia Heights,MN,5.0,,(763) 234-2223,https://www.ultimatefitgolf.com/,https://clubfittingdirectory.com/listing/ultimate-fit-golf-llc-columbia-heights-mn
-31,seo_basics,no-meta-description,GOLF Performance Academy,Clark,NJ,5.0,,(917) 763-0307,https://bettergolfperformance.com/,https://clubfittingdirectory.com/listing/golf-performance-academy-clark-nj
-31,seo_basics,no-h1,Arizona GOLF Exchange & Indoor GOLF,Tucson,AZ,4.9,,(520) 325-8526,https://www.arizonagolfexchange.com/,https://clubfittingdirectory.com/listing/arizona-golf-exchange-indoor-golf-tucson-az
-31,seo_basics,thin-title,Pebblehurst GOLF And Putter Lab,Homewood,AL,4.9,,(205) 490-1122,https://www.pebblehurst.com/,https://clubfittingdirectory.com/listing/pebblehurst-golf-and-putter-lab-homewood-al
-31,seo_basics,thin-title,The Swing Lab,Canton,MA,5.0,,(781) 422-8450,https://theswinglab.com/,https://clubfittingdirectory.com/listing/the-swing-lab-canton-ma
-31,seo_basics,no-h1,Golftrk - Lenexa,Lenexa,KS,4.8,,(913) 513-4653,https://www.golftrk.com/lenexa-ks,https://clubfittingdirectory.com/listing/golftrk-lenexa-lenexa-ks
-31,seo_basics,no-h1,GOLF Specialtees,Pittsburgh,PA,4.9,,(412) 343-2323,https://golfspecialtees.com/,https://clubfittingdirectory.com/listing/golf-specialtees-pittsburgh-pa
-31,seo_basics,no-h1,Last Best GOLF Company,Missoula,MT,5.0,,(406) 304-9892,https://www.lastbestgolfco.com/,https://clubfittingdirectory.com/listing/last-best-golf-company-missoula-mt
-31,seo_basics,"no-meta-description,no-h1",Rocky Mountain GOLF Company,Bozeman,MT,5.0,,(406) 924-6085,https://rockymountaingolfcompany.com/,https://clubfittingdirectory.com/listing/rocky-mountain-golf-company-bozeman-mt
-31,seo_basics,no-meta-description,Classic Swing GOLF School,Myrtle Beach,SC,4.8,,(843) 903-5560,https://www.classicswing.com/,https://clubfittingdirectory.com/listing/classic-swing-golf-school-myrtle-beach-sc
-31,seo_basics,"no-meta-description,no-h1",Touchet Performance GOLF,Fort Wayne,IN,4.9,,(260) 436-4535,https://touchetgolf.com/,https://clubfittingdirectory.com/listing/touchet-performance-golf-fort-wayne-in
-31,seo_basics,no-h1,Thomas Campbell GOLF,St Paul,MN,5.0,,(612) 245-5025,https://www.thomascampbellgolf.com/,https://clubfittingdirectory.com/listing/thomas-campbell-golf-st-paul-mn
-31,seo_basics,no-h1,GOLF Dynamics Performance Center,Loveland,CO,4.9,,(970) 613-9663,https://www.golfdynamics287.com/,https://clubfittingdirectory.com/listing/golf-dynamics-performance-center-loveland-co
-31,seo_basics,no-meta-description,Big Island GOLF Shop,Kailua-kona,HI,5.0,,(808) 657-4801,https://www.bigislandgolfshop.com/,https://clubfittingdirectory.com/listing/big-island-golf-shop-kailua-kona-hi
-31,seo_basics,no-meta-description,GOLF Guru,Gilbert,AZ,4.8,,(480) 568-2383,https://golfguru360.com/,https://clubfittingdirectory.com/listing/golf-guru-gilbert-az
-31,seo_basics,no-h1,The GOLF Clinic,Jupiter,FL,5.0,,(561) 972-7063,https://www.thegolfclinicfl.com/,https://clubfittingdirectory.com/listing/the-golf-clinic-jupiter-fl
-31,seo_basics,no-h1,Sandbaggerz GOLF,Coeur D'alene,ID,4.9,,(208) 665-7250,https://sandbaggerzgolf.com/,https://clubfittingdirectory.com/listing/sandbaggerz-golf-coeur-dalene-id
-31,seo_basics,"no-meta-description,no-h1",Big Mike's House Of GOLF,Hudson,FL,5.0,,(727) 378-4999,https://www.bigmikesgolf.com/,https://clubfittingdirectory.com/listing/big-mikes-house-of-golf-hudson-fl
-31,seo_basics,no-h1,Tour Proven GOLF,Colleyville,TX,5.0,,(469) 390-1300,https://www.tourprovengolf.com/,https://clubfittingdirectory.com/listing/tour-proven-golf-colleyville-tx
-31,seo_basics,no-meta-description,Flex-fit Custom GOLF,Celina,OH,5.0,,(419) 586-4260,https://www.flexfitcustomgolf.com/,https://clubfittingdirectory.com/listing/flex-fit-custom-golf-celina-oh
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF - West Maple,Omaha,NE,4.9,,(402) 614-4040,https://austads.com/pages/omaha-west-maple-store,https://clubfittingdirectory.com/listing/austads-golf-west-maple-omaha-ne
-31,seo_basics,no-viewport,Imperial GOLF Of Parkville,Kansas City,MO,5.0,,(929) 251-4653,https://www.imperialgolfkc.com/,https://clubfittingdirectory.com/listing/imperial-golf-of-parkville-kansas-city-mo
-31,seo_basics,"no-title,no-meta-description,no-h1",The GOLF Connection,Lafayette,LA,4.9,,(337) 534-0541,https://www.golfconnectionlouisiana.com/,https://clubfittingdirectory.com/listing/the-golf-connection-lafayette-la
-31,seo_basics,no-h1,Leighton Smith GOLF,Colorado Springs,CO,5.0,,(719) 223-5546,https://www.leightonsmithgolf.com/,https://clubfittingdirectory.com/listing/leighton-smith-golf-colorado-springs-co
-31,seo_basics,"no-meta-description,no-h1",S&p GOLF,Lonsdale,AR,5.0,,(501) 915-0699,https://www.snpgolf.com/,https://clubfittingdirectory.com/listing/sp-golf-lonsdale-ar
-31,seo_basics,no-h1,Newport Indoor GOLF,Portsmouth,RI,4.8,,(401) 847-1947,https://www.newportindoorgolf.com/,https://clubfittingdirectory.com/listing/newport-indoor-golf-portsmouth-ri
-31,seo_basics,"thin-title,no-viewport",Spr GOLF,Fairfield,CT,5.0,,(203) 373-5911,https://sprgolf.com/,https://clubfittingdirectory.com/listing/spr-golf-fairfield-ct
-31,seo_basics,no-h1,Grips GOLF & Club Repair LLC,Springfield,MO,4.8,,(417) 831-7888,https://www.gripsgolf.com/,https://clubfittingdirectory.com/listing/grips-golf-club-repair-llc-springfield-mo
-31,seo_basics,"no-meta-description,no-h1",GOLF Society,Carlsbad,NM,4.8,,(575) 266-4140,https://www.golfsocietynm.com/,https://clubfittingdirectory.com/listing/golf-society-carlsbad-nm
-31,seo_basics,"no-meta-description,no-viewport,no-h1",Dv Golf/akron GOLF Clubs,Akron,OH,4.8,,(330) 253-8000,https://www.dvgolf.com/,https://clubfittingdirectory.com/listing/dv-golfakron-golf-clubs-akron-oh
-31,seo_basics,no-h1,Profectus GOLF,Nashville,TN,5.0,,(615) 647-9349,https://www.profectusgolf.com/,https://clubfittingdirectory.com/listing/profectus-golf-nashville-tn
-31,seo_basics,no-meta-description,John Moldovan Professional Instruction Custom Clubs And Repair,Uniontown,OH,5.0,,(330) 844-4653,https://www.johnsgolfshop.com/,https://clubfittingdirectory.com/listing/john-moldovan-professional-instruction-custom-clubs-and-repair-uniontown-oh
-31,seo_basics,"thin-title,no-h1",Da Golflab,Sun City West,AZ,5.0,,(623) 544-6577,https://dagolflab.com/,https://clubfittingdirectory.com/listing/da-golflab-sun-city-west-az
-31,seo_basics,"thin-title,no-viewport,no-h1",Bailey & Izett INC,Ardmore,PA,4.8,,(610) 642-1887,https://www.izettgolf.com/,https://clubfittingdirectory.com/listing/bailey-izett-inc-ardmore-pa
-31,seo_basics,no-meta-description,PRO Shop At Severna Park GOLF Center,Arnold,MD,5.0,,(410) 647-8618,https://www.severnaparkgolf.com/pro-shop/,https://clubfittingdirectory.com/listing/pro-shop-at-severna-park-golf-center-arnold-md
-31,seo_basics,no-meta-description,Pacific GOLF Clubs,Riverside,CA,5.0,,(951) 686-1536,https://pacificgolfclubs.com/,https://clubfittingdirectory.com/listing/pacific-golf-clubs-riverside-ca
-31,seo_basics,"no-meta-description,no-h1",Swing Fit GOLF Club,Blue Ash,OH,4.9,,(513) 815-5855,https://swingfitgolfclub.com/,https://clubfittingdirectory.com/listing/swing-fit-golf-club-blue-ash-oh
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF - Fargo,Fargo,ND,4.8,,(701) 297-3551,https://austads.com/pages/fargo-store,https://clubfittingdirectory.com/listing/austads-golf-fargo-fargo-nd
-31,seo_basics,no-h1,Chris Cote's GOLF Shop,Portland,CT,4.9,,(860) 342-2226,https://www.chriscotegolf.com/,https://clubfittingdirectory.com/listing/chris-cotes-golf-shop-portland-ct
-31,seo_basics,no-h1,Artisan GOLF,Fort Worth,TX,4.9,,,https://www.artisangolftx.com/,https://clubfittingdirectory.com/listing/artisan-golf-fort-worth-tx
-31,seo_basics,no-h1,Above Par GOLF & Entertainment,Leonardtown,MD,5.0,,(240) 309-4208,https://www.abovepar.golf/,https://clubfittingdirectory.com/listing/above-par-golf-entertainment-leonardtown-md
-31,seo_basics,no-h1,GOLF Lessons Boston,Boston,MA,4.8,,,https://www.golflessonsboston.com/,https://clubfittingdirectory.com/listing/golf-lessons-boston-boston-ma
-31,seo_basics,no-meta-description,Par GOLF Premier Fitting & PRO Shop,Dublin,OH,4.8,,(614) 792-3553,https://www.pargolfproshop.com/,https://clubfittingdirectory.com/listing/par-golf-premier-fitting-pro-shop-dublin-oh
-31,seo_basics,"thin-title,no-meta-description,no-h1",Embers GOLF,Westminster,CO,4.9,,(303) 800-5659,https://www.embersgolf.com/,https://clubfittingdirectory.com/listing/embers-golf-westminster-co
-31,seo_basics,no-h1,All Seasons GOLF,Golden Valley,MN,5.0,,(651) 689-4653,https://allseasonsgolf.com/,https://clubfittingdirectory.com/listing/all-seasons-golf-golden-valley-mn
-31,seo_basics,no-meta-description,Fellinger Custom GOLF,Orange Park,FL,5.0,,(904) 888-1873,https://fellingercustomgolf.com/,https://clubfittingdirectory.com/listing/fellinger-custom-golf-orange-park-fl
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF Sioux City,Sioux City,IA,4.8,,(712) 587-6381,https://austads.com/pages/sioux-city-store,https://clubfittingdirectory.com/listing/austads-golf-sioux-city-sioux-city-ia
-31,seo_basics,no-meta-description,Mat Blair's GOLF Studio,La Porte,IN,5.0,,(219) 380-5289,https://matblairgolfstudio.com/,https://clubfittingdirectory.com/listing/mat-blairs-golf-studio-la-porte-in
-31,seo_basics,"no-meta-description,no-h1",Merrifield GOLF Store,Fairfax,VA,4.8,,(703) 573-7282,https://merrifieldgolf.com/,https://clubfittingdirectory.com/listing/merrifield-golf-store-fairfax-va
-31,seo_basics,no-h1,Pro-fit Pxiii Performance Club Fitting,Lincoln,NE,5.0,,(402) 730-4951,https://pxthree.com/,https://clubfittingdirectory.com/listing/pro-fit-pxiii-performance-club-fitting-lincoln-ne
-31,seo_basics,"thin-title,no-meta-description",Ace Of Clubs,Saugus,MA,5.0,,(781) 307-7815,https://www.aceofclubstp.com/,https://clubfittingdirectory.com/listing/ace-of-clubs-saugus-ma
-31,seo_basics,thin-title,De Mane GOLF,Greenwich,CT,5.0,,(203) 531-9126,https://www.demanegolf.com/,https://clubfittingdirectory.com/listing/de-mane-golf-greenwich-ct
-31,seo_basics,no-meta-description,Birdie & Blades,Monroe,NC,4.9,,(704) 283-0022,https://www.birdieandblades.com/,https://clubfittingdirectory.com/listing/birdie-blades-monroe-nc
-31,seo_basics,"no-meta-description,no-h1",Powdertown GOLF,Keokuk,IA,4.9,,(319) 526-7433,https://www.powdertowngolf.com/,https://clubfittingdirectory.com/listing/powdertown-golf-keokuk-ia
-31,seo_basics,no-h1,USA GOLF Masters,El Cajon,CA,4.8,,(619) 447-7648,https://usagolfmasters.com/,https://clubfittingdirectory.com/listing/usa-golf-masters-el-cajon-ca
-31,seo_basics,no-meta-description,GOLF Garage,Phoenix,OR,4.9,,(541) 897-9982,https://www.golfgarageoregon.com/,https://clubfittingdirectory.com/listing/golf-garage-phoenix-or
-31,seo_basics,no-h1,Lighten GOLF Club,Riverton,UT,4.9,,(385) 503-5065,https://lightengolfclub.com/,https://clubfittingdirectory.com/listing/lighten-golf-club-riverton-ut
-31,seo_basics,no-h1,Pure Science GOLF - Feather Sound,Clearwater,FL,5.0,,(727) 317-3510,https://www.puresciencegolf.com/,https://clubfittingdirectory.com/listing/pure-science-golf-feather-sound-clearwater-fl
-31,seo_basics,no-h1,Petoskey GOLF Center,Petoskey,MI,4.9,,(231) 622-8799,https://www.petoskeygolfcenter.com/,https://clubfittingdirectory.com/listing/petoskey-golf-center-petoskey-mi
-31,seo_basics,no-h1,Champion GOLF Fitting & Repair,Vancouver,WA,5.0,1,(503) 799-7600,https://championgolffitting.com/,https://clubfittingdirectory.com/listing/champion-golf-fitting-repair-vancouver-wa
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF - Cedar Rapids,Marion,IA,4.9,,(319) 826-6870,https://austads.com/pages/cedar-rapids-store,https://clubfittingdirectory.com/listing/austads-golf-cedar-rapids-marion-ia
-31,seo_basics,no-meta-description,Seth Dichard GOLF Centers,Hudson,NH,5.0,,(603) 860-9893,https://www.sethdichardgolf.com/,https://clubfittingdirectory.com/listing/seth-dichard-golf-centers-hudson-nh
-31,seo_basics,no-meta-description,Tour Striker GOLF Academy,Phoenix,AZ,5.0,,(541) 948-2480,https://tourstrikergolfacademy.com/,https://clubfittingdirectory.com/listing/tour-striker-golf-academy-phoenix-az
-31,seo_basics,no-h1,Golfinity,Austin,TX,4.8,,(512) 551-0789,https://www.golfinity.com/,https://clubfittingdirectory.com/listing/golfinity-austin-tx
-31,seo_basics,no-h1,GOLF Lab Ct,Fairfield,CT,5.0,,(475) 422-9266,https://www.golflabct.com/,https://clubfittingdirectory.com/listing/golf-lab-ct-fairfield-ct
-31,seo_basics,no-h1,Hat Creek GOLF Course,Brookneal,VA,4.9,,(434) 272-5830,https://www.hatcreekgolf.com/,https://clubfittingdirectory.com/listing/hat-creek-golf-course-brookneal-va
-31,seo_basics,"thin-title,no-meta-description",Unique GOLF,West Islip,NY,4.8,,(631) 422-6431,https://uniquegolfshop.com/,https://clubfittingdirectory.com/listing/unique-golf-west-islip-ny
-31,seo_basics,no-meta-description,Dd Custom GOLF,Mohegan Lake,NY,4.8,,(914) 715-8486,https://ddcustomgolf.com/,https://clubfittingdirectory.com/listing/dd-custom-golf-mohegan-lake-ny
-31,seo_basics,"thin-title,no-meta-description",Tru-fit GOLF,Louisville,CO,5.0,,(303) 886-1097,https://tru-fitgolf.com/about-us,https://clubfittingdirectory.com/listing/tru-fit-golf-louisville-co
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF Omaha Westwood,Omaha,NE,4.9,,(402) 758-7000,https://austads.com/pages/omaha-westwood-store,https://clubfittingdirectory.com/listing/austads-golf-omaha-westwood-omaha-ne
-31,seo_basics,no-h1,Barla GOLF Academy,Noblesville,IN,5.0,,(317) 210-3499,https://www.barlagolfacademy.com/,https://clubfittingdirectory.com/listing/barla-golf-academy-noblesville-in
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF - Rapid City,Rapid City,SD,4.8,,(605) 791-1951,https://austads.com/pages/rapid-city-store,https://clubfittingdirectory.com/listing/austads-golf-rapid-city-rapid-city-sd
-31,seo_basics,no-h1,My Chicago GOLF,Chicago,IL,4.9,,(773) 683-1816,https://www.mychicagogolf.com/,https://clubfittingdirectory.com/listing/my-chicago-golf-chicago-il
-31,seo_basics,"thin-title,no-meta-description,no-h1",Jeko GOLF,Los Angeles,CA,5.0,,(323) 348-2114,https://www.jeko.golf/,https://clubfittingdirectory.com/listing/jeko-golf-los-angeles-ca
-31,seo_basics,"thin-title,no-meta-description,no-h1",Alex Black GOLF Instruction,Mesa,AZ,5.0,,(480) 861-5694,https://alexblackgolf.com/,https://clubfittingdirectory.com/listing/alex-black-golf-instruction-mesa-az
-31,seo_basics,no-h1,Mr. GOLF,De Pere,WI,4.8,,(920) 338-9535,https://www.mrgolf.net/,https://clubfittingdirectory.com/listing/mr-golf-de-pere-wi
-31,seo_basics,no-meta-description,Ken Schall GOLF Performance,West Des Moines,IA,4.8,,(515) 528-2054,https://kenschallgolf.com/,https://clubfittingdirectory.com/listing/ken-schall-golf-performance-west-des-moines-ia
-31,seo_basics,no-h1,The GOLF Emporium,Owensboro,KY,5.0,,(270) 631-7888,https://golfemporiumowensboro.com/,https://clubfittingdirectory.com/listing/the-golf-emporium-owensboro-ky
-31,seo_basics,no-h1,GOLF Country INC,Kimball,MI,4.8,,(810) 364-9160,https://golfcountryonline.com/,https://clubfittingdirectory.com/listing/golf-country-inc-kimball-mi
-31,seo_basics,no-h1,Swing Tech GOLF,Bluffton,SC,5.0,,(843) 941-4111,https://swingtechgolf.org/,https://clubfittingdirectory.com/listing/swing-tech-golf-bluffton-sc
-31,seo_basics,no-meta-description,Impact Precision GOLF,Spring,TX,4.9,,(713) 389-5366,https://www.impactprecisiongolf.com/,https://clubfittingdirectory.com/listing/impact-precision-golf-spring-tx
-31,seo_basics,no-meta-description,Aulenti GOLF Club Fitting Studio,Stamford,CT,4.8,,(203) 329-2067,https://sterlingfarmsgolfshop.net/clubfitting.html,https://clubfittingdirectory.com/listing/aulenti-golf-club-fitting-studio-stamford-ct
-31,seo_basics,no-h1,Stripe Show Club Fitters,Dallas,TX,5.0,,(214) 454-4749,https://www.sscfdtx.com/,https://clubfittingdirectory.com/listing/stripe-show-club-fitters-dallas-tx
-31,seo_basics,"thin-title,no-h1",Golfrx,Louisville,CO,5.0,,(817) 694-7280,https://golfrx.info/,https://clubfittingdirectory.com/listing/golfrx-louisville-co
-31,seo_basics,"no-title,no-meta-description,no-h1",Apexgolf Instruction,Draper,UT,4.9,,(385) 253-7390,https://www.apexgolfinstruction.com/draper,https://clubfittingdirectory.com/listing/apexgolf-instruction-draper-ut
-31,seo_basics,thin-title,Spillman GOLF LLC,Berea,KY,5.0,,(859) 893-9849,https://spillmangolf.com/,https://clubfittingdirectory.com/listing/spillman-golf-llc-berea-ky
-31,seo_basics,no-meta-description,Allvictorygolf,Kent,WA,5.0,,(206) 432-0908,https://www.victorygolfandrepair.com/,https://clubfittingdirectory.com/listing/allvictorygolf-kent-wa
-31,seo_basics,no-h1,Ferguson GOLF Institute,Churchville,MD,4.8,,(410) 879-5497,https://www.fgigolf.com/,https://clubfittingdirectory.com/listing/ferguson-golf-institute-churchville-md
-31,seo_basics,"no-meta-description,no-h1",Golfletics Performance Center,Coralville,IA,4.9,,(319) 569-1240,https://www.begolfletic.com/,https://clubfittingdirectory.com/listing/golfletics-performance-center-coralville-ia
-31,seo_basics,"no-meta-description,no-viewport,no-h1",The Hangar Club,Denver,CO,4.9,,(720) 500-1141,https://hangarclub.co/,https://clubfittingdirectory.com/listing/the-hangar-club-denver-co
-31,seo_basics,no-h1,Jeff Goble GOLF Inc.,Plymouth,MI,5.0,,(734) 604-9919,https://jeffgoblegolf.com/,https://clubfittingdirectory.com/listing/jeff-goble-golf-inc-plymouth-mi
-31,seo_basics,"thin-title,no-meta-description,no-h1",GOLF Shop,Mooresville,NC,5.0,,(704) 799-0797,https://www.golfshopnc.com/,https://clubfittingdirectory.com/listing/golf-shop-mooresville-nc
-31,seo_basics,"thin-title,no-meta-description,no-h1",GOLF Nv,Reno,NV,4.9,,(775) 800-1600,https://www.golfnvreno.com/?y_source=1_NjQyMTg0MzEtNzE1LWxvY2F0aW9uLndlYnNpdGU=,https://clubfittingdirectory.com/listing/golf-nv-reno-nv
-31,seo_basics,"no-meta-description,no-h1",Austad's GOLF - Des Moines,West Des Moines,IA,5.0,,(515) 664-8015,https://austads.com/pages/des-moines-golf-store,https://clubfittingdirectory.com/listing/austads-golf-des-moines-west-des-moines-ia
-31,seo_basics,no-meta-description,Elevate GOLF Performance Center,Cornelius,NC,4.8,,(704) 512-9284,https://www.elevategolfperformancecenter.com/,https://clubfittingdirectory.com/listing/elevate-golf-performance-center-cornelius-nc
-31,seo_basics,"thin-title,no-h1",Parfit GOLF,Metamora,MI,5.0,,(313) 663-1414,https://parfitgolf.com/,https://clubfittingdirectory.com/listing/parfit-golf-metamora-mi
-31,seo_basics,no-h1,Big Screen GOLF,Pottstown,PA,5.0,,(610) 600-4653,https://www.bigscreengolf.com/,https://clubfittingdirectory.com/listing/big-screen-golf-pottstown-pa
-31,seo_basics,"no-title,no-meta-description",Lou Guzzi GOLF Academy,Ambler,PA,4.8,,,https://louguzzi.com/,https://clubfittingdirectory.com/listing/lou-guzzi-golf-academy-ambler-pa
-31,seo_basics,thin-title,Spargo GOLF,Providence,RI,4.9,,(401) 946-4653,https://www.spargogolf.com/,https://clubfittingdirectory.com/listing/spargo-golf-providence-ri
-31,seo_basics,no-h1,Justin Hill GOLF Academy,Little Rock,AR,5.0,,(214) 542-7613,https://www.justinhillgolf.com/,https://clubfittingdirectory.com/listing/justin-hill-golf-academy-little-rock-ar
-31,seo_basics,no-h1,Chris Cote's Performance Center,Portland,CT,5.0,,(860) 316-3106,https://www.chriscotegolf.com/pages/toptracer-range-in-portland,https://clubfittingdirectory.com/listing/chris-cotes-performance-center-portland-ct
-31,seo_basics,no-h1,Tilbury GOLF Academy,Fremont,IN,5.0,,(260) 667-1159,https://tilburygolfacademy.com/,https://clubfittingdirectory.com/listing/tilbury-golf-academy-fremont-in
-31,seo_basics,no-h1,Mclam GOLF Academy,Orem,UT,5.0,,(801) 230-9279,https://mclamgolf.com/,https://clubfittingdirectory.com/listing/mclam-golf-academy-orem-ut
-31,seo_basics,no-meta-description,Larry Hamilton GOLF,Rochester,MI,4.8,,(248) 605-2201,https://www.larryhamiltongolf.com/,https://clubfittingdirectory.com/listing/larry-hamilton-golf-rochester-mi
-31,seo_basics,no-h1,GOLF 360,Manchester,NH,5.0,,(603) 289-0715,https://www.golf360academy.com/,https://clubfittingdirectory.com/listing/golf-360-manchester-nh
-31,seo_basics,no-h1,Bluegrass GOLF Academy,Lexington,KY,5.0,,(859) 321-7825,https://bluegrassgolfacademy.com/,https://clubfittingdirectory.com/listing/bluegrass-golf-academy-lexington-ky
-31,seo_basics,thin-title,Ready GOLF Teaching And Club Fitting Center,Laconia,NH,5.0,,(603) 524-2929,https://readygolfcenter.com/,https://clubfittingdirectory.com/listing/ready-golf-teaching-and-club-fitting-center-laconia-nh
-31,seo_basics,no-h1,Tdgolf Studio,Herndon,VA,5.0,,(703) 498-0690,https://www.tdgolfstudio.com/,https://clubfittingdirectory.com/listing/tdgolf-studio-herndon-va
-31,seo_basics,"thin-title,no-meta-description",Saint's GOLF,Tinley Park,IL,4.9,,(708) 342-1111,https://www.golfsaints.com/,https://clubfittingdirectory.com/listing/saints-golf-tinley-park-il
-31,seo_basics,"no-meta-description,no-h1",White Rose GOLF And Training Center - Lancaster,Lancaster,PA,5.0,,(717) 869-5865,https://www.lancasterindoorgolf.com/,https://clubfittingdirectory.com/listing/white-rose-golf-and-training-center-lancaster-lancaster-pa
-31,seo_basics,"no-title,no-meta-description,no-h1",Xfit GOLF Lab,Fort Lee,NJ,5.0,,(201) 503-5638,https://calendar.app.google/sLw2hQ312eMYoc6G6,https://clubfittingdirectory.com/listing/xfit-golf-lab-fort-lee-nj
-31,seo_basics,no-h1,Wallace GOLF Academy,Chambersburg,PA,5.0,,(717) 263-8296,https://www.wallacegolfshop.com/collections/golf-academy,https://clubfittingdirectory.com/listing/wallace-golf-academy-chambersburg-pa
-31,seo_basics,no-h1,Gott GOLF Custom Club Fitting,Lakewood,CO,4.8,,(303) 345-5442,https://www.gottgolf.com/locations/lakewood,https://clubfittingdirectory.com/listing/gott-golf-custom-club-fitting-lakewood-co
-31,seo_basics,"thin-title,no-meta-description",Jj GOLF Studio,Ellicott City,MD,4.8,,(410) 465-9009,https://jj-golf.com/,https://clubfittingdirectory.com/listing/jj-golf-studio-ellicott-city-md
-31,seo_basics,no-h1,Felix Clubworks,Collierville,TN,5.0,,(901) 268-7544,https://www.felixclubworks.com/,https://clubfittingdirectory.com/listing/felix-clubworks-collierville-tn
-31,seo_basics,"thin-title,no-meta-description",Continental GOLF,Raleigh,NC,4.9,,(919) 833-8887,https://www.continentalgolf.net/,https://clubfittingdirectory.com/listing/continental-golf-raleigh-nc
-31,seo_basics,no-h1,Fairhope GOLF Works,Fairhope,AL,5.0,,(425) 218-4218,https://fairhopegolfworks.com/,https://clubfittingdirectory.com/listing/fairhope-golf-works-fairhope-al
-31,seo_basics,no-h1,Malone GOLF Academy,Old Hickory,TN,4.9,,(615) 268-6863,https://malonegolfacademy.com/,https://clubfittingdirectory.com/listing/malone-golf-academy-old-hickory-tn
-31,seo_basics,"no-meta-description,no-h1",Usher GOLF,Savannah,GA,5.0,,(912) 303-9650,https://www.chipandputt.com/,https://clubfittingdirectory.com/listing/usher-golf-savannah-ga
-31,seo_basics,no-h1,The Turn,White Hall,WV,4.9,,(304) 816-3081,https://www.theturnwv.com/,https://clubfittingdirectory.com/listing/the-turn-white-hall-wv
-31,seo_basics,no-meta-description,Hhi GOLF Shoppe,Hilton Head Island,SC,4.9,,(843) 715-0427,https://hhigolfshoppe.com/,https://clubfittingdirectory.com/listing/hhi-golf-shoppe-hilton-head-island-sc
-31,seo_basics,"no-meta-description,no-h1",Wedges And Woods,Augusta,GA,4.8,,(706) 854-0360,https://wedgesandwoods.com/,https://clubfittingdirectory.com/listing/wedges-and-woods-augusta-ga
-31,seo_basics,no-h1,Indoor GOLF At Chris Cote's GOLF Shop,Portland,CT,4.9,,(860) 342-2226,https://www.chriscotegolf.com/pages/book-indoor-golf,https://clubfittingdirectory.com/listing/indoor-golf-at-chris-cotes-golf-shop-portland-ct
-31,seo_basics,no-h1,Play Better GOLF Academy,Addison,IL,4.9,,(847) 436-1652,https://www.playbettergolfacademy.com/,https://clubfittingdirectory.com/listing/play-better-golf-academy-addison-il
-31,seo_basics,"no-meta-description,no-h1",First Tee GOLF Shop,Goldsboro,NC,4.9,,(919) 778-7963,https://www.firstteegolfshop.com/,https://clubfittingdirectory.com/listing/first-tee-golf-shop-goldsboro-nc
-31,seo_basics,thin-title,PRO Link GOLF,Wichita,KS,4.9,,(316) 262-3131,https://www.prolinkgolfwichita.net/,https://clubfittingdirectory.com/listing/pro-link-golf-wichita-ks
-31,seo_basics,no-meta-description,Tour Truck GOLF,Hickory,NC,5.0,,(828) 855-2993,https://tourtruck.golf/,https://clubfittingdirectory.com/listing/tour-truck-golf-hickory-nc
-31,seo_basics,thin-title,The GOLF Room,Dublin,OH,4.9,,(614) 747-5006,https://www.thegolfroom.com/,https://clubfittingdirectory.com/listing/the-golf-room-dublin-oh
-31,seo_basics,"no-title,no-meta-description,no-viewport,no-h1",The GOLF Performance Center At Westhaven,Franklin,TN,5.0,,(615) 599-4420,https://www.golfperformancecenterwesthaven.com/,https://clubfittingdirectory.com/listing/the-golf-performance-center-at-westhaven-franklin-tn
-31,seo_basics,no-h1,Ferguson GOLF Institute,Forest Hill,MD,5.0,,(443) 981-1648,https://www.fgigolf.com/,https://clubfittingdirectory.com/listing/ferguson-golf-institute-forest-hill-md
+41,none,,Golf Mart - Walnut Creek,WALNUT CREEK,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-walnut-creek-walnut-creek-ca
+41,none,,GOLFTEC Cypress,Houston,TX,,,346 666 7005,,https://clubfittingdirectory.com/listing/golftec-cypress-houston-tx
+41,none,,Golf Stuff,DUNDEE,FL,,,,,https://clubfittingdirectory.com/listing/golf-stuff-dundee-fl
+41,none,,Short Game LLC,CASTROVILLE,TX,,,,,https://clubfittingdirectory.com/listing/short-game-llc-castroville-tx
+41,none,,Golf Mart - San Diego,SAN DIEGO,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-san-diego-san-diego-ca
+41,none,,Ancil Hoffman Golf Shop,CARMICHAEL,CA,,,916-482-3813,,https://clubfittingdirectory.com/listing/ancil-hoffman-golf-shop-carmichael-ca
+41,none,,True Spec Golf - Tampa Bay,Belleair,FL,,,,,https://clubfittingdirectory.com/listing/true-spec-golf-tampa-bay-belleair-fl
+41,none,,Vans Pro Shop-Avondale,AVONDALE,AZ,,,(623)935-9351,,https://clubfittingdirectory.com/listing/vans-pro-shop-avondale-avondale-az
+41,none,,Golf Galaxy - San Jose,SAN JOSE,CA,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-san-jose-san-jose-ca
+41,none,,Edwin Watts - San Antonio,SAN ANTONIO,TX,,,(210) 822-4060,,https://clubfittingdirectory.com/listing/edwin-watts-san-antonio-san-antonio-tx
+41,none,,GolfTEC Pleasanton,PLEASANTON,CA,,,,,https://clubfittingdirectory.com/listing/golftec-pleasanton-pleasanton-ca
+41,none,,Golf Mart - Del Mar,DEL MAR,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-del-mar-del-mar-ca
+41,none,,PGA Tour Superstore Orlando,ORLANDO,FL,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-orlando-orlando-fl
+41,none,,Golf Mart - South San Francisco,SOUTH SAN FRANCISCO,CA,,,650-583-4653,,https://clubfittingdirectory.com/listing/golf-mart-south-san-francisco-south-san-francisco-ca
+41,none,,Summit Golf School LLC,Spring,TX,,,281-516-1002,,https://clubfittingdirectory.com/listing/summit-golf-school-llc-spring-tx
+41,none,,Edwin Watts - Orlando,ORLANDO,FL,,,,,https://clubfittingdirectory.com/listing/edwin-watts-orlando-orlando-fl
+41,none,,Roger Dunn - Seal Beach,SEAL BEACH,CA,,,,,https://clubfittingdirectory.com/listing/roger-dunn-seal-beach-seal-beach-ca
+41,none,,Fore Some Sports LLC,BRADENTON,FL,,,19417942345,,https://clubfittingdirectory.com/listing/fore-some-sports-llc-bradenton-fl
+41,none,,Reid West Golf Academies,SUN CITY WEST,AZ,,,6236874333,,https://clubfittingdirectory.com/listing/reid-west-golf-academies-sun-city-west-az
+41,none,,Cool Clubs,Irvine,CA,,,,,https://clubfittingdirectory.com/listing/cool-clubs-irvine-ca
+41,none,,GolfTEC Mission Valley #110,SAN DIEGO,CA,,,,,https://clubfittingdirectory.com/listing/golftec-mission-valley-110-san-diego-ca
+41,none,,PGA Tour Superstore N. Scottsdale,PHOENIX,AZ,,,602-777-6380,,https://clubfittingdirectory.com/listing/pga-tour-superstore-n-scottsdale-phoenix-az
+41,none,,MK Golf Technologies,SAN ANTONIO,TX,,,,,https://clubfittingdirectory.com/listing/mk-golf-technologies-san-antonio-tx
+41,none,,Edwin Watts - St Simons Island,ST SIMONS ISLAND,GA,,,,,https://clubfittingdirectory.com/listing/edwin-watts-st-simons-island-st-simons-island-ga
+41,none,,Hornacek's House Of Golf,SCOTTSDALE,AZ,,,,,https://clubfittingdirectory.com/listing/hornacek-s-house-of-golf-scottsdale-az
+41,none,,Roger Dunn - North Hollywood,NORTH HOLLYWOOD,CA,,,818-763-3622,,https://clubfittingdirectory.com/listing/roger-dunn-north-hollywood-north-hollywood-ca
+41,none,,Club Champion,Brandon,FL,,,,,https://clubfittingdirectory.com/listing/club-champion-brandon-fl
+41,none,,GolfTEC Oxnard,OXNARD,CA,,,,,https://clubfittingdirectory.com/listing/golftec-oxnard-oxnard-ca
+41,none,,The Golf Ranch,GEORGETOWN,TX,,,512-863-4573,,https://clubfittingdirectory.com/listing/the-golf-ranch-georgetown-tx
+41,none,,Golf Galaxy - Sacramento,ROSEVILLE,CA,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-sacramento-roseville-ca
+41,none,,GolfTEC Pasedena,PASADENA,CA,,,,,https://clubfittingdirectory.com/listing/golftec-pasedena-pasadena-ca
+41,none,,GOLFTEC North Miami Beach,Miami,FL,,,786 891 4779,,https://clubfittingdirectory.com/listing/golftec-north-miami-beach-miami-fl
+41,none,,Wood Hollow Range Pro Shop,LONGVIEW,TX,,,903-663-0036,,https://clubfittingdirectory.com/listing/wood-hollow-range-pro-shop-longview-tx
+41,none,,Summit Golf School LLC,Spring,TX,,,832-639-8111,,https://clubfittingdirectory.com/listing/summit-golf-school-llc-spring-tx-2
+41,none,,GolfTEC,EL PASO,TX,,,915-308-0880,,https://clubfittingdirectory.com/listing/golftec-el-paso-tx
+41,none,,PGA Tour Superstore Tampa,TAMPA,FL,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-tampa-tampa-fl
+41,none,,Club Champion,The Villages,FL,,,,,https://clubfittingdirectory.com/listing/club-champion-the-villages-fl
+41,none,,Golf Headquarters,AMARILLO,TX,,,,,https://clubfittingdirectory.com/listing/golf-headquarters-amarillo-tx
+41,none,,GolfTEC Woodland Hills,WOODLAND HILLS,CA,,,,,https://clubfittingdirectory.com/listing/golftec-woodland-hills-woodland-hills-ca
+41,none,,GolfTEC Irvine,IRVINE,CA,,,,,https://clubfittingdirectory.com/listing/golftec-irvine-irvine-ca
+41,none,,Roger Dunn - Indio,INDIO,CA,,,,,https://clubfittingdirectory.com/listing/roger-dunn-indio-indio-ca
+41,none,,Vans - Sun City,SUN CITY,AZ,,,,,https://clubfittingdirectory.com/listing/vans-sun-city-sun-city-az
+41,none,,GolfTEC Tucson,TUCSON,AZ,,,,,https://clubfittingdirectory.com/listing/golftec-tucson-tucson-az
+41,none,,Golf Galaxy - Naples,NAPLES,FL,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-naples-naples-fl
+41,none,,Golf Galaxy - Chandler,CHANDLER,AZ,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-chandler-chandler-az
+41,none,,Golf Fore Less,Rome,GA,,,706-802-0042,,https://clubfittingdirectory.com/listing/golf-fore-less-rome-ga-2
+41,none,,Fairway Golf Shop,San Diego,CA,,,858-268-1702,,https://clubfittingdirectory.com/listing/fairway-golf-shop-san-diego-ca
+41,none,,Edwin Watts - Doral,DORAL,FL,,,(305)591-1220,,https://clubfittingdirectory.com/listing/edwin-watts-doral-doral-fl
+41,none,,Vans - Gilbert,GILBERT,AZ,,,,,https://clubfittingdirectory.com/listing/vans-gilbert-gilbert-az
+41,none,,Nxgen Golf,SARASOTA,FL,,,941.278.1170,,https://clubfittingdirectory.com/listing/nxgen-golf-sarasota-fl
+41,none,,GolfTEC Southlake,SOUTHLAKE,TX,,,,,https://clubfittingdirectory.com/listing/golftec-southlake-southlake-tx
+41,none,,Club Champion,Houston,TX,,,,,https://clubfittingdirectory.com/listing/club-champion-houston-tx
+41,none,,GolfTEC Sarasota,LAKEWOOD RANCH,FL,,,,,https://clubfittingdirectory.com/listing/golftec-sarasota-lakewood-ranch-fl
+41,none,,Club Champion,Jacksonville,FL,,,,,https://clubfittingdirectory.com/listing/club-champion-jacksonville-fl
+41,none,,PGA Tour Superstore Houston,HOUSTON,TX,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-houston-houston-tx
+41,none,,Golf Galaxy - Katy,KATY,TX,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-katy-katy-tx
+41,none,,Edwin Watts - Destin,DESTIN,FL,,,8506540363,,https://clubfittingdirectory.com/listing/edwin-watts-destin-destin-fl
+41,none,,Edwin Watts - Jacksonville,JACKSONVILLE,FL,,,,,https://clubfittingdirectory.com/listing/edwin-watts-jacksonville-jacksonville-fl
+41,none,,Roger Dunn Golf Visalia,Visalia,CA,,,5597341385,,https://clubfittingdirectory.com/listing/roger-dunn-golf-visalia-visalia-ca
+41,none,,Moon Golf,MELBOURNE,FL,,,,,https://clubfittingdirectory.com/listing/moon-golf-melbourne-fl
+41,none,,Desert Princess Golf Shop,Cathedral City,CA,,,760.322.2280,,https://clubfittingdirectory.com/listing/desert-princess-golf-shop-cathedral-city-ca
+41,none,,Vans - Tucson (crossroads),TUCSON,AZ,,,,,https://clubfittingdirectory.com/listing/vans-tucson-crossroads-tucson-az
+41,none,,Cool Clubs,The Colony,TX,,,,,https://clubfittingdirectory.com/listing/cool-clubs-the-colony-tx
+41,none,,Golf Galaxy - Sarasota,SARASOTA,FL,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-sarasota-sarasota-fl
+41,none,,Sunday Swing LLC,MORAGA,CA,,,925-257-2264,,https://clubfittingdirectory.com/listing/sunday-swing-llc-moraga-ca
+41,none,,Club Champion,Blackhawk,CA,,,,,https://clubfittingdirectory.com/listing/club-champion-blackhawk-ca
+41,none,,Roger Dunn - Riverside,RIVERSIDE,CA,,,,,https://clubfittingdirectory.com/listing/roger-dunn-riverside-riverside-ca
+41,none,,PGA Tour Superstore Chandler,CHANDLER,AZ,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-chandler-chandler-az
+41,none,,GolfTEC Fort Worth,FORT WORTH,TX,,,,,https://clubfittingdirectory.com/listing/golftec-fort-worth-fort-worth-tx
+41,none,,The Golf Exchange,TORRANCE,CA,,,,,https://clubfittingdirectory.com/listing/the-golf-exchange-torrance-ca
+41,none,,Golf Mart - Encinitas,ENCINITAS,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-encinitas-encinitas-ca
+41,none,,PGA Tour Superstore Sarasota,UNIVERSITY PARK,FL,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-sarasota-university-park-fl
+41,none,,GolfTEC Studio City,STUDIO CITY,CA,,,,,https://clubfittingdirectory.com/listing/golftec-studio-city-studio-city-ca
+41,none,,GolfTEC Plano,PLANO,TX,,,,,https://clubfittingdirectory.com/listing/golftec-plano-plano-tx
+41,none,,GolfTEC Foster City,FOSTER CITY,CA,,,,,https://clubfittingdirectory.com/listing/golftec-foster-city-foster-city-ca
+41,none,,Meadow Club,FAIRFAX,CA,,,,,https://clubfittingdirectory.com/listing/meadow-club-fairfax-ca
+41,none,,Golf Mart - Carlsbad,CARLSBAD,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-carlsbad-carlsbad-ca
+41,none,,Gary Player Golf - The Refinery,THE WOODLANDS,TX,,,,,https://clubfittingdirectory.com/listing/gary-player-golf-the-refinery-the-woodlands-tx
+41,none,,Golf Galaxy - Atlanta,ATLANTA,GA,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-atlanta-atlanta-ga
+41,none,,Club Champion,Bradenton,FL,,,,,https://clubfittingdirectory.com/listing/club-champion-bradenton-fl
+41,none,,Cool Clubs,SCOTTSDALE,AZ,,,,,https://clubfittingdirectory.com/listing/cool-clubs-scottsdale-az
+41,none,,True Spec Golf - North Georgia,Cartersville,GA,,,,,https://clubfittingdirectory.com/listing/true-spec-golf-north-georgia-cartersville-ga
+41,none,,Club Champion,Buford,GA,,,,,https://clubfittingdirectory.com/listing/club-champion-buford-ga
+41,none,,True Spec Golf - Dallas-Fort Worth,Irving,TX,,,,,https://clubfittingdirectory.com/listing/true-spec-golf-dallas-fort-worth-irving-tx
+41,none,,True Spec Golf - Ponte Vedra,Jacksonville,FL,,,,,https://clubfittingdirectory.com/listing/true-spec-golf-ponte-vedra-jacksonville-fl
+41,none,,Roger Dunn - Mission Viejo,MISSION VIEJO,CA,,,,,https://clubfittingdirectory.com/listing/roger-dunn-mission-viejo-mission-viejo-ca
+41,none,,Club Champion,Miami,FL,,,,,https://clubfittingdirectory.com/listing/club-champion-miami-fl
+41,none,,The Caddie Golf Shop LLC,Bryan,TX,,,979-776-4653,,https://clubfittingdirectory.com/listing/the-caddie-golf-shop-llc-bryan-tx
+41,none,,Club Champion,San Jose,CA,,,,,https://clubfittingdirectory.com/listing/club-champion-san-jose-ca
+41,none,,2nd Swing PGA Coaching Center,Frisco,TX,,,469-701-1775,,https://clubfittingdirectory.com/listing/2nd-swing-pga-coaching-center-frisco-tx
+41,none,,The Rim Club,PAYSON,AZ,,,,,https://clubfittingdirectory.com/listing/the-rim-club-payson-az
+41,none,,PGA Tour Superstore Altamonte Sprin,ALTAMONTE SPRINGS,FL,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-altamonte-sprin-altamonte-springs-fl
+41,none,,Golf Galaxy - The Woodlands,SPRING,TX,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-the-woodlands-spring-tx
+41,none,,Club Champion,Delray Beach,FL,,,,,https://clubfittingdirectory.com/listing/club-champion-delray-beach-fl
+41,none,,Golf Mart - Dublin,DUBLIN,CA,,,,,https://clubfittingdirectory.com/listing/golf-mart-dublin-dublin-ca
+41,none,,Golf Galaxy - Glendale,PEORIA,AZ,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-glendale-peoria-az
+41,none,,GOLFTEC Boca Raton,Boca Raton,FL,,,561 483 4180,,https://clubfittingdirectory.com/listing/golftec-boca-raton-boca-raton-fl
+41,none,,Club Champion,San Carlos,CA,,,,,https://clubfittingdirectory.com/listing/club-champion-san-carlos-ca
+41,none,,Stripe Show Club Fitters,LUBBOCK,TX,,,8062528347,,https://clubfittingdirectory.com/listing/stripe-show-club-fitters-lubbock-tx
+41,none,,Edwin Watts - Martinez,Augusta,GA,,,,,https://clubfittingdirectory.com/listing/edwin-watts-martinez-augusta-ga
+41,none,,PGA Tour Superstore Jacksonville,JACKSONVILLE,FL,,,,,https://clubfittingdirectory.com/listing/pga-tour-superstore-jacksonville-jacksonville-fl
+41,none,,Edwin Watts - Villages,THE VILLAGES,FL,,,,,https://clubfittingdirectory.com/listing/edwin-watts-villages-the-villages-fl
+41,none,,Edwin Watts - Palm Harbor,PALM HARBOR,FL,,,,,https://clubfittingdirectory.com/listing/edwin-watts-palm-harbor-palm-harbor-fl
+41,none,,Meadowbrook Farms Lp,KATY,TX,,,281-693-4653,,https://clubfittingdirectory.com/listing/meadowbrook-farms-lp-katy-tx
+41,none,,Golf Galaxy - Dallas-Arlington,ARLINGTON,TX,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-dallas-arlington-arlington-tx
+41,none,,2nd Swing Scottsdale South,SCOTTSDALE,AZ,,,,,https://clubfittingdirectory.com/listing/2nd-swing-scottsdale-south-scottsdale-az
+41,none,,GolfTEC St Petersburg,ST PETERSBURG,FL,,,,,https://clubfittingdirectory.com/listing/golftec-st-petersburg-st-petersburg-fl
+41,none,,Cool Clubs,Cartersville,GA,,,,,https://clubfittingdirectory.com/listing/cool-clubs-cartersville-ga
+41,none,,Golf Galaxy - Baybrook,FRIENDSWOOD,TX,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-baybrook-friendswood-tx
+41,none,,Stanford University,Stanford,CA,,,6507240944,,https://clubfittingdirectory.com/listing/stanford-university-stanford-ca
+41,none,,Golf Galaxy - Galleria,HOUSTON,TX,,,,,https://clubfittingdirectory.com/listing/golf-galaxy-galleria-houston-tx
