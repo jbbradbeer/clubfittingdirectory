@@ -13,9 +13,9 @@ import { CAL_FOUNDING_CALL_URL, SITE_URL } from "@/lib/constants"
 import { FREE_PERKS, SERVICE_TIERS } from "@/lib/plans"
 
 export const metadata: Metadata = {
-  title: "For Shop Owners — Free Verified Listing & Featured Placement",
+  title: "For Shop Owners",
   description:
-    "Claim your listing free, get hand-verified, and the Verified badge golfers trust goes on your shop — no charge. Upgrade to Featured for top placement, AI search optimization, and a 6,600-golfer newsletter. $49/month or $499/year.",
+    "Claim your listing free and earn the hand-checked Verified badge golfers trust. Upgrade to Featured for top placement — $49/month or $499/year.",
   alternates: { canonical: `${SITE_URL}/for-shops` },
   openGraph: {
     title: "For Shop Owners — Free Verified Listing & Featured Placement",

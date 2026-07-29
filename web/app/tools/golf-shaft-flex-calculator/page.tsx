@@ -11,9 +11,9 @@ import { DIRECTORY_YEAR } from "@/lib/seo-content"
 const TITLE = `Golf Shaft Flex Calculator — What Flex Do I Need? (${DIRECTORY_YEAR})`
 
 export const metadata: Metadata = {
-  title: { absolute: `${TITLE} | Club Fitting Directory` },
+  title: { absolute: TITLE },
   description:
-    "Free golf shaft flex calculator. Enter your driver swing speed or carry distance to see whether you need ladies, senior, regular, stiff, or extra stiff — and when tempo changes the answer.",
+    "Free golf shaft flex calculator. Enter your driver swing speed or carry distance to see whether you need ladies, senior, regular, stiff, or extra stiff.",
   alternates: { canonical: `${SITE_URL}/tools/golf-shaft-flex-calculator` },
 }
 

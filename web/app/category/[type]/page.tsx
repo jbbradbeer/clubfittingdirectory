@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     // Year-stamped comparison format — the same treatment as state/city pages
     // (it's the format that wins both Google SERPs and AI citations).
-    title: { absolute: `Top ${label} in the US for ${DIRECTORY_YEAR} | Compare Tech & Pricing` },
+    title: { absolute: `Top ${label} in the US for ${DIRECTORY_YEAR}` },
     description: `Compare ${label.toLowerCase()} across the US — ratings, fitting prices, launch monitor tech, and independent vs chain. Updated ${LAST_UPDATED_LABEL}.`,
     alternates: { canonical: `${SITE_URL}/category/${slug}` },
   }

@@ -102,6 +102,8 @@ export function ResultsGrid({
 
   return (
     <div>
+      {/* Cards render as H3 — this keeps the H1→H2→H3 ladder intact */}
+      <h2 className="sr-only">Directory results</h2>
       {/* Almanac result header — tabular counts */}
       <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-[var(--color-line)] pb-3">
         <p className="text-sm text-[var(--color-charcoal-light)]">

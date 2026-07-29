@@ -7,7 +7,7 @@ import { SITE_URL } from "@/lib/constants"
 export const metadata: Metadata = {
   title: "Newsletter — The Tuxedo Collective",
   description:
-    "Join The Tuxedo Collective: a free weekly newsletter on the fittings, gear, and stories behind private club golf — from the team behind the Club Fitting Directory.",
+    "Join The Tuxedo Collective: a free weekly newsletter on the fittings, gear, and stories behind private club golf.",
   alternates: { canonical: `${SITE_URL}/newsletter` },
   openGraph: {
     title: "The Tuxedo Collective — Private Club Golf, Explained",
@@ -73,7 +73,7 @@ export default function NewsletterPage() {
                 <IconCircle size="lg" className="mb-5">
                   {r.icon}
                 </IconCircle>
-                <h3 className="text-xl font-bold text-[var(--color-charcoal)]">{r.title}</h3>
+                <h2 className="text-xl font-bold text-[var(--color-charcoal)]">{r.title}</h2>
                 <p className="mt-2 text-[var(--color-charcoal-light)] leading-relaxed">{r.body}</p>
               </div>
             ))}

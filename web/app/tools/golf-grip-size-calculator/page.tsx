@@ -11,9 +11,9 @@ import { DIRECTORY_YEAR } from "@/lib/seo-content"
 const TITLE = `Golf Grip Size Calculator — Hand Measurement Chart (${DIRECTORY_YEAR})`
 
 export const metadata: Metadata = {
-  title: { absolute: `${TITLE} | Club Fitting Directory` },
+  title: { absolute: TITLE },
   description:
-    "Free golf grip size calculator. Measure your hand and middle finger to find your grip size — undersize, standard, midsize, or jumbo — using the standard fitting chart.",
+    "Free golf grip size calculator. Measure your hand and middle finger to find your grip size — undersize, standard, midsize, or jumbo.",
   alternates: { canonical: `${SITE_URL}/tools/golf-grip-size-calculator` },
 }
 

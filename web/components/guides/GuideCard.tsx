@@ -21,9 +21,9 @@ export function GuideCard({ guide }: { guide: Guide }) {
         )}
       </div>
 
-      <h3 className="font-display text-xl font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors">
+      <h2 className="font-display text-xl font-bold text-[var(--color-charcoal)] leading-snug group-hover:text-[var(--color-forest)] transition-colors">
         {guide.h1}
-      </h3>
+      </h2>
 
       <p className="mt-2.5 text-[var(--color-charcoal-light)] leading-relaxed line-clamp-3">
         {guide.excerpt}

@@ -11,9 +11,9 @@ import { DIRECTORY_YEAR } from "@/lib/seo-content"
 const TITLE = `Golf Club Length Calculator — Wrist-to-Floor Chart (${DIRECTORY_YEAR})`
 
 export const metadata: Metadata = {
-  title: { absolute: `${TITLE} | Club Fitting Directory` },
+  title: { absolute: TITLE },
   description:
-    "Free golf club length calculator. Enter your height and wrist-to-floor measurement to get a static length recommendation from the standard fitting chart, then find a fitter to dial it in.",
+    "Free golf club length calculator. Enter your height and wrist-to-floor measurement to get a static length recommendation from the standard fitting chart.",
   alternates: { canonical: `${SITE_URL}/tools/golf-club-length-calculator` },
 }
 
