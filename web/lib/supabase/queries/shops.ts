@@ -78,7 +78,11 @@ export interface MapShop {
   longitude: number
   rating: number | null
   offers_fitting: boolean | null
-  verified: boolean | null
+  /* Badge inputs for lib/badges.ts — never select the scraped Google
+     `verified` column here; it is a lookalike of the earned badge. */
+  claimed_at: string | null
+  listing_tier: string | null
+  verified_expires_at: string | null
   is_featured: boolean | null
   shop_type: string | null
 }
@@ -89,7 +93,7 @@ export async function getMapShops(): Promise<MapShop[]> {
     supabase
       .from("shops")
       .select(
-        "slug, name, city, state_code, latitude, longitude, rating, offers_fitting, verified, is_featured, shop_type",
+        "slug, name, city, state_code, latitude, longitude, rating, offers_fitting, claimed_at, listing_tier, verified_expires_at, is_featured, shop_type",
       )
       .eq("status", "active")
       .not("latitude", "is", null)

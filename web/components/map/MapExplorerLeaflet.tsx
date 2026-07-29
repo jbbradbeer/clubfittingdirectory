@@ -9,6 +9,7 @@ import "leaflet.markercluster/dist/MarkerCluster.css"
 import "leaflet.markercluster/dist/MarkerCluster.Default.css"
 import { LocateFixed } from "lucide-react"
 import type { MapShop } from "@/lib/supabase/queries/shops"
+import { isFeaturedPaid, isVerified } from "@/lib/badges"
 
 /* Two pin variants: the standard forest pin (same artwork as the directory
    map) and a gold-dome version for verified/featured shops so they stand out
@@ -41,7 +42,9 @@ function popupHtml(shop: MapShop): string {
   const rating = shop.rating
     ? `<p style="font-size:12px;margin:4px 0 0"><span style="color:#a3823c">★</span> ${shop.rating.toFixed(1)}</p>`
     : ""
-  const badge = shop.verified
+  // Earned badge only (owner-claimed, lib/badges.ts) — never the scraped
+  // Google `verified` column.
+  const badge = isVerified(shop)
     ? `<span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#a3823c">Verified</span>`
     : ""
   return `<div style="font-size:13px;line-height:1.4">
@@ -74,7 +77,7 @@ function ClusterLayer({ shops }: { shops: MapShop[] }) {
 
     for (const shop of shops) {
       const marker = L.marker([shop.latitude, shop.longitude], {
-        icon: shop.verified || shop.is_featured ? goldPin : forestPin,
+        icon: isVerified(shop) || isFeaturedPaid(shop) || shop.is_featured ? goldPin : forestPin,
       })
       marker.bindPopup(popupHtml(shop))
       group.addLayer(marker)
