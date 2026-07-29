@@ -3,6 +3,8 @@ import { NextResponse, type NextRequest } from "next/server"
 // Inlined (not imported from admin-auth.ts) so this stays free of node:crypto,
 // which the Edge runtime can't load. Must match ADMIN_COOKIE there.
 const ADMIN_COOKIE = "cfd_admin"
+// Must match PORTAL_COOKIE in portal-auth.ts (same inlining rule).
+const PORTAL_COOKIE = "cfd_portal"
 
 /**
  * Edge gate for /admin (Next 16 "proxy" convention, formerly middleware). Runs
@@ -30,9 +32,23 @@ export function proxy(request: NextRequest) {
       return NextResponse.redirect(url)
     }
   }
+
+  // Owner portal: /portal (request-link page) and /portal/auth (magic-link
+  // landing) are public; everything else needs the session cookie present.
+  // Presence-only here — the authoritative HMAC check runs server-side in
+  // getPortalSession() on every page and action.
+  if (pathname.startsWith("/portal/") && pathname !== "/portal/auth") {
+    const hasCookie = request.cookies.get(PORTAL_COOKIE)?.value
+    if (!hasCookie) {
+      const url = request.nextUrl.clone()
+      url.pathname = "/portal"
+      url.search = ""
+      return NextResponse.redirect(url)
+    }
+  }
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*", "/portal", "/portal/:path*"],
 }

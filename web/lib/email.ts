@@ -445,3 +445,129 @@ export async function notifyUpdateRequest(args: {
     return false
   }
 }
+
+/* ── Owner portal ─────────────────────────────────────────── */
+
+/** Magic sign-in link for the owner portal. Sent to the address the owner typed
+ *  (only ever matches a claimed shop's owner_email — checked by the caller). */
+export async function sendPortalMagicLink(args: {
+  email: string
+  magicLink: string
+}): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    log.warn("email", "RESEND_API_KEY not set — skipping portal magic link")
+    return false
+  }
+  const html = `
+    <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
+      <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 12px;">Sign in to your shop portal</p>
+      <p style="font-size:14px;color:#444;margin:0 0 16px;">
+        Click the button below to manage your listing on Club Fitting Directory.
+        The link works once and expires in 20 minutes.
+      </p>
+      <p style="margin:0 0 20px;">
+        <a href="${escapeHtml(args.magicLink)}"
+           style="display:inline-block;background:#1B4332;color:#fff;font-weight:600;font-size:14px;padding:10px 22px;border-radius:999px;text-decoration:none;">
+          Open my portal
+        </a>
+      </p>
+      <p style="font-size:12px;color:#8a8a8a;margin:0;">
+        Didn't request this? You can ignore this email — nothing changes without the link.
+      </p>
+    </div>`
+  try {
+    const resend = new Resend(apiKey)
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: args.email,
+      subject: "Your Club Fitting Directory sign-in link",
+      html,
+    })
+    if (error) throw error
+    return true
+  } catch (e) {
+    log.error("email", "failed to send portal magic link", { error: e })
+    return false
+  }
+}
+
+/** Founder alert: a claimed owner submitted a structured edit batch. */
+export async function notifyOwnerEditSubmitted(args: {
+  shopName: string
+  shopSlug: string
+  ownerEmail: string
+  fieldLabels: string[]
+}): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    log.warn("email", "RESEND_API_KEY not set — skipping owner-edit alert (batch was still saved)")
+    return false
+  }
+  const html = `
+    <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
+      <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 4px;">Owner edit submitted</p>
+      <p style="font-size:14px;color:#6b6b6b;margin:0 0 12px;">
+        <strong>${escapeHtml(args.shopName)}</strong> · ${escapeHtml(args.ownerEmail)}
+      </p>
+      <p style="font-size:14px;color:#444;margin:0 0 16px;">
+        Fields changed: ${args.fieldLabels.map(escapeHtml).join(", ") || "(none)"}
+      </p>
+      <p style="font-size:13px;margin:0;">
+        <a href="${SITE_URL}/admin/owner-edits" style="color:#1B4332;">Review in admin →</a>
+      </p>
+    </div>`
+  try {
+    const resend = new Resend(apiKey)
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: NOTIFY_TO,
+      subject: `Owner edit — ${args.shopName}`,
+      html,
+    })
+    if (error) throw error
+    return true
+  } catch (e) {
+    log.error("email", "failed to send owner-edit alert", { error: e })
+    return false
+  }
+}
+
+/** Owner notification: their approved edits are live on the listing. */
+export async function notifyOwnerEditsLive(args: {
+  ownerEmail: string
+  shopName: string
+  shopSlug: string
+}): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    log.warn("email", "RESEND_API_KEY not set — skipping edits-live email")
+    return false
+  }
+  const listingUrl = SLUG_RE.test(args.shopSlug) ? `${SITE_URL}/listing/${args.shopSlug}` : SITE_URL
+  const html = `
+    <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
+      <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 12px;">Your listing updates are live</p>
+      <p style="font-size:14px;color:#444;margin:0 0 16px;">
+        The changes you submitted for <strong>${escapeHtml(args.shopName)}</strong> have been
+        reviewed and published.
+      </p>
+      <p style="font-size:13px;margin:0;">
+        <a href="${escapeHtml(listingUrl)}" style="color:#1B4332;">See your listing →</a>
+      </p>
+    </div>`
+  try {
+    const resend = new Resend(apiKey)
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: args.ownerEmail,
+      subject: `Your updates to ${args.shopName} are live`,
+      html,
+    })
+    if (error) throw error
+    return true
+  } catch (e) {
+    log.error("email", "failed to send edits-live email", { error: e })
+    return false
+  }
+}

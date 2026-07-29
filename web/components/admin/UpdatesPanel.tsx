@@ -83,6 +83,10 @@ export async function UpdatesPanel({
       <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
         Update requests ({total ?? 0})
       </h3>
+      <p className="mb-4 text-xs text-[var(--color-charcoal-light)]">
+        Free-text requests from anyone. Claimed shop? Point the owner at /portal
+        instead — structured edits land in the Owner Edits tab with one-click apply.
+      </p>
       {error && (
         <p className="mb-6 text-sm text-red-600">
           Could not load update requests: {error.message} (has migration 013 been run?)
