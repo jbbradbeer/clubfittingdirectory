@@ -135,7 +135,7 @@ export default async function RepairPage() {
 
       <FaqSection items={repairFaqs(shops)} heading="Golf Club Repair — FAQ" />
 
-      <RelatedGuides />
+      <RelatedGuides slugs={["golf-club-repair-cost", "golf-club-fitting-cost", "is-golf-club-fitting-worth-it"]} />
     </>
   )
 }

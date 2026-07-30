@@ -2,9 +2,9 @@ import type { Guide } from "@/lib/guides/types"
 
 export const golfClubFittingCostGuide: Guide = {
   slug: "golf-club-fitting-cost",
-  metaTitle: "Golf Club Fitting Cost in 2026: Real Prices From 71 Shops",
+  metaTitle: "Golf Club Fitting Cost in 2026: Real Prices From 250 Shops",
   metaDescription:
-    "Golf club fitting costs $0 to $400+ in 2026. Real published prices from 71 independent shops (median $139), chain menus compared, and what fee-waived really means.",
+    "Golf club fitting costs $0 to $400+ in 2026. Real published prices from 250 shops (median $99), chain menus compared, and what fee-waived really means.",
   targetKeyword: "golf club fitting cost",
   eyebrow: "2026 Pricing Guide",
   h1: "How Much Does a Golf Club Fitting Cost? (2026 Guide)",
@@ -12,7 +12,7 @@ export const golfClubFittingCostGuide: Guide = {
     "An honest 2026 breakdown of what club fittings actually cost — by shop type, by club type, and what the fee-waived model really means for your wallet.",
   keyTakeaways: [
     "A golf club fitting costs $0 to $400+ in 2026: big-box retailers charge $0 to $75 (usually credited toward purchase), independent studios $75 to $200 flat, and premium chains like Club Champion and True Spec up to $400 to $450 for a full bag.",
-    "Real data, not estimates: among the 71 directory shops that publish fitting prices, the median entry-level fitting is $139, 31% start under $100, and simulator studios are the cheapest door in at a median of $95.",
+    "Real data, not estimates: among the 250 directory shops that publish fitting prices, the median entry-level fitting is $99, half start under $100, and simulator studios and driving ranges are the cheapest doors in at a median of $75.",
     "A single-club fitting for your driver or irons runs roughly $50 to $175 and is the smartest entry point before committing to a full-bag session.",
     "The fee-waived model means the fitting cost is bundled into the club build, not eliminated: buy the recommended clubs and the fee disappears, walk away and you pay it.",
     "The fitting fee is rarely the expensive part: premium aftermarket shafts and per-club installation fees can push a chain-studio build far above the session price, so ask for the build quote before you commit.",
@@ -20,7 +20,7 @@ export const golfClubFittingCostGuide: Guide = {
   ],
   readMinutes: 7,
   datePublished: "2026-06-15",
-  dateModified: "2026-07-26",
+  dateModified: "2026-07-30",
   blocks: [
     {
       type: "paragraph",
@@ -81,26 +81,27 @@ export const golfClubFittingCostGuide: Guide = {
     {
       type: "paragraph",
       text: [
-        "Every number above is a chain's published menu. Independent shops are harder to pin down — so we collected the data ourselves. As of July 2026, 71 shops in ",
+        "Every number above is a chain's published menu. Independent shops are harder to pin down — so we collected the data ourselves. As of late July 2026, 250 shops in ",
         { text: "our directory", href: "/directory" },
-        " publish their fitting prices on their own websites. Across those 71 shops, the median entry-level fitting is $139, roughly a third (31%) start under $100, and half start under $150. The cheapest published fitting in the directory is $40; the median top-end (typically full-bag) price is $350, with a handful of tour-style studios running to $1,200.",
+        " publish their fitting prices on their own websites. Across those 250 shops, the median entry-level fitting is $99, half start under $100, and roughly three-quarters start under $150. The cheapest published fitting in the directory is $40; the median top-of-menu price is $200, with a handful of tour-style studios running to $1,290.",
       ],
     },
     {
       type: "table",
-      caption: "Published entry-level fitting prices by shop type — 71 directory shops, July 2026.",
-      headers: ["Shop type", "Shops with published prices", "Median entry price", "Range"],
+      caption: "Published entry-level fitting prices by shop type — 250 directory shops, July 2026.",
+      headers: ["Shop type", "Shops with published prices", "Median entry price", "Entry range"],
       rows: [
-        ["Dedicated club fitter", "41", "$175", "$40–$699"],
-        ["Simulator studio", "13", "$95", "$40–$499"],
-        ["Golf retailer", "11", "$199", "$50–$225"],
-        ["Pro shop / course", "4", "$250", "$99–$400"],
+        ["Dedicated club fitter", "140", "$100", "$40–$900"],
+        ["Simulator studio", "43", "$75", "$40–$499"],
+        ["Golf retailer", "30", "$88", "$44–$350"],
+        ["Driving range", "24", "$75", "$40–$200"],
+        ["Pro shop / course", "9", "$119", "$40–$500"],
       ],
     },
     {
       type: "paragraph",
       text: [
-        "Two patterns stand out. Simulator studios are the budget door into fitting: their median entry price ($95) is nearly half the dedicated fitters' ($175), because a fitting is an add-on to bay time they already sell. And dedicated fitters cover the widest spread — the same category contains a $40 loft-and-lie check and a $699 tour-style full-bag experience. The label on the door matters less than the menu, which is why every ",
+        "Two patterns stand out. Simulator studios and driving ranges are the budget doors into fitting: their median entry price ($75) is well under the dedicated fitters' ($100), because a fitting is an add-on to bay time they already sell. And dedicated fitters cover the widest spread — the same category contains a $40 loft-and-lie check and a $900 tour-style full-bag experience. The label on the door matters less than the menu, which is why every ",
         { text: "directory listing", href: "/directory" },
         " shows the shop's published prices when we have them.",
       ],
@@ -108,7 +109,7 @@ export const golfClubFittingCostGuide: Guide = {
     {
       type: "callout",
       title: "Where these numbers come from",
-      text: "Prices are scraped and hand-checked from each shop's own website in July 2026, then kept on the shop's directory listing. Medians are used instead of averages so a few $1,000+ premium studios don't distort the picture of what a typical shop charges.",
+      text: "Prices are extracted from each shop's own website in July 2026 — every price is stored with the exact sentence it came from and a link to the source page — then shown on the shop's directory listing. Medians are used instead of averages so a few $1,000+ premium studios don't distort the picture of what a typical shop charges.",
     },
 
     { type: "heading", level: 2, text: "How much does a single-club fitting cost?" },

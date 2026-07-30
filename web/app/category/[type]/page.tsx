@@ -45,6 +45,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+/* Topical guide picks per category — each category page links the three
+   guides its visitor is most likely mid-question on. Unmapped slugs fall
+   back to RelatedGuides' registry default. */
+const CATEGORY_GUIDES: Record<string, string[]> = {
+  "club-fitters":    ["how-to-choose-a-club-fitter", "golf-club-fitting-cost", "club-champion-vs-independent-fitter"],
+  "golf-retailers":  ["club-champion-vs-independent-fitter", "golf-club-fitting-cost", "is-golf-club-fitting-worth-it"],
+  "golf-simulators": ["launch-monitors", "golf-club-fitting-cost", "online-golf-club-fitting"],
+  "pro-shops":       ["club-fitting-for-beginners", "lessons-or-fitting-first", "golf-club-fitting-cost"],
+  "instruction":     ["lessons-or-fitting-first", "club-fitting-for-beginners", "is-golf-club-fitting-worth-it"],
+  "driving-ranges":  ["club-fitting-for-beginners", "launch-monitors", "golf-club-fitting-cost"],
+}
+
 export default async function CategoryPage({ params }: PageProps) {
   const { type: slug } = await params
   const shopType = slugToShopType(slug)
@@ -134,7 +146,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
       <FaqSection items={categoryFaqs(label, shops)} heading={`${label} — FAQ`} />
 
-      <RelatedGuides />
+      <RelatedGuides slugs={CATEGORY_GUIDES[slug]} />
     </>
   )
 }

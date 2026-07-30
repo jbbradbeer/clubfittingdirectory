@@ -208,7 +208,7 @@ export default async function StatePage({ params }: PageProps) {
 
       <FaqSection items={stateFaqs(stateName, shops)} heading={`Club fitting in ${stateName} — FAQ`} />
 
-      <RelatedGuides />
+      <RelatedGuides slugs={["golf-club-fitting-cost", "club-champion-vs-independent-fitter", "is-golf-club-fitting-worth-it"]} />
     </>
   )
 }
