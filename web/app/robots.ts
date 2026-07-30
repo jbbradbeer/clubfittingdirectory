@@ -29,7 +29,13 @@ const AI_SEARCH_BOTS = [
   "Claude-SearchBot",// Anthropic search index
   "Claude-User",     // Anthropic live fetches
   "Google-Extended", // Google — Gemini/AI grounding
+  "Googlebot",       // Google — search index + AI Overviews
   "Bingbot",         // Bing — feeds ChatGPT Search results
+  "Applebot",        // Apple — Siri/Spotlight
+  "Applebot-Extended",   // Apple — Apple Intelligence training
+  "Amazonbot",       // Amazon — Alexa answers
+  "meta-externalagent",  // Meta — Llama/AI training
+  "cohere-ai",       // Cohere crawler
 ]
 
 export default function robots(): MetadataRoute.Robots {
