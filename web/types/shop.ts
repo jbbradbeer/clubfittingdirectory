@@ -43,13 +43,21 @@ export interface Shop {
   fitting_environment: string | null
   public_fitting: boolean
 
-  // Fitting attributes (migrations 005/011; values managed by the provenance
-  // ledger and promoted into these columns — empty/null until populated)
+  // Fitting attributes (migrations 005/011/017; values managed by the
+  // provenance ledger and promoted into these columns — empty/null until
+  // populated. Optional where rows may predate migration 017.)
   launch_monitors: string[]
+  brands_fitted?: string[] | null
   ownership_type: "independent" | "big_box" | "national_chain" | "oem" | "unknown" | null
   /** Fitting price range in whole USD; "From $150" when only min is known */
   fitting_price_min: number | null
   fitting_price_max: number | null
+  year_established?: number | null
+  credentials?: string[] | null
+  bay_count?: number | null
+  mobile_fitting?: boolean | null
+  in_house_build?: boolean | null
+  google_place_id?: string | null
 
   // Hours — a day's value is usually a string ("9 AM–5 PM") but can be an
   // array of strings for split hours (e.g. ["9 AM–1 PM", "2 PM–6 PM"]).
