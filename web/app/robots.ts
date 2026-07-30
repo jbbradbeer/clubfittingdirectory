@@ -19,24 +19,8 @@ import { SITE_URL } from "@/lib/constants"
    ⚠️  Update SITE_URL before launch if the domain changes.
    ───────────────────────────────────────────────────────── */
 
-const AI_SEARCH_BOTS = [
-  "GPTBot",          // OpenAI — training + ChatGPT browsing
-  "OAI-SearchBot",   // OpenAI — ChatGPT Search index
-  "ChatGPT-User",    // OpenAI — live user-initiated fetches
-  "PerplexityBot",   // Perplexity index
-  "Perplexity-User", // Perplexity live fetches
-  "ClaudeBot",       // Anthropic crawler
-  "Claude-SearchBot",// Anthropic search index
-  "Claude-User",     // Anthropic live fetches
-  "Google-Extended", // Google — Gemini/AI grounding
-  "Googlebot",       // Google — search index + AI Overviews
-  "Bingbot",         // Bing — feeds ChatGPT Search results
-  "Applebot",        // Apple — Siri/Spotlight
-  "Applebot-Extended",   // Apple — Apple Intelligence training
-  "Amazonbot",       // Amazon — Alexa answers
-  "meta-externalagent",  // Meta — Llama/AI training
-  "cohere-ai",       // Cohere crawler
-]
+// Canonical list lives in lib/ai-bots.ts (shared with proxy.ts crawler logging).
+import { AI_SEARCH_BOTS } from "@/lib/ai-bots"
 
 export default function robots(): MetadataRoute.Robots {
   return {
