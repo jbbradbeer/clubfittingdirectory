@@ -180,9 +180,15 @@ export default async function HomePage() {
             data-reveal
           >
             <SectionHeader title="Highest-rated fitters" centered={false} />
-            <Button href="/directory" variant="outline" size="sm">
-              View all {hasStats ? `${stats.total.toLocaleString()} ` : ""}shops
-            </Button>
+            <div className="flex items-center gap-3">
+              {/* Independent-first: the audience we champion gets its own door in. */}
+              <Button href="/directory?ownership=independent" variant="outline" size="sm">
+                Independent shops only
+              </Button>
+              <Button href="/directory" variant="outline" size="sm">
+                View all {hasStats ? `${stats.total.toLocaleString()} ` : ""}shops
+              </Button>
+            </div>
           </div>
           <ListingGrid shops={topShops} className="mt-12" reveal />
         </div>
@@ -267,6 +273,27 @@ export default async function HomePage() {
                 Read the fitting guide
               </Button>
             </div>
+            {/* Descriptive-anchor links to the calculators — their only other
+                inbound link is the footer, which isn't enough for them to rank. */}
+            <p className="mt-5 pt-5 border-t border-[var(--color-line)] text-sm text-[var(--color-charcoal-light)] leading-relaxed">
+              Free fitting tools:{" "}
+              <Link href="/tools/golf-club-length-calculator" className="font-semibold text-[var(--color-forest)] hover:underline">
+                club length calculator
+              </Link>
+              ,{" "}
+              <Link href="/tools/golf-shaft-flex-calculator" className="font-semibold text-[var(--color-forest)] hover:underline">
+                shaft flex
+              </Link>
+              ,{" "}
+              <Link href="/tools/golf-grip-size-calculator" className="font-semibold text-[var(--color-forest)] hover:underline">
+                grip size
+              </Link>
+              {" "}and{" "}
+              <Link href="/tools/golf-club-distance-calculator" className="font-semibold text-[var(--color-forest)] hover:underline">
+                distance charts
+              </Link>
+              .
+            </p>
           </div>
 
           {/* Card B — submit a shop */}

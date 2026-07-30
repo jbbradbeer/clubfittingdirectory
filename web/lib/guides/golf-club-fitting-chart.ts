@@ -168,5 +168,7 @@ export const golfClubFittingChartGuide: Guide = {
   related: [
     { label: "Golf Club Fitting: The Complete Guide", href: "/guides/golf-club-fitting" },
     { label: "Where to Get Fitted for Golf Clubs", href: "/guides/where-to-get-fitted-for-golf-clubs" },
+    { label: "Golf Club Length Calculator", href: "/tools/golf-club-length-calculator" },
+    { label: "Golf Shaft Flex Calculator", href: "/tools/golf-shaft-flex-calculator" },
   ],
 }

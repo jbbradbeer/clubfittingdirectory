@@ -213,5 +213,6 @@ export const driverFittingGuide: Guide = {
       label: "What to Expect at a Golf Club Fitting",
       href: "/guides/what-to-expect-at-a-golf-club-fitting",
     },
+    { label: "Golf Shaft Flex Calculator", href: "/tools/golf-shaft-flex-calculator" },
   ],
 }

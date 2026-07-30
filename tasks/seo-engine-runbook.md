@@ -101,6 +101,14 @@ After opening each PR (article and maintenance alike):
    saying which check failed or timed out.
 4. Never re-run, override, or work around a failing check to get to green.
 
+## Weekly rank check (added 2026-07-29)
+
+If the OpenSEO MCP is available in the run, call `get_rank_tracker` for project
+`1a447349-7486-4a70-89fd-736d6627ab73` and report movement on the saved
+keywords tagged `competitor-strategy-2026-07` in the PR description (3 lines
+max: up / down / notable). If the MCP is unavailable, skip silently — never
+block drafting on it.
+
 ## PR conventions
 
 - Branch names: `seo-article-<slug>` / `seo-maintenance-<yyyy-mm>`.

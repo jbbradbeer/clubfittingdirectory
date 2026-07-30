@@ -95,6 +95,24 @@ page — listing metadata/copy now uses the full city spelling for this reason.
 | **Repair category/filter surfacing** | golf club repair near me | G-confirmed demand; S: ~80 city variants. Shops' services data already includes repair. |
 | **Fitting days / demo days layer** (future) | "ping fitting days near me", "taylormade demo days 2026" | S: unserved events cluster; no data source yet — park it. |
 
+## Fitting Glossary cluster (shipped 2026-07-29 — feat/keyword-strategy branch)
+Competitor-derived (FittingPros ranks a bare terms page for "shaft fitting golf",
+12.1k/mo, KD 0 — see `tasks/keyword-strategy-2026-07.md`). All 8 published as
+Guides with eyebrow "Fitting Glossary". **Duplicate guard: these slugs are in
+GUIDES — do not re-draft.** Queue rows 12 (shaft flex chart) and 19 (grip size
+chart) remain eligible but MUST cross-link the matching glossary article.
+
+| URL | Keyword | Vol/mo |
+|---|---|---|
+| /guides/shaft-fitting | shaft fitting golf | 12,100 |
+| /guides/kick-point | kick point golf shaft | — |
+| /guides/lie-angle | lie angle golf | — |
+| /guides/golf-club-loft | golf club loft | — |
+| /guides/swing-weight | swing weight golf | — |
+| /guides/golf-club-moi | moi golf clubs | — |
+| /guides/launch-monitors | golf launch monitor fitting | — |
+| /guides/golf-grip-size | golf grip size | — |
+
 ## FAQ bank
 356 question-form phrases captured → `tasks/research/kw_questions.txt`; the
 canonical 25 (deduped) are in §11 of
