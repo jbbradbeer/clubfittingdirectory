@@ -2,6 +2,7 @@ import type { Shop } from "@/types/shop"
 import type { Guide } from "@/lib/guides/types"
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, SITE_AUTHOR, SITE_AUTHOR_TITLE } from "@/lib/constants"
 import { toCitySlug } from "@/lib/slugs"
+import { formatFittingPrice } from "@/lib/fitter-classification"
 
 /* ─────────────────────────────────────────────────────────
    JSON-LD STRUCTURED DATA
@@ -133,6 +134,46 @@ export function buildLocalBusinessSchema(shop: Shop): Record<string, unknown> {
   // Opening hours
   const openingHours = parseOpeningHours(shop.working_hours)
   if (openingHours.length > 0) schema.openingHours = openingHours
+
+  // ── Differentiating attributes (migration 017) — every property below maps
+  //    1:1 to a stored, provenance-governed field and is omitted when empty. ──
+  if (shop.year_established != null) schema.foundingDate = String(shop.year_established)
+
+  const priceRange = formatFittingPrice(shop.fitting_price_min, shop.fitting_price_max)
+  if (priceRange) schema.priceRange = priceRange
+
+  // Brands the shop fits — knowsAbout is the least-lossy fit for "works with
+  // these manufacturers" without claiming it *sells* them (offers would).
+  if (shop.brands_fitted && shop.brands_fitted.length > 0) {
+    schema.knowsAbout = shop.brands_fitted
+  }
+
+  // Machine-readable label/value pairs for the attributes with no dedicated
+  // schema.org property — the block AI engines can lift unambiguously.
+  const additionalProperty = [
+    shop.launch_monitors?.length
+      ? { "@type": "PropertyValue", name: "Launch monitors", value: shop.launch_monitors.join(", ") }
+      : null,
+    shop.fitting_environment
+      ? { "@type": "PropertyValue", name: "Fitting environment", value: shop.fitting_environment }
+      : null,
+    shop.bay_count != null
+      ? { "@type": "PropertyValue", name: "Fitting bays", value: shop.bay_count }
+      : null,
+    shop.mobile_fitting != null
+      ? { "@type": "PropertyValue", name: "Mobile fitting", value: shop.mobile_fitting }
+      : null,
+    shop.in_house_build != null
+      ? { "@type": "PropertyValue", name: "In-house club building", value: shop.in_house_build }
+      : null,
+    shop.credentials?.length
+      ? { "@type": "PropertyValue", name: "Credentials", value: shop.credentials.join(", ") }
+      : null,
+    shop.ownership_type && shop.ownership_type !== "unknown"
+      ? { "@type": "PropertyValue", name: "Ownership", value: shop.ownership_type.replace(/_/g, " ") }
+      : null,
+  ].filter(Boolean)
+  if (additionalProperty.length > 0) schema.additionalProperty = additionalProperty
 
   return schema
 }

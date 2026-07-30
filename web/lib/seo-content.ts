@@ -375,6 +375,14 @@ export function listingQuickFacts(shop: Shop): string {
     parts.push(`Fitting technology on record: ${listWords(shop.launch_monitors)}.`)
   }
 
+  if (shop.brands_fitted && shop.brands_fitted.length > 0) {
+    parts.push(`Brands fitted include ${listWords(shop.brands_fitted)}.`)
+  }
+
+  if (shop.year_established != null) {
+    parts.push(`The shop has been in business since ${shop.year_established}.`)
+  }
+
   if (shop.rating && shop.rating > 0 && shop.reviews && shop.reviews > 0) {
     parts.push(`Golfers rate it ${shop.rating}/5 across ${shop.reviews} reviews.`)
   }
@@ -408,6 +416,26 @@ export function listingFaqs(shop: Shop): FaqItem[] {
       ? {
           question: `What launch monitor technology does ${shop.name} use?`,
           answer: `${shop.name} has ${listWords(shop.launch_monitors ?? [])} on record. The launch monitor drives the quality of your fitting data, so it's worth confirming the setup when you book.`,
+        }
+      : null,
+    (shop.brands_fitted?.length ?? 0) > 0
+      ? {
+          question: `What club brands does ${shop.name} fit?`,
+          answer: `${shop.name} has ${listWords(shop.brands_fitted ?? [])} on record as fitted brands${
+            shop.ownership_type === "independent"
+              ? ". As an independently owned shop, it isn't tied to a single manufacturer's lineup"
+              : ""
+          }. Brand availability changes, so confirm the current matrix when you book.`,
+        }
+      : null,
+    // Brand-agnostic question only where the data supports a real answer:
+    // independent ownership plus at least two fitted brands on record.
+    shop.ownership_type === "independent" && (shop.brands_fitted?.length ?? 0) >= 2
+      ? {
+          question: `Is ${shop.name} brand agnostic?`,
+          answer: `${shop.name} is independently owned and has ${
+            (shop.brands_fitted ?? []).length
+          } brands on record (${listWords(shop.brands_fitted ?? [])}), rather than selling a single manufacturer's line. Ask the shop which heads and shafts are in its current fitting matrix.`,
         }
       : null,
     shop.city

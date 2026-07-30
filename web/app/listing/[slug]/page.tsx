@@ -244,11 +244,17 @@ export default async function ListingPage({ params }: PageProps) {
               {/* Club Fitting Details — render on ANY fitting signal. ~100
                   shops have crawled launch monitor / price facts while
                   offers_fitting is still false; gating on the flag alone hid
-                  their data entirely. */}
+                  their data entirely. Every row reads straight from a stored
+                  field and is omitted when empty — never padded. */}
               {(shop.offers_fitting ||
                 (shop.launch_monitors?.length ?? 0) > 0 ||
+                (shop.brands_fitted?.length ?? 0) > 0 ||
+                (shop.credentials?.length ?? 0) > 0 ||
                 shop.fitting_price_min != null ||
-                shop.fitting_price_max != null) && (
+                shop.fitting_price_max != null ||
+                shop.bay_count != null ||
+                shop.mobile_fitting ||
+                shop.in_house_build) && (
                 <div>
                   <h2 className="font-display text-xl font-semibold text-[var(--color-charcoal)] mb-4">
                     Club Fitting Details
@@ -279,6 +285,50 @@ export default async function ListingPage({ params }: PageProps) {
                         <CheckCircle size={16} className="text-[var(--color-forest)]" />
                         <span className="text-sm">
                           Launch Monitors: <strong>{shop.launch_monitors.join(" · ")}</strong>
+                        </span>
+                      </div>
+                    )}
+                    {shop.brands_fitted && shop.brands_fitted.length > 0 && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">
+                          Brands Fitted: <strong>{shop.brands_fitted.join(" · ")}</strong>
+                        </span>
+                      </div>
+                    )}
+                    {shop.credentials && shop.credentials.length > 0 && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">
+                          Credentials: <strong>{shop.credentials.join(" · ")}</strong>
+                        </span>
+                      </div>
+                    )}
+                    {shop.bay_count != null && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">
+                          Fitting Bays: <strong>{shop.bay_count}</strong>
+                        </span>
+                      </div>
+                    )}
+                    {shop.mobile_fitting && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">Mobile Fitting Available</span>
+                      </div>
+                    )}
+                    {shop.in_house_build && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">In-House Club Building</span>
+                      </div>
+                    )}
+                    {shop.year_established != null && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle size={16} className="text-[var(--color-forest)]" />
+                        <span className="text-sm">
+                          Established: <strong>{shop.year_established}</strong>
                         </span>
                       </div>
                     )}
