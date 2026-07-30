@@ -13,6 +13,8 @@ import { onlineGolfClubFittingGuide } from "@/lib/guides/online-golf-club-fittin
 import { customGolfClubFittingGuide } from "@/lib/guides/custom-golf-club-fitting"
 import { driverFittingGuide } from "@/lib/guides/driver-fitting"
 import { ironFittingGuide } from "@/lib/guides/iron-fitting"
+import { lessonsOrFittingFirstGuide } from "@/lib/guides/lessons-or-fitting-first"
+import { clubFittingForBeginnersGuide } from "@/lib/guides/club-fitting-for-beginners"
 import { shaftFittingGuide } from "@/lib/guides/shaft-fitting"
 import { kickPointGuide } from "@/lib/guides/kick-point"
 import { lieAngleGuide } from "@/lib/guides/lie-angle"
@@ -46,6 +48,10 @@ export const GUIDES: Guide[] = [
   customGolfClubFittingGuide,
   driverFittingGuide,
   ironFittingGuide,
+  // Question-form spokes (2026-07-30 — keyword-map backlog #11, #14). The
+  // exact question shapes that trigger AI answers; honest non-salesy answers.
+  lessonsOrFittingFirstGuide,
+  clubFittingForBeginnersGuide,
   // Fitting Glossary cluster (competitor-derived, 2026-07-29 —
   // tasks/keyword-strategy-2026-07.md). shaft-fitting is the volume leader.
   shaftFittingGuide,

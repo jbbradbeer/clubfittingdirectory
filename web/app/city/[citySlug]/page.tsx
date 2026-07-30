@@ -244,7 +244,7 @@ export default async function CityPage({ params }: PageProps) {
 
       <FaqSection items={cityFaqs(city, state, shops)} heading={`Club fitting in ${city} — FAQ`} />
 
-      <RelatedGuides />
+      <RelatedGuides slugs={["golf-club-fitting-cost", "how-to-choose-a-club-fitter", "what-to-expect-at-a-golf-club-fitting"]} />
     </>
   )
 }
