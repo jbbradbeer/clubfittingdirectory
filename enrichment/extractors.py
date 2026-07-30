@@ -121,7 +121,11 @@ CREDENTIAL_PATTERNS: dict[str, str] = {
     "Callaway Certified Fitter":   r"\bcallaway\s+certified\b",
     "TaylorMade Certified Fitter": r"\btaylor\s?made\s+certified\b",
     "Mizuno Certified Fitter":     r"\bmizuno\s+certified\b",
-    "Golf Digest Top 100 Fitter":  r"\b(?:golf\s+digest[^.]{0,40})?top\s*100\s+(?:club\s*)?fitters?\b",
+    # "Top 100" must be tied to its awarding body — a bare "top 100 fitter"
+    # match mislabeled Mizuno's award as Golf Digest's (2026-07-30 crawl:
+    # 25 of 76 hits were neither).
+    "Golf Digest Top 100 Fitter":  r"\bgolf\s+digest[^.]{0,40}top\s*100\s+(?:club\s*)?fitters?\b",
+    "Mizuno Top 100 Fitter":       r"\bmizuno[^.]{0,40}top\s*100\s+fitters?\b",
     "AGCP Member":                 r"\bagcp\b|\bassociation\s+of\s+golf\s+clubfitting\s+professionals\b",
     "GCA Accredited":              r"\bgolf\s+clubmakers\s+association\b",
     "SAM PuttLab Certified":       r"\bsam\s+putt\s?lab\s+certified\b",
