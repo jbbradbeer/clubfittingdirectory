@@ -13,6 +13,14 @@ import { onlineGolfClubFittingGuide } from "@/lib/guides/online-golf-club-fittin
 import { customGolfClubFittingGuide } from "@/lib/guides/custom-golf-club-fitting"
 import { driverFittingGuide } from "@/lib/guides/driver-fitting"
 import { ironFittingGuide } from "@/lib/guides/iron-fitting"
+import { shaftFittingGuide } from "@/lib/guides/shaft-fitting"
+import { kickPointGuide } from "@/lib/guides/kick-point"
+import { lieAngleGuide } from "@/lib/guides/lie-angle"
+import { golfClubLoftGuide } from "@/lib/guides/golf-club-loft"
+import { swingWeightGuide } from "@/lib/guides/swing-weight"
+import { golfClubMoiGuide } from "@/lib/guides/golf-club-moi"
+import { launchMonitorsGuide } from "@/lib/guides/launch-monitors"
+import { golfGripSizeGuide } from "@/lib/guides/golf-grip-size"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -38,6 +46,16 @@ export const GUIDES: Guide[] = [
   customGolfClubFittingGuide,
   driverFittingGuide,
   ironFittingGuide,
+  // Fitting Glossary cluster (competitor-derived, 2026-07-29 —
+  // tasks/keyword-strategy-2026-07.md). shaft-fitting is the volume leader.
+  shaftFittingGuide,
+  lieAngleGuide,
+  golfClubLoftGuide,
+  swingWeightGuide,
+  kickPointGuide,
+  golfClubMoiGuide,
+  launchMonitorsGuide,
+  golfGripSizeGuide,
 ]
 
 export function getAllGuides(): Guide[] {

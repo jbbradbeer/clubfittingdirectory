@@ -51,7 +51,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!shop) return { title: "Fitter Not Found" }
 
   const displayCity = expandCityName(shop.city ?? "")
-  const title = `${shop.name} — ${displayCity}, ${shop.state_code}`
+  // "{Shop} — Golf Club Fitting in {City}, {ST}" matches the two query shapes
+  // that drive listing traffic: "{brand} {city}" and "club fitting {city}".
+  // Non-fitting shops keep the plain locality title — claiming fitting there
+  // would be inaccurate and dilute the pattern.
+  const offersFittingSignal =
+    shop.offers_fitting ||
+    (shop.launch_monitors?.length ?? 0) > 0 ||
+    shop.fitting_price_min != null ||
+    shop.fitting_price_max != null
+  const title = offersFittingSignal
+    ? `${shop.name} — Golf Club Fitting in ${displayCity}, ${shop.state_code}`
+    : `${shop.name} — ${displayCity}, ${shop.state_code}`
   const description = `${shop.name} is a ${shop.shop_type ?? "golf shop"} in ${displayCity}, ${shop.state}. ${
     shop.offers_fitting ? "Club fitting available. " : ""
   }${shop.rating ? `Rated ${shop.rating}/5.` : ""}`

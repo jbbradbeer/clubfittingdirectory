@@ -225,5 +225,6 @@ export const ironFittingGuide: Guide = {
       label: "Is a Golf Club Fitting Worth It?",
       href: "/guides/is-golf-club-fitting-worth-it",
     },
+    { label: "Golf Club Length Calculator", href: "/tools/golf-club-length-calculator" },
   ],
 }

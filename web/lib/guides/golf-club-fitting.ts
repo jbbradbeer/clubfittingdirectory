@@ -202,5 +202,7 @@ export const golfClubFittingGuide: Guide = {
     { label: "Is a Golf Club Fitting Worth It?", href: "/guides/is-golf-club-fitting-worth-it" },
     { label: "Where to Get Fitted for Golf Clubs", href: "/guides/where-to-get-fitted-for-golf-clubs" },
     { label: "Golf Club Fitting Chart: Length, Lie & Shaft by Height and Swing Speed", href: "/guides/golf-club-fitting-chart" },
+    { label: "Golf Club Length Calculator", href: "/tools/golf-club-length-calculator" },
+    { label: "Golf Club Distance Calculator", href: "/tools/golf-club-distance-calculator" },
   ],
 }
