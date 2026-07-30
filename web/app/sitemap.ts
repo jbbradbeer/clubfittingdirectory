@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [slugs, stateCodes, citySlugs, typeCounts] = await Promise.all([
     getAllShopSlugs().catch((e) => logQueryError("sitemap getAllShopSlugs", e, [] as { slug: string; updated_at: string }[])),
     getAllStateCodes().catch((e) => logQueryError("sitemap getAllStateCodes", e, [] as string[])),
-    getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string; shopCount: number }[])),
+    getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string; shopCount: number; indexable: boolean }[])),
     getShopTypeCounts().catch((e) => logQueryError("sitemap getShopTypeCounts", e, {} as Record<string, number>)),
   ])
 
@@ -167,10 +167,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
 
   /* ── City pages (/city/austin-tx, …) ──
-     One-shop cities are excluded: those pages are noindexed as thin content,
-     and a sitemap entry for a noindexed page is a mixed signal to Google. */
+     Include exactly the indexable set: multi-shop cities plus one-shop cities
+     the nearby-fitters module lifts to a ≥3-fitter comparison. `indexable`
+     (getAllCitySlugs) mirrors the robots gate on the city page itself, so
+     the sitemap never lists a noindexed page nor omits an indexable one. */
   const cityRoutes: MetadataRoute.Sitemap = citySlugs
-    .filter(({ shopCount }) => shopCount >= 2)
+    .filter(({ indexable }) => indexable)
     .map(({ citySlug }) => ({
       url:             `${SITE_URL}/city/${citySlug}`,
       lastModified:    now,

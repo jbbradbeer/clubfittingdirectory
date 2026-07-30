@@ -333,25 +333,63 @@ export async function getAllShopTypes(): Promise<string[]> {
 export { toCitySlug } from "@/lib/slugs"
 
 /* ── All city slugs (for generateStaticParams on city page) ── */
-export async function getAllCitySlugs(): Promise<{ citySlug: string; shopCount: number }[]> {
+export async function getAllCitySlugs(): Promise<
+  { citySlug: string; shopCount: number; indexable: boolean }[]
+> {
   const supabase = createStaticClient()
-  const data = await fetchAllRows<{ city: string; state_code: string }>(() =>
+  const data = await fetchAllRows<{
+    city: string
+    state_code: string
+    latitude: number | null
+    longitude: number | null
+  }>(() =>
     supabase
       .from("shops")
-      .select("city, state_code")
+      .select("city, state_code, latitude, longitude")
       .eq("status", "active")
       .order("id", { ascending: true }),
   )
 
-  // shopCount lets the sitemap skip one-shop cities (those pages are noindexed
-  // as thin content; listing them in the sitemap would send a mixed signal).
-  const counts = new Map<string, number>()
+  const cities = new Map<string, { count: number; anchor: { lat: number; lng: number } | null }>()
+  const located: { slug: string; lat: number; lng: number }[] = []
   for (const row of data) {
     if (!row.city || !row.state_code) continue
     const slug = toCitySlug(row.city, row.state_code)
-    counts.set(slug, (counts.get(slug) ?? 0) + 1)
+    const entry = cities.get(slug) ?? { count: 0, anchor: null }
+    entry.count++
+    // First located shop becomes the anchor — mirrors nearbyForCity, which
+    // anchors the "Other fitters near {city}" module on the city's first shop.
+    if (entry.anchor === null && row.latitude != null && row.longitude != null) {
+      entry.anchor = { lat: row.latitude, lng: row.longitude }
+    }
+    cities.set(slug, entry)
+    if (row.latitude != null && row.longitude != null) {
+      located.push({ slug, lat: row.latitude, lng: row.longitude })
+    }
   }
-  return [...counts.entries()].map(([citySlug, shopCount]) => ({ citySlug, shopCount }))
+
+  // `indexable` mirrors the city page's robots gate (city/[citySlug] metadata):
+  // multi-shop cities index outright; a one-shop city indexes only when the
+  // nearby-fitters module lifts it to a ≥3-fitter comparison — i.e. ≥2 active
+  // shops with coordinates inside 60 miles, outside the city itself. Keeping
+  // the sitemap in lockstep with that gate means no indexable page is missing
+  // from the sitemap and no noindexed page is listed in it.
+  const NEARBY_RADIUS_MI = 60
+  return [...cities.entries()].map(([citySlug, { count, anchor }]) => {
+    let indexable = count >= 2
+    if (!indexable && anchor) {
+      let nearby = 0
+      for (const s of located) {
+        if (s.slug === citySlug) continue
+        if (haversineMiles(anchor.lat, anchor.lng, s.lat, s.lng) <= NEARBY_RADIUS_MI) {
+          nearby++
+          if (nearby >= 2) break
+        }
+      }
+      indexable = 1 + nearby >= 3
+    }
+    return { citySlug, shopCount: count, indexable }
+  })
 }
 
 /* ── City links for a state (city-page cross-linking) ──
