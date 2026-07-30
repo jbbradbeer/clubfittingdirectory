@@ -1,7 +1,7 @@
 import { getAllGuides } from "@/lib/guides"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
-import { getAllShopSlugs } from "@/lib/supabase/queries/shops"
+import { getAllShopSlugs, getAllCitySlugs } from "@/lib/supabase/queries/shops"
 import { logQueryError } from "@/lib/utils"
 
 /* ─────────────────────────────────────────────────────────
@@ -24,6 +24,15 @@ export async function GET(): Promise<Response> {
   )
   const countPhrase = slugs.length > 0 ? `${slugs.length} hand-vetted` : "hundreds of hand-vetted"
 
+  // Top indexable city hubs by listing count — the local entry points an AI
+  // engine should start from for "fitting near {city}" questions.
+  const topCities = (
+    await getAllCitySlugs().catch((e) => logQueryError("llms.txt getAllCitySlugs", e, []))
+  )
+    .filter((c) => c.indexable)
+    .sort((a, b) => b.shopCount - a.shopCount || a.citySlug.localeCompare(b.citySlug))
+    .slice(0, 25)
+
   const lines: string[] = [
     `# ${SITE_NAME}`,
     "",
@@ -43,6 +52,24 @@ export async function GET(): Promise<Response> {
     ...SHOP_TYPES.map(
       (t) => `- [${t.label}](${SITE_URL}/category/${t.slug}): every ${t.singular.toLowerCase()} listing in the US`
     ),
+    ...(topCities.length > 0
+      ? [
+          "",
+          "## Cities",
+          "",
+          `> City hub pages exist for every US city with listings (pattern: ${SITE_URL}/city/{city}-{state}). The largest markets:`,
+          "",
+          ...topCities.map((c) => {
+            const parts = c.citySlug.split("-")
+            const state = parts[parts.length - 1].toUpperCase()
+            const city = parts
+              .slice(0, -1)
+              .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+              .join(" ")
+            return `- [Golf club fitting in ${city}, ${state}](${SITE_URL}/city/${c.citySlug}): ${c.shopCount} listed ${c.shopCount === 1 ? "shop" : "shops"}`
+          }),
+        ]
+      : []),
   ]
 
   return new Response(lines.join("\n") + "\n", {

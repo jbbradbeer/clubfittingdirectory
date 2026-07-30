@@ -109,6 +109,26 @@ keywords tagged `competitor-strategy-2026-07` in the PR description (3 lines
 max: up / down / notable). If the MCP is unavailable, skip silently — never
 block drafting on it.
 
+## Weekly AI-citation check (added 2026-07-30)
+
+The scoreboard for AI-search visibility. Each run:
+
+1. `python3 scripts/citation_check.py --prompts` — the canonical query list.
+2. For each prompt, run ONE web search (WebSearch tool). Note whether
+   clubfittingdirectory.com appears in the results, and which of these appear
+   instead: fittingpros.com, golffittingfinder.com, clubchampion.com,
+   truespecgolf.com, golftec.com, pgatoursuperstore.com.
+3. Record each observation:
+   `python3 scripts/citation_check.py --append websearch "<prompt>" <yes|no> - "<competitor-domains-semicolon-or-dash>"`
+4. Commit the updated `tasks/citations/history.csv` on the week's branch, and
+   add a 3-line summary to the PR description: cited count vs last week, new
+   prompts we appear for, most-seen competitor.
+
+Budget ~1 search per prompt; if search is unavailable this run, skip silently —
+never block drafting on it. (When model API keys are added to the environment,
+`python3 scripts/citation_check.py` run without flags samples ChatGPT/Claude/
+Perplexity directly — prefer that over manual searches once available.)
+
 ## PR conventions
 
 - Branch names: `seo-article-<slug>` / `seo-maintenance-<yyyy-mm>`.
