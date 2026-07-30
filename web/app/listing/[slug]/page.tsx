@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import {
   MapPin, Phone, Globe, ExternalLink, Clock, CheckCircle, Wrench, Navigation,
 } from "lucide-react"
-import { getShopBySlug, getNearbyShops, getAllShopSlugs, toCitySlug } from "@/lib/supabase/queries/shops"
+import { getShopBySlug, getNearbyShops, getNearbyShopsByDistance, getAllShopSlugs, toCitySlug } from "@/lib/supabase/queries/shops"
 import { getListingVerification } from "@/lib/supabase/queries/provenance"
 import { buildLocalBusinessSchema, buildBreadcrumbSchema } from "@/lib/structured-data"
 import { JsonLd } from "@/components/seo/JsonLd"
@@ -99,6 +99,19 @@ export default async function ListingPage({ params }: PageProps) {
     ? shop.website.startsWith("http") ? shop.website : `https://${shop.website}`
     : null
   const { paletteIndex: coverPalette } = getCover(shop.slug, shop.shop_type)
+
+  // Independent-first positioning: chain/OEM/big-box pages double as landing
+  // pages for branded searches, so they steer readers to nearby independents.
+  // Same-city independents are the whole point, hence excludeSlug (not the
+  // default city-level exclusion). Empty when the store has no coordinates.
+  const isChainListing = ["national_chain", "big_box", "oem"].includes(shop.ownership_type ?? "")
+  const independentNearby =
+    isChainListing && shop.latitude != null && shop.longitude != null
+      ? await getNearbyShopsByDistance(shop.latitude, shop.longitude, citySlug, 3, 40, {
+          ownership: ["independent"],
+          excludeSlug: shop.slug,
+        }).catch((e) => logQueryError("listing getNearbyShopsByDistance independent", e, []))
+      : []
 
   /* Parse about JSON for display */
   const aboutEntries: { key: string; value: string }[] = []
@@ -479,6 +492,20 @@ export default async function ListingPage({ params }: PageProps) {
       </section>
 
       <FaqSection items={listingFaqs(shop)} heading={`${shop.name} — FAQ`} />
+
+      {/* Independent alternatives — only on chain/OEM/big-box listings */}
+      {independentNearby.length > 0 && (
+        <section className="bg-[var(--color-cream)] py-12 border-t border-[var(--color-border)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeader title={`Independent fitters near ${expandCityName(shop.city ?? "")}`} />
+            <p className="-mt-4 mb-8 text-sm text-[var(--color-charcoal-light)] max-w-2xl">
+              Prefer an independently owned shop? These fitters are within{" "}
+              {Math.ceil(Math.max(...independentNearby.map((s) => s.distanceMi)))} miles.
+            </p>
+            <ListingGrid shops={independentNearby} reveal />
+          </div>
+        </section>
+      )}
 
       {/* Nearby Fitters */}
       {nearby.length > 0 && (

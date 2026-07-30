@@ -43,8 +43,14 @@ fitting-signal shops only).
 | Uinta | 5 | ok |
 | 2nd Swing | 4 | ok |
 
-Follow-up data task (bulk-upload workflow, dry-run first): source + import PGA Tour
-Superstore and GolfTEC locations; rename Vans listings.
+**CANCELLED 2026-07-29 — founder positioning call:** the site highlights local/
+independent shops; big chains stay only as a comparison foil. No PGA Tour
+Superstore / GolfTEC imports, no Vans rename. Instead: 146 chain-branded
+listings reclassified to `national_chain` (ownership_type), and chain/OEM/big-box
+listing pages now render an "Independent fitters near {city}" module that steers
+branded-search visitors to local alternatives. "Independent"-phrased keywords
+have ~zero search volume (verified via OpenSEO) — independence is the conversion
+angle, not the traffic angle; traffic still arrives via the clusters above.
 
 ### 2. City "near me" intent (city hub pages)
 Google resolves "near me" to city pages. FittingPros city hubs hit pos 15–16.

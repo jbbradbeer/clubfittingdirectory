@@ -1,7 +1,7 @@
 export const SITE_URL = "https://clubfittingdirectory.com"
 export const SITE_NAME = "Club Fitting Directory"
 export const SITE_DESCRIPTION =
-  "Find independent golf club fitting shops near you. Browse 700+ hand-vetted fitters, simulators, and retailers across all 50 states — curated by The Tuxedo Collective."
+  "Find independent golf club fitting shops near you. Browse 1,000+ hand-vetted fitters, simulators, and retailers across all 50 US states."
 
 /* Named author for guides — a visible byline plus Person schema is an E-E-A-T
    trust signal Google and AI engines weigh more than an anonymous Organization

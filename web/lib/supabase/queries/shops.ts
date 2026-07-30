@@ -453,6 +453,11 @@ export const getNearbyShopsByDistance = cache(async (
   excludeCitySlug: string,
   limit = 6,
   radiusMi = 60,
+  // opts.ownership narrows to those ownership types (chain listing pages use
+  // ["independent"] for the alternatives module). opts.excludeSlug drops one
+  // shop by slug INSTEAD of the whole anchor city — a chain listing wants
+  // same-city independents shown, so city-level exclusion would be wrong there.
+  opts?: { ownership?: string[]; excludeSlug?: string },
 ): Promise<(Shop & { distanceMi: number })[]> => {
   const supabase = createStaticClient()
   // Bounding box around the anchor. ~69 miles per degree of latitude; longitude
@@ -463,7 +468,7 @@ export const getNearbyShopsByDistance = cache(async (
   const lngDelta = radiusMi / (69 * Math.max(0.2, Math.cos((lat * Math.PI) / 180)))
 
   const candidates = await fetchAllRows<Shop>(() => {
-    const q = supabase
+    let q = supabase
       .from("shops")
       .select(CARD_FIELDS)
       .eq("status", "active")
@@ -474,13 +479,18 @@ export const getNearbyShopsByDistance = cache(async (
       .gte("longitude", lng - lngDelta)
       .lte("longitude", lng + lngDelta)
       .order("id", { ascending: true })
+    if (opts?.ownership?.length) q = q.in("ownership_type", opts.ownership)
     return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
   })
 
   return candidates
     .filter((s) => s.latitude != null && s.longitude != null)
-    // Drop the anchor city's own shops — those already render on the page.
-    .filter((s) => !(s.city && toCitySlug(s.city, s.state_code) === excludeCitySlug))
+    .filter((s) =>
+      opts?.excludeSlug
+        ? s.slug !== opts.excludeSlug
+        : // Drop the anchor city's own shops — those already render on the page.
+          !(s.city && toCitySlug(s.city, s.state_code) === excludeCitySlug),
+    )
     .map((s) => ({ ...s, distanceMi: haversineMiles(lat, lng, s.latitude!, s.longitude!) }))
     .filter((s) => s.distanceMi <= radiusMi)
     .sort((a, b) => a.distanceMi - b.distanceMi || String(a.id).localeCompare(String(b.id)))

@@ -180,9 +180,15 @@ export default async function HomePage() {
             data-reveal
           >
             <SectionHeader title="Highest-rated fitters" centered={false} />
-            <Button href="/directory" variant="outline" size="sm">
-              View all {hasStats ? `${stats.total.toLocaleString()} ` : ""}shops
-            </Button>
+            <div className="flex items-center gap-3">
+              {/* Independent-first: the audience we champion gets its own door in. */}
+              <Button href="/directory?ownership=independent" variant="outline" size="sm">
+                Independent shops only
+              </Button>
+              <Button href="/directory" variant="outline" size="sm">
+                View all {hasStats ? `${stats.total.toLocaleString()} ` : ""}shops
+              </Button>
+            </div>
           </div>
           <ListingGrid shops={topShops} className="mt-12" reveal />
         </div>
