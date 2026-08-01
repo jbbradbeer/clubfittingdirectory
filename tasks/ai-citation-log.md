@@ -18,3 +18,20 @@ Monthly tracking of whether clubfittingdirectory.com appears in web search resul
 - First month of tracking — no prior baseline to compare against.
 - Only cited on the direct-intent "club fitting directory" query; absent on all city-specific and informational queries.
 - fittingpros.com and clubchampion.com are the most consistent competitors across queries — worth watching as primary SEO/AI-visibility rivals.
+
+## 2026-08-01
+
+| Query | Cited? | Position | Who ranks instead |
+|---|---|---|---|
+| best golf club fitter in Austin | No | Absent | clubchampion.com, bartoncreekfittingstudio.com, golftec.com |
+| best club fitter in Denver | No | Absent | gottgolf.com, truespecgolf.com, clubchampion.com |
+| how much does a golf club fitting cost | No | Absent | truespecgolf.com, pgatoursuperstore.com, mygolfspy.com |
+| top independent club fitters in Texas | No | Absent | fittingpros.com (via GolfWRX), clubchampion.com, mkgolftech.com |
+| golf club fitting near me Chicago | No | Absent | pgatoursuperstore.com, clubchampion.com, golftec.com |
+| state of club fitting 2026 | No | Absent | golfdatatech.com, mygolfspy.com, pluggedingolf.com |
+| club fitting directory | Yes | Top 3 (3rd of 7 links) | fittingpros.com, clubfittingdirectory.com (us), customclubfitters.com |
+| where to get fitted for golf clubs Phoenix | No | Absent | pgatoursuperstore.com, truespecgolf.com, theclubfix.com |
+
+- No change from July: still cited only on the direct-intent "club fitting directory" query, still absent on every city-specific and informational query.
+- fittingpros.com and clubchampion.com remain the dominant, most consistent competitors across nearly every query — unchanged from last month.
+- golfdigest.com dropped out of the "club fitting directory" top results this month (customclubfitters.com and fittingpros.com now lead); worth another look next month to confirm.
