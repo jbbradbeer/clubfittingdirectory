@@ -19,7 +19,7 @@ export const golfClubFittingChartGuide: Guide = {
   ],
   readMinutes: 7,
   datePublished: "2026-06-03",
-  dateModified: "2026-07-04",
+  dateModified: "2026-08-03",
   blocks: [
     {
       type: "paragraph",
@@ -93,6 +93,16 @@ export const golfClubFittingChartGuide: Guide = {
       type: "callout",
       text: "Flex labels are not standardised across brands — one maker's 'Stiff' can play softer than another's 'Regular'. Shaft weight and profile matter as much as the flex label, which is why trying shafts on a launch monitor beats any chart.",
     },
+    {
+      type: "paragraph",
+      text: [
+        "For a full explanation of all five flex categories, a separate iron shaft flex chart by 7-iron speed, and how your swing tempo affects which flex you actually need, see our ",
+        { text: "golf shaft flex guide", href: "/guides/golf-shaft-flex" },
+        ". For how a fitter actually tests shafts and when a reshaft beats buying new clubs, see the ",
+        { text: "shaft fitting guide", href: "/guides/shaft-fitting" },
+        ".",
+      ],
+    },
 
     { type: "heading", level: 2, text: "How to read lie angle" },
     {
@@ -107,6 +117,14 @@ export const golfClubFittingChartGuide: Guide = {
         ["Mark toward the toe / ball pushes right", "Lie is too flat", "Bend more upright"],
         ["Mark in the centre / ball flies straight", "Lie is correct", "No change"],
         ["Mark toward the heel / ball pulls left", "Lie is too upright", "Bend flatter"],
+      ],
+    },
+    {
+      type: "paragraph",
+      text: [
+        "To understand exactly how lie angle affects your ball flight and what a fitting does to measure and correct it, see our dedicated ",
+        { text: "lie angle guide", href: "/guides/lie-angle" },
+        ".",
       ],
     },
 
@@ -124,6 +142,14 @@ export const golfClubFittingChartGuide: Guide = {
         ["7\" – 8.25\"", "Standard"],
         ["8.25\" – 9.25\"", "Midsize"],
         ["Over 9.25\"", "Jumbo / Oversize"],
+      ],
+    },
+    {
+      type: "paragraph",
+      text: [
+        "For a more detailed look at how grip size affects your release, feel, and shot shape — plus how to measure accurately — see our ",
+        { text: "golf grip size guide", href: "/guides/golf-grip-size" },
+        ".",
       ],
     },
 
@@ -168,6 +194,10 @@ export const golfClubFittingChartGuide: Guide = {
   related: [
     { label: "Golf Club Fitting: The Complete Guide", href: "/guides/golf-club-fitting" },
     { label: "Where to Get Fitted for Golf Clubs", href: "/guides/where-to-get-fitted-for-golf-clubs" },
+    { label: "Golf Shaft Flex, Explained + Chart (2026)", href: "/guides/golf-shaft-flex" },
+    { label: "Lie Angle in Golf, Explained", href: "/guides/lie-angle" },
+    { label: "Golf Grip Size: Chart + How to Measure", href: "/guides/golf-grip-size" },
+    { label: "Golf Shaft Fitting: How It Works", href: "/guides/shaft-fitting" },
     { label: "Golf Club Length Calculator", href: "/tools/golf-club-length-calculator" },
     { label: "Golf Shaft Flex Calculator", href: "/tools/golf-shaft-flex-calculator" },
   ],

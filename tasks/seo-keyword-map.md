@@ -52,6 +52,17 @@ voice-of-customer frequency.
 | 19 | Golf Grip Size: Chart + How to Measure | golf grip size chart | S: own cluster · C: component shops only · Chart/snippet win. |
 | 20 | Senior Golf Club Fitting: What Changes | golf club fitting for seniors | S: audience cluster · C: True Spec 2022 thin post only. (Women's fitting guide is the natural #21.) |
 
+### Queue re-sort note — 2026-08-03 (maintenance pass)
+
+GSC pull script failed in this environment (Python module error — service-account key not available). Most recent manual GSC export remains 2026-06-10. Queue re-sort based on that data plus competitive signals from web search (2026-08-03):
+
+- **Item #12 (Golf Shaft Flex Chart) shipped 2026-08-03.** Driver + iron charts in one place; cross-links to shaft-fitting glossary guide.
+- **Item #13 (Putter Fitting) confirmed next.** True Spec's putter fitting posts are dated 2022–2023; SAM PuttLab content gap still open. Forum signal: "even at $125 worth it for peace of mind." Remains at #13.
+- **Item #15 (Fitted for Existing Clubs) strong.** "Can you get fitted for clubs you already own?" — nearly untouched by competitors; ties to repair CTA. Bumped above #16.
+- No other order changes. Items 13 → 15 → 16 → 17 → 18 → 19 → 20 reflects current signal.
+
+*James — the GSC key isn't set up in this environment and the manual export is stale; run the pull locally or drop a fresh export into `tasks/`.*
+
 ### Queue re-sort note — 2026-07-06 (GSC export: 2026-06-10)
 
 Re-reviewed queue order against the 2026-06-10 GSC export (most recent available; script can't run in this environment — no service-account key):
