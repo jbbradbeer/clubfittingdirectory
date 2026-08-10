@@ -43,7 +43,7 @@ voice-of-customer frequency.
 | 10 | Iron Fitting Guide | iron fitting (+ worth it) | Same as #9; forum lean "irons ≥ driver" is the fresh angle. — ✅ drafted 2026-07-27 |
 | 11 | ✅ Lessons or Club Fitting First? (shipped 2026-07-30, `lessons-or-fitting-first`) | golf lessons or club fitting first | V: HIGH, the standard thread debate · C: only Club Champion covers it (self-servingly). Include the "Phantom Miss" bent-lie story archetype. |
 | 12 | ✅ Golf Shaft Flex, Explained (+ Swing-Speed Chart) (shipped 2026-08-03, `golf-shaft-flex`) | golf shaft flex chart / what shaft flex do I need | S: deep (per-mph variants: 80/85/90/100) · C: MyGolfSpy chart ranks — beatable with a cleaner consumer table · Chart format earns links/snippets. |
-| 13 | Putter Fitting: Worth It? What Happens? | putter fitting (+ worth it) | S: own family · V: "even at $125 worth it" · C: True Spec x3 but thin/dated. |
+| 13 | ✅ Putter Fitting: What Happens and Is It Worth It? (shipped 2026-08-10, `putter-fitting`) | putter fitting (+ worth it) | S: own family · V: "even at $125 worth it" · C: True Spec x3 but thin/dated. |
 | 14 | ✅ Do Beginners Need a Club Fitting? (shipped 2026-07-30, `club-fitting-for-beginners`) | golf club fitting for beginners | S: audience cluster · V: VERY HIGH overlap w/ #2 (different SERP) · C: covered but all self-serving — honest take wins. |
 | 15 | Can You Get Fitted for Clubs You Already Own? | fitting existing clubs / fitted for used clubs | S: notable "existing clubs" sub-intent · V: most-upvoted money strategy · C: nearly untouched (one CC promo post). Repair/adjustment tie-in → directory. |
 | 16 | Wedge Fitting: Where to Start | wedge fitting | C: only MyGolfSpy 101 · V: "wedge fitting doesn't seem to be a thing" confusion = the angle. |
