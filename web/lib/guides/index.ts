@@ -24,6 +24,7 @@ import { golfClubMoiGuide } from "@/lib/guides/golf-club-moi"
 import { launchMonitorsGuide } from "@/lib/guides/launch-monitors"
 import { golfGripSizeGuide } from "@/lib/guides/golf-grip-size"
 import { golfShaftFlexGuide } from "@/lib/guides/golf-shaft-flex"
+import { putterFittingGuide } from "@/lib/guides/putter-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -65,6 +66,8 @@ export const GUIDES: Guide[] = [
   golfGripSizeGuide,
   // Shaft flex chart + what-flex-do-I-need guide (2026-08-03 — keyword-map #12)
   golfShaftFlexGuide,
+  // Club-by-Club guides (2026-08-10 — keyword-map #13)
+  putterFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
