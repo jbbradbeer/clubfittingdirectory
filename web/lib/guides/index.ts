@@ -26,6 +26,7 @@ import { golfGripSizeGuide } from "@/lib/guides/golf-grip-size"
 import { golfShaftFlexGuide } from "@/lib/guides/golf-shaft-flex"
 import { putterFittingGuide } from "@/lib/guides/putter-fitting"
 import { fittingExistingClubsGuide } from "@/lib/guides/fitting-existing-clubs"
+import { pingFittingGuide } from "@/lib/guides/ping-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -71,6 +72,8 @@ export const GUIDES: Guide[] = [
   putterFittingGuide,
   // Smart-golfer strategy spokes (2026-08-10 — keyword-map #15)
   fittingExistingClubsGuide,
+  // Brand-specific fitting guides (2026-08-17 — keyword-map #17)
+  pingFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
