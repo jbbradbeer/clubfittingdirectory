@@ -28,6 +28,7 @@ import { putterFittingGuide } from "@/lib/guides/putter-fitting"
 import { fittingExistingClubsGuide } from "@/lib/guides/fitting-existing-clubs"
 import { wedgeFittingGuide } from "@/lib/guides/wedge-fitting"
 import { pingFittingGuide } from "@/lib/guides/ping-fitting"
+import { indoorVsOutdoorFittingGuide } from "@/lib/guides/indoor-vs-outdoor-fitting"
 import { golfGripSizeChartGuide } from "@/lib/guides/golf-grip-size-chart"
 
 /* ─────────────────────────────────────────────────────────
@@ -77,6 +78,8 @@ export const GUIDES: Guide[] = [
   // Club-by-Club + brand-specific guides (2026-08-17 — keyword-map #16, #17)
   wedgeFittingGuide,
   pingFittingGuide,
+  // Venue / environment guide (2026-08-24 — keyword-map #18)
+  indoorVsOutdoorFittingGuide,
   // Grip size chart — chart-intent companion to golf-grip-size glossary (2026-08-24 — keyword-map #19)
   golfGripSizeChartGuide,
 ]
