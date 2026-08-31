@@ -30,6 +30,7 @@ import { wedgeFittingGuide } from "@/lib/guides/wedge-fitting"
 import { pingFittingGuide } from "@/lib/guides/ping-fitting"
 import { indoorVsOutdoorFittingGuide } from "@/lib/guides/indoor-vs-outdoor-fitting"
 import { golfGripSizeChartGuide } from "@/lib/guides/golf-grip-size-chart"
+import { seniorGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-seniors"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -82,6 +83,8 @@ export const GUIDES: Guide[] = [
   indoorVsOutdoorFittingGuide,
   // Grip size chart — chart-intent companion to golf-grip-size glossary (2026-08-24 — keyword-map #19)
   golfGripSizeChartGuide,
+  // Persona spoke: senior golfers (2026-08-31 — keyword-map #20)
+  seniorGolfClubFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
