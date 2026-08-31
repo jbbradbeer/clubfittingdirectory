@@ -50,7 +50,7 @@ voice-of-customer frequency.
 | 17 | ✅ Ping Fitting: Color Code Chart Explained + Where to Get Fitted (shipped 2026-08-17, `ping-fitting`) | ping fitting / ping color code chart | G: "ping fitters near me" impression already · C: weak third parties rank beside ping.com; caddiehq template · Directory answers the "where" natively. |
 | 18 | ✅ Indoor vs. Outdoor Fitting: Can You Trust the Numbers? (shipped 2026-08-24, `indoor-vs-outdoor-fitting`) | indoor vs outdoor golf fitting | V: MEDIUM recurring trust worry · C: only Club Champion's self-defense post. Mat-vs-turf lie story; independents with outdoor fitting get showcased. |
 | 19 | ✅ Golf Grip Size: Chart + How to Measure (shipped 2026-08-24, `golf-grip-size-chart`) | golf grip size chart | S: own cluster · C: component shops only · Chart/snippet win. Cross-links to `golf-grip-size` glossary guide per Fitting Glossary note. |
-| 20 | Senior Golf Club Fitting: What Changes | golf club fitting for seniors | S: audience cluster · C: True Spec 2022 thin post only. (Women's fitting guide is the natural #21.) |
+| 20 | ✅ Senior Golf Club Fitting: What Changes (shipped 2026-08-31, `golf-club-fitting-for-seniors`) | golf club fitting for seniors | S: audience cluster · C: True Spec 2022 thin post only. (Women's fitting guide is the natural #21.) |
 
 ### Queue re-sort note — 2026-08-03 (maintenance pass)
 
