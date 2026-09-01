@@ -35,3 +35,20 @@ Monthly tracking of whether clubfittingdirectory.com appears in web search resul
 - No change from July: still cited only on the direct-intent "club fitting directory" query, still absent on every city-specific and informational query.
 - fittingpros.com and clubchampion.com remain the dominant, most consistent competitors across nearly every query — unchanged from last month.
 - golfdigest.com dropped out of the "club fitting directory" top results this month (customclubfitters.com and fittingpros.com now lead); worth another look next month to confirm.
+
+## 2026-09-01
+
+| Query | Cited? | Position | Who ranks instead |
+|---|---|---|---|
+| best golf club fitter in Austin | No | Absent | clubchampion.com, golftec.com, yelp.com |
+| best club fitter in Denver | No | Absent | truespecgolf.com, clubchampion.com, golftec.com |
+| how much does a golf club fitting cost | No | Absent | truespecgolf.com, mygolfspy.com, outofboundsgolf.com |
+| top independent club fitters in Texas | No | Absent | clubchampion.com, fittingpros.com, mkgolftech.com |
+| golf club fitting near me Chicago | No | Absent | pgatoursuperstore.com, clubchampion.com, golftec.com |
+| state of club fitting 2026 | No | Absent | pluggedingolf.com, mygolfspy.com, golfdatatech.com |
+| club fitting directory | Yes | Top 10 (4th of 8 links) | golfdigest.com, golf.com, fittingpros.com |
+| where to get fitted for golf clubs Phoenix | No | Absent | pgatoursuperstore.com, truespecgolf.com, theclubfix.com |
+
+- Same pattern as July/August: cited only on the direct-intent "club fitting directory" query; absent on all 7 city-specific and informational queries.
+- On "club fitting directory," position slipped from 3rd (July/Aug) to 4th–5th of 8 — golfdigest.com and golf.com's new Top 50 Clubfitters directory page now rank above us; customclubfitters.com dropped out of the top links entirely this month.
+- fittingpros.com and clubchampion.com remain the most consistent competitors across nearly every query, three months running — still the primary AI-visibility rivals to target.
