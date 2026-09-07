@@ -52,6 +52,19 @@ voice-of-customer frequency.
 | 19 | ✅ Golf Grip Size: Chart + How to Measure (shipped 2026-08-24, `golf-grip-size-chart`) | golf grip size chart | S: own cluster · C: component shops only · Chart/snippet win. Cross-links to `golf-grip-size` glossary guide per Fitting Glossary note. |
 | 20 | ✅ Senior Golf Club Fitting: What Changes (shipped 2026-08-31, `golf-club-fitting-for-seniors`) | golf club fitting for seniors | S: audience cluster · C: True Spec 2022 thin post only. (Women's fitting guide is the natural #21.) |
 
+### Queue re-sort note — 2026-09-07 (maintenance pass)
+
+GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now over 3 months old.
+
+Queue status: all 21 rows are ✅. The entire planned persona and club-by-club cluster is published. Recommended next priorities based on competitive signals from this week's web searches:
+
+- **Left-handed golfer fitting** — True Spec's persona series includes a thin 2022 left-handed post; no neutral guide exists. High forum anxiety ("lefty access problems recur").
+- **Junior golf club fitting** — True Spec covers it thinly; high parental search intent; unique angle: when to start, how to time refitting as kids grow.
+- **Callaway/TaylorMade/Titleist fitting guide** — brand-specific "where + what to expect" pages (as Ping fitting was) — Callaway and TaylorMade fitting pages are thin on third-party sites.
+- **How often to get refitted** — FAQ-cluster query, unserved by neutral content; ties into the "when to refit" sub-intent.
+
+*James — the GSC key isn't set up in this environment and the manual export is stale; run the pull locally or drop a fresh export into `tasks/` to re-sort by real impression data before the next run drafts from this list.*
+
 ### Queue re-sort note — 2026-08-03 (maintenance pass)
 
 GSC pull script failed in this environment (Python module error — service-account key not available). Most recent manual GSC export remains 2026-06-10. Queue re-sort based on that data plus competitive signals from web search (2026-08-03):

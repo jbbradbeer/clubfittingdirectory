@@ -19,7 +19,7 @@ export const isGolfClubFittingWorthItGuide: Guide = {
   ],
   readMinutes: 7,
   datePublished: "2026-06-29",
-  dateModified: "2026-07-04",
+  dateModified: "2026-09-07",
   blocks: [
     {
       type: "paragraph",
@@ -58,7 +58,13 @@ export const isGolfClubFittingWorthItGuide: Guide = {
     },
     {
       type: "paragraph",
-      text: "Starting with one club — your driver or your most-played iron, whichever causes the most trouble — is the sensible first step. You will come away with concrete spec data (shaft flex, lie angle, loft settings, grip size) that is useful information regardless of what you do next. Forum golfers who were fitted at the 80–99 score level consistently report the investment was worth it; the most common phrase is that fitting \"removed a variable\" they had been blaming on their swing.",
+      text: [
+        "Starting with one club — your ",
+        { text: "driver", href: "/guides/driver-fitting" },
+        " or your most-played ",
+        { text: "iron", href: "/guides/iron-fitting" },
+        ", whichever causes the most trouble — is the sensible first step. You will come away with concrete spec data (shaft flex, lie angle, loft settings, grip size) that is useful information regardless of what you do next. Forum golfers who were fitted at the 80–99 score level consistently report the investment was worth it; the most common phrase is that fitting \"removed a variable\" they had been blaming on their swing.",
+      ],
     },
 
     { type: "heading", level: 2, text: "If you shoot below 80" },
@@ -74,7 +80,11 @@ export const isGolfClubFittingWorthItGuide: Guide = {
     { type: "heading", level: 2, text: "Lessons or fitting first? The honest sequence" },
     {
       type: "paragraph",
-      text: "Forum consensus leans toward lessons first, then fit the improved swing. But the full answer has a wrinkle: badly fitting clubs can make lessons harder. If your irons are sending the ball offline because of a wrong lie angle, an instructor cannot easily separate swing errors from equipment errors. The practical sequence most experienced golfers recommend is: start with used clubs in the right approximate size, take some lessons, do a quick basics check to rule out obvious equipment problems, then book a proper fitting once your swing stabilises — usually around the time you are consistently breaking 90.",
+      text: [
+        "Forum consensus leans toward lessons first, then fit the improved swing. But the full answer has a wrinkle: badly fitting clubs can make lessons harder. If your irons are sending the ball offline because of a wrong lie angle, an instructor cannot easily separate swing errors from equipment errors. The practical sequence most experienced golfers recommend is: start with used clubs in the right approximate size, take some lessons, do a quick basics check to rule out obvious equipment problems, then book a proper fitting once your swing stabilises — usually around the time you are consistently breaking 90. Our full guide to ",
+        { text: "lessons or fitting first", href: "/guides/lessons-or-fitting-first" },
+        " walks through the sequence in detail, including when the two overlap.",
+      ],
     },
     {
       type: "paragraph",
@@ -130,6 +140,18 @@ export const isGolfClubFittingWorthItGuide: Guide = {
         " breaks down what each venue type charges, explains the fee-waived model honestly, and covers the widely-recommended strategy of paying for a fitting and sourcing clubs separately.",
       ],
     },
+    {
+      type: "paragraph",
+      text: [
+        "If you are asking this question for a specific type of golfer, we have dedicated honest-broker guides for ",
+        { text: "beginners", href: "/guides/club-fitting-for-beginners" },
+        ", ",
+        { text: "senior golfers", href: "/guides/golf-club-fitting-for-seniors" },
+        ", and ",
+        { text: "women golfers", href: "/guides/golf-club-fitting-for-women" },
+        " — each covers the same worth-it question from the angle that matters most for that group.",
+      ],
+    },
   ],
 
   faqs: [
@@ -162,5 +184,8 @@ export const isGolfClubFittingWorthItGuide: Guide = {
       label: "Where to Get Fitted for Golf Clubs",
       href: "/guides/where-to-get-fitted-for-golf-clubs",
     },
+    { label: "Lessons or Fitting First?", href: "/guides/lessons-or-fitting-first" },
+    { label: "Do Beginners Need a Club Fitting?", href: "/guides/club-fitting-for-beginners" },
+    { label: "Golf Club Fitting for Seniors", href: "/guides/golf-club-fitting-for-seniors" },
   ],
 }
