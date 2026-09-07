@@ -31,6 +31,7 @@ import { pingFittingGuide } from "@/lib/guides/ping-fitting"
 import { indoorVsOutdoorFittingGuide } from "@/lib/guides/indoor-vs-outdoor-fitting"
 import { golfGripSizeChartGuide } from "@/lib/guides/golf-grip-size-chart"
 import { seniorGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-seniors"
+import { womenGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-women"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -85,6 +86,8 @@ export const GUIDES: Guide[] = [
   golfGripSizeChartGuide,
   // Persona spoke: senior golfers (2026-08-31 — keyword-map #20)
   seniorGolfClubFittingGuide,
+  // Persona spoke: women golfers (2026-09-07 — keyword-map #21)
+  womenGolfClubFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
