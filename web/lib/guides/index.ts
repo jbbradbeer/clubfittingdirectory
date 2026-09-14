@@ -36,6 +36,7 @@ import { leftHandedGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-f
 import { howOftenToGetFittedGuide } from "@/lib/guides/how-often-to-get-fitted-for-golf-clubs"
 import { highHandicapperGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-high-handicappers"
 import { howLongDoesAGolfClubFittingTakeGuide } from "@/lib/guides/how-long-does-a-golf-club-fitting-take"
+import { howToPrepareForAGolfClubFittingGuide } from "@/lib/guides/how-to-prepare-for-a-golf-club-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -100,6 +101,8 @@ export const GUIDES: Guide[] = [
   howLongDoesAGolfClubFittingTakeGuide,
   // Persona spoke: high handicappers (2026-09-14 — keyword-map #25)
   highHandicapperGolfClubFittingGuide,
+  // Before-your-fitting spoke: how to prepare (2026-09-14 — keyword-map #26)
+  howToPrepareForAGolfClubFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
