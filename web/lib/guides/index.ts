@@ -32,6 +32,7 @@ import { indoorVsOutdoorFittingGuide } from "@/lib/guides/indoor-vs-outdoor-fitt
 import { golfGripSizeChartGuide } from "@/lib/guides/golf-grip-size-chart"
 import { seniorGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-seniors"
 import { womenGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-women"
+import { leftHandedGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-left-handed-golfers"
 import { howOftenToGetFittedGuide } from "@/lib/guides/how-often-to-get-fitted-for-golf-clubs"
 
 /* ─────────────────────────────────────────────────────────
@@ -89,6 +90,8 @@ export const GUIDES: Guide[] = [
   seniorGolfClubFittingGuide,
   // Persona spoke: women golfers (2026-09-07 — keyword-map #21)
   womenGolfClubFittingGuide,
+  // Persona spoke: left-handed golfers (2026-09-14 — keyword-map #22)
+  leftHandedGolfClubFittingGuide,
   // Fitting strategy spoke: how often to refit (2026-09-14 — keyword-map #23)
   howOftenToGetFittedGuide,
 ]
