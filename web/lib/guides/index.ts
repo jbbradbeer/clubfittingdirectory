@@ -33,6 +33,7 @@ import { golfGripSizeChartGuide } from "@/lib/guides/golf-grip-size-chart"
 import { seniorGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-seniors"
 import { womenGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-women"
 import { leftHandedGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-left-handed-golfers"
+import { howOftenToGetFittedGuide } from "@/lib/guides/how-often-to-get-fitted-for-golf-clubs"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -91,6 +92,8 @@ export const GUIDES: Guide[] = [
   womenGolfClubFittingGuide,
   // Persona spoke: left-handed golfers (2026-09-14 — keyword-map #22)
   leftHandedGolfClubFittingGuide,
+  // Fitting strategy spoke: how often to refit (2026-09-14 — keyword-map #23)
+  howOftenToGetFittedGuide,
 ]
 
 export function getAllGuides(): Guide[] {
