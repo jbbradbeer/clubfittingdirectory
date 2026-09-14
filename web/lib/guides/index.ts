@@ -34,6 +34,7 @@ import { seniorGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-s
 import { womenGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-women"
 import { leftHandedGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-left-handed-golfers"
 import { howOftenToGetFittedGuide } from "@/lib/guides/how-often-to-get-fitted-for-golf-clubs"
+import { highHandicapperGolfClubFittingGuide } from "@/lib/guides/golf-club-fitting-for-high-handicappers"
 import { howLongDoesAGolfClubFittingTakeGuide } from "@/lib/guides/how-long-does-a-golf-club-fitting-take"
 
 /* ─────────────────────────────────────────────────────────
@@ -97,6 +98,8 @@ export const GUIDES: Guide[] = [
   howOftenToGetFittedGuide,
   // Before-your-fitting spoke: how long does it take (2026-09-14 — keyword-map #24)
   howLongDoesAGolfClubFittingTakeGuide,
+  // Persona spoke: high handicappers (2026-09-14 — keyword-map #25)
+  highHandicapperGolfClubFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
