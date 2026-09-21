@@ -58,6 +58,21 @@ voice-of-customer frequency.
 | 25 | ✅ Golf Club Fitting for High Handicappers: Is It Worth It? (shipped 2026-09-14, `golf-club-fitting-for-high-handicappers`) | golf club fitting for high handicappers | V: HIGH forum signal ("I shoot 95–110") · C: Golf Monthly listicle, fitmygolfclubs.com thin affiliate · Gap: no neutral guide for 15–25 HCP golfers · Angle: yes for length/lie, no for fixing the slice; basics-check first. |
 | 26 | ✅ How to Prepare for a Golf Club Fitting (shipped 2026-09-14, `how-to-prepare-for-a-golf-club-fitting`) | how to prepare for a golf club fitting | V: strong before-booking intent — every golfer asks this before their first fitting · C: Club Champion self-serving "prepare for your fitting" blog + local shop posts — all chain-agenda · Gap: no honest independent checklist covering what to bring, what to wear, warm-up, budget convo · Angle: 9-item table checklist + "questions to ask your fitter" list that signals quality. |
 | 27 | ✅ Junior Golf Club Fitting: When Does Your Kid Need One? (shipped 2026-09-14, `junior-golf-club-fitting`) | junior golf club fitting | V: HIGH parental search intent · C: US Kids Golf retail pages, True Spec thin 2022 post · Gap: no neutral parent-facing guide that honestly addresses the growth-rate problem · Angle: height-chart method works for most; full fitting makes sense for serious competitors near adult size only. |
+| 28 | ✅ TaylorMade Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `taylormade-fitting`) | taylormade fitting / taylormade club fitting | C: TM's own branded pages + GolfGearDirect.blog cost-only page; no neutral broker guide · V: HIGH brand recognition; most-fitted brand globally · Gap: nobody explains the SelectFit system, venue comparison, or TM-specific vs. independent tradeoffs · Angle: myFittingExp locator + tiered venue comparison + honest multi-brand vs. brand-specific decision. |
+### Queue re-sort note — 2026-09-21
+
+GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now over 3 months old.
+
+Citation check 2026-09-21: clubfittingdirectory.com cited 2/19 prompts ("club fitting directory", "independent golf club fitter") — same as last week. Most-seen competitors: clubchampion.com (16/19), truespecgolf.com (12/19), fittingpros.com (7/19), pgatoursuperstore.com (7/19).
+
+Queue status after shipping row 28: the brand-specific series now covers Ping and TaylorMade. Recommended next priorities:
+
+- **Callaway fitting guide** — `callaway-fitting` — brand-specific series (#29 in queue); no neutral guide exists; GOLFTEC partnership makes free fitting widely available; Performance Center tiers + Distance Fitting honest assessment.
+- **Titleist fitting guide** — `titleist-fitting` — completes the Big Four brand series; Titleist's fitting locator is strong but no neutral third-party guide exists.
+- **Hybrid/fairway wood fitting** — `hybrid-fitting` — extends the club-by-club series; moderate forum frequency.
+- **Golf club regripping guide** (cost + when) — `golf-club-regripping` — repair cluster extension; 26% of directory shops offer regripping.
+
+*James — the GSC key isn't set up in this environment and the manual export is stale; run the pull locally or drop a fresh export into `tasks/` to re-sort by real impression data before the next run drafts from this list.*
 
 ### Queue re-sort note — 2026-09-07 (maintenance pass)
 
