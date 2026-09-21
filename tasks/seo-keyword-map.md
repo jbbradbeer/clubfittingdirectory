@@ -59,18 +59,19 @@ voice-of-customer frequency.
 | 26 | ✅ How to Prepare for a Golf Club Fitting (shipped 2026-09-14, `how-to-prepare-for-a-golf-club-fitting`) | how to prepare for a golf club fitting | V: strong before-booking intent — every golfer asks this before their first fitting · C: Club Champion self-serving "prepare for your fitting" blog + local shop posts — all chain-agenda · Gap: no honest independent checklist covering what to bring, what to wear, warm-up, budget convo · Angle: 9-item table checklist + "questions to ask your fitter" list that signals quality. |
 | 27 | ✅ Junior Golf Club Fitting: When Does Your Kid Need One? (shipped 2026-09-14, `junior-golf-club-fitting`) | junior golf club fitting | V: HIGH parental search intent · C: US Kids Golf retail pages, True Spec thin 2022 post · Gap: no neutral parent-facing guide that honestly addresses the growth-rate problem · Angle: height-chart method works for most; full fitting makes sense for serious competitors near adult size only. |
 | 28 | ✅ TaylorMade Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `taylormade-fitting`) | taylormade fitting / taylormade club fitting | C: TM's own branded pages + GolfGearDirect.blog cost-only page; no neutral broker guide · V: HIGH brand recognition; most-fitted brand globally · Gap: nobody explains the SelectFit system, venue comparison, or TM-specific vs. independent tradeoffs · Angle: myFittingExp locator + tiered venue comparison + honest multi-brand vs. brand-specific decision. |
+| 29 | ✅ Callaway Club Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `callaway-fitting`) | callaway club fitting / callaway fitting | C: Callaway's own pages + GOLFTEC brand pages; no neutral guide · V: HIGH brand volume, #2 OEM by US sales · Gap: no one explains Performance Center tiers, GOLFTEC partnership, or honest Distance Fitting assessment · Angle: free GOLFTEC fittings + Performance Center tiers + Distance Fitting honest take. |
+
 ### Queue re-sort note — 2026-09-21
 
 GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now over 3 months old.
 
 Citation check 2026-09-21: clubfittingdirectory.com cited 2/19 prompts ("club fitting directory", "independent golf club fitter") — same as last week. Most-seen competitors: clubchampion.com (16/19), truespecgolf.com (12/19), fittingpros.com (7/19), pgatoursuperstore.com (7/19).
 
-Queue status after shipping row 28: the brand-specific series now covers Ping and TaylorMade. Recommended next priorities:
+Queue status after shipping rows 28–29: the brand-specific series now covers Ping, TaylorMade, and Callaway. Recommended next priorities:
 
-- **Callaway fitting guide** — `callaway-fitting` — brand-specific series (#29 in queue); no neutral guide exists; GOLFTEC partnership makes free fitting widely available; Performance Center tiers + Distance Fitting honest assessment.
-- **Titleist fitting guide** — `titleist-fitting` — completes the Big Four brand series; Titleist's fitting locator is strong but no neutral third-party guide exists.
-- **Hybrid/fairway wood fitting** — `hybrid-fitting` — extends the club-by-club series; moderate forum frequency.
-- **Golf club regripping guide** (cost + when) — `golf-club-regripping` — repair cluster extension; 26% of directory shops offer regripping.
+- **Titleist fitting guide** — `titleist-fitting` — completes the Big Four brand series (Ping, TM, Callaway done); Titleist's fitting locator is strong but no neutral third-party guide exists; AVX/Pro V1 ball fitting is a unique angle no competitor covers.
+- **Hybrid/fairway wood fitting** — `hybrid-fitting` — extends the club-by-club series; True Spec has a thin 2023 post; "hybrid fitting worth it" has moderate forum frequency.
+- **Golf club regripping guide** (cost + when) — `golf-club-regripping` — repair cluster extension; regripping is the highest-frequency repair service (26% of directory shops).
 
 *James — the GSC key isn't set up in this environment and the manual export is stale; run the pull locally or drop a fresh export into `tasks/` to re-sort by real impression data before the next run drafts from this list.*
 
