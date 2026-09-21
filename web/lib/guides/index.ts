@@ -38,6 +38,7 @@ import { highHandicapperGolfClubFittingGuide } from "@/lib/guides/golf-club-fitt
 import { howLongDoesAGolfClubFittingTakeGuide } from "@/lib/guides/how-long-does-a-golf-club-fitting-take"
 import { howToPrepareForAGolfClubFittingGuide } from "@/lib/guides/how-to-prepare-for-a-golf-club-fitting"
 import { juniorGolfClubFittingGuide } from "@/lib/guides/junior-golf-club-fitting"
+import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -106,6 +107,8 @@ export const GUIDES: Guide[] = [
   howToPrepareForAGolfClubFittingGuide,
   // Persona spoke: junior golfers (2026-09-14 — keyword-map #27)
   juniorGolfClubFittingGuide,
+  // Brand-specific fitting guides: TaylorMade (2026-09-21 — keyword-map #28)
+  taylorMadeFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
