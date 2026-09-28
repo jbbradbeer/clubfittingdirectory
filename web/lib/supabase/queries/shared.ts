@@ -44,6 +44,15 @@ export function sanitizeSearchTerm(input: string): string {
   )
 }
 
+/* Escape a value for use as an EXACT (case-insensitive) match inside a
+   PostgREST `.ilike()`: `%` and `_` are LIKE wildcards and `\` is the escape
+   character, so a raw email like "%@%" would match every row. Use this when
+   the input must match literally; use sanitizeSearchTerm for free-text search
+   where wildcards are wanted. */
+export function escapeLikePattern(value: string): string {
+  return value.replace(/[\\%_]/g, (c) => `\\${c}`)
+}
+
 /* PostgREST (Supabase's API layer) silently caps every response at 1,000 rows.
    The shops table passed that size in June 2026, which silently truncated the
    sitemap, generateStaticParams, and the homepage stats — ~267 shops vanished
