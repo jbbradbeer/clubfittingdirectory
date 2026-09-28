@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type Stripe from "stripe"
 import { getStripe } from "@/lib/stripe"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateFeaturedShop } from "@/lib/verified"
+import { activateFeaturedShop, lapseFeaturedShop } from "@/lib/verified"
 import { sendPaymentReceivedEmail } from "@/lib/email"
 import { isPlanKey, type PlanKey } from "@/lib/plans"
 import { log } from "@/lib/logger"
@@ -56,6 +56,28 @@ export async function POST(request: Request) {
   // Subscription renewal auto-charges (recurring price only).
   if (event.type === "invoice.paid") {
     return handleRenewalInvoice(event.data.object as Stripe.Invoice)
+  }
+
+  // Subscription ended (owner cancelled, or Stripe gave up after failed
+  // retries): take the paid placement off right away instead of waiting for
+  // the daily expiry sweep. Nothing to double-apply — lapse is idempotent.
+  if (event.type === "customer.subscription.deleted") {
+    return handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
+  }
+
+  // A failed renewal charge is NOT a lapse: Stripe's smart retries run for
+  // days and usually recover. The badge already has verified_expires_at as its
+  // hard stop, and the daily sweep enforces it. We only log so the founder can
+  // reach out before the subscription cancels.
+  if (event.type === "invoice.payment_failed") {
+    const invoice = event.data.object as Stripe.Invoice
+    log.warn("api/stripe-webhook", "renewal payment failed — Stripe will retry", {
+      invoice: invoice.id,
+      shopSlug: invoice.parent?.subscription_details?.metadata?.shop_slug ?? null,
+      customerEmail: invoice.customer_email ?? null,
+      attempt: invoice.attempt_count,
+    })
+    return NextResponse.json({ received: true })
   }
 
   // Everything except a completed, paid checkout is acknowledged and ignored.
@@ -196,6 +218,36 @@ async function handleRenewalInvoice(invoice: Stripe.Invoice) {
     log.error("api/stripe-webhook", "renewal processing failed", {
       error: e,
       invoice: invoice.id,
+    })
+    return NextResponse.json({ error: "Processing failed." }, { status: 500 })
+  }
+}
+
+/* ── Subscription cancelled/ended ──
+   The shop is identified by the subscription metadata set at checkout
+   (subscription_data.metadata). One-time annual payments have no subscription,
+   so they never reach here — the daily expiry sweep ends those. */
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  const shopSlug = subscription.metadata?.shop_slug
+  if (!shopSlug) {
+    log.error("api/stripe-webhook", "subscription.deleted missing shop metadata", {
+      subscription: subscription.id,
+    })
+    return NextResponse.json({ received: true })
+  }
+
+  try {
+    const changed = await lapseFeaturedShop(shopSlug, "stripe_cancelled")
+    log.info("api/stripe-webhook", "subscription ended — featured lapsed", {
+      slug: shopSlug,
+      subscription: subscription.id,
+      changed,
+    })
+    return NextResponse.json({ received: true })
+  } catch (e) {
+    log.error("api/stripe-webhook", "lapse on subscription.deleted failed", {
+      error: e,
+      subscription: subscription.id,
     })
     return NextResponse.json({ error: "Processing failed." }, { status: 500 })
   }

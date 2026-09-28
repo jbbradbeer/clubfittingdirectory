@@ -47,6 +47,7 @@ ALTER TABLE public.shop_submissions ENABLE ROW LEVEL SECURITY;
 -- true" (lint 0024). That is INTENTIONAL here — anyone is meant to be able to
 -- submit a shop. There is deliberately NO SELECT/UPDATE/DELETE policy, so the
 -- public still cannot read back, edit, or delete submissions.
+DROP POLICY IF EXISTS "Public can submit a shop" ON public.shop_submissions;
 CREATE POLICY "Public can submit a shop"
   ON public.shop_submissions FOR INSERT
   TO anon, authenticated

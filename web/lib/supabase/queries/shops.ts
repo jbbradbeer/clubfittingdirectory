@@ -2,6 +2,7 @@ import { cache } from "react"
 import { createStaticClient } from "@/lib/supabase/server"
 import { toCitySlug } from "@/lib/slugs"
 import type { Shop } from "@/types/shop"
+import { TOP_RATED_MIN_RATING, TOP_RATED_MIN_REVIEWS } from "@/lib/badges"
 import {
   CARD_FIELDS,
   fetchAllRows,
@@ -27,7 +28,10 @@ export async function getTopRatedShops(limit = 6): Promise<Shop[]> {
     .from("shops")
     .select(CARD_FIELDS)
     .eq("status", "active")
-    .gte("rating", 4.8)
+    // Same bar as the Top Rated badge (lib/badges.ts): a 5.0 from two reviews
+    // must not headline the homepage while rendering without the badge.
+    .gte("rating", TOP_RATED_MIN_RATING)
+    .gte("reviews", TOP_RATED_MIN_REVIEWS)
     .order("rating", { ascending: false, nullsFirst: false })
     .order("reviews", { ascending: false, nullsFirst: false })
     // Stable tiebreaker by id so rows that tie on the sort key always come back
@@ -200,6 +204,7 @@ export async function searchShops(
     .or(`name.ilike.%${term}%,city.ilike.%${term}%,state.ilike.%${term}%`)
     .order("is_featured", { ascending: false })
     .order("rating", { ascending: false, nullsFirst: false })
+    .order("id", { ascending: true }) // stable tiebreaker — ties at 4.8–5.0 are common and this response is CDN-cached
     .limit(limit)
 
   if (error) throw error
@@ -435,27 +440,35 @@ export const getShopsForCityPage = cache(async (
   const cityFirstWord = (parts[0] ?? "").replace(/[^a-z0-9]/gi, "")
 
   const supabase = createStaticClient()
-  const stateShops = await fetchAllRows<Shop>(() => {
-    let query = supabase
-      .from("shops")
-      .select(CARD_FIELDS)
-      .eq("status", "active")
-      .eq("state_code", stateCode)
-    if (cityFirstWord) query = query.ilike("city", `${cityFirstWord}%`)
-    const q = query
-      .order("is_featured", { ascending: false })
-      .order("rating",      { ascending: false, nullsFirst: false })
-      .order("id",          { ascending: true }) // stable tiebreaker — see getTopRatedShops
-    return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
-  })
+  const fetchState = (prefix: string | null) =>
+    fetchAllRows<Shop>(() => {
+      let query = supabase
+        .from("shops")
+        .select(CARD_FIELDS)
+        .eq("status", "active")
+        .eq("state_code", stateCode)
+      if (prefix) query = query.ilike("city", `${prefix}%`)
+      const q = query
+        .order("is_featured", { ascending: false })
+        .order("rating",      { ascending: false, nullsFirst: false })
+        .order("id",          { ascending: true }) // stable tiebreaker — see getTopRatedShops
+      return q as unknown as PagedQuery<Shop> // CARD_FIELDS is dynamic, so rows can't be inferred
+    })
 
   // Match by SLUG (not exact city string) for both identification and filtering,
   // so cities whose spellings collapse to the same slug (e.g. "St. Louis" and
   // "St Louis" → "st-louis-mo") are grouped together instead of one silently
   // hiding the other's listings.
-  const shops = stateShops.filter(
-    (s) => s.city && toCitySlug(s.city, stateCode) === citySlug,
-  )
+  const inCity = (rows: Shop[]) =>
+    rows.filter((s) => s.city && toCitySlug(s.city, stateCode) === citySlug)
+
+  let shops = inCity(await fetchState(cityFirstWord || null))
+  // The prefix narrowing assumes the stored city STARTS with the slug's first
+  // token. toCitySlug strips leading non-alphanumerics (e.g. "Ávila" → "vila"),
+  // so for those cities the narrowed query finds nothing while the slug is
+  // still valid (it's in generateStaticParams + the sitemap). Fall back to the
+  // whole state before declaring a 404.
+  if (shops.length === 0 && cityFirstWord) shops = inCity(await fetchState(null))
 
   if (shops.length === 0) return null
 

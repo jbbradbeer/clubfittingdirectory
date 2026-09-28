@@ -119,6 +119,7 @@ ALTER TABLE public.shops ENABLE ROW LEVEL SECURITY;
 -- authenticated" (lints 0026/0027). That is INTENTIONAL — a public directory must
 -- let anonymous visitors read active shops. The policy above limits them to
 -- status = 'active' rows; writes are blocked (no write policy → service_role only).
+DROP POLICY IF EXISTS "Public read active shops" ON public.shops;
 CREATE POLICY "Public read active shops"
   ON public.shops FOR SELECT
   USING (status = 'active');
