@@ -41,6 +41,9 @@ export function sanitizeSearchTerm(input: string): string {
       // break or alter the query.
       .replace(/[,()%\\*]/g, " ")
       .trim()
+      // No real search is longer than this; without a cap a 50 KB `q` becomes a
+      // 50 KB ILIKE pattern run against every row, twice (count + data).
+      .slice(0, 80)
   )
 }
 

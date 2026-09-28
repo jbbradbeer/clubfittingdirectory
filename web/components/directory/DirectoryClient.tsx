@@ -104,10 +104,12 @@ export function DirectoryClient({
       if (e.key === "Escape") setFiltersOpen(false)
     }
     document.addEventListener("keydown", onKey)
+    // Snapshot the toggle now: by cleanup time the ref may point elsewhere.
+    const toggle = filtersToggleRef.current
     return () => {
       document.body.style.overflow = ""
       document.removeEventListener("keydown", onKey)
-      filtersToggleRef.current?.focus()
+      toggle?.focus()
     }
   }, [filtersOpen])
 

@@ -1,5 +1,61 @@
 # Codebase Bug Audit & Remediation Plan (2026-05-31)
 
+## Senior-engineer audit + fixes — 2026-09-28
+
+Branch `fix/audit-2026-09`. Three read-only audits (web app, DB/data layer, recurring
+processes); full findings + tiers in `~/.claude/plans/evaluate-this-project-for-snug-meadow.md`.
+Founder chose: Tier 1 + Tier 2 code fixes now, Tier 3 (ops/process) as backlog.
+
+### Tier 1 — shipped
+- [x] Featured badge/sort survived expiry forever → `getShopTag` no longer trusts `is_featured`;
+      `lapseFeaturedShop` (one path: admin button, Stripe `customer.subscription.deleted`,
+      daily cron sweep); activation now filters `status='active'`.
+- [x] New `GET /api/cron/daily` (vercel.json cron 06:00 UTC, `CRON_SECRET`): expiry sweep,
+      un-notified lead retry, `crawler_hits` 90-day prune.
+- [x] Portal magic-link `ilike` wildcard hole (`%@%` matched every claimed shop) → LIKE-escaped + validated.
+- [x] JSON-LD `<` escape (script breakout via scraped shop name).
+- [x] `proxy.ts` crawler logging: Googlebot/Bingbot no longer logged; 60s per-bot+path dedupe.
+- [x] Owner edit clearing a field → NOT NULL violation jammed the batch silently → null deletes the
+      owner fact; approve action returns the error inline.
+- [x] `/api/revalidate`: `/map` refresh, case-insensitive `/repair`, timing-safe secret + rate limit;
+      path logic moved to `lib/revalidate-paths.ts` (tested).
+- [x] Sitemap rethrows on query failure / refuses empty slug list.
+
+### Tier 2 — shipped
+- [x] Migration `019_indexes_and_retention.sql` (trigram + composite indexes, drop dup index, optional pg_cron prune).
+- [x] Migration `020_fitting_requests_notified.sql` (`notified_at`, `notify_attempts`).
+- [x] Listing page "nearby" is now by distance (state fallback when no coords).
+- [x] Homepage Top Rated carousel uses the badge's 25-review floor; `searchShops` stable tiebreaker.
+- [x] City page falls back to full-state query when the prefix narrowing finds nothing.
+- [x] Category subtitle excludes DC from the state count; `generateStaticParams` returns param keys only.
+- [x] `sanitizeSearchTerm` capped at 80 chars; lint ref-cleanup warning fixed.
+- [x] Migrations 001/002/007/009 policies made re-runnable (`DROP POLICY IF EXISTS`).
+
+### Owner actions to go live
+- [ ] Run `web/supabase/019_indexes_and_retention.sql` then `020_fitting_requests_notified.sql` in Supabase SQL editor.
+- [ ] Vercel env: add `CRON_SECRET` (`openssl rand -hex 32`) — the cron refuses to run without it.
+- [ ] Stripe dashboard → webhook → add events `customer.subscription.deleted` and `invoice.payment_failed`.
+- [ ] Merge PR, deploy with `vercel --prod` (git auto-deploy still broken — Tier 3 item A).
+- [ ] Confirm the Supabase revalidate webhook is actually wired (`tasks/wire-revalidation-webhook.md` checklist is unticked).
+
+### Tier 3 backlog (not started)
+CI deploy job + `.next/cache`; auto-disable revalidate trigger in `push_*_facts.py` + batch IndexNow;
+rewrite `outreach/README.md` (says Gmail drafts, code sends via AgentMail) + cron `check_replies.py`;
+enrichment `--resume` + rate limit; `scripts/_common.py`; `AGENTS.md` symlink + CLAUDE.md route fixes;
+admin cookie HMAC expiry; `.gitignore` `audit-issues.json`, `.codex/`.
+
+## Shop assistant product design — 2026-09-18
+
+- [x] Review existing directory and owner-portal planning context.
+- [x] Design a starter product for a typical independent fitter using explicit assumptions.
+- [x] Define first-release scope, owner screens, automation boundaries, pilot checks, and later additions.
+- [x] Founder review of the proposed product scope (approved 2026-09-18).
+- [x] Save staged directory integration roadmap in `tasks/shop-assistant-integration-plan.md`.
+- [x] Incorporate founder correction: standalone platform; directory is an optional connector. Current roadmap: `tasks/standalone-booking-platform-plan.md`.
+- [ ] Establish separate product workspace, then write stage-specific technical plans starting with business accounts and hosted booking intake.
+
+Review: proposal saved in `tasks/shop-assistant-product-design.md`. Documentation only; no application changes. Calendar provider and pricing remain decisions for pilot discovery, not unsupported compatibility or revenue promises.
+
 Context: Live site was down because Supabase env vars were missing on Vercel (fixed by
 adding them to Vercel + redeploy). Audit run afterward across data layer, pages, components,
 and config. Work organized into phases (bug fixes) + SEO batches. Domain clubfittingdirectory.com
