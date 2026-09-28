@@ -40,6 +40,7 @@ import { howToPrepareForAGolfClubFittingGuide } from "@/lib/guides/how-to-prepar
 import { juniorGolfClubFittingGuide } from "@/lib/guides/junior-golf-club-fitting"
 import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 import { callawayFittingGuide } from "@/lib/guides/callaway-fitting"
+import { titleistFittingGuide } from "@/lib/guides/titleist-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -111,6 +112,8 @@ export const GUIDES: Guide[] = [
   // Brand-specific fitting guides: TaylorMade + Callaway (2026-09-21 — keyword-map #28, #29)
   taylorMadeFittingGuide,
   callawayFittingGuide,
+  // Brand-specific fitting guide: Titleist (2026-09-28 — keyword-map #30)
+  titleistFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
