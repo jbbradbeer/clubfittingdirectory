@@ -41,7 +41,6 @@ import { juniorGolfClubFittingGuide } from "@/lib/guides/junior-golf-club-fittin
 import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 import { callawayFittingGuide } from "@/lib/guides/callaway-fitting"
 import { titleistFittingGuide } from "@/lib/guides/titleist-fitting"
-import { hybridFittingGuide } from "@/lib/guides/hybrid-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -115,8 +114,6 @@ export const GUIDES: Guide[] = [
   callawayFittingGuide,
   // Brand-specific fitting guide: Titleist (2026-09-28 — keyword-map #30)
   titleistFittingGuide,
-  // Club-by-Club: hybrid and fairway wood fitting (2026-09-28 — keyword-map #31)
-  hybridFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
