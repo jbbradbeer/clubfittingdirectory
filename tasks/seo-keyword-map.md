@@ -60,6 +60,22 @@ voice-of-customer frequency.
 | 27 | ✅ Junior Golf Club Fitting: When Does Your Kid Need One? (shipped 2026-09-14, `junior-golf-club-fitting`) | junior golf club fitting | V: HIGH parental search intent · C: US Kids Golf retail pages, True Spec thin 2022 post · Gap: no neutral parent-facing guide that honestly addresses the growth-rate problem · Angle: height-chart method works for most; full fitting makes sense for serious competitors near adult size only. |
 | 28 | ✅ TaylorMade Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `taylormade-fitting`) | taylormade fitting / taylormade club fitting | C: TM's own branded pages + GolfGearDirect.blog cost-only page; no neutral broker guide · V: HIGH brand recognition; most-fitted brand globally · Gap: nobody explains the SelectFit system, venue comparison, or TM-specific vs. independent tradeoffs · Angle: myFittingExp locator + tiered venue comparison + honest multi-brand vs. brand-specific decision. |
 | 29 | ✅ Callaway Club Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `callaway-fitting`) | callaway club fitting / callaway fitting | C: Callaway's own pages + GOLFTEC brand pages; no neutral guide · V: HIGH brand volume, #2 OEM by US sales · Gap: no one explains Performance Center tiers, GOLFTEC partnership, or honest Distance Fitting assessment · Angle: free GOLFTEC fittings + Performance Center tiers + Distance Fitting honest take. |
+| 30 | ✅ Titleist Fitting: What Happens and Where to Get Fitted (shipped 2026-09-28, `titleist-fitting`) | titleist fitting / titleist club fitting | C: Titleist's own pages + True Spec brand pages; no neutral third-party guide · V: HIGH brand recognition, most-played tour brand · Gap: no one explains the ball-first fitting sequence, TPI, or authorized fitter network honestly · Angle: ball-first fitting philosophy is unique; TPI flagship experience; True Spec as major fitting partner. |
+| 31 | ✅ Hybrid and Fairway Wood Fitting: Gaps, Lofts & What to Expect (shipped 2026-09-28, `hybrid-fitting`) | hybrid fitting / fairway wood fitting | S: moderate "hybrid fitting worth it" forum frequency · C: Club Champion general page, True Spec thin 2023 post · Gap: no neutral guide on set composition, yardage gapping, or shaft weight for hybrids · Angle: yardage gap problem (160–200 yd); shaft weight as most-overlooked variable; hybrid vs. utility iron honest test. |
+
+### Queue re-sort note — 2026-09-28
+
+GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now over 3.5 months old.
+
+Citation check 2026-09-28: clubfittingdirectory.com cited 2/6 prompts checked this run ("club fitting directory", "independent golf club fitter equivalent"). Most-seen competitors: clubchampion.com (5/6), truespecgolf.com (3/6), fittingpros.com (2/6). Cited count same as last week (2/19 full set). No new prompts we appear for in this partial run.
+
+Rows 30–31 shipped: Big Four brand series now complete (Ping, TaylorMade, Callaway, Titleist). Recommended next priorities for 2026-10-06:
+
+- **Golf club regripping guide** (cost + when) — `golf-club-regripping` — repair cluster extension; regripping is the highest-frequency repair service (26% of directory shops per directory-stats-2026-06.md); no neutral US informational authority.
+- **Mizuno fitting guide** — `mizuno-fitting` — extends brand-specific series; Mizuno's grain-flow forged irons are high-forum-signal; forged iron fitting differences is a genuine content gap.
+- **Full bag fitting vs. single-club fitting** — `full-bag-fitting` — FAQ cluster; "should I get a full bag fitting" is a high-frequency question with no neutral answer guide.
+
+*James — the GSC key still isn't set up in this environment and the manual export is stale (over 3 months old). Run the pull locally or drop a fresh export into `tasks/` to re-sort by real impression data before the next run drafts from this list.*
 
 ### Queue re-sort note — 2026-09-21
 
