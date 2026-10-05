@@ -41,6 +41,7 @@ import { juniorGolfClubFittingGuide } from "@/lib/guides/junior-golf-club-fittin
 import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 import { callawayFittingGuide } from "@/lib/guides/callaway-fitting"
 import { hybridFittingGuide } from "@/lib/guides/hybrid-fitting"
+import { golfClubRegrippingGuide } from "@/lib/guides/golf-club-regripping"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -114,6 +115,8 @@ export const GUIDES: Guide[] = [
   callawayFittingGuide,
   // Club-by-Club: hybrid and fairway wood fitting (2026-09-28 — keyword-map #31)
   hybridFittingGuide,
+  // Repair cluster: regripping guide (2026-10-05 — keyword-map #32)
+  golfClubRegrippingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
