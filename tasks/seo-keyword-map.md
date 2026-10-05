@@ -62,6 +62,22 @@ voice-of-customer frequency.
 | 29 | ✅ Callaway Club Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `callaway-fitting`) | callaway club fitting / callaway fitting | C: Callaway's own pages + GOLFTEC brand pages; no neutral guide · V: HIGH brand volume, #2 OEM by US sales · Gap: no one explains Performance Center tiers, GOLFTEC partnership, or honest Distance Fitting assessment · Angle: free GOLFTEC fittings + Performance Center tiers + Distance Fitting honest take. |
 | 30 | ✅ Titleist Fitting: What Happens and Where to Get Fitted (shipped 2026-09-28, `titleist-fitting`) | titleist fitting / titleist club fitting | C: Titleist's own pages + True Spec brand pages; no neutral third-party guide · V: HIGH brand recognition, most-played tour brand · Gap: no one explains the ball-first fitting sequence, TPI, or authorized fitter network honestly · Angle: ball-first fitting philosophy is unique; TPI flagship experience; True Spec as major fitting partner. (See PR #89.) |
 | 31 | ✅ Hybrid and Fairway Wood Fitting: Gaps, Lofts & What to Expect (shipped 2026-09-28, `hybrid-fitting`) | hybrid fitting / fairway wood fitting | S: moderate "hybrid fitting worth it" forum frequency · C: Club Champion general page, True Spec thin 2023 post · Gap: no neutral guide on set composition, yardage gapping, or shaft weight for hybrids · Angle: yardage gap problem (160–200 yd); shaft weight as most-overlooked variable; hybrid vs. utility iron honest test. |
+| 32 | ✅ Golf Club Regripping: When to Do It, What It Costs, and Where to Get It Done (shipped 2026-10-05, `golf-club-regripping`) | golf club regripping / when to regrip golf clubs / golf grip replacement cost | Repair cluster extension; regripping is the highest-frequency repair service (330 of 1,268 directory shops offer it, 26%). C: landscape is all DIY how-to guides; nobody connects the regripping decision to local shop discovery. Gap: no neutral guide that covers cost + when-to-regrip signals + grip size connection + shop-finder CTA. Angle: grips as the forgotten fitting variable; grip size check at regrip time pairs with /repair funnel. |
+| 33 | Mizuno Fitting: What Happens and Where to Get Fitted | mizuno fitting / mizuno club fitting | Brand-specific series extension. C: Mizuno's own pages + thin third-party posts; no neutral broker guide · V: HIGH — forged iron reputation means serious golfers search brand-specifically · Gap: nobody explains Shaft Optimizer technology, Fitting Network, or forged-vs-cast honest tradeoff · Angle: Shaft Optimizer swing DNA as the unique differentiator; forged fitting differences for ball-strikers. |
+| 34 | Full Bag Fitting vs. Single-Club Fitting: What's the Difference? | full bag fitting / full bag golf fitting | FAQ cluster, high-frequency unserved query. C: Club Champion and True Spec brand pages explain their packages but no neutral guide explains the decision · V: HIGH forum frequency ("should I do full bag or just irons?") · Gap: no independent guide that explains when full-bag adds value vs. when a single-club session is the smarter spend · Angle: decision tree by score + budget + which clubs need it most. |
+
+### Queue re-sort note — 2026-10-05 (maintenance pass — first Monday October)
+
+GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now nearly 4 months old.
+
+Citation check 2026-10-05: clubfittingdirectory.com cited **3/6 prompts** checked this run ("club fitting directory", "independent golf club fitter", "club champion vs independent fitter"). Up from 2/7 last run. Most-seen competitors: clubchampion.com (5/6), fittingpros.com (3/6), golfdigest.com (2/6).
+
+Row 32 (`golf-club-regripping`) shipped 2026-10-05. Recommended next priorities:
+- **Mizuno fitting guide** — `mizuno-fitting` (row 33) — brand-specific series; Shaft Optimizer is a unique differentiator; no neutral third-party guide exists.
+- **Full bag vs. single-club fitting** — `full-bag-fitting` (row 34) — high-frequency FAQ cluster; no neutral guide exists.
+- **TitleistFitting + Ball fitting** — `titleist-ball-fitting` — ball-first fitting philosophy is unique to Titleist; Pro V1x Left Dash is an angle no competitor covers.
+
+*James — the GSC key still isn't set up in this environment and the manual export is nearly 4 months old. Drop a fresh export into `tasks/` or run the pull locally to re-sort by real impression data.*
 
 ### Queue re-sort note — 2026-09-28
 
