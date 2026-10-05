@@ -19,7 +19,7 @@ export const customGolfClubFittingGuide: Guide = {
   ],
   readMinutes: 8,
   datePublished: "2026-07-20",
-  dateModified: "2026-07-20",
+  dateModified: "2026-10-05",
   blocks: [
     {
       type: "paragraph",
@@ -194,7 +194,11 @@ export const customGolfClubFittingGuide: Guide = {
       items: [
         "\"Custom fitting is only for pros or low handicappers.\" False — mid-handicappers gain the most measurable improvement from a fitting. Pros are optimising margins; most amateurs are correcting mismatches that are actively costing them strokes.",
         "\"Custom clubs are more expensive.\" The clubs themselves cost the same for most standard adjustments. Premium aftermarket shafts add cost, but that is optional — the fitting data will tell you whether the performance gain justifies the price.",
-        "\"You need a new set to get fitted.\" You can get fitted into clubs you already own. A loft-and-lie adjustment on your existing irons costs $5–$10 per club. A regrip costs $12–$30. Many fitters start by checking your current clubs before recommending anything new.",
+        [
+          "\"You need a new set to get fitted.\" ",
+          { text: "You can get fitted into clubs you already own", href: "/guides/fitting-existing-clubs" },
+          ". A loft-and-lie adjustment on your existing irons costs $5–$10 per club, and a regrip costs $12–$30. Many fitters start by checking your current clubs before recommending anything new.",
+        ],
         "\"Custom fitting means everything gets changed.\" A fitting often confirms that one or two variables are wrong and the rest are fine. You might leave with a recommendation to adjust only the lie angle and grip size — not replace the set.",
         "\"You have to buy from the fitter.\" At most independent shops, no. Confirm before booking that you will receive a full spec sheet regardless of where you purchase. A good fitter has no interest in hiding your specs.",
       ],
@@ -207,7 +211,11 @@ export const customGolfClubFittingGuide: Guide = {
     },
     {
       type: "paragraph",
-      text: "Custom fitting optimises equipment for the swing you have — not the swing you are trying to build. A consistent miss caused by swing path, grip pressure, or body rotation will not be corrected by better-fitted clubs; it requires instruction. The smart sequence for most golfers is: get a basic equipment check first (so your clubs are not making swing lessons harder), take lessons to improve mechanics, then invest in a full custom fitting once the swing is repeatable enough to produce reliable data.",
+      text: [
+        "Custom fitting optimises equipment for the swing you have — not the swing you are trying to build. A consistent miss caused by swing path, grip pressure, or body rotation will not be corrected by better-fitted clubs; it requires instruction. The smart sequence for most golfers is: get a basic equipment check first (so your clubs are not making swing lessons harder), take lessons to improve mechanics, then invest in a full custom fitting once the swing is repeatable enough to produce reliable data. If you are planning your first fitting, ",
+        { text: "our guide on how to prepare for a golf club fitting", href: "/guides/how-to-prepare-for-a-golf-club-fitting" },
+        " covers what to bring, what to wear, and the questions to ask your fitter.",
+      ],
     },
     {
       type: "paragraph",
@@ -275,8 +283,12 @@ export const customGolfClubFittingGuide: Guide = {
       href: "/guides/golf-club-fitting-cost",
     },
     {
-      label: "How to Choose a Club Fitter",
-      href: "/guides/how-to-choose-a-club-fitter",
+      label: "How to Prepare for a Golf Club Fitting",
+      href: "/guides/how-to-prepare-for-a-golf-club-fitting",
+    },
+    {
+      label: "Can You Get Fitted for Clubs You Already Own?",
+      href: "/guides/fitting-existing-clubs",
     },
   ],
 }
