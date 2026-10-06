@@ -31,6 +31,7 @@ CREATE INDEX IF NOT EXISTS idx_shop_claims_shop   ON public.shop_claims (shop_id
 ALTER TABLE public.shop_claims ENABLE ROW LEVEL SECURITY;
 
 -- Public claim form may INSERT; nobody public can read/update/delete.
+DROP POLICY IF EXISTS "Public can claim a shop" ON public.shop_claims;
 CREATE POLICY "Public can claim a shop"
   ON public.shop_claims FOR INSERT
   TO anon, authenticated

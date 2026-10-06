@@ -8,7 +8,7 @@ import {
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { getAllGuides } from "@/lib/guides"
 import { SITE_URL } from "@/lib/constants"
-import { logQueryError } from "@/lib/utils"
+import { rethrowQueryError } from "@/lib/utils"
 
 /* ─────────────────────────────────────────────────────────
    SITEMAP
@@ -32,12 +32,21 @@ export const revalidate = 86400
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Fetch all dynamic routes in parallel */
+  /* RETHROW on failure (don't fall back to []): a swallowed error here would
+     publish a sitemap with only the static routes and cache it for a day —
+     Google would see ~1,000 listing URLs vanish. Throwing makes the ISR
+     regeneration fail, so Next keeps serving the last good sitemap. */
   const [slugs, stateCodes, citySlugs, typeCounts] = await Promise.all([
-    getAllShopSlugs().catch((e) => logQueryError("sitemap getAllShopSlugs", e, [] as { slug: string; updated_at: string }[])),
-    getAllStateCodes().catch((e) => logQueryError("sitemap getAllStateCodes", e, [] as string[])),
-    getAllCitySlugs().catch((e) => logQueryError("sitemap getAllCitySlugs", e, [] as { citySlug: string; shopCount: number; indexable: boolean }[])),
-    getShopTypeCounts().catch((e) => logQueryError("sitemap getShopTypeCounts", e, {} as Record<string, number>)),
+    getAllShopSlugs().catch(rethrowQueryError("sitemap getAllShopSlugs")),
+    getAllStateCodes().catch(rethrowQueryError("sitemap getAllStateCodes")),
+    getAllCitySlugs().catch(rethrowQueryError("sitemap getAllCitySlugs")),
+    getShopTypeCounts().catch(rethrowQueryError("sitemap getShopTypeCounts")),
   ])
+  if (slugs.length === 0) {
+    // A successful-but-empty read is just as wrong (RLS misconfig, wrong
+    // project): refuse to publish a listing-less sitemap.
+    throw new Error("sitemap: zero active shop slugs returned — refusing to publish an empty sitemap")
+  }
 
   /* A deterministic "last updated" anchor for routes that have no date of their
      own (home, /directory, state/category/city indexes). Using `new Date()` here

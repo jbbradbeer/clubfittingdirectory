@@ -41,7 +41,19 @@ export function sanitizeSearchTerm(input: string): string {
       // break or alter the query.
       .replace(/[,()%\\*]/g, " ")
       .trim()
+      // No real search is longer than this; without a cap a 50 KB `q` becomes a
+      // 50 KB ILIKE pattern run against every row, twice (count + data).
+      .slice(0, 80)
   )
+}
+
+/* Escape a value for use as an EXACT (case-insensitive) match inside a
+   PostgREST `.ilike()`: `%` and `_` are LIKE wildcards and `\` is the escape
+   character, so a raw email like "%@%" would match every row. Use this when
+   the input must match literally; use sanitizeSearchTerm for free-text search
+   where wildcards are wanted. */
+export function escapeLikePattern(value: string): string {
+  return value.replace(/[\\%_]/g, (c) => `\\${c}`)
 }
 
 /* PostgREST (Supabase's API layer) silently caps every response at 1,000 rows.

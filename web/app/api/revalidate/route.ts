@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
-import { toCitySlug } from "@/lib/slugs"
-import { dbTypeToShopType } from "@/lib/shop-types"
+import crypto from "node:crypto"
+import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 import { log } from "@/lib/logger"
 import { pingIndexNow } from "@/lib/indexnow"
-import { SERVICE_FILTERS } from "@/lib/service-filters"
+import { pathsForShop, mapNeedsRefresh, type ShopRow } from "@/lib/revalidate-paths"
 
 /**
  * On-demand revalidation endpoint.
@@ -29,33 +29,10 @@ import { SERVICE_FILTERS } from "@/lib/service-filters"
 
 export const dynamic = "force-dynamic"
 
-type ShopRow = {
-  slug?: string | null
-  state_code?: string | null
-  city?: string | null
-  shop_type?: string | null
-  services?: string | null
-  rating?: number | null
-  is_featured?: boolean | null
-  listing_tier?: string | null
-  claimed_at?: string | null
-}
-
-function pathsForShop(row: ShopRow): string[] {
-  const paths: string[] = []
-  if (row.slug) paths.push(`/listing/${row.slug}`)
-  if (row.state_code) paths.push(`/state/${row.state_code.toLowerCase()}`)
-  if (row.city && row.state_code) paths.push(`/city/${toCitySlug(row.city, row.state_code)}`)
-  if (row.shop_type) {
-    const cat = dbTypeToShopType(row.shop_type)
-    if (cat) paths.push(`/category/${cat.slug}`)
-  }
-  // Service landing pages (/repair) list shops by services text, so a change
-  // to a shop with a matching service must refresh them too.
-  if (row.services && SERVICE_FILTERS.some((s) => row.services!.includes(s.value))) {
-    paths.push("/repair")
-  }
-  return paths
+function secretMatches(provided: string, secret: string): boolean {
+  const a = Buffer.from(provided)
+  const b = Buffer.from(secret)
+  return a.length === b.length && crypto.timingSafeEqual(a, b)
 }
 
 export async function POST(request: Request) {
@@ -65,9 +42,16 @@ export async function POST(request: Request) {
     log.error("api/revalidate", "REVALIDATE_SECRET is not set")
     return NextResponse.json({ error: "Revalidation is not configured." }, { status: 500 })
   }
+  // Failed attempts are rate limited per IP so the secret can't be brute
+  // forced; the comparison itself is constant-time.
+  const ip = clientIp(request)
+  if (!rateLimitOk(`revalidate-auth:${ip}`, 20, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 })
+  }
   const auth = request.headers.get("authorization") ?? ""
   const provided = auth.replace(/^Bearer\s+/i, "").trim()
-  if (provided !== secret) {
+  if (!secretMatches(provided, secret)) {
+    log.warn("api/revalidate", "rejected request with bad secret", { ip })
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 })
   }
 
@@ -106,6 +90,7 @@ export async function POST(request: Request) {
     paths.add("/states")
     paths.add("/sitemap.xml")
   }
+  if (mapNeedsRefresh(type, record, oldRecord)) paths.add("/map")
 
   // The homepage shows a "Top Rated" carousel ordered by rating + featured flag.
   // A plain UPDATE doesn't change shop counts, but if it changes one of those two

@@ -3,7 +3,9 @@
  *
  * Three badges, strictly ranked:
  *   Featured (paid, listing_tier='featured'   — the $49/mo / $499/yr product —
- *             or the legacy is_featured flag)
+ *             AND not past verified_expires_at. The is_featured column only
+ *             drives SORT order; it is never read for the badge, because it is
+ *             a cached flag that can lag expiry — see lapseFeaturedShop.)
  *   Verified (FREE, claimed_at set)           — granted when an owner claims
  *     the listing and the claim is hand-approved. Earned by ownership, never
  *     bought.
@@ -61,7 +63,10 @@ export function getShopTag(shop: {
   rating?: number | null
   reviews?: number | null
 }): ShopTag | null {
-  if (isFeaturedPaid(shop) || shop.is_featured) {
+  // Deliberately NOT `|| shop.is_featured`: that fallback let a lapsed
+  // subscription keep the gold badge forever (is_featured is only cleared by
+  // the lapse path, which used to be a manual button).
+  if (isFeaturedPaid(shop)) {
     return { label: "Featured", className: "bg-[var(--color-gold)] text-[var(--color-forest-deep)]" }
   }
   if (isVerified(shop)) {

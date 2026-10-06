@@ -27,6 +27,7 @@ import { listingQuickFacts, listingFaqs, expandCityName } from "@/lib/seo-conten
 import { FaqSection } from "@/components/seo/FaqSection"
 import { SITE_URL } from "@/lib/constants"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
+import type { Shop } from "@/types/shop"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -36,7 +37,7 @@ export const revalidate = 2592000 // 30 days — long window keeps ISR writes lo
 
 export async function generateStaticParams() {
   const slugs = await getAllShopSlugs().catch((e) => logQueryError("listing generateStaticParams getAllShopSlugs", e, []))
-  return slugs
+  return slugs.map(({ slug }) => ({ slug })) // route param only (updated_at is for the sitemap)
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -85,15 +86,28 @@ export default async function ListingPage({ params }: PageProps) {
   const shop = await getShopBySlug(slug).catch(rethrowQueryError("listing getShopBySlug"))
   if (!shop) notFound()
 
-  const nearby = await getNearbyShops(shop.state_code, shop.slug, 3).catch((e) => logQueryError("listing getNearbyShops", e, []))
+  // "Nearby" means by distance when the shop has coordinates (El Paso must not
+  // suggest Houston, 750 miles away); same-state is only the fallback for the
+  // ~300 shops still awaiting geocoding.
+  // Guard against rows with a null city/state_code so a single bad row can't
+  // crash the whole page (mirrors the defensive handling in structured-data.ts).
+  const citySlug = shop.city && shop.state_code ? toCitySlug(shop.city, shop.state_code) : ""
+  const nearbyByDistance: Shop[] =
+    shop.latitude != null && shop.longitude != null
+      ? await getNearbyShopsByDistance(shop.latitude, shop.longitude, citySlug, 3, 60, {
+          excludeSlug: shop.slug,
+        }).catch((e) => logQueryError("listing getNearbyShopsByDistance", e, []))
+      : []
+  const nearby: Shop[] =
+    nearbyByDistance.length > 0
+      ? nearbyByDistance
+      : await getNearbyShops(shop.state_code, shop.slug, 3).catch((e) => logQueryError("listing getNearbyShops", e, []))
+  const nearbyIsByDistance = nearbyByDistance.length > 0
   // Provenance/confidence level for the "Owner-verified / Unverified" badge.
   const verification = await getListingVerification(shop.id)
 
   const localBusinessSchema = buildLocalBusinessSchema(shop)
   const breadcrumbSchema = buildBreadcrumbSchema(shop)
-  // Guard against rows with a null city/state_code so a single bad row can't
-  // crash the whole page (mirrors the defensive handling in structured-data.ts).
-  const citySlug = shop.city && shop.state_code ? toCitySlug(shop.city, shop.state_code) : ""
   // Stored websites sometimes lack a protocol — normalize once for every link below.
   const websiteUrl = shop.website
     ? shop.website.startsWith("http") ? shop.website : `https://${shop.website}`
@@ -561,7 +575,7 @@ export default async function ListingPage({ params }: PageProps) {
       {nearby.length > 0 && (
         <section className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader title={`More Fitters in ${shop.state}`} />
+            <SectionHeader title={nearbyIsByDistance ? `Fitters Near ${expandCityName(shop.city ?? "")}` : `More Fitters in ${shop.state}`} />
             <ListingGrid shops={nearby} reveal />
             {/* Descriptive-anchor link up to the parent city page — the
                 breadcrumb alone doesn't tell Google the city page is the

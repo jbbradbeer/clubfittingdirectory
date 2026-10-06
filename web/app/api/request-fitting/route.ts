@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { notifyNewFittingRequest } from "@/lib/email"
 import { log } from "@/lib/logger"
@@ -88,8 +87,12 @@ export async function POST(request: Request) {
   // the shop_id no longer matches a row (FK violation 23503, e.g. shop removed
   // since page-load), we retry WITHOUT the link so the lead is still captured
   // (shop_name/slug are snapshotted, so it stays readable).
+  let leadId: string | null = null
   try {
-    const supabase = await createClient()
+    // Service-role insert so we get the new row's id back (anon has INSERT
+    // but no SELECT, so `returning` would be refused). The route is server-
+    // side; nothing here is exposed to the browser.
+    const supabase = createAdminClient()
     const row = {
       shop_id: dbShop?.id ?? (shopId || null),
       shop_slug: dbShop?.slug ?? (shopSlug || null),
@@ -102,17 +105,22 @@ export async function POST(request: Request) {
       preferred_time: preferredTime || null,
       notes: notes || null,
     }
-    const { error } = await supabase.from("fitting_requests").insert(row)
+    const { data, error } = await supabase.from("fitting_requests").insert(row).select("id").single()
     if (error) {
       if (error.code === "23503" && row.shop_id) {
         log.warn("api/request-fitting", "shop_id FK miss — saving lead without link")
-        const { error: retryError } = await supabase
+        const { data: retryData, error: retryError } = await supabase
           .from("fitting_requests")
           .insert({ ...row, shop_id: null })
+          .select("id")
+          .single()
         if (retryError) throw retryError
+        leadId = retryData?.id ?? null
       } else {
         throw error
       }
+    } else {
+      leadId = data?.id ?? null
     }
   } catch (e) {
     log.error("api/request-fitting", "insert failed", { error: e })
@@ -123,8 +131,10 @@ export async function POST(request: Request) {
   }
 
   // ── Notify (best-effort; never blocks the save). Claimed shop → email goes
-  // to the owner with the founder cc'd; otherwise founder-only as before. ──
-  await notifyNewFittingRequest({
+  // to the owner with the founder cc'd; otherwise founder-only as before.
+  // The outcome is RECORDED: notified_at stays NULL on failure so the daily
+  // cron (app/api/cron/daily) retries instead of the lead sitting unseen. ──
+  const notified = await notifyNewFittingRequest({
     shopName: dbShop?.name ?? (shopName || null),
     shopSlug: dbShop?.slug ?? (shopSlug || null),
     ownerEmail: dbShop?.claimed_at && dbShop.owner_email ? dbShop.owner_email : null,
@@ -136,6 +146,15 @@ export async function POST(request: Request) {
     preferredTime,
     notes,
   })
+  if (leadId) {
+    await createAdminClient()
+      .from("fitting_requests")
+      .update({ notify_attempts: 1, ...(notified ? { notified_at: new Date().toISOString() } : {}) })
+      .eq("id", leadId)
+      .then(({ error }) => {
+        if (error) log.warn("api/request-fitting", "could not record notification state", { error })
+      })
+  }
 
   return NextResponse.json({ ok: true })
 }
