@@ -42,6 +42,7 @@ import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 import { callawayFittingGuide } from "@/lib/guides/callaway-fitting"
 import { hybridFittingGuide } from "@/lib/guides/hybrid-fitting"
 import { golfClubRegrippingGuide } from "@/lib/guides/golf-club-regripping"
+import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -117,6 +118,8 @@ export const GUIDES: Guide[] = [
   hybridFittingGuide,
   // Repair cluster: regripping guide (2026-10-05 — keyword-map #32)
   golfClubRegrippingGuide,
+  // Fitting strategy: full bag vs. single-club decision guide (2026-10-12 — keyword-map #34)
+  fullBagFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
