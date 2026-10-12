@@ -42,6 +42,7 @@ import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 import { callawayFittingGuide } from "@/lib/guides/callaway-fitting"
 import { hybridFittingGuide } from "@/lib/guides/hybrid-fitting"
 import { golfClubRegrippingGuide } from "@/lib/guides/golf-club-regripping"
+import { mizunoFittingGuide } from "@/lib/guides/mizuno-fitting"
 import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
 
 /* ─────────────────────────────────────────────────────────
@@ -118,6 +119,8 @@ export const GUIDES: Guide[] = [
   hybridFittingGuide,
   // Repair cluster: regripping guide (2026-10-05 — keyword-map #32)
   golfClubRegrippingGuide,
+  // Brand-specific fitting guide: Mizuno + Shaft Optimizer (2026-10-12 — keyword-map #33)
+  mizunoFittingGuide,
   // Fitting strategy: full bag vs. single-club decision guide (2026-10-12 — keyword-map #34)
   fullBagFittingGuide,
 ]
