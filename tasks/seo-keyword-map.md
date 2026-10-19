@@ -66,6 +66,19 @@ voice-of-customer frequency.
 | 33 | ✅ Mizuno Fitting: What Happens and Where to Get Fitted (shipped 2026-10-19, `mizuno-fitting`) | mizuno fitting / mizuno club fitting | Brand-specific series extension. C: Mizuno's own pages + thin third-party posts; no neutral broker guide · V: HIGH — forged iron reputation means serious golfers search brand-specifically · Gap: nobody explains Shaft Optimizer technology, Fitting Network, or forged-vs-cast honest tradeoff · Angle: Shaft Optimizer swing DNA as the unique differentiator; forged fitting differences for ball-strikers. |
 | 34 | Full Bag Fitting vs. Single-Club Fitting: What's the Difference? | full bag fitting / full bag golf fitting | FAQ cluster, high-frequency unserved query. C: Club Champion and True Spec brand pages explain their packages but no neutral guide explains the decision · V: HIGH forum frequency ("should I do full bag or just irons?") · Gap: no independent guide that explains when full-bag adds value vs. when a single-club session is the smarter spend · Angle: decision tree by score + budget + which clubs need it most. |
 
+### Queue re-sort note — 2026-10-19
+
+GSC pull script failed again (service-account key unavailable). Manual export remains 2026-06-10.
+
+Citation check 2026-10-19: clubfittingdirectory.com cited **0/6 prompts** — down from 3/6 on 2026-10-05. Most-seen competitors: clubchampion.com (5/6), golfdigest.com (2/6).
+
+Row 33 (`mizuno-fitting`) shipped 2026-10-19. Row 34 (`full-bag-fitting`) shipping in parallel PR. Recommended next priorities:
+- **Titleist fitting** — `titleist-fitting` — completes the Big Four; PR #89 is open from a prior run.
+- **Golf club reshafting** — `golf-club-reshafting` — repair cluster extension.
+- **Cobra fitting** — `cobra-fitting` — brand-specific series continues.
+
+*James — the GSC key still isn't set up in this environment. Drop a fresh export into `tasks/` to re-sort by real impression data.*
+
 ### Queue re-sort note — 2026-10-05 (maintenance pass — first Monday October)
 
 GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now nearly 4 months old.
