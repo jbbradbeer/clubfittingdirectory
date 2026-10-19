@@ -66,6 +66,19 @@ voice-of-customer frequency.
 | 33 | Mizuno Fitting: What Happens and Where to Get Fitted | mizuno fitting / mizuno club fitting | Brand-specific series extension. C: Mizuno's own pages + thin third-party posts; no neutral broker guide · V: HIGH — forged iron reputation means serious golfers search brand-specifically · Gap: nobody explains Shaft Optimizer technology, Fitting Network, or forged-vs-cast honest tradeoff · Angle: Shaft Optimizer swing DNA as the unique differentiator; forged fitting differences for ball-strikers. |
 | 34 | ✅ Full Bag Fitting vs. Single-Club Fitting: What's the Difference? (shipped 2026-10-19, `full-bag-fitting`) | full bag fitting / full bag golf fitting | FAQ cluster, high-frequency unserved query. C: Club Champion and True Spec brand pages explain their packages but no neutral guide explains the decision · V: HIGH forum frequency ("should I do full bag or just irons?") · Gap: no independent guide that explains when full-bag adds value vs. when a single-club session is the smarter spend · Angle: decision tree by score + budget + which clubs need it most. |
 
+### Queue re-sort note — 2026-10-19
+
+GSC pull script failed again (service-account key unavailable). Manual export remains 2026-06-10.
+
+Citation check 2026-10-19: clubfittingdirectory.com cited **0/6 prompts** checked this run — down from 3/6 on 2026-10-05. Most-seen competitors: clubchampion.com (5/6), golfdigest.com (2/6). This is the same 0/6 result reported in the 2026-10-12 session (see `tasks/citations/history.csv`); the two weeks of 0-citation results suggest the gains from early October may have been temporary. No structural change to the queue order.
+
+Rows 33 (`mizuno-fitting`) and 34 (`full-bag-fitting`) shipped 2026-10-19. Recommended next priorities:
+- **Titleist fitting + ball fitting** — `titleist-fitting` — completes the Big Four brand series; ball-first philosophy is unique angle; PR #89 is still open from a prior run.
+- **Golf club reshafting guide** — `golf-club-reshafting` — repair cluster extension; reshafting is the second most common repair after regripping.
+- **Cobra fitting guide** — `cobra-fitting` — extends brand-specific series (Ping, TM, Callaway, Mizuno done).
+
+*James — the GSC key still isn't set up in this environment. Drop a fresh export into `tasks/` or run the pull locally to re-sort by real impression data.*
+
 ### Queue re-sort note — 2026-10-05 (maintenance pass — first Monday October)
 
 GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now nearly 4 months old.
