@@ -132,7 +132,7 @@ export async function POST(request: Request) {
       throw insertErr
     }
 
-    const slug = await activateFeaturedShop(shopSlug, plan)
+    const slug = await activateOrReleaseGate(supabase, session.id, shopSlug, plan)
     log.info("api/stripe-webhook", "payment processed, badge activated", {
       slug,
       plan,
@@ -161,6 +161,33 @@ export async function POST(request: Request) {
     // 500 → Stripe retries with backoff; the idempotency gate makes the retry safe.
     log.error("api/stripe-webhook", "processing failed", { error: e, session: session.id })
     return NextResponse.json({ error: "Processing failed." }, { status: 500 })
+  }
+}
+
+/* Activation runs after the idempotency row is committed. If it fails, delete
+   that row before rethrowing so Stripe's retry re-runs activation instead of
+   short-circuiting on 23505 (which would leave a paid shop un-Featured). */
+async function activateOrReleaseGate(
+  supabase: ReturnType<typeof createAdminClient>,
+  gateId: string,
+  shopSlug: string,
+  plan: PlanKey
+) {
+  try {
+    return await activateFeaturedShop(shopSlug, plan)
+  } catch (e) {
+    const { error: delErr } = await supabase
+      .from("shop_payments")
+      .delete()
+      .eq("stripe_session_id", gateId)
+    if (delErr) {
+      log.error("api/stripe-webhook", "activation failed AND gate release failed — manual fix needed", {
+        gateId,
+        shopSlug,
+        error: delErr,
+      })
+    }
+    throw e
   }
 }
 
@@ -206,7 +233,7 @@ async function handleRenewalInvoice(invoice: Stripe.Invoice) {
       throw insertErr
     }
 
-    const slug = await activateFeaturedShop(shopSlug, plan)
+    const slug = await activateOrReleaseGate(supabase, invoice.id, shopSlug, plan)
     log.info("api/stripe-webhook", "renewal processed, badge extended", {
       slug,
       plan,

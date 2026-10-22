@@ -50,6 +50,16 @@ export async function POST(request: Request) {
   else if (!isValidEmail(visitorEmail)) errors.push("Enter a valid email.")
   if (fittingType && !VALID_FITTING_TYPES.has(fittingType)) errors.push("Invalid fitting type.")
   if (preferredTime && !VALID_TIMES.has(preferredTime)) errors.push("Invalid preferred time.")
+  if (preferredDate) {
+    // <input type="date"> sends YYYY-MM-DD. Allow yesterday (UTC) so a
+    // visitor west of UTC picking "today" isn't rejected.
+    const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(preferredDate) || Number.isNaN(Date.parse(preferredDate))) {
+      errors.push("Enter a valid preferred date.")
+    } else if (preferredDate < yesterday) {
+      errors.push("Preferred date can't be in the past.")
+    }
+  }
 
   if (errors.length) {
     return NextResponse.json({ error: errors.join(" ") }, { status: 400 })
