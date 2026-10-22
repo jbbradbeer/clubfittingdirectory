@@ -61,9 +61,12 @@ export async function POST(request: Request) {
         "id, name, slug, status, claimed_at, owner_email, listing_tier, verified_expires_at, verified_plan",
       )
       .eq("slug", slug)
-      .single()
+      .eq("status", "active")
+      .order("id", { ascending: true })
+      .limit(1)
+      .maybeSingle()
 
-    if (error || !shop || shop.status !== "active") {
+    if (error || !shop) {
       return NextResponse.json({ error: "Shop not found." }, { status: 400 })
     }
     if (!shop.claimed_at) {
