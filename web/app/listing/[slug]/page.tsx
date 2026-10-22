@@ -20,6 +20,7 @@ import { TuxedoInlineLink } from "@/components/newsletter/TuxedoInlineLink"
 import { RequestFittingButton } from "@/components/booking/RequestFittingButton"
 import { ProvenanceBadge } from "@/components/shop-profile/ProvenanceBadge"
 import { Reveal } from "@/lib/useReveal"
+import { dbTypeToShopType } from "@/lib/shop-types"
 import { getCover } from "@/lib/cover"
 import { isFeaturedPaid, isTopRated, isVerified } from "@/lib/badges"
 import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
@@ -64,7 +65,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = offersFittingSignal
     ? `${shop.name} — Golf Club Fitting in ${displayCity}, ${shop.state_code}`
     : `${shop.name} — ${displayCity}, ${shop.state_code}`
-  const description = `${shop.name} is a ${shop.shop_type ?? "golf shop"} in ${displayCity}, ${shop.state}. ${
+  const typeDef = shop.shop_type ? dbTypeToShopType(shop.shop_type) : undefined
+  const typeNoun =
+    typeDef && typeDef.dbType !== "Instruction" ? typeDef.singular.toLowerCase() : "golf shop"
+  const description = `${shop.name} is a ${typeNoun} in ${displayCity}, ${shop.state}. ${
     shop.offers_fitting ? "Club fitting available. " : ""
   }${shop.rating ? `Rated ${shop.rating}/5.` : ""}`
 

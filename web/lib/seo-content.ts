@@ -101,7 +101,7 @@ function techStatSentence(place: string, shops: CollectionShop[]): string {
 }
 
 export function stateIntro(stateName: string, shops: CollectionShop[], cityCount: number): string {
-  const opening = `Comparing golf club fitters in ${stateName}? Browse ${shops.length} fitters, retailers, and simulators across ${cityCount} ${
+  const opening = `Comparing golf club fitters in ${stateName}? Browse ${shops.length} ${shops.length === 1 ? "listing" : "fitters, retailers, and simulators"} across ${cityCount} ${
     cityCount === 1 ? "city" : "cities"
   }, with fitting prices, launch monitor technology, and ownership shown where we've verified them.`
   const data = dataSentences(shops)
