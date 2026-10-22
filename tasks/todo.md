@@ -32,10 +32,10 @@ Founder chose: Tier 1 + Tier 2 code fixes now, Tier 3 (ops/process) as backlog.
 - [x] Migrations 001/002/007/009 policies made re-runnable (`DROP POLICY IF EXISTS`).
 
 ### Owner actions to go live
-- [ ] Run `web/supabase/019_indexes_and_retention.sql` then `020_fitting_requests_notified.sql` in Supabase SQL editor.
-- [ ] Vercel env: add `CRON_SECRET` (`openssl rand -hex 32`) — the cron refuses to run without it.
-- [ ] Stripe dashboard → webhook → add events `customer.subscription.deleted` and `invoice.payment_failed`.
-- [ ] Merge PR, deploy with `vercel --prod` (git auto-deploy still broken — Tier 3 item A).
+- [x] Run `web/supabase/019_indexes_and_retention.sql` then `020_fitting_requests_notified.sql` in Supabase SQL editor. (2026-10-22; 020 verified via REST)
+- [x] Vercel env: add `CRON_SECRET` (`openssl rand -hex 32`) — the cron refuses to run without it. (2026-10-22; /api/cron/daily now 401 not 500)
+- [ ] **DO BEFORE FIRST PAYING SHOP** (0 payments as of 2026-10-22): Stripe dashboard → webhook → add events `customer.subscription.deleted` and `invoice.payment_failed`.
+- [x] Merge PR, deploy with `vercel --prod` (git auto-deploy still broken — Tier 3 item A).
 - [ ] Confirm the Supabase revalidate webhook is actually wired (`tasks/wire-revalidation-webhook.md` checklist is unticked).
 
 ### Tier 3 backlog (not started)
