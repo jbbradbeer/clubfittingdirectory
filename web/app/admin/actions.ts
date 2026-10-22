@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { rateLimitOk } from "@/lib/rate-limit"
 import { log } from "@/lib/logger"
 import { revalidatePath } from "next/cache"
-import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
+import { ADMIN_COOKIE, ADMIN_SESSION_MS, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { activateFeaturedShop, lapseFeaturedShop } from "@/lib/verified"
 import { sendClaimApprovedEmail, sendPaymentLinkEmail } from "@/lib/email"
@@ -43,7 +43,7 @@ export async function login(formData: FormData) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: ADMIN_SESSION_MS / 1000,
   })
   redirect("/admin")
 }
