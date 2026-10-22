@@ -49,3 +49,8 @@ export const US_STATE_CODES = new Set(US_STATES.map((s) => s.code))
 
 /* Public contact address shown on the contact page. */
 export const CONTACT_EMAIL = "bowtiedgolf@gmail.com"
+
+// Map background tiles (OpenStreetMap; CARTO basemaps now require an API key)
+export const MAP_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+export const MAP_TILE_ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
