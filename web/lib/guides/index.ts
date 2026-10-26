@@ -44,6 +44,7 @@ import { hybridFittingGuide } from "@/lib/guides/hybrid-fitting"
 import { golfClubRegrippingGuide } from "@/lib/guides/golf-club-regripping"
 import { mizunoFittingGuide } from "@/lib/guides/mizuno-fitting"
 import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
+import { golfClubReshaftingGuide } from "@/lib/guides/golf-club-reshafting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -123,6 +124,8 @@ export const GUIDES: Guide[] = [
   mizunoFittingGuide,
   // Fitting strategy: full bag vs. single-club decision guide (2026-10-12 — keyword-map #34)
   fullBagFittingGuide,
+  // Repair cluster: reshafting guide — cost, when to do it, reshaft vs. buy new (2026-10-26 — keyword-map #36)
+  golfClubReshaftingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
