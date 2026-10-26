@@ -40,10 +40,12 @@ import { howToPrepareForAGolfClubFittingGuide } from "@/lib/guides/how-to-prepar
 import { juniorGolfClubFittingGuide } from "@/lib/guides/junior-golf-club-fitting"
 import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 import { callawayFittingGuide } from "@/lib/guides/callaway-fitting"
+import { titleistFittingGuide } from "@/lib/guides/titleist-fitting"
 import { hybridFittingGuide } from "@/lib/guides/hybrid-fitting"
 import { golfClubRegrippingGuide } from "@/lib/guides/golf-club-regripping"
 import { mizunoFittingGuide } from "@/lib/guides/mizuno-fitting"
 import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
+import { golfBallFittingGuide } from "@/lib/guides/golf-ball-fitting"
 import { golfClubReshaftingGuide } from "@/lib/guides/golf-club-reshafting"
 
 /* ─────────────────────────────────────────────────────────
@@ -116,6 +118,8 @@ export const GUIDES: Guide[] = [
   // Brand-specific fitting guides: TaylorMade + Callaway (2026-09-21 — keyword-map #28, #29)
   taylorMadeFittingGuide,
   callawayFittingGuide,
+  // Brand-specific fitting guide: Titleist (2026-09-28 — keyword-map #30)
+  titleistFittingGuide,
   // Club-by-Club: hybrid and fairway wood fitting (2026-09-28 — keyword-map #31)
   hybridFittingGuide,
   // Repair cluster: regripping guide (2026-10-05 — keyword-map #32)
@@ -124,6 +128,8 @@ export const GUIDES: Guide[] = [
   mizunoFittingGuide,
   // Fitting strategy: full bag vs. single-club decision guide (2026-10-12 — keyword-map #34)
   fullBagFittingGuide,
+  // Buying guide: golf ball fitting — when it's worth it and how it works (2026-10-26 — keyword-map #35)
+  golfBallFittingGuide,
   // Repair cluster: reshafting guide — cost, when to do it, reshaft vs. buy new (2026-10-26 — keyword-map #36)
   golfClubReshaftingGuide,
 ]
