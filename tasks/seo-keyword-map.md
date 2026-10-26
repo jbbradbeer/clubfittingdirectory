@@ -65,6 +65,20 @@ voice-of-customer frequency.
 | 32 | ✅ Golf Club Regripping: When to Do It, What It Costs, and Where to Get It Done (shipped 2026-10-05, `golf-club-regripping`) | golf club regripping / when to regrip golf clubs / golf grip replacement cost | Repair cluster extension; regripping is the highest-frequency repair service (330 of 1,268 directory shops offer it, 26%). C: landscape is all DIY how-to guides; nobody connects the regripping decision to local shop discovery. Gap: no neutral guide that covers cost + when-to-regrip signals + grip size connection + shop-finder CTA. Angle: grips as the forgotten fitting variable; grip size check at regrip time pairs with /repair funnel. |
 | 33 | ✅ Mizuno Fitting: What Happens and Where to Get Fitted (shipped 2026-10-12, `mizuno-fitting`) | mizuno fitting / mizuno club fitting | Brand-specific series extension. C: Mizuno's own pages + thin third-party posts; no neutral broker guide · V: HIGH — forged iron reputation means serious golfers search brand-specifically · Gap: nobody explains Shaft Optimizer technology, Fitting Network, or forged-vs-cast honest tradeoff · Angle: Shaft Optimizer swing DNA as the unique differentiator; forged fitting differences for ball-strikers. |
 | 34 | ✅ Full Bag Fitting vs. Single-Club Fitting: What's the Difference? (shipped 2026-10-12, `full-bag-fitting`) | full bag fitting / full bag golf fitting | FAQ cluster, high-frequency unserved query. C: Club Champion and True Spec brand pages explain their packages but no neutral guide explains the decision · V: HIGH forum frequency ("should I do full bag or just irons?") · Gap: no independent guide that explains when full-bag adds value vs. when a single-club session is the smarter spend · Angle: decision tree by score + budget + which clubs need it most. |
+| 35 | ✅ Golf Ball Fitting: What It Is, How It Works, and Whether You Need It (shipped 2026-10-26, `golf-ball-fitting`) | golf ball fitting / is golf ball fitting worth it | TABLE STAKES per competitor inventory (MyGolfSpy 101, Club Champion post) · Titleist's ball-first fitting protocol is the hook no competitor covers neutrally · Gap: no honest broker guide explains when ball fitting is worth it vs. not · Angle: usually free; short-game spin is the main variable; compression myth debunked; honest threshold (shoot under 90). |
+
+### Queue re-sort note — 2026-10-26
+
+GSC pull script failed again (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now over 4.5 months old.
+
+Citation check 2026-10-26: clubfittingdirectory.com cited **0/6 prompts** checked this run — down from 3/6 on 2026-10-05. Most-seen competitors: clubchampion.com (4/6), teeoff.com (3/6), mygolfspy.com (2/6), golfdigest.com (2/6). Note: fittingpros.com appeared in result for "club fitting directory" query, which previously cited us — they may have improved their SEO.
+
+Rows 35 (`golf-ball-fitting`) and 36 (`golf-club-reshafting`) shipped 2026-10-26. Recommended next priorities:
+- **Srixon / Cleveland fitting guide** — `srixon-fitting` / `cleveland-fitting` — brand series extension; Srixon Z-Forged and Cleveland wedge fitting are unserved by neutral third-party guides.
+- **Golf club loft and lie adjustment** — `loft-lie-adjustment` — repair cluster extension; "bend fitting" is a distinct service confused with a reshaft; high-intent local query.
+- **Set makeup / bag building guide** — `golf-set-makeup` — FAQ cluster; "what clubs should I carry?" is a top-10 before-fitting question.
+
+*James — the GSC key still isn't set up in this environment and the manual export is now over 4.5 months old. Citation visibility dropped to 0/6 this week — worth a manual check to see if fittingpros.com has overtaken us on the "club fitting directory" query. Drop a fresh GSC export into `tasks/` when you can.*
 
 ### Queue re-sort note — 2026-10-05 (maintenance pass — first Monday October)
 
