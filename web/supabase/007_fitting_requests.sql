@@ -58,6 +58,7 @@ ALTER TABLE public.fitting_requests ENABLE ROW LEVEL SECURITY;
 -- (true): anyone may request a fitting. There is deliberately NO
 -- SELECT/UPDATE/DELETE policy, so the public cannot read back, edit, or delete
 -- leads — only the service_role (server-side / dashboard) can.
+DROP POLICY IF EXISTS "Public can request a fitting" ON public.fitting_requests;
 CREATE POLICY "Public can request a fitting"
   ON public.fitting_requests FOR INSERT
   TO anon, authenticated

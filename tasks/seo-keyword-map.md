@@ -60,22 +60,37 @@ voice-of-customer frequency.
 | 27 | ✅ Junior Golf Club Fitting: When Does Your Kid Need One? (shipped 2026-09-14, `junior-golf-club-fitting`) | junior golf club fitting | V: HIGH parental search intent · C: US Kids Golf retail pages, True Spec thin 2022 post · Gap: no neutral parent-facing guide that honestly addresses the growth-rate problem · Angle: height-chart method works for most; full fitting makes sense for serious competitors near adult size only. |
 | 28 | ✅ TaylorMade Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `taylormade-fitting`) | taylormade fitting / taylormade club fitting | C: TM's own branded pages + GolfGearDirect.blog cost-only page; no neutral broker guide · V: HIGH brand recognition; most-fitted brand globally · Gap: nobody explains the SelectFit system, venue comparison, or TM-specific vs. independent tradeoffs · Angle: myFittingExp locator + tiered venue comparison + honest multi-brand vs. brand-specific decision. |
 | 29 | ✅ Callaway Club Fitting: What Happens and Where to Get Fitted (shipped 2026-09-21, `callaway-fitting`) | callaway club fitting / callaway fitting | C: Callaway's own pages + GOLFTEC brand pages; no neutral guide · V: HIGH brand volume, #2 OEM by US sales · Gap: no one explains Performance Center tiers, GOLFTEC partnership, or honest Distance Fitting assessment · Angle: free GOLFTEC fittings + Performance Center tiers + Distance Fitting honest take. |
-| 30 | ✅ Titleist Fitting: What Happens and Where to Get Fitted (shipped 2026-09-28, `titleist-fitting`) | titleist fitting / titleist club fitting | C: Titleist's own pages + True Spec brand pages; no neutral third-party guide · V: HIGH brand recognition, most-played tour brand · Gap: no one explains the ball-first fitting sequence, TPI, or authorized fitter network honestly · Angle: ball-first fitting philosophy is unique; TPI flagship experience; True Spec as major fitting partner. |
+| 30 | ✅ Titleist Fitting: What Happens and Where to Get Fitted (shipped 2026-09-28, `titleist-fitting`) | titleist fitting / titleist club fitting | C: Titleist's own pages + True Spec brand pages; no neutral third-party guide · V: HIGH brand recognition, most-played tour brand · Gap: no one explains the ball-first fitting sequence, TPI, or authorized fitter network honestly · Angle: ball-first fitting philosophy is unique; TPI flagship experience; True Spec as major fitting partner. (Merged PR #89, 2026-10-26.) |
 | 31 | ✅ Hybrid and Fairway Wood Fitting: Gaps, Lofts & What to Expect (shipped 2026-09-28, `hybrid-fitting`) | hybrid fitting / fairway wood fitting | S: moderate "hybrid fitting worth it" forum frequency · C: Club Champion general page, True Spec thin 2023 post · Gap: no neutral guide on set composition, yardage gapping, or shaft weight for hybrids · Angle: yardage gap problem (160–200 yd); shaft weight as most-overlooked variable; hybrid vs. utility iron honest test. |
+| 32 | ✅ Golf Club Regripping: When to Do It, What It Costs, and Where to Get It Done (shipped 2026-10-05, `golf-club-regripping`) | golf club regripping / when to regrip golf clubs / golf grip replacement cost | Repair cluster extension; regripping is the highest-frequency repair service (330 of 1,268 directory shops offer it, 26%). C: landscape is all DIY how-to guides; nobody connects the regripping decision to local shop discovery. Gap: no neutral guide that covers cost + when-to-regrip signals + grip size connection + shop-finder CTA. Angle: grips as the forgotten fitting variable; grip size check at regrip time pairs with /repair funnel. |
+| 33 | ✅ Mizuno Fitting: What Happens and Where to Get Fitted (shipped 2026-10-12, `mizuno-fitting`) | mizuno fitting / mizuno club fitting | Brand-specific series extension. C: Mizuno's own pages + thin third-party posts; no neutral broker guide · V: HIGH — forged iron reputation means serious golfers search brand-specifically · Gap: nobody explains Shaft Optimizer technology, Fitting Network, or forged-vs-cast honest tradeoff · Angle: Shaft Optimizer swing DNA as the unique differentiator; forged fitting differences for ball-strikers. |
+| 34 | ✅ Full Bag Fitting vs. Single-Club Fitting: What's the Difference? (shipped 2026-10-12, `full-bag-fitting`) | full bag fitting / full bag golf fitting | FAQ cluster, high-frequency unserved query. C: Club Champion and True Spec brand pages explain their packages but no neutral guide explains the decision · V: HIGH forum frequency ("should I do full bag or just irons?") · Gap: no independent guide that explains when full-bag adds value vs. when a single-club session is the smarter spend · Angle: decision tree by score + budget + which clubs need it most. |
+
+### Queue re-sort note — 2026-10-05 (maintenance pass — first Monday October)
+
+GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now nearly 4 months old.
+
+Citation check 2026-10-05: clubfittingdirectory.com cited **3/6 prompts** checked this run ("club fitting directory", "independent golf club fitter", "club champion vs independent fitter"). Up from 2/7 last run. Most-seen competitors: clubchampion.com (5/6), fittingpros.com (3/6), golfdigest.com (2/6).
+
+Row 32 (`golf-club-regripping`) shipped 2026-10-05. Recommended next priorities:
+- **Mizuno fitting guide** — `mizuno-fitting` (row 33) — brand-specific series; Shaft Optimizer is a unique differentiator; no neutral third-party guide exists.
+- **Full bag vs. single-club fitting** — `full-bag-fitting` (row 34) — high-frequency FAQ cluster; no neutral guide exists.
+- **Titleist Ball Fitting** — `titleist-ball-fitting` — ball-first fitting philosophy is unique to Titleist; Pro V1x Left Dash is an angle no competitor covers.
+
+*James — the GSC key still isn't set up in this environment and the manual export is nearly 4 months old. Drop a fresh export into `tasks/` or run the pull locally to re-sort by real impression data.*
 
 ### Queue re-sort note — 2026-09-28
 
 GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now over 3.5 months old.
 
-Citation check 2026-09-28: clubfittingdirectory.com cited 2/6 prompts checked this run ("club fitting directory", "independent golf club fitter equivalent"). Most-seen competitors: clubchampion.com (5/6), truespecgolf.com (3/6), fittingpros.com (2/6). Cited count same as last week (2/19 full set). No new prompts we appear for in this partial run.
+Citation check 2026-09-28: clubfittingdirectory.com cited 2/7 prompts checked this run ("club fitting directory", "independent golf club fitter"). Most-seen competitors: clubchampion.com (5/7), truespecgolf.com (3/7), fittingpros.com (2/7). Cited count unchanged from last week.
 
-Rows 30–31 shipped: Big Four brand series now complete (Ping, TaylorMade, Callaway, Titleist). Recommended next priorities for 2026-10-06:
+Rows 30–31 shipped. Recommended next priorities for 2026-10-06:
+- **Golf club regripping guide** — `golf-club-regripping` — repair cluster; regripping is highest-frequency repair service (26% of directory shops).
+- **Mizuno fitting guide** — `mizuno-fitting` — brand-specific series extension; forged iron fitting differences is a genuine content gap.
+- **Full bag fitting vs. single-club fitting** — `full-bag-fitting` — FAQ cluster, high-frequency unserved query.
 
-- **Golf club regripping guide** (cost + when) — `golf-club-regripping` — repair cluster extension; regripping is the highest-frequency repair service (26% of directory shops per directory-stats-2026-06.md); no neutral US informational authority.
-- **Mizuno fitting guide** — `mizuno-fitting` — extends brand-specific series; Mizuno's grain-flow forged irons are high-forum-signal; forged iron fitting differences is a genuine content gap.
-- **Full bag fitting vs. single-club fitting** — `full-bag-fitting` — FAQ cluster; "should I get a full bag fitting" is a high-frequency question with no neutral answer guide.
-
-*James — the GSC key still isn't set up in this environment and the manual export is stale (over 3 months old). Run the pull locally or drop a fresh export into `tasks/` to re-sort by real impression data before the next run drafts from this list.*
+*James — the GSC key still isn't set up in this environment. The manual export is over 3 months old. Drop a fresh export into `tasks/` or run the pull locally to re-sort by real impression data.*
 
 ### Queue re-sort note — 2026-09-21
 

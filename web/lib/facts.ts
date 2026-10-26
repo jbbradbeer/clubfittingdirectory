@@ -25,6 +25,26 @@ export async function applyOwnerFact(
 ): Promise<void> {
   const supabase = createAdminClient()
 
+  // An owner clearing a field arrives as null. listing_facts.value is NOT
+  // NULL, so "no owner value" is represented by REMOVING the owner row; the
+  // recompute then falls back to the next-best source (or clears the cache).
+  // Upserting null here used to throw 23502 and jam the whole approval batch.
+  if (value === null || value === undefined) {
+    const { error: delErr } = await supabase
+      .from("listing_facts")
+      .delete()
+      .eq("listing_id", listingId)
+      .eq("attribute", attribute)
+      .eq("source", OWNER_SOURCE)
+    if (delErr) throw delErr
+    const { error: rpcErr } = await supabase.rpc("recompute_current_fact", {
+      p_listing_id: listingId,
+      p_attribute: attribute,
+    })
+    if (rpcErr) throw rpcErr
+    return
+  }
+
   const { error: upsertErr } = await supabase
     .from("listing_facts")
     .upsert(

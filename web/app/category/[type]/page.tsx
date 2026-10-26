@@ -67,6 +67,9 @@ export default async function CategoryPage({ params }: PageProps) {
 
   const { shops, stateBreakdown } = result
   const label = shopType.label
+  // DC is browsable but not a state — the homepage stat already excludes it;
+  // the category subtitle must not read "51 states".
+  const stateCount = stateBreakdown.filter((s) => s.state_code !== "DC").length
 
   const itemListSchema = buildItemListSchema(shops, `${label} Directory`)
   const breadcrumbSchema = buildCategoryBreadcrumbSchema(label, slug)
@@ -80,14 +83,14 @@ export default async function CategoryPage({ params }: PageProps) {
         breadcrumb={[{ label: "Home", href: "/" }, { label: label }]}
         eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
         title={label}
-        subtitle={`${shops.length} listings across ${stateBreakdown.length} states.`}
+        subtitle={`${shops.length} listings across ${stateCount} states.`}
       />
 
       {/* Intro copy */}
       <section className="bg-[var(--color-ivory)] pt-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-lg text-[var(--color-charcoal-light)] leading-relaxed">
-            {categoryIntro(label, shops, stateBreakdown.length)}
+            {categoryIntro(label, shops, stateCount)}
           </p>
         </div>
       </section>

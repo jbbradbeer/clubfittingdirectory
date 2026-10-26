@@ -52,3 +52,20 @@ Monthly tracking of whether clubfittingdirectory.com appears in web search resul
 - Same pattern as July/August: cited only on the direct-intent "club fitting directory" query; absent on all 7 city-specific and informational queries.
 - On "club fitting directory," position slipped from 3rd (July/Aug) to 4th–5th of 8 — golfdigest.com and golf.com's new Top 50 Clubfitters directory page now rank above us; customclubfitters.com dropped out of the top links entirely this month.
 - fittingpros.com and clubchampion.com remain the most consistent competitors across nearly every query, three months running — still the primary AI-visibility rivals to target.
+
+## 2026-10-01
+
+| Query | Cited? | Position | Who ranks instead |
+|---|---|---|---|
+| best golf club fitter in Austin | No | Absent | clubchampion.com, golftec.com, bartoncreekfittingstudio.com |
+| best club fitter in Denver | No | Absent | gottgolf.com, clubchampion.com, golftec.com |
+| how much does a golf club fitting cost | Yes | Top 10 (4th of 9) | truespecgolf.com, fitmygolfclubs.com, countryclubcontent.com |
+| top independent club fitters in Texas | No | Absent | golfdigest.com, fittingpros.com, clubchampion.com |
+| golf club fitting near me Chicago | No | Absent | pgatoursuperstore.com, clubchampion.com, truespecgolf.com |
+| state of club fitting 2026 | No | Absent | golf.com, pluggedingolf.com, fittingpros.com |
+| club fitting directory | Yes | Top 10 (5th of 10, homepage also 7th) | golf.com (50 Best Clubfitters), golfdigest.com, fittingpros.com |
+| where to get fitted for golf clubs Phoenix | No | Absent | pgatoursuperstore.com, truespecgolf.com, fittingpros.com |
+
+- New win: our `/guides/golf-club-fitting-cost` page is now cited on "how much does a golf club fitting cost" — first appearance on this query in 3 months of tracking, and the first time we've shown up on a non-"directory" (informational) query.
+- "club fitting directory" still cited, but now two of our URLs show up (homepage + guides page); best position roughly flat vs. September (5th of 10 vs. 4th of 8).
+- Still zero visibility on every city-specific "best fitter in X" query and on "state of club fitting 2026" — those remain owned by clubchampion.com, golftec.com, truespecgolf.com, fittingpros.com, and pgatoursuperstore.com; worth prioritizing city-level content next.

@@ -73,11 +73,15 @@ export async function POST(request: Request) {
 
     // Best-effort: confirm to the claimant + invite them to book the intro
     // call (founder cc'd as the new-claim alert). Never fails the request.
-    await sendClaimConfirmation({
-      shopName: shops[0].name,
-      claimantName: name,
-      claimantEmail: email,
-    })
+    try {
+      await sendClaimConfirmation({
+        shopName: shops[0].name,
+        claimantName: name,
+        claimantEmail: email,
+      })
+    } catch (e) {
+      log.error("api/claim-shop", "confirmation email failed (claim saved)", { error: e })
+    }
   } catch (e) {
     log.error("api/claim-shop", "insert failed", { error: e })
     return NextResponse.json(

@@ -47,7 +47,9 @@ async function nearbyForCity(
 
 export async function generateStaticParams() {
   const slugs = await getAllCitySlugs().catch((e) => logQueryError("city generateStaticParams getAllCitySlugs", e, []))
-  return slugs
+  // Only the route param — extra keys (shopCount, indexable) are tolerated today
+  // but undefined behaviour across Next minors.
+  return slugs.map(({ citySlug }) => ({ citySlug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

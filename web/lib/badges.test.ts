@@ -34,9 +34,17 @@ describe("getShopTag priority", () => {
     expect(getShopTag({ listing_tier: "featured", verified_expires_at: "2999-01-01T00:00:00Z", claimed_at: "2026-07-01T00:00:00Z", rating: 5, reviews: 99 })?.label)
       .toBe("Featured")
   })
-  it("legacy is_featured flag still shows Featured", () => {
+  it("is_featured alone never grants the badge (it is a sort flag, not a paid state)", () => {
     expect(getShopTag({ listing_tier: "free", is_featured: true, claimed_at: "2026-07-01T00:00:00Z", rating: 5, reviews: 99 })?.label)
-      .toBe("Featured")
+      .toBe("Verified")
+    expect(getShopTag({ listing_tier: "free", is_featured: true, claimed_at: null, rating: 4.2, reviews: 3 }))
+      .toBeNull()
+  })
+  it("REAL activation shape after expiry: tier still 'featured', is_featured still true → Verified, not Featured", () => {
+    // This is exactly what activateFeaturedShop writes, one day past expiry,
+    // before any lapse sweep has run. The badge must already be gone.
+    expect(getShopTag({ listing_tier: "featured", is_featured: true, verified_expires_at: "2020-01-01T00:00:00Z", claimed_at: "2026-07-01T00:00:00Z", rating: 5, reviews: 99 })?.label)
+      .toBe("Verified")
   })
   it("free Verified (claimed) beats Top Rated", () => {
     expect(getShopTag({ listing_tier: "free", is_featured: false, claimed_at: "2026-07-01T00:00:00Z", rating: 5, reviews: 99 })?.label)

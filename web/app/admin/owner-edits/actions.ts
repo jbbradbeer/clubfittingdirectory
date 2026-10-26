@@ -37,7 +37,10 @@ async function loadBatch(id: string): Promise<Batch | null> {
   return data as unknown as Batch
 }
 
-export async function approveOwnerEdits(formData: FormData): Promise<void> {
+/* Returns { error } (not throw) so ActionButton shows it inline — a thrown
+   server-action error renders the opaque error boundary and the founder can't
+   tell WHICH attribute failed or that the batch is still retryable. */
+export async function approveOwnerEdits(formData: FormData): Promise<{ error?: string } | void> {
   if (!(await isAdmin())) redirect("/admin/login")
   const id = String(formData.get("id") ?? "")
   const batch = await loadBatch(id)
@@ -54,7 +57,12 @@ export async function approveOwnerEdits(formData: FormData): Promise<void> {
         await applyOwnerFact(batch.shop_id, attribute, value)
       } catch (e) {
         log.error("admin/owner-edits", "applyOwnerFact failed", { error: e, attribute, batchId: id })
-        return // leave the batch 'new' so it can be retried after the fix
+        // Leave the batch 'new' so it can be retried after the fix. Earlier
+        // attributes in this batch are already applied; re-approving re-upserts
+        // them harmlessly.
+        return {
+          error: `Could not apply "${attribute}": ${e instanceof Error ? e.message : "unknown error"}. Batch left pending — fix and retry.`,
+        }
       }
       if (WIDE_REVALIDATE_ATTRIBUTES.has(attribute)) wide = true
     }

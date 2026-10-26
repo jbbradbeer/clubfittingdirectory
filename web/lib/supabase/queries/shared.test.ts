@@ -1,5 +1,18 @@
 import { describe, expect, it } from "vitest"
-import { fetchAllRows, sanitizeSearchTerm } from "@/lib/supabase/queries/shared"
+import { escapeLikePattern, fetchAllRows, sanitizeSearchTerm } from "@/lib/supabase/queries/shared"
+
+/* The portal magic-link lookup matches owner_email with ilike. Unescaped, a
+   requested address of "%@%" matched EVERY claimed shop. */
+describe("escapeLikePattern", () => {
+  it("neutralises LIKE wildcards so the match is literal", () => {
+    expect(escapeLikePattern("%@%")).toBe("\\%@\\%")
+    expect(escapeLikePattern("a_c@x.com")).toBe("a\\_c@x.com")
+    expect(escapeLikePattern("back\\slash")).toBe("back\\\\slash")
+  })
+  it("leaves ordinary addresses untouched", () => {
+    expect(escapeLikePattern("Pete.Smith@golf.co")).toBe("Pete.Smith@golf.co")
+  })
+})
 
 /* Regression tests for the search-input sanitizer. The apostrophe mapping
    exists because macOS smart quotes broke search entirely (commit f7cc17d);

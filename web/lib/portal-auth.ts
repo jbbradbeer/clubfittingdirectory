@@ -1,6 +1,8 @@
 import { cookies } from "next/headers"
 import crypto from "node:crypto"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { escapeLikePattern } from "@/lib/supabase/queries/shared"
+import { isValidEmail } from "@/lib/api/validation"
 
 /**
  * Owner-portal auth (mirrors the admin-auth HMAC + httpOnly cookie pattern —
@@ -118,15 +120,21 @@ export type OwnedShop = {
  * All claimed shops owned by this email. Case-insensitive match at compare
  * time — approveClaim stores the claimant email verbatim, so never assume
  * casing (and don't migrate the data).
+ *
+ * The email is LIKE-escaped before the ilike: `%` and `_` are wildcards, so an
+ * unescaped "%@%" would have matched EVERY claimed shop (and `_` is common in
+ * real addresses, so escaping also fixes false matches like a_c ↔ abc). A
+ * syntactically invalid address short-circuits to no shops.
  */
 export async function getOwnedShops(email: string): Promise<OwnedShop[]> {
+  if (!isValidEmail(email)) return []
   const supabase = createAdminClient()
   const { data, error } = await supabase
     .from("shops")
     .select(
       "id, slug, name, city, state_code, phone, website, street, working_hours, services_array, offers_fitting, brands_fitted, launch_monitors, ownership_type",
     )
-    .ilike("owner_email", email)
+    .ilike("owner_email", escapeLikePattern(email))
     .not("claimed_at", "is", null)
     .eq("status", "active")
     .order("name")

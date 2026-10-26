@@ -41,6 +41,10 @@ import { juniorGolfClubFittingGuide } from "@/lib/guides/junior-golf-club-fittin
 import { taylorMadeFittingGuide } from "@/lib/guides/taylormade-fitting"
 import { callawayFittingGuide } from "@/lib/guides/callaway-fitting"
 import { titleistFittingGuide } from "@/lib/guides/titleist-fitting"
+import { hybridFittingGuide } from "@/lib/guides/hybrid-fitting"
+import { golfClubRegrippingGuide } from "@/lib/guides/golf-club-regripping"
+import { mizunoFittingGuide } from "@/lib/guides/mizuno-fitting"
+import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -114,6 +118,14 @@ export const GUIDES: Guide[] = [
   callawayFittingGuide,
   // Brand-specific fitting guide: Titleist (2026-09-28 — keyword-map #30)
   titleistFittingGuide,
+  // Club-by-Club: hybrid and fairway wood fitting (2026-09-28 — keyword-map #31)
+  hybridFittingGuide,
+  // Repair cluster: regripping guide (2026-10-05 — keyword-map #32)
+  golfClubRegrippingGuide,
+  // Brand-specific fitting guide: Mizuno + Shaft Optimizer (2026-10-12 — keyword-map #33)
+  mizunoFittingGuide,
+  // Fitting strategy: full bag vs. single-club decision guide (2026-10-12 — keyword-map #34)
+  fullBagFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {

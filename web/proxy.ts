@@ -24,10 +24,31 @@ const PORTAL_COOKIE = "cfd_portal"
    reading the site. Strictly fire-and-forget: the insert is handed to
    event.waitUntil and every failure path is swallowed, so logging can never
    slow down or break a page response. */
+/* Per-instance dedupe: the same bot re-fetching the same path within the
+   window is not new information, and the User-Agent is client-supplied, so
+   without this a loop of `curl -A GPTBot` could insert unbounded rows with
+   the service key. The map is capped so it can't grow without limit. */
+const HIT_DEDUPE_WINDOW_MS = 60_000
+const HIT_DEDUPE_MAX_KEYS = 5_000
+const recentHits = new Map<string, number>()
+
+function isDuplicateHit(bot: string, pathname: string, now: number): boolean {
+  const key = `${bot}\n${pathname}`
+  const last = recentHits.get(key)
+  if (last !== undefined && now - last < HIT_DEDUPE_WINDOW_MS) return true
+  if (recentHits.size >= HIT_DEDUPE_MAX_KEYS) {
+    for (const [k, t] of recentHits) if (now - t >= HIT_DEDUPE_WINDOW_MS) recentHits.delete(k)
+    if (recentHits.size >= HIT_DEDUPE_MAX_KEYS) recentHits.clear()
+  }
+  recentHits.set(key, now)
+  return false
+}
+
 function logCrawlerHit(bot: string, pathname: string, ua: string | null, event: NextFetchEvent) {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!base || !key) return
+  if (isDuplicateHit(bot, pathname, Date.now())) return
   try {
     event.waitUntil(
       fetch(`${base}/rest/v1/crawler_hits`, {

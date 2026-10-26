@@ -5,9 +5,9 @@ import { redirect } from "next/navigation"
 import { rateLimitOk } from "@/lib/rate-limit"
 import { log } from "@/lib/logger"
 import { revalidatePath } from "next/cache"
-import { ADMIN_COOKIE, tokenForPassword, isAdmin } from "@/lib/admin-auth"
+import { ADMIN_COOKIE, ADMIN_SESSION_MS, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateFeaturedShop } from "@/lib/verified"
+import { activateFeaturedShop, lapseFeaturedShop } from "@/lib/verified"
 import { sendClaimApprovedEmail, sendPaymentLinkEmail } from "@/lib/email"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
@@ -43,7 +43,7 @@ export async function login(formData: FormData) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: ADMIN_SESSION_MS / 1000,
   })
   redirect("/admin")
 }
@@ -228,16 +228,12 @@ export async function lapseFeatured(formData: FormData) {
   const slug = String(formData.get("slug") ?? "").trim().toLowerCase()
   if (!slug) return
 
-  const supabase = createAdminClient()
-  const { error } = await supabase
-    .from("shops")
-    .update({ listing_tier: "free", is_featured: false })
-    .eq("slug", slug)
-  if (error) return { error: `Could not lapse: ${error.message}` }
-
-  revalidatePath("/admin", "layout")
-  revalidatePath(`/listing/${slug}`)
-  revalidatePath("/")
+  // Shared with the Stripe webhook + daily sweep — one lapse path (lib/verified.ts).
+  try {
+    await lapseFeaturedShop(slug, "admin")
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Could not lapse." }
+  }
 }
 
 /* ── Reject a claim (does not touch shops) ── */

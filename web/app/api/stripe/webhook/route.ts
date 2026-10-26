@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type Stripe from "stripe"
 import { getStripe } from "@/lib/stripe"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { activateFeaturedShop } from "@/lib/verified"
+import { activateFeaturedShop, lapseFeaturedShop } from "@/lib/verified"
 import { sendPaymentReceivedEmail } from "@/lib/email"
 import { isPlanKey, type PlanKey } from "@/lib/plans"
 import { log } from "@/lib/logger"
@@ -58,6 +58,28 @@ export async function POST(request: Request) {
     return handleRenewalInvoice(event.data.object as Stripe.Invoice)
   }
 
+  // Subscription ended (owner cancelled, or Stripe gave up after failed
+  // retries): take the paid placement off right away instead of waiting for
+  // the daily expiry sweep. Nothing to double-apply — lapse is idempotent.
+  if (event.type === "customer.subscription.deleted") {
+    return handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
+  }
+
+  // A failed renewal charge is NOT a lapse: Stripe's smart retries run for
+  // days and usually recover. The badge already has verified_expires_at as its
+  // hard stop, and the daily sweep enforces it. We only log so the founder can
+  // reach out before the subscription cancels.
+  if (event.type === "invoice.payment_failed") {
+    const invoice = event.data.object as Stripe.Invoice
+    log.warn("api/stripe-webhook", "renewal payment failed — Stripe will retry", {
+      invoice: invoice.id,
+      shopSlug: invoice.parent?.subscription_details?.metadata?.shop_slug ?? null,
+      customerEmail: invoice.customer_email ?? null,
+      attempt: invoice.attempt_count,
+    })
+    return NextResponse.json({ received: true })
+  }
+
   // Everything except a completed, paid checkout is acknowledged and ignored.
   if (event.type !== "checkout.session.completed") {
     return NextResponse.json({ received: true })
@@ -110,7 +132,7 @@ export async function POST(request: Request) {
       throw insertErr
     }
 
-    const slug = await activateFeaturedShop(shopSlug, plan)
+    const slug = await activateOrReleaseGate(supabase, session.id, shopSlug, plan)
     log.info("api/stripe-webhook", "payment processed, badge activated", {
       slug,
       plan,
@@ -139,6 +161,33 @@ export async function POST(request: Request) {
     // 500 → Stripe retries with backoff; the idempotency gate makes the retry safe.
     log.error("api/stripe-webhook", "processing failed", { error: e, session: session.id })
     return NextResponse.json({ error: "Processing failed." }, { status: 500 })
+  }
+}
+
+/* Activation runs after the idempotency row is committed. If it fails, delete
+   that row before rethrowing so Stripe's retry re-runs activation instead of
+   short-circuiting on 23505 (which would leave a paid shop un-Featured). */
+async function activateOrReleaseGate(
+  supabase: ReturnType<typeof createAdminClient>,
+  gateId: string,
+  shopSlug: string,
+  plan: PlanKey
+) {
+  try {
+    return await activateFeaturedShop(shopSlug, plan)
+  } catch (e) {
+    const { error: delErr } = await supabase
+      .from("shop_payments")
+      .delete()
+      .eq("stripe_session_id", gateId)
+    if (delErr) {
+      log.error("api/stripe-webhook", "activation failed AND gate release failed — manual fix needed", {
+        gateId,
+        shopSlug,
+        error: delErr,
+      })
+    }
+    throw e
   }
 }
 
@@ -184,7 +233,7 @@ async function handleRenewalInvoice(invoice: Stripe.Invoice) {
       throw insertErr
     }
 
-    const slug = await activateFeaturedShop(shopSlug, plan)
+    const slug = await activateOrReleaseGate(supabase, invoice.id, shopSlug, plan)
     log.info("api/stripe-webhook", "renewal processed, badge extended", {
       slug,
       plan,
@@ -196,6 +245,36 @@ async function handleRenewalInvoice(invoice: Stripe.Invoice) {
     log.error("api/stripe-webhook", "renewal processing failed", {
       error: e,
       invoice: invoice.id,
+    })
+    return NextResponse.json({ error: "Processing failed." }, { status: 500 })
+  }
+}
+
+/* ── Subscription cancelled/ended ──
+   The shop is identified by the subscription metadata set at checkout
+   (subscription_data.metadata). One-time annual payments have no subscription,
+   so they never reach here — the daily expiry sweep ends those. */
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  const shopSlug = subscription.metadata?.shop_slug
+  if (!shopSlug) {
+    log.error("api/stripe-webhook", "subscription.deleted missing shop metadata", {
+      subscription: subscription.id,
+    })
+    return NextResponse.json({ received: true })
+  }
+
+  try {
+    const changed = await lapseFeaturedShop(shopSlug, "stripe_cancelled")
+    log.info("api/stripe-webhook", "subscription ended — featured lapsed", {
+      slug: shopSlug,
+      subscription: subscription.id,
+      changed,
+    })
+    return NextResponse.json({ received: true })
+  } catch (e) {
+    log.error("api/stripe-webhook", "lapse on subscription.deleted failed", {
+      error: e,
+      subscription: subscription.id,
     })
     return NextResponse.json({ error: "Processing failed." }, { status: 500 })
   }
