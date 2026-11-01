@@ -69,3 +69,20 @@ Monthly tracking of whether clubfittingdirectory.com appears in web search resul
 - New win: our `/guides/golf-club-fitting-cost` page is now cited on "how much does a golf club fitting cost" — first appearance on this query in 3 months of tracking, and the first time we've shown up on a non-"directory" (informational) query.
 - "club fitting directory" still cited, but now two of our URLs show up (homepage + guides page); best position roughly flat vs. September (5th of 10 vs. 4th of 8).
 - Still zero visibility on every city-specific "best fitter in X" query and on "state of club fitting 2026" — those remain owned by clubchampion.com, golftec.com, truespecgolf.com, fittingpros.com, and pgatoursuperstore.com; worth prioritizing city-level content next.
+
+## 2026-11-01
+
+| Query | Cited? | Position | Who ranks instead |
+|---|---|---|---|
+| best golf club fitter in Austin | No | Absent | clubchampion.com, pgatoursuperstore.com, avodagolf.com |
+| best club fitter in Denver | No | Absent | truespecgolf.com, golfdigest.com, lessons.com |
+| how much does a golf club fitting cost | No | Absent | thepricer.org, golfersauthority.com, truespecgolf.com |
+| top independent club fitters in Texas | No | Absent | clubchampion.com, pgatoursuperstore.com, lessons.com |
+| golf club fitting near me Chicago | No | Absent | clubchampion.com, truespecgolf.com, firstcallgolf.com |
+| state of club fitting 2026 | No | Absent | mygolfspy.com, thegolfwire.com, golfshake.com |
+| club fitting directory | No | Absent | golfdigest.com, golf.com, fittingpros.com |
+| where to get fitted for golf clubs Phoenix | No | Absent | truespecgolf.com, golftec.com, pgatoursuperstore.com |
+
+- **Regression:** lost citation on "club fitting directory" — the one query we'd been cited on every month since July (was 5th of 10 last month); absent now, with golfdigest.com/golf.com/fittingpros.com occupying the results instead.
+- Also lost "how much does a golf club fitting cost," last month's new win (`/guides/golf-club-fitting-cost` was 4th of 9); absent this month, replaced by generic cost-explainer sites (thepricer.org, golfersauthority.com).
+- Net result: 0 of 8 queries cited this month, down from 2 of 8 in October — first month with zero visibility since tracking began; worth checking whether the guides/directory pages were affected by a deploy, robots/indexing change, or a Google algorithm shift before next month's run.
