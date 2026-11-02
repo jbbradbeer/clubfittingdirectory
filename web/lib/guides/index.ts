@@ -47,6 +47,7 @@ import { mizunoFittingGuide } from "@/lib/guides/mizuno-fitting"
 import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
 import { golfBallFittingGuide } from "@/lib/guides/golf-ball-fitting"
 import { golfClubReshaftingGuide } from "@/lib/guides/golf-club-reshafting"
+import { srixonFittingGuide } from "@/lib/guides/srixon-fitting"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -132,6 +133,8 @@ export const GUIDES: Guide[] = [
   golfBallFittingGuide,
   // Repair cluster: reshafting guide — cost, when to do it, reshaft vs. buy new (2026-10-26 — keyword-map #36)
   golfClubReshaftingGuide,
+  // Brand-specific fitting guide: Srixon irons + Cleveland wedges (2026-11-02 — keyword-map #37)
+  srixonFittingGuide,
 ]
 
 export function getAllGuides(): Guide[] {
