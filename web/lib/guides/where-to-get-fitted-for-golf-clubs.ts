@@ -19,7 +19,7 @@ export const whereToGetFittedGuide: Guide = {
   ],
   readMinutes: 6,
   datePublished: "2026-06-03",
-  dateModified: "2026-07-04",
+  dateModified: "2026-11-02",
   blocks: [
     {
       type: "paragraph",
@@ -29,7 +29,11 @@ export const whereToGetFittedGuide: Guide = {
     { type: "heading", level: 2, text: "Independent fitting studios" },
     {
       type: "paragraph",
-      text: "Dedicated fitting studios are usually the gold standard. Because they are brand-agnostic, they can recommend the genuinely best head-and-shaft combination for you rather than steering you toward one manufacturer. Expect a launch monitor, a wide selection of components, and an unhurried, data-driven session.",
+      text: [
+        "Dedicated fitting studios are usually the gold standard. Because they are brand-agnostic, they can recommend the genuinely best head-and-shaft combination for you rather than steering you toward one manufacturer. Expect a launch monitor, a wide selection of components, and an unhurried, data-driven session. For a full breakdown of what separates a great fitter from an average one — including specific questions to ask — see the guide to ",
+        { text: "how to choose a club fitter", href: "/guides/how-to-choose-a-club-fitter" },
+        ".",
+      ],
     },
     {
       type: "list",
@@ -39,16 +43,20 @@ export const whereToGetFittedGuide: Guide = {
       ],
     },
 
-    { type: "heading", level: 2, text: "Big-box golf retailers" },
+    { type: "heading", level: 2, text: "Big-box golf retailers and national fitting chains" },
     {
       type: "paragraph",
-      text: "Large golf retailers offer convenient, accessible fittings, often with hitting bays and launch monitors in-store. Quality varies by location and by the individual fitter, but a good one delivers an excellent fitting — and many credit the fitting fee toward clubs you buy.",
+      text: [
+        "Large golf retailers and national chains like Club Champion and True Spec offer convenient, accessible fittings with hitting bays and launch monitors. Quality varies by location and by the individual fitter, but a good one delivers an excellent fitting — and many credit the fitting fee toward clubs you buy. For an honest comparison of what chains offer versus what you give up, see the ",
+        { text: "Club Champion vs. independent fitter guide", href: "/guides/club-champion-vs-independent-fitter" },
+        ".",
+      ],
     },
     {
       type: "list",
       items: [
         "Best for: buying new clubs and getting fitted in one trip.",
-        "Trade-off: selection and fitter experience can vary between stores.",
+        "Trade-off: selection and fitter experience can vary between locations.",
       ],
     },
 
@@ -64,6 +72,22 @@ export const whereToGetFittedGuide: Guide = {
         "Trade-off: single-brand, so no cross-brand comparison.",
       ],
     },
+    {
+      type: "paragraph",
+      text: [
+        "Each major brand's fitting experience has its own quirks — dedicated guides cover ",
+        { text: "Ping fitting", href: "/guides/ping-fitting" },
+        ", ",
+        { text: "TaylorMade fitting", href: "/guides/taylormade-fitting" },
+        ", ",
+        { text: "Callaway fitting", href: "/guides/callaway-fitting" },
+        ", ",
+        { text: "Titleist fitting", href: "/guides/titleist-fitting" },
+        ", and ",
+        { text: "Mizuno fitting", href: "/guides/mizuno-fitting" },
+        " — each one explains what makes that brand's approach distinctive and whether a brand-specific session beats a multi-brand studio for that manufacturer.",
+      ],
+    },
 
     { type: "heading", level: 2, text: "Golf simulators & indoor studios" },
     {
@@ -71,7 +95,8 @@ export const whereToGetFittedGuide: Guide = {
       text: [
         "Indoor ",
         { text: "golf simulators", href: "/category/golf-simulators" },
-        " have become popular fitting venues. They offer year-round, weather-proof launch-monitor data and are often more relaxed than a busy retail floor. Many simulator studios now offer fitting as a dedicated service.",
+        " have become popular fitting venues. They offer year-round, weather-proof launch-monitor data and are often more relaxed than a busy retail floor. Many simulator studios now offer fitting as a dedicated service. For an honest look at whether indoor fitting data translates to the course, see ",
+        { text: "indoor vs. outdoor fitting: can you trust the numbers?", href: "/guides/indoor-vs-outdoor-fitting" },
       ],
     },
 
@@ -94,6 +119,16 @@ export const whereToGetFittedGuide: Guide = {
         "What's the fee policy? Ask whether the fitting fee is credited toward a purchase.",
         "What do reviews say? Look for golfers praising the fitter's patience and explanation, not just the products.",
         "Is it convenient? You're more likely to follow through (and return) if it's close to home.",
+      ],
+    },
+    {
+      type: "paragraph",
+      text: [
+        "For a detailed checklist of what to look for in a fitter — plus red flags that suggest you should book elsewhere — see ",
+        { text: "how to choose a club fitter", href: "/guides/how-to-choose-a-club-fitter" },
+        ". For what to expect during the session itself, read ",
+        { text: "what to expect at a golf club fitting", href: "/guides/what-to-expect-at-a-golf-club-fitting" },
+        ".",
       ],
     },
 
@@ -145,11 +180,14 @@ export const whereToGetFittedGuide: Guide = {
     {
       question: "How much does it cost to get fitted for golf clubs?",
       answer:
-        "A single-club fitting often costs around $50–$150, while a full-bag fitting can run $200–$400 or more. Many retailers waive or credit the fee toward clubs purchased, so always ask about the fee policy when booking.",
+        "In 2026, a single-club fitting at an independent studio typically costs $75–$150; a full-bag fitting runs $200–$400 at most venues. Big-box retailers charge similar amounts ($80–$300 depending on scope), and many credit the fee toward clubs purchased. National chains like Club Champion charge $175–$250 for a full-bag session. Brand demo days are often free or close to it. Always ask about the fee policy when booking — at many shops the fitting fee disappears when you buy.",
     },
   ],
   related: [
     { label: "Golf Club Fitting: The Complete Guide", href: "/guides/golf-club-fitting" },
     { label: "Golf Club Fitting Chart: Length, Lie & Shaft Flex", href: "/guides/golf-club-fitting-chart" },
+    { label: "How to Choose a Club Fitter", href: "/guides/how-to-choose-a-club-fitter" },
+    { label: "Club Champion vs. Independent Fitter", href: "/guides/club-champion-vs-independent-fitter" },
+    { label: "What to Expect at a Golf Club Fitting", href: "/guides/what-to-expect-at-a-golf-club-fitting" },
   ],
 }

@@ -68,6 +68,21 @@ voice-of-customer frequency.
 | 35 | ✅ Golf Ball Fitting: What It Is, How It Works, and Whether You Need It (shipped 2026-10-26, `golf-ball-fitting`) | golf ball fitting / is golf ball fitting worth it | TABLE STAKES per competitor inventory (MyGolfSpy 101, Club Champion post) · Titleist's ball-first fitting protocol is the hook no competitor covers neutrally · Gap: no honest broker guide explains when ball fitting is worth it vs. not · Angle: usually free; short-game spin is the main variable; compression myth debunked; honest threshold (shoot under 90). |
 | 36 | ✅ Golf Club Reshafting: Cost, When to Do It, and Where (shipped 2026-10-26, `golf-club-reshafting`) | golf club reshafting / how much to reshaft golf clubs / when to reshaft | Repair cluster extension (follows regripping guide, row 32). C: landscape is thin SEO-farm content with no trustworthy cost tables; no neutral US informational authority · V: MEDIUM forum signal ("reshaft vs buy new" is a recurring GolfWRX/Sand Trap thread) · Gap: no honest guide explains the decision framework + the driver reshafting sweet spot · Angle: cost table by club type; "driver reshafting sweet spot" (great head + OEM stock shaft = easy win); reshaft vs. used set math. |
 
+### Queue re-sort note — 2026-11-02 (maintenance pass — first Monday November)
+
+GSC pull script failed again in this environment (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now nearly 5 months old.
+
+Citation check 2026-11-02: clubfittingdirectory.com cited **0/10 prompts** checked this run — continues the 0/6 trend from 2026-10-26. Competitors most seen: clubchampion.com (7/10), mygolfspy.com (3/10), truespecgolf.com (2/10), fittingpros.com (2/10), teeoff.com (2/10). FittingPros continues to appear for the "club fitting directory" query — they appear to be growing their SEO footprint.
+
+Maintenance this run: refreshed `where-to-get-fitted-for-golf-clubs` guide (oldest dateModified 2026-07-04) — added internal links to 9 guides published since July 2026, expanded `related` array, updated 2026 cost figures in FAQ. New article: `srixon-fitting` (row 37, shipped same run).
+
+Recommended next priorities:
+- **Golf club loft and lie adjustment** — `loft-lie-adjustment` — repair cluster extension; "bend fitting" is a distinct service confused with a reshaft; high-intent local query.
+- **Set makeup / bag building guide** — `golf-set-makeup` — FAQ cluster; "what clubs should I carry?" is a top-10 before-fitting question.
+- **Cleveland wedge fitting deep-dive** (if search volume justifies a standalone) — `cleveland-fitting` — the wedge fitting section in the Srixon guide may be enough, but a standalone "Cleveland wedge fitting" article could capture the specific query cluster.
+
+*James — the GSC key still isn't set up in this environment and the manual export is now nearly 5 months old. Citation visibility remains at 0/10 this run — FittingPros is appearing consistently for the "club fitting directory" query. Worth a manual check and potentially a fresh GSC export into `tasks/` to re-sort the queue by real impression data.*
+
 ### Queue re-sort note — 2026-10-26
 
 GSC pull script failed again (service-account key unavailable). Most recent manual GSC export remains 2026-06-10 — now over 4.5 months old.
