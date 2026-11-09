@@ -48,6 +48,7 @@ import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
 import { golfBallFittingGuide } from "@/lib/guides/golf-ball-fitting"
 import { golfClubReshaftingGuide } from "@/lib/guides/golf-club-reshafting"
 import { srixonClevelandFittingGuide } from "@/lib/guides/srixon-cleveland-fitting"
+import { loftLieAdjustmentGuide } from "@/lib/guides/loft-lie-adjustment"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -135,6 +136,8 @@ export const GUIDES: Guide[] = [
   golfClubReshaftingGuide,
   // Brand-specific fitting guide: Srixon + Cleveland (2026-11-09 — keyword-map #37)
   srixonClevelandFittingGuide,
+  // Repair cluster: loft and lie adjustment — cost, forged vs. cast, warranty risks (2026-11-09 — keyword-map #38)
+  loftLieAdjustmentGuide,
 ]
 
 export function getAllGuides(): Guide[] {
