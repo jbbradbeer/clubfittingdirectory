@@ -47,6 +47,7 @@ import { mizunoFittingGuide } from "@/lib/guides/mizuno-fitting"
 import { fullBagFittingGuide } from "@/lib/guides/full-bag-fitting"
 import { golfBallFittingGuide } from "@/lib/guides/golf-ball-fitting"
 import { golfClubReshaftingGuide } from "@/lib/guides/golf-club-reshafting"
+import { loftLieAdjustmentGuide } from "@/lib/guides/loft-lie-adjustment"
 
 /* ─────────────────────────────────────────────────────────
    GUIDE REGISTRY — the single source of truth for the Content
@@ -132,6 +133,8 @@ export const GUIDES: Guide[] = [
   golfBallFittingGuide,
   // Repair cluster: reshafting guide — cost, when to do it, reshaft vs. buy new (2026-10-26 — keyword-map #36)
   golfClubReshaftingGuide,
+  // Repair cluster: loft and lie adjustment — cost, forged vs. cast, warranty risks (2026-11-09 — keyword-map #38)
+  loftLieAdjustmentGuide,
 ]
 
 export function getAllGuides(): Guide[] {
