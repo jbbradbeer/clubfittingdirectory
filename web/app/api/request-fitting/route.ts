@@ -5,6 +5,8 @@ import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 /**
  * Public "Request a Fitting" endpoint — the booking engine's intake.
  * POST /api/request-fitting  → inserts a row into fitting_requests (RLS allows
@@ -80,13 +82,19 @@ export async function POST(request: Request) {
       // Admin (service-role) client: owner_email isn't readable through the
       // public RLS policy. The insert below still uses the anon RLS client.
       const admin = createAdminClient()
-      const { data } = await admin
+      // limit(1), not maybeSingle(): a duplicated slug must still resolve to
+      // one shop (same stable pick as getShopBySlug) rather than erroring to
+      // null and silently skipping the claimed owner.
+      const { data, error } = await admin
         .from("shops")
         .select("id,name,slug,owner_email,claimed_at")
         .eq("slug", shopSlug)
         .eq("status", "active")
-        .maybeSingle()
-      dbShop = data ?? null
+        .order("rating", { ascending: false, nullsFirst: false })
+        .order("id", { ascending: true })
+        .limit(1)
+      if (error) throw error
+      dbShop = data?.[0] ?? null
     } catch (e) {
       log.warn("api/request-fitting", "shop lookup failed — falling back to posted values", { error: e })
     }
@@ -104,7 +112,9 @@ export async function POST(request: Request) {
     // side; nothing here is exposed to the browser.
     const supabase = createAdminClient()
     const row = {
-      shop_id: dbShop?.id ?? (shopId || null),
+      // The posted id is only a fallback, and only if it's a real UUID —
+      // garbage would fail the insert (22P02) and lose the lead.
+      shop_id: dbShop?.id ?? (UUID_RE.test(shopId) ? shopId : null),
       shop_slug: dbShop?.slug ?? (shopSlug || null),
       shop_name: dbShop?.name ?? (shopName || null),
       visitor_name: visitorName,

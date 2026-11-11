@@ -67,3 +67,52 @@ export const EDITABLE_ATTRIBUTES = new Set(EDITABLE_FIELDS.map((f) => f.attribut
 
 /** Fields whose change should also refresh city/state/category pages. */
 export const WIDE_REVALIDATE_ATTRIBUTES = new Set(["services_array", "offers_fitting"])
+
+export type ParsedEdit = { changed: false } | { changed: true; value: unknown }
+
+/**
+ * Turn one submitted form value into a proposed edit, or report "no change".
+ * Pure (no I/O) so the edge cases are unit-tested in portal-editable.test.ts:
+ *  - An UNticked checkbox is absent from FormData, so a missing boolean means
+ *    `false` (not "skip") — otherwise owners could never untick a box.
+ *  - "Empty" is one value: null, false-for-booleans and [] all mean "nothing
+ *    set", so leaving a blank field blank is never reported as a change (and
+ *    never stored as an owner-verified empty value on approval).
+ */
+export function parseEditValue(
+  field: EditableField,
+  raw: FormDataEntryValue | null,
+  currentValue: unknown,
+): ParsedEdit {
+  let value: unknown
+  if (field.kind === "boolean") {
+    value = raw !== null && (String(raw) === "on" || String(raw) === "true")
+    if (value === Boolean(currentValue)) return { changed: false }
+    return { changed: true, value }
+  }
+
+  if (raw === null) return { changed: false }
+
+  if (field.kind === "jsonb") return { changed: false } // working_hours read-only v1
+  if (field.kind === "text_array") {
+    const list = String(raw)
+      .split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .slice(0, 40)
+    value = list.length > 0 ? list : null
+  } else if (field.kind === "select") {
+    const allowed = new Set((field.options ?? []).map((o) => o.value))
+    const v = String(raw).trim()
+    if (!allowed.has(v)) return { changed: false }
+    value = v
+  } else {
+    const v = String(raw).trim().slice(0, 500)
+    value = v === "" ? null : v
+  }
+
+  const current =
+    Array.isArray(currentValue) && currentValue.length === 0 ? null : currentValue ?? null
+  if (JSON.stringify(value) === JSON.stringify(current)) return { changed: false }
+  return { changed: true, value }
+}

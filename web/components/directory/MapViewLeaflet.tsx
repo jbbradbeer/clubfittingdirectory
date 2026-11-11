@@ -1,7 +1,7 @@
 "use client"
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
-import { MAP_TILE_ATTRIBUTION, MAP_TILE_URL } from "@/lib/constants"
+import { MAP_MAX_ZOOM, MAP_TILE_ATTRIBUTION, MAP_TILE_URL } from "@/lib/constants"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import Link from "next/link"
@@ -52,8 +52,7 @@ export function MapViewLeaflet({ shops }: MapViewLeafletProps) {
         <TileLayer
           attribution={MAP_TILE_ATTRIBUTION}
           url={MAP_TILE_URL}
-          subdomains="abcd"
-          maxZoom={20}
+          maxZoom={MAP_MAX_ZOOM}
         />
         {validShops.map((shop) => (
           <Marker

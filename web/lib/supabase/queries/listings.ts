@@ -8,6 +8,7 @@
 import { createClient } from "@/lib/supabase/client"
 import type { Shop } from "@/types/shop"
 import {
+  CARD_FIELDS,
   queryListings,
   type DirectoryFilters,
   type DirectoryResult,
@@ -37,12 +38,29 @@ export async function getNearMeListings(
   limit = 50,
 ): Promise<NearMeShop[]> {
   const supabase = createClient()
-  const { data, error } = await supabase.rpc("search_shops_near", {
+  // Step 1: the DB does the geo math (strict radius, migration 022) and hands
+  // back ids nearest-first. Step 2: load the same card columns every other grid
+  // uses, so cards and Map view (latitude/longitude) get everything they need.
+  const { data: hits, error } = await supabase.rpc("nearby_shop_ids", {
     lat,
     lng,
     radius_km: radiusKm,
     p_limit:   limit,
   })
   if (error) throw error
-  return (data ?? []) as NearMeShop[]
+  const ranked = (hits ?? []) as { id: string; distance_km: number }[]
+  if (ranked.length === 0) return []
+
+  const { data: rows, error: rowsError } = await supabase
+    .from("shops")
+    .select(CARD_FIELDS)
+    .in("id", ranked.map((h) => h.id))
+    .eq("status", "active")
+  if (rowsError) throw rowsError
+
+  const byId = new Map(((rows ?? []) as unknown as Shop[]).map((s) => [s.id, s]))
+  return ranked.flatMap((h) => {
+    const shop = byId.get(h.id)
+    return shop ? [{ ...shop, distance_km: h.distance_km }] : []
+  })
 }

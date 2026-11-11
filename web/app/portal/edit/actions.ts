@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { getPortalSession, getOwnedShops } from "@/lib/portal-auth"
-import { EDITABLE_FIELDS, EDITABLE_ATTRIBUTES } from "@/lib/portal-editable"
+import { EDITABLE_FIELDS, EDITABLE_ATTRIBUTES, parseEditValue } from "@/lib/portal-editable"
 import { notifyOwnerEditSubmitted } from "@/lib/email"
 import { rateLimitOk } from "@/lib/rate-limit"
 import { log } from "@/lib/logger"
@@ -36,33 +36,11 @@ export async function submitEdits(formData: FormData): Promise<void> {
 
   for (const field of EDITABLE_FIELDS) {
     if (!EDITABLE_ATTRIBUTES.has(field.attribute)) continue
-    if (field.kind === "jsonb") continue // working_hours read-only v1
-
-    const raw = formData.get(field.attribute)
-    if (raw === null) continue
     const currentValue = (shop as unknown as Record<string, unknown>)[field.attribute] ?? null
-
-    let value: unknown
-    if (field.kind === "boolean") {
-      value = String(raw) === "on" || String(raw) === "true"
-    } else if (field.kind === "text_array") {
-      value = String(raw)
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .slice(0, 40)
-    } else if (field.kind === "select") {
-      const allowed = new Set((field.options ?? []).map((o) => o.value))
-      const v = String(raw).trim()
-      if (!allowed.has(v)) continue
-      value = v
-    } else {
-      value = String(raw).trim().slice(0, 500)
-      if (value === "") value = null
-    }
-
-    // Drop no-ops so the admin diff shows only real changes.
-    if (JSON.stringify(value) === JSON.stringify(currentValue)) continue
+    // No-ops are dropped so the admin diff shows only real changes.
+    const parsed = parseEditValue(field, formData.get(field.attribute), currentValue)
+    if (!parsed.changed) continue
+    const { value } = parsed
     proposed[field.attribute] = value
     previous[field.attribute] = currentValue
     changedLabels.push(field.label)

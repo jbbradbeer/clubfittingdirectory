@@ -6,6 +6,7 @@ import { TOP_RATED_MIN_RATING, TOP_RATED_MIN_REVIEWS } from "@/lib/badges"
 import {
   CARD_FIELDS,
   fetchAllRows,
+  PUBLIC_SHOP_FIELDS,
   queryListings,
   sanitizeSearchTerm,
   tallyStates,
@@ -55,7 +56,7 @@ export const getShopBySlug = cache(async (slug: string): Promise<Shop | null> =>
   // rows", and never crashes on an accidental duplicate.
   const { data, error } = await supabase
     .from("shops")
-    .select("*")
+    .select(PUBLIC_SHOP_FIELDS)
     .eq("slug", slug)
     .eq("status", "active")
     .order("rating", { ascending: false, nullsFirst: false })
@@ -64,7 +65,7 @@ export const getShopBySlug = cache(async (slug: string): Promise<Shop | null> =>
 
   // A real database error still throws; "no rows" is just an empty array → null.
   if (error) throw error
-  return (data?.[0] as Shop) ?? null
+  return (data?.[0] as unknown as Shop) ?? null
 })
 
 /* ── All slugs (for generateStaticParams) ── */

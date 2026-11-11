@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import crypto from "node:crypto"
-import { rateLimitOk, clientIp } from "@/lib/rate-limit"
+import { rateLimitOk, rateLimitPeek, clientIp } from "@/lib/rate-limit"
 import { log } from "@/lib/logger"
 import { pingIndexNow } from "@/lib/indexnow"
 import { pathsForShop, mapNeedsRefresh, type ShopRow } from "@/lib/revalidate-paths"
@@ -42,15 +42,18 @@ export async function POST(request: Request) {
     log.error("api/revalidate", "REVALIDATE_SECRET is not set")
     return NextResponse.json({ error: "Revalidation is not configured." }, { status: 500 })
   }
-  // Failed attempts are rate limited per IP so the secret can't be brute
-  // forced; the comparison itself is constant-time.
+  // Only FAILED attempts count toward the per-IP limit, so the secret can't be
+  // brute forced but a bulk DB update (hundreds of valid webhooks from
+  // Supabase's IP) is never throttled. The comparison itself is constant-time.
   const ip = clientIp(request)
-  if (!rateLimitOk(`revalidate-auth:${ip}`, 20, 10 * 60 * 1000)) {
+  const limitKey = `revalidate-auth:${ip}`
+  if (!rateLimitPeek(limitKey, 20)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 })
   }
   const auth = request.headers.get("authorization") ?? ""
   const provided = auth.replace(/^Bearer\s+/i, "").trim()
   if (!secretMatches(provided, secret)) {
+    rateLimitOk(limitKey, 20, 10 * 60 * 1000) // record the failure
     log.warn("api/revalidate", "rejected request with bad secret", { ip })
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 })
   }
