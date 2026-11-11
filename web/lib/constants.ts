@@ -1,7 +1,7 @@
 export const SITE_URL = "https://clubfittingdirectory.com"
 export const SITE_NAME = "Club Fitting Directory"
 export const SITE_DESCRIPTION =
-  "Find independent golf club fitting shops near you. Browse 1,000+ hand-vetted fitters, simulators, and retailers across all 50 US states."
+  "Find independent golf club fitting shops near you. Browse nearly 1,000 hand-vetted fitters, simulators, and retailers across all 50 US states."
 
 /* Named author for guides — a visible byline plus Person schema is an E-E-A-T
    trust signal Google and AI engines weigh more than an anonymous Organization
@@ -54,3 +54,5 @@ export const CONTACT_EMAIL = "bowtiedgolf@gmail.com"
 export const MAP_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 export const MAP_TILE_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+// tile.openstreetmap.org serves zoom 0–19; anything deeper is a grey square.
+export const MAP_MAX_ZOOM = 19

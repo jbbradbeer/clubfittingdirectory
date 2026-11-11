@@ -35,6 +35,15 @@ export function rateLimitOk(key: string, limit: number, windowMs: number): boole
   return bucket.count <= limit
 }
 
+/** Read-only check: true while `key` is still under `limit` in its current
+ *  window. Does NOT count a hit — pair with rateLimitOk() to record only the
+ *  requests that should count (e.g. failed auth attempts, not valid calls). */
+export function rateLimitPeek(key: string, limit: number): boolean {
+  const bucket = buckets.get(key)
+  if (!bucket || Date.now() >= bucket.resetAt) return true
+  return bucket.count < limit
+}
+
 /** Best-effort client IP from proxy headers (Vercel sets x-forwarded-for). */
 export function clientIp(request: Request): string {
   const fwd = request.headers.get("x-forwarded-for")

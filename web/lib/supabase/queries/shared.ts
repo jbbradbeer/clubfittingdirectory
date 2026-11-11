@@ -18,6 +18,28 @@ export const CARD_FIELDS = [
   "launch_monitors", "ownership_type", "fitting_price_min", "fitting_price_max",
 ].join(", ")
 
+/* Every shops column the public (anon) key may read — the full listing page
+   uses this instead of SELECT *. Must match the column GRANT in migration
+   021_hide_private_shop_columns.sql: owner_email, owner_title and
+   outreach_ready are private (service-role only), so a SELECT * from the anon
+   key would be rejected. Add new public columns here AND in a GRANT. */
+export const PUBLIC_SHOP_FIELDS = [
+  "id", "slug", "name", "shop_type", "primary_service", "query",
+  "street", "city", "state", "state_code", "postal_code", "time_zone",
+  "phone", "website", "location_link", "google_place_id",
+  "latitude", "longitude", "location",
+  "rating", "rating_tier", "reviews", "photos_count", "has_photos",
+  "offers_fitting", "fitting_environment", "public_fitting", "mobile_fitting",
+  "in_house_build", "bay_count", "brands_fitted", "launch_monitors",
+  "credentials", "ownership_type", "is_chain", "year_established", "about",
+  "area_service", "fitting_price_min", "fitting_price_max",
+  "services", "services_array", "services_source", "num_services",
+  "working_hours", "open_on_weekends", "business_status",
+  "verified", "verified_at", "verified_expires_at", "verified_plan",
+  "claimed_at", "is_featured", "listing_tier",
+  "status", "created_at", "updated_at",
+].join(", ")
+
 /* NOTE: card/grid queries cast their rows to Shop even though only the
    CARD_FIELDS columns are actually selected — the other ~15 columns are
    undefined at runtime. Card consumers must only rely on CARD_FIELDS columns. */

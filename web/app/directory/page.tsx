@@ -10,7 +10,7 @@ import type { DirectoryResult } from "@/lib/supabase/queries/shared"
 export const metadata: Metadata = {
   title: "Search Golf Fitters & Retailers",
   description:
-    "Search and filter 1,000+ independent golf club fitters, retailers, simulators, and pro shops across all 50 US states.",
+    "Search and filter nearly 1,000 independent golf club fitters, retailers, simulators, and pro shops across all 50 US states.",
   alternates: { canonical: `${SITE_URL}/directory` },
 }
 
@@ -42,7 +42,7 @@ export default async function DirectoryPage() {
             </h1>
             <p className="mt-3 text-sm sm:text-base text-[var(--color-charcoal-light)] leading-relaxed">
               Every independent club fitter, golf retailer, simulator studio, and pro shop in
-              the directory — 1,000+ hand-vetted listings across all 50 states. Filter by
+              the directory — nearly 1,000 hand-vetted listings across all 50 states. Filter by
               state, services, fitting environment, or rating, or use Near Me to see who&rsquo;s
               within driving distance.
             </p>

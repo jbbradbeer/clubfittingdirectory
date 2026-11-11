@@ -105,3 +105,17 @@ stream, so ALL unknown slugs returned 200 "Not Found" (soft 404). Fix pattern:
 no root loading.tsx on SEO-critical routes + call `notFound()` in
 `generateMetadata` (pre-stream). Check with `curl -o /dev/null -w "%{http_code}"`
 on a fake slug after any change to loading/Suspense structure.
+
+## 2026-11-11 — RLS hides ROWS, not COLUMNS
+`shops` RLS (`status='active'`) let the public anon key read every column of
+active rows, including `owner_email` — a code comment claimed it was hidden,
+nothing enforced it. Rule: any private column on a publicly readable table
+needs column-level GRANTs (migration 021) and app code must never
+`select("*")` with the anon client (use PUBLIC_SHOP_FIELDS). Verify a privacy
+claim with a live anon curl, not by reading comments.
+
+## 2026-11-11 — Unchecked checkbox = absent form field
+A checkbox that is unticked is simply missing from FormData, so "skip missing
+fields" logic makes un-ticking impossible. Booleans: missing means false.
+Also treat null / [] / false as one "empty" value when diffing, or every
+save reports phantom changes. See parseEditValue() in lib/portal-editable.ts.

@@ -7,7 +7,7 @@ import { logQueryError } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Browse by State",
-  description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with over 1,000 hand-vetted shop listings.`,
+  description: `Find golf club fitters and retailers in your state. ${SITE_NAME} covers all 50 US states with nearly 1,000 hand-vetted shop listings.`,
   alternates: { canonical: `${SITE_URL}/states` },
 }
 
@@ -58,7 +58,7 @@ export default async function StatesPage() {
               {states.length > 0 ? (
                 <>over {Math.floor(states.reduce((n, s) => n + s.count, 0) / 100) * 100} </>
               ) : (
-                <>over 1,000 </>
+                <>nearly 1,000 </>
               )}
               independent club fitters, golf retailers, simulator studios, and repair
               specialists, each listing reviewed by hand. Pick your state above to see

@@ -114,7 +114,7 @@ export default async function StatePage({ params }: PageProps) {
         ]}
         eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
         title={`Top Golf Club Fitters in ${stateName} (${DIRECTORY_YEAR})`}
-        subtitle={`${shops.length} fitters across ${cityCount} cities — including ${Object.entries(
+        subtitle={`${shops.length} ${shops.length === 1 ? "shop" : "shops"} across ${cityCount} ${cityCount === 1 ? "city" : "cities"} — including ${Object.entries(
           typeMap,
         )
           .slice(0, 3)
