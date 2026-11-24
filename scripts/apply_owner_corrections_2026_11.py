@@ -22,9 +22,10 @@ CONF = {"owner": 0.9, "admin": 1.0}
 FIT = "https://elevategolfperformancecenter.com/club-fitting/"
 WEEK = {d: ["8AM-5PM"] for d in ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")}
 FACTS = [
-    ("elevate-golf-performance-center-cornelius-nc", "fitting_price_max", 275, "owner", FIT),
+    # Minimum first: the database requires min <= max, and the old min was 300.
     # Not stated by the owner; read from the shop's own fitting page.
     ("elevate-golf-performance-center-cornelius-nc", "fitting_price_min", 150, "admin", FIT),
+    ("elevate-golf-performance-center-cornelius-nc", "fitting_price_max", 275, "owner", FIT),
     ("all-about-golf-tempe-az", "working_hours", {**WEEK, "Saturday": ["9AM-2PM"]}, "owner", None),
     ("hawks-view-golf-club-lake-geneva-wi", "year_established", 2001, "owner", None),
 ]
@@ -40,6 +41,21 @@ def call(method, path, body=None, prefer="return=representation"):
     with urllib.request.urlopen(req, timeout=30) as res:
         raw = res.read()
         return json.loads(raw) if raw else None
+
+
+def promote(listing_id, attr):
+    """recompute_current_fact, working around its pre-025 bug: it swaps the old and
+    new current rows in one UPDATE, which can trip uq_listing_facts_current. Clear
+    the old flag first; put it back if promotion fails."""
+    where = f"listing_facts?listing_id=eq.{listing_id}&attribute=eq.{attr}"
+    current = call("GET", where + "&is_current=is.true&select=id")
+    call("PATCH", where + "&is_current=is.true", {"is_current": False}, "return=minimal")
+    try:
+        call("POST", "rpc/recompute_current_fact", {"p_listing_id": listing_id, "p_attribute": attr}, "return=minimal")
+    except Exception:
+        for row in current:
+            call("PATCH", f"listing_facts?id=eq.{row['id']}", {"is_current": True}, "return=minimal")
+        raise
 
 
 print("COMMIT" if COMMIT else "DRY RUN (nothing is written)")
@@ -58,7 +74,7 @@ for slug, attr, value, source, url in FACTS:
             "listing_id": shop["id"], "attribute": attr, "value": value, "source": source,
             "source_url": url, "confidence": CONF[source], "verified_by": "human",
         }, "resolution=merge-duplicates,return=minimal")
-        call("POST", "rpc/recompute_current_fact", {"p_listing_id": shop["id"], "p_attribute": attr}, "return=minimal")
+        promote(shop["id"], attr)
         after = call("GET", f"shops?select={attr}&slug=eq.{slug}")[0][attr]
         ok.setdefault(slug, []).append(after == value)
         print("     ->", "ok" if after == value else f"FAILED ({after})")
