@@ -12,6 +12,7 @@ import {
   buildArticleSchema,
   buildGuideBreadcrumbSchema,
 } from "@/lib/structured-data"
+import { isCoreGuide, robotsFor } from "@/lib/index-policy"
 import { JsonLd } from "@/components/seo/JsonLd"
 
 interface PageProps {
@@ -37,6 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: guide.metaTitle,
     description: guide.metaDescription,
     alternates: { canonical: url },
+    ...robotsFor(isCoreGuide(guide.slug)),
     openGraph: {
       title: guide.metaTitle,
       description: guide.metaDescription,

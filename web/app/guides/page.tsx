@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { getAllGuides } from "@/lib/guides"
+import { isCoreGuide } from "@/lib/index-policy"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { GuideCard } from "@/components/guides/GuideCard"
 import { Button } from "@/components/ui/Button"
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
 }
 
 export default function GuidesIndexPage() {
-  const guides = getAllGuides()
+  // Core guides first (stable sort keeps the registry order within each group).
+  const guides = [...getAllGuides()].sort((a, b) => Number(isCoreGuide(b.slug)) - Number(isCoreGuide(a.slug)))
 
   return (
     <>

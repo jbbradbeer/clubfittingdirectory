@@ -27,6 +27,8 @@ import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
 import { listingQuickFacts, listingFaqs, expandCityName } from "@/lib/seo-content"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { SITE_URL } from "@/lib/constants"
+import { isCoreListing, robotsFor } from "@/lib/index-policy"
+import { hasReliableHours } from "@/lib/hours"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import type { Shop } from "@/types/shop"
 
@@ -76,6 +78,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: `${SITE_URL}/listing/${slug}` },
+    ...robotsFor(isCoreListing(shop)),
     openGraph: {
       title,
       description,
@@ -523,14 +526,20 @@ export default async function ListingPage({ params }: PageProps) {
                 </p>
               )}
 
-              {/* Hours card */}
+              {/* Hours card — partial hours are hidden, see lib/hours.ts */}
               {shop.working_hours && Object.keys(shop.working_hours).length > 0 && (
                 <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-6">
                   <h3 className="font-display text-lg font-bold text-[var(--color-charcoal)] mb-4 flex items-center gap-2">
                     <Clock size={20} className="text-[var(--color-gold)]" />
                     Hours
                   </h3>
-                  <ShopHours workingHours={shop.working_hours} />
+                  {hasReliableHours(shop.working_hours) ? (
+                    <ShopHours workingHours={shop.working_hours} />
+                  ) : (
+                    <p className="text-sm text-[var(--color-charcoal-light)]">
+                      Contact the shop for current hours.
+                    </p>
+                  )}
                 </div>
               )}
 

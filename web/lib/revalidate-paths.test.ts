@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { pathsForShop, mapNeedsRefresh } from "./revalidate-paths"
+import { listingSetChanged, mapNeedsRefresh, pathsForShop } from "./revalidate-paths"
 
 const shop = {
   slug: "pete-s-golf-austin",
@@ -39,5 +39,21 @@ describe("mapNeedsRefresh", () => {
     expect(mapNeedsRefresh("UPDATE", shop, { ...shop, services: "other" })).toBe(false)
     expect(mapNeedsRefresh("UPDATE", shop, { ...shop, latitude: 31 })).toBe(true)
     expect(mapNeedsRefresh("UPDATE", shop, { ...shop, name: "Old name" })).toBe(true)
+  })
+})
+
+describe("listingSetChanged", () => {
+  const row = { slug: "a", status: "active", name: "A" }
+  it("is true when a listing appears, disappears, is hidden, or is renamed", () => {
+    expect(listingSetChanged("INSERT", row, null)).toBe(true)
+    expect(listingSetChanged("DELETE", null, row)).toBe(true)
+    expect(listingSetChanged("UPDATE", { ...row, status: "inactive" }, row)).toBe(true)
+    expect(listingSetChanged("UPDATE", { ...row, slug: "b" }, row)).toBe(true)
+  })
+  it("is false for a plain content edit, so ISR writes stay low", () => {
+    expect(listingSetChanged("UPDATE", { ...row, name: "B" }, row)).toBe(false)
+  })
+  it("hiding a listing also refreshes the map", () => {
+    expect(mapNeedsRefresh("UPDATE", { ...row, status: "inactive" }, row)).toBe(true)
   })
 })

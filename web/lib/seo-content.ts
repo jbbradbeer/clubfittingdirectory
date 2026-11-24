@@ -9,16 +9,10 @@ import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
  * staying genuinely useful and accurate.
  */
 
-/* ── Freshness stamp ──
-   Evaluated when a page is BUILT (each deploy + every 30-day ISR refresh), so
-   it reflects real rebuild dates instead of churning per request. Year-stamped,
-   comparison-framed titles are the format that wins both Google SERPs and AI
-   citations (tasks/research/geo-ai-search-2026-07.md). */
+/* ── Year stamp for comparison titles ("… for 2026") ──
+   There is deliberately no "Updated <month>" label: it was derived from the
+   build date, so it claimed a fresh update whenever the site was redeployed. */
 export const DIRECTORY_YEAR = new Date().getFullYear()
-export const LAST_UPDATED_LABEL = new Date().toLocaleDateString("en-US", {
-  month: "long",
-  year: "numeric",
-})
 
 /* ── Data-driven intro paragraphs ──
    Composed from each page's REAL shop data (launch monitor brands, published

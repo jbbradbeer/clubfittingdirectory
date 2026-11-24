@@ -12,15 +12,27 @@ safe items; everything else goes to the founder. Every agent action logged and u
 - [x] Claim messages copied to Update Requests on approval.
 - [x] Founder alert when a shop is submitted.
 - [x] Redirects for merged/renamed listings (`lib/listing-redirects.ts`).
-- [ ] Founder OK, deploy, then `scripts/cleanup_submissions_2026_11.py --commit`.
+- [x] Deployed 2026-11-24 (git auto-deploy works again); cleanup committed and verified live.
 - [ ] Founder reviews `tasks/review/possible-duplicates-2026-11.md`.
 
-### PR 2 — the agent (not started)
-- [ ] Migration 024, claim email confirmation, rules, website evidence, shadow mode, agent log + undo, daily digest, honest "by hand" copy.
+### PR 2 — Google core pages (2026-11-24)
+Diagnosis: no manual action; domain registered 2026-06-01; ~1,900 templated pages at launch; 1 indexed. Strong inference, not proven.
+- [x] `lib/index-policy.ts`: 389 core URLs for Google; the other 1,268 get a Googlebot-only noindex (Bing/AI unaffected). Off switch: `GOOGLE_CORE_ONLY`.
+- [x] `/sitemap.xml` = core; `/sitemap-all.xml` = all 1,657 (submit to Bing by hand).
+- [x] Partial hours hidden on the page and in structured data (638 shops claimed one open day).
+- [x] Build-date "Updated <month>" labels and unreliable sitemap dates removed.
+- [x] Hiding or renaming a listing now refreshes counts, map, and sitemaps.
+- [ ] Founder approves the page/guide list, then merge (auto-deploys) and spot-check live.
+- [ ] Founder: resubmit sitemap; Request indexing on 10 pages; submit sitemap-all to Bing.
+- [ ] Check the 10 + 10 control pages at 2 and 6 weeks.
 
-### Google recovery (not started)
-- [ ] Founder: Search Console Manual actions + Security issues, Crawl stats, Sitemaps screenshots.
-- Finding: impressions 339/day (2026-06-15) to 17 in 28 days; 1,306 discovered + 499 crawled, not indexed. Cause unconfirmed.
+### PR 3 — approvals agent (not started)
+- [ ] Migration 024, claim email confirmation, rules, website evidence, shadow mode, agent log + undo, escalation email, honest "by hand" copy.
+
+### Weekly scoreboard
+| Date | Indexed | Impressions (28d) | Real linking sites | Leads (28d) |
+|---|---|---|---|---|
+| 2026-11-24 | 1 | 17 | about 7 (filtered list) | 2 in Nov |
 
 Review: 80 tests, typecheck, lint, build pass; admin queue checked in a browser; cleanup verified as dry run only.
 

@@ -5,6 +5,7 @@ import {
   getShopsForStatePage,
   getAllStateCodes,
   getAllStatesWithShops,
+  getCoreCounts,
   toCitySlug,
 } from "@/lib/supabase/queries/shops"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -14,12 +15,13 @@ import { LedgerList } from "@/components/directory/LedgerList"
 import { Button } from "@/components/ui/Button"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { SITE_NAME, SITE_URL } from "@/lib/constants"
+import { isCoreCity, isCoreState, robotsFor } from "@/lib/index-policy"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import { buildItemListSchema, buildStateBreadcrumbSchema } from "@/lib/structured-data"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { stateIntro, stateFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
+import { stateIntro, stateFaqs, DIRECTORY_YEAR } from "@/lib/seo-content"
 import { TopFittersTable } from "@/components/seo/TopFittersTable"
 import { shopTypeCountPhrase } from "@/lib/shop-types"
 
@@ -45,15 +47,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // an empty list from a DB blip keeps the soft fallback below.
   if (states.length > 0 && !stateInfo) notFound()
   const stateName = stateInfo?.state ?? code
+  // A failed count leaves the page visible to Google (never hide on a blip).
+  const core = await getCoreCounts(code).catch((e) =>
+    logQueryError("state generateMetadata getCoreCounts", e, undefined),
+  )
 
   return {
     // Absolute: the year-stamped comparison format needs the full 60-char
     // budget, so we skip the "| Club Fitting Directory" template suffix here.
     title: { absolute: `Top Golf Club Fitters in ${stateName} for ${DIRECTORY_YEAR}` },
-    description: `Compare ${stateInfo?.count ?? ""} golf club fitters in ${stateName} — fitting prices, launch monitor tech, and independent vs chain. Updated ${LAST_UPDATED_LABEL}.`,
+    description: `Compare ${stateInfo?.count ?? ""} golf club fitters in ${stateName} — fitting prices, launch monitor tech, and independent vs chain.`,
     // Always lowercase: /state/TX renders too (dynamicParams), and a raw-param
     // canonical would let Google index both casings as separate pages.
     alternates: { canonical: `${SITE_URL}/state/${state_code.toLowerCase()}` },
+    ...robotsFor(core ? isCoreState(core.states.get(code) ?? 0) : true),
   }
 }
 
@@ -61,9 +68,10 @@ export default async function StatePage({ params }: PageProps) {
   const { state_code } = await params
   const code = state_code.toUpperCase()
 
-  const [result, states] = await Promise.all([
+  const [result, states, core] = await Promise.all([
     getShopsForStatePage(code).catch(rethrowQueryError("state getShopsForStatePage")),
     getAllStatesWithShops().catch((e) => logQueryError("state getAllStatesWithShops", e, [])),
+    getCoreCounts(code).catch((e) => logQueryError("state getCoreCounts", e, undefined)),
   ])
 
   if (!result || result.shops.length === 0) notFound()
@@ -83,7 +91,12 @@ export default async function StatePage({ params }: PageProps) {
   }
   const cities = Object.entries(cityMap)
     .map(([name, { count, slug }]) => ({ name, count, slug }))
-    .sort((a, b) => b.count - a.count)
+    // Strong city pages first, so crawlers reach them soonest.
+    .sort(
+      (a, b) =>
+        Number(isCoreCity(core?.cities.get(b.slug) ?? 0)) - Number(isCoreCity(core?.cities.get(a.slug) ?? 0)) ||
+        b.count - a.count,
+    )
 
   /* Shop type breakdown */
   const typeMap: Record<string, number> = {}
@@ -112,7 +125,7 @@ export default async function StatePage({ params }: PageProps) {
           { label: "States", href: "/states" },
           { label: stateName },
         ]}
-        eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
+        eyebrow="Club Fitting Directory"
         title={`Top Golf Club Fitters in ${stateName} (${DIRECTORY_YEAR})`}
         subtitle={`${shops.length} ${shops.length === 1 ? "shop" : "shops"} across ${cityCount} ${cityCount === 1 ? "city" : "cities"} — including ${Object.entries(
           typeMap,
