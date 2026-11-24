@@ -68,6 +68,11 @@ export async function approveSubmission(formData: FormData): Promise<ActionResul
       city: text("city"),
       state_code: text("state_code"),
       shop_type: text("shop_type"),
+      street: text("street"),
+      postal_code: text("postal_code"),
+      offers_fitting: text("offers_fitting") === undefined ? undefined : text("offers_fitting") === "1",
+      omitHours: text("omit_hours") === "1",
+      omitServices: text("omit_services") === "1",
       allowDuplicate: text("allow_duplicate") === "1",
     })
     if (error) return { error }

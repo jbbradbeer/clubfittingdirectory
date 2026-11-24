@@ -11,13 +11,14 @@ vi.mock("@/lib/supabase/admin", () => ({
     from(table: string) {
       const filters: ((r: Row) => boolean)[] = []
       let op: "select" | "insert" | "update" = "select"
-      let payload: Row = {}
+      let payload: Row | Row[] = {}
       const run = () => {
         const rows = (db[table] ??= [])
         if (op === "insert") {
           if (failInsertInto === table) return { data: null, error: { message: "boom" } }
-          rows.push({ ...payload })
-          return { data: [payload], error: null }
+          const added = (Array.isArray(payload) ? payload : [payload]).map((r: Row) => ({ id: `${table}-new`, ...r }))
+          rows.push(...added)
+          return { data: added, error: null }
         }
         const hit = rows.filter((r) => filters.every((f) => f(r)))
         if (op === "update") hit.forEach((r) => Object.assign(r, payload))
@@ -25,7 +26,7 @@ vi.mock("@/lib/supabase/admin", () => ({
       }
       const q = {
         select: () => q,
-        insert: (p: Row) => { op = "insert"; payload = p; return q },
+        insert: (p: Row | Row[]) => { op = "insert"; payload = p; return q },
         update: (p: Row) => { op = "update"; payload = p; return q },
         eq: (k: string, v: unknown) => { filters.push((r) => r[k] === v); return q },
         is: (k: string, v: unknown) => { filters.push((r) => (r[k] ?? null) === v); return q },
@@ -52,6 +53,9 @@ vi.mock("@/lib/email", () => ({ sendClaimApprovedEmail: email }))
 const { forward } = vi.hoisted(() => ({ forward: vi.fn(async () => 0) }))
 vi.mock("@/lib/leads/relay", () => ({ forwardOpenLeads: forward }))
 
+const { geocode } = vi.hoisted(() => ({ geocode: vi.fn(async (): Promise<unknown> => ({ latitude: 1, longitude: 2 })) }))
+vi.mock("@/lib/geocode", () => ({ geocodeAddress: geocode }))
+
 import { applyClaimApproval, applyRejection, applySubmissionApproval } from "@/lib/moderation/apply"
 
 const sub = (o: Row = {}): Row => ({
@@ -72,6 +76,7 @@ beforeEach(() => {
   failInsertInto = null
   email.mockClear()
   forward.mockReset()
+  geocode.mockClear()
 })
 
 describe("applySubmissionApproval", () => {
@@ -123,6 +128,65 @@ describe("applySubmissionApproval", () => {
     failInsertInto = "shops"
     expect((await applySubmissionApproval("sub-123456")).error).toMatch(/Could not create/)
     expect(db.shop_submissions[0].review_status).toBe("new")
+  })
+})
+
+describe("publishing the submitted details", () => {
+  const full = (o: Row = {}) => sub({
+    street: "1 Main St", postal_code: "85122", offers_fitting: true, website: "azclubcoach.com",
+    details: { hours: { Monday: ["9AM-5PM"], Tuesday: ["<b>"] }, services: ["Club Repair", "Free Beer"] }, ...o,
+  })
+  beforeEach(() => { db.shops = [] })
+
+  it("publishes address, pin, hours and known services, and links the listing", async () => {
+    db.shop_submissions = [full()]
+    await applySubmissionApproval("sub-123456")
+    expect(db.shops[0]).toMatchObject({
+      street: "1 Main St", postal_code: "85122", latitude: 1, longitude: 2,
+      working_hours: { Monday: ["9AM-5PM"] }, services: "Club Fitting | Club Repair",
+      services_array: ["Club Fitting", "Club Repair"], num_services: 2,
+    })
+    expect(db.shop_submissions[0].published_shop_id).toBe("shops-new")
+    expect(db.shop_submissions[0].published_at).toBeTruthy()
+  })
+  it("records each fact once, never as human-verified, skipping blanks", async () => {
+    db.shop_submissions = [full()]
+    await applySubmissionApproval("sub-123456")
+    expect(db.listing_facts.map((f) => f.attribute).sort()).toEqual(
+      ["offers_fitting", "services_array", "street", "website", "working_hours"])
+    expect(db.listing_facts.every((f) => f.source === "submission" && f.verified_by === "system" && f.is_current)).toBe(true)
+  })
+  it("no street means no lookup and no pin", async () => {
+    db.shop_submissions = [full()]
+    await applySubmissionApproval("sub-123456", { street: "  " })
+    expect(geocode).not.toHaveBeenCalled()
+    expect(db.shops[0]).toMatchObject({ street: null })
+    expect(db.shops[0].latitude).toBeUndefined()
+  })
+  it("publishes without a pin when the address isn't found", async () => {
+    geocode.mockResolvedValueOnce(null)
+    db.shop_submissions = [full()]
+    expect((await applySubmissionApproval("sub-123456")).slug).toBeTruthy()
+    expect(db.shops[0].latitude).toBeUndefined()
+  })
+  it("the reviewer can leave out hours, services and fitting", async () => {
+    db.shop_submissions = [full()]
+    await applySubmissionApproval("sub-123456", { omitHours: true, omitServices: true, offers_fitting: false })
+    expect(db.shops[0]).toMatchObject({ working_hours: null, services: null, services_array: [], offers_fitting: false })
+    expect(db.listing_facts.map((f) => f.attribute)).not.toContain("offers_fitting")
+  })
+  it("a ledger failure never undoes the listing", async () => {
+    failInsertInto = "listing_facts"
+    db.shop_submissions = [full()]
+    expect((await applySubmissionApproval("sub-123456")).slug).toBeTruthy()
+    expect(db.shops).toHaveLength(1)
+    expect(db.shop_submissions[0].review_status).toBe("approved")
+  })
+  it("catches a state typed into the city, and a bad ZIP", async () => {
+    db.shop_submissions = [full({ city: "Walnut, MS" })]
+    expect((await applySubmissionApproval("sub-123456")).error).toMatch(/just the city/)
+    expect((await applySubmissionApproval("sub-123456", { city: "Walnut", postal_code: "917" })).error).toMatch(/ZIP/)
+    expect(db.shops).toHaveLength(0)
   })
 })
 

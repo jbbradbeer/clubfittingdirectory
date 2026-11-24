@@ -9,6 +9,7 @@ import { SubmissionReview } from "@/components/admin/SubmissionReview"
 import { loadShopsForDuplicateCheck } from "@/lib/moderation/apply"
 import { findDuplicates, type DuplicateMatch, type ExistingShop } from "@/lib/moderation/duplicates"
 import { normalizeWebsite } from "@/lib/moderation/normalize"
+import { cleanStoredHours, describeHours, parseServices } from "@/lib/submission-details"
 import { log } from "@/lib/logger"
 
 interface Submission {
@@ -24,6 +25,19 @@ interface Submission {
   submitter_email: string | null
   review_status: string
   created_at: string
+  street: string | null
+  postal_code: string | null
+  details: { hours?: unknown; services?: unknown } | null
+  published: { slug: string; status: string } | null
+}
+
+interface Published {
+  id: string
+  name: string
+  shops: {
+    slug: string; status: string; street: string | null; latitude: number | null
+    listing_facts: { count: number }[]
+  } | null
 }
 
 interface Claim {
@@ -46,6 +60,24 @@ const STATUS_OPTIONS = [
   { value: "rejected", label: "rejected" },
 ]
 const PAGE_SIZE = 25
+const RECENT_DAYS = 7
+
+/* Everything published lately, whatever filter is on: approving a submission
+   removes its card from the pending list, so this is where the link shows up. */
+async function loadRecentlyPublished(): Promise<Published[]> {
+  const since = new Date(Date.now() - RECENT_DAYS * 86_400_000).toISOString()
+  const { data, error } = await createAdminClient()
+    .from("shop_submissions")
+    .select("id, name, shops:published_shop_id(slug, status, street, latitude, listing_facts(count))")
+    .gte("published_at", since)
+    .order("published_at", { ascending: false })
+    .limit(10)
+  if (error) {
+    log.error("admin/submissions", "recently published lookup failed", { error })
+    return []
+  }
+  return (data ?? []) as unknown as Published[]
+}
 
 function fmtDate(iso: string): string {
   try {
@@ -85,7 +117,7 @@ export async function SubmissionsPanel({
     .range((claimPage - 1) * PAGE_SIZE, claimPage * PAGE_SIZE - 1)
   let subsQuery = supabase
     .from("shop_submissions")
-    .select("*", { count: "exact" })
+    .select("*, published:published_shop_id(slug, status)", { count: "exact" })
     .order("created_at", { ascending: false })
     .range((subPage - 1) * PAGE_SIZE, subPage * PAGE_SIZE - 1)
 
@@ -100,7 +132,7 @@ export async function SubmissionsPanel({
     subsQuery = subsQuery.or(`name.ilike.%${term}%,city.ilike.%${term}%`)
   }
 
-  const [claimsRes, subsRes] = await Promise.all([claimsQuery, subsQuery])
+  const [claimsRes, subsRes, recent] = await Promise.all([claimsQuery, subsQuery, loadRecentlyPublished()])
 
   const claims = (claimsRes.data ?? []) as unknown as Claim[]
   const subs = (subsRes.data ?? []) as Submission[]
@@ -124,6 +156,32 @@ export async function SubmissionsPanel({
         placeholder="Search claims (name/email) & submissions (shop/city)…"
         statusOptions={STATUS_OPTIONS}
       />
+
+      {recent.some((r) => r.shops) && (
+        <div className="mb-8 rounded-2xl bg-[var(--color-forest-tint)] px-5 py-4 text-sm text-[var(--color-charcoal)]">
+          <p className="font-semibold text-[var(--color-forest)]">Published in the last {RECENT_DAYS} days</p>
+          <ul className="mt-2 space-y-1">
+            {recent.map((r) => r.shops && (
+              <li key={r.id}>
+                <span className="font-medium">{r.name}</span>{" "}
+                {r.shops.status === "active" ? (
+                  <Link href={`/listing/${r.shops.slug}`} className="text-[var(--color-forest)] underline">View live page</Link>
+                ) : (
+                  <span className="text-[var(--color-charcoal-light)]">since hidden</span>
+                )}
+                {r.shops.status === "active" && r.shops.latitude == null && (
+                  <span className="text-amber-800">
+                    {" "}· no map pin ({r.shops.street ? "the address wasn't found" : "no street address"})
+                  </span>
+                )}
+                {(r.shops.listing_facts[0]?.count ?? 0) === 0 && (
+                  <span className="text-amber-800"> · its sources weren&apos;t recorded, so a later data import could overwrite it</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* ── Ownership claims ── */}
       <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-charcoal-light)] mb-3">
@@ -296,6 +354,17 @@ function SubmissionCard({
             {s.shop_type ? ` · ${s.shop_type}` : ""}
             {s.offers_fitting ? " · offers fitting" : ""}
           </p>
+          {s.published && (
+            <p className="text-sm mt-1">
+              {s.published.status === "active" ? (
+                <Link href={`/listing/${s.published.slug}`} className="text-[var(--color-forest)] underline">
+                  Live: view page
+                </Link>
+              ) : (
+                <span className="text-[var(--color-charcoal-light)]">Listing hidden</span>
+              )}
+            </p>
+          )}
           <div className="mt-2 text-sm text-[var(--color-charcoal-light)] space-y-0.5">
             {website ? (
               <p>
@@ -339,6 +408,11 @@ function SubmissionCard({
           city={s.city}
           stateCode={s.state_code}
           shopType={s.shop_type}
+          street={s.street ?? ""}
+          postalCode={s.postal_code ?? ""}
+          offersFitting={s.offers_fitting ?? false}
+          hours={describeHours(cleanStoredHours(s.details?.hours))}
+          services={parseServices(s.details?.services)}
           likelyDuplicate={duplicates.some((d) => d.likely)}
         />
       )}

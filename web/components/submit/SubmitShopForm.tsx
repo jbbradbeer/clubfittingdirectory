@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { CheckCircle, Loader2, ChevronDown } from "lucide-react"
 import { US_STATES } from "@/lib/constants"
 import { SHOP_TYPES } from "@/lib/shop-types"
@@ -7,12 +8,16 @@ import { fieldClass, selectClass, labelClass, checkboxClass } from "@/lib/form-s
 import { Button } from "@/components/ui/Button"
 import { useFormSubmit } from "@/lib/hooks/useFormSubmit"
 import { Honeypot, Req } from "@/components/forms/FormBits"
+import { HoursFields, emptyHours } from "@/components/submit/HoursFields"
+import { SUBMISSION_SERVICES } from "@/lib/submission-details"
 
 export function SubmitShopForm() {
   const { status, errorMsg, submit } = useFormSubmit(
     "/api/submit-shop",
     "Submission failed. Please try again.",
   )
+
+  const [hours, setHours] = useState(emptyHours)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -24,7 +29,11 @@ export function SubmitShopForm() {
       shop_type: fd.get("shop_type"),
       website: fd.get("website"),
       phone: fd.get("phone"),
+      street: fd.get("street"),
+      postal_code: fd.get("postal_code"),
       offers_fitting: fd.get("offers_fitting") === "on",
+      services: fd.getAll("services"),
+      hours,
       notes: fd.get("notes"),
       submitter_email: fd.get("submitter_email"),
       company_website: fd.get("company_website"), // honeypot
@@ -68,7 +77,7 @@ export function SubmitShopForm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="city" className={labelClass}>City<Req /></label>
-            <input id="city" name="city" required maxLength={80} className={fieldClass} placeholder="e.g. Austin" />
+            <input id="city" name="city" required maxLength={80} pattern="[^,0-9]+" title="Just the city, without a state or ZIP" className={fieldClass} placeholder="e.g. Austin" />
           </div>
           <div>
             <label htmlFor="state_code" className={labelClass}>State<Req /></label>
@@ -82,6 +91,20 @@ export function SubmitShopForm() {
               <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-charcoal-light)] pointer-events-none" />
             </div>
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_8rem] gap-4">
+          <div>
+            <label htmlFor="street" className={labelClass}>Street address</label>
+            <input id="street" name="street" maxLength={200} aria-describedby="street-hint" className={fieldClass} placeholder="e.g. 123 Fairway Dr" />
+          </div>
+          <div>
+            <label htmlFor="postal_code" className={labelClass}>ZIP</label>
+            <input id="postal_code" name="postal_code" inputMode="numeric" maxLength={10} pattern="\d{5}(-\d{4})?" title="Five-digit ZIP" className={fieldClass} placeholder="78701" />
+          </div>
+          <p id="street-hint" className="sm:col-span-2 -mt-2 text-xs text-[var(--color-charcoal-light)]">
+            Shown on the listing and used for the map. Leave the street blank if it shouldn&apos;t be public.
+          </p>
         </div>
 
         <div>
@@ -113,9 +136,23 @@ export function SubmitShopForm() {
           <span className="text-sm text-[var(--color-charcoal)]">This shop offers club fitting</span>
         </label>
 
+        <fieldset>
+          <legend className={labelClass}>Other services</legend>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2.5">
+            {SUBMISSION_SERVICES.map((s) => (
+              <label key={s} className="flex items-center gap-2.5 cursor-pointer">
+                <input type="checkbox" name="services" value={s} className={checkboxClass} />
+                <span className="text-sm text-[var(--color-charcoal)]">{s}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <HoursFields value={hours} onChange={setHours} />
+
         <div>
           <label htmlFor="notes" className={labelClass}>Anything else?</label>
-          <textarea id="notes" name="notes" maxLength={1000} rows={3} className={fieldClass} placeholder="Services offered, what makes them great, etc." />
+          <textarea id="notes" name="notes" maxLength={1000} rows={3} className={fieldClass} placeholder="What makes them great, brands they carry, etc." />
         </div>
 
         <div>

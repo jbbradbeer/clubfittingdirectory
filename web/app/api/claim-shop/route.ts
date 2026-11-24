@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
-import { sendClaimConfirmation } from "@/lib/email"
+import { notifyNewClaim, sendClaimConfirmation } from "@/lib/email"
 import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
 
 /**
@@ -71,8 +71,12 @@ export async function POST(request: Request) {
     })
     if (error) throw error
 
-    // Best-effort: confirm to the claimant + invite them to book the intro
-    // call (founder cc'd as the new-claim alert). Never fails the request.
+    // Best-effort: tell the founder, and confirm to the claimant + invite them
+    // to book the intro call. Neither can fail the request.
+    await notifyNewClaim({
+      shopName: shops[0].name, claimantName: name, claimantRole: role,
+      claimantEmail: email, claimantPhone: phone, message,
+    })
     try {
       await sendClaimConfirmation({
         shopName: shops[0].name,

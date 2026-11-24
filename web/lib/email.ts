@@ -126,8 +126,8 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
 
 /**
  * Confirm a shop claim to the claimant and invite them to book the founding
- * partner intro call. The founder is cc'd, which doubles as the new-claim
- * alert. Best-effort like the lead email: the claim row is already saved, so
+ * partner intro call. The founder is told separately (notifyNewClaim), so a bad
+ * claimant address can't silence the alert. Best-effort like the lead email: the claim row is already saved, so
  * a send failure must never fail the request.
  */
 export async function sendClaimConfirmation(claim: {
@@ -167,7 +167,6 @@ export async function sendClaimConfirmation(claim: {
     const { error } = await resend.emails.send({
       from: FROM,
       to: claim.claimantEmail,
-      cc: NOTIFY_TO,
       replyTo: NOTIFY_TO,
       subject: `Claim received — ${claim.shopName}`,
       html,
@@ -469,6 +468,11 @@ export async function notifyNewSubmission(args: {
   phone: string
   notes: string
   submitterEmail: string
+  street: string
+  postalCode: string | null
+  offersFitting: boolean
+  services: string
+  hours: string
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
@@ -481,8 +485,12 @@ export async function notifyNewSubmission(args: {
       <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 16px;">New shop submission</p>
       <table style="border-collapse:collapse;width:100%;">
         ${row("Shop", args.name)}
-        ${row("Location", `${args.city}, ${args.stateCode}`)}
+        ${row("Street", args.street)}
+        ${row("Location", `${args.city}, ${args.stateCode} ${args.postalCode ?? ""}`.trim())}
         ${row("Type", args.shopType)}
+        ${row("Club fitting", args.offersFitting ? "Yes" : "Not ticked")}
+        ${row("Services", args.services)}
+        ${row("Hours", args.hours)}
         ${row("Website", args.website)}
         ${row("Phone", args.phone)}
         ${row("Notes", args.notes)}
@@ -512,7 +520,7 @@ export async function notifyNewSubmission(args: {
 
 async function deliver(
   what: string,
-  payload: { to: string; subject: string; html: string; text?: string },
+  payload: { to: string; subject: string; html: string; text?: string; replyTo?: string },
   idempotencyKey?: string,
 ): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY
@@ -536,6 +544,60 @@ async function deliver(
 const P = "font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 16px;"
 const WRAP = "font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;"
 const BUTTON = "display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;"
+
+/** Founder-only alert for a new ownership claim. Best-effort. */
+export async function notifyNewClaim(claim: {
+  shopName: string
+  claimantName: string
+  claimantRole: string
+  claimantEmail: string
+  claimantPhone: string
+  message: string
+}): Promise<boolean> {
+  return deliver("claim alert", {
+    to: NOTIFY_TO,
+    replyTo: claim.claimantEmail,
+    subject: `New claim: ${claim.shopName}`.replace(/[\r\n]+/g, " "),
+    html: `
+    <div style="${WRAP}">
+      <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 16px;">New ownership claim</p>
+      <table style="border-collapse:collapse;width:100%;">
+        ${row("Shop", claim.shopName)}
+        ${row("From", claim.claimantName)}
+        ${row("Role", claim.claimantRole)}
+        ${row("Email", claim.claimantEmail)}
+        ${row("Phone", claim.claimantPhone)}
+        ${row("Message", claim.message)}
+      </table>
+      <p style="margin-top:20px;"><a href="${SITE_URL}/admin/submissions?status=new" style="${BUTTON}">Review claim</a></p>
+    </div>`,
+  })
+}
+
+/** One daily summary to the founder of what's waiting for approval. Shop names
+ *  only. Keyed by day, so a re-run of the daily job can't send it twice. */
+export async function sendApprovalReminder(
+  items: { kind: "submission" | "claim"; shopName: string; createdAt: string }[],
+  day: string,
+): Promise<boolean> {
+  const block = (title: string, kind: "submission" | "claim") => {
+    const some = items.filter((i) => i.kind === kind)
+    return some.length
+      ? `<p style="${P}"><strong>${title}</strong></p><ul>${some
+          .map((i) => `<li>${escapeHtml(i.shopName)}, received ${i.createdAt.slice(0, 10)}</li>`).join("")}</ul>`
+      : ""
+  }
+  return deliver("approval reminder", {
+    to: NOTIFY_TO,
+    subject: `${items.length} shop${items.length === 1 ? "" : "s"} waiting for your approval`,
+    html: `
+    <div style="${WRAP}">
+      ${block("New shops", "submission")}
+      ${block("Ownership claims", "claim")}
+      <p><a href="${SITE_URL}/admin/submissions?status=new" style="${BUTTON}">Review them</a></p>
+    </div>`,
+  }, `approval-reminder-${day}`)
+}
 
 /** The request, without golfer contact details, to an unverified shop. Replies
  *  reach the founder. Renders exactly what the admin preview showed. */

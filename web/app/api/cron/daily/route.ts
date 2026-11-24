@@ -4,12 +4,13 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { sweepExpiredFeatured } from "@/lib/verified"
 import { notifyNewFittingRequest } from "@/lib/email"
 import { forwardOpenLeads, sendDueReminders } from "@/lib/leads/relay"
+import { remindPendingApprovals } from "@/lib/moderation/reminders"
 import { log } from "@/lib/logger"
 
 /**
  * Daily housekeeping — GET /api/cron/daily, scheduled in vercel.json.
  *
- * Five jobs that used to depend on a human remembering:
+ * Six jobs that used to depend on a human remembering:
  *   1. Lapse Featured shops whose verified_expires_at has passed (annual
  *      one-time payments never emit a Stripe cancellation, so without this
  *      the paid badge + top-of-list sort lasted forever).
@@ -21,6 +22,7 @@ import { log } from "@/lib/logger"
  *
  *   4. Forward open requests to owners whose claim was approved (retry).
  *   5. Remind the founder about requests nobody has passed on or resolved.
+ *   6. Remind the founder about submissions and claims waiting over 24 hours.
  *
  * SECURITY: Vercel Cron sends `Authorization: Bearer $CRON_SECRET`. Compared
  * constant-time; without CRON_SECRET set the route refuses to run at all.
@@ -82,6 +84,13 @@ export async function GET(request: Request) {
   } catch (e) {
     log.error("cron/daily", "lead reminders failed", { error: e })
     report.leadReminders = "error"
+  }
+
+  try {
+    report.approvalsWaiting = await remindPendingApprovals()
+  } catch (e) {
+    log.error("cron/daily", "approval reminder failed", { error: e })
+    report.approvalsWaiting = "error"
   }
 
   // ── 3. crawler_hits retention ──

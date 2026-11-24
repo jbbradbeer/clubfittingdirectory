@@ -9,6 +9,8 @@ import { US_STATES } from "@/lib/constants"
 import { dbTypeToShopType, SHOP_TYPES } from "@/lib/shop-types"
 import { findDuplicates, type ExistingShop } from "@/lib/moderation/duplicates"
 import { normalizeWebsite, phoneDigits } from "@/lib/moderation/normalize"
+import { geocodeAddress } from "@/lib/geocode"
+import { cleanStoredHours, FITTING_SERVICE, isPlausibleCity, parseServices, parseZip } from "@/lib/submission-details"
 
 /**
  * Approving and rejecting shop submissions and ownership claims — THE single
@@ -76,8 +78,38 @@ export type SubmissionOverrides = {
   city?: string
   state_code?: string
   shop_type?: string
+  street?: string
+  postal_code?: string
+  offers_fitting?: boolean
+  /** Leave out what the submitter said about these. */
+  omitHours?: boolean
+  omitServices?: boolean
   /** Publish even though a likely duplicate exists (e.g. a real second location). */
   allowDuplicate?: boolean
+}
+
+/* A submitter isn't a verified owner: their details beat a scrape and lose to
+   an owner's or an admin's word (fact source 'submission', migration 026). */
+const SUBMISSION_SOURCE = "submission"
+const SUBMISSION_CONFIDENCE = 0.7
+
+/* The ledger copy of what was just published. The listing is brand new, so
+   every fact is current and nothing needs recomputing. */
+async function recordSubmissionFacts(shopId: string, values: Record<string, unknown>) {
+  const rows = Object.entries(values)
+    .filter(([, v]) => v !== null && v !== undefined && !(Array.isArray(v) && v.length === 0))
+    .map(([attribute, value]) => ({
+      listing_id: shopId,
+      attribute,
+      source: SUBMISSION_SOURCE,
+      value,
+      confidence: SUBMISSION_CONFIDENCE,
+      verified_by: "system",
+      is_current: true,
+      fetched_at: new Date().toISOString(),
+    }))
+  const { error } = await createAdminClient().from("listing_facts").insert(rows)
+  if (error) throw error
 }
 
 export async function applySubmissionApproval(
@@ -93,12 +125,17 @@ export async function applySubmissionApproval(
   const stateCode = (overrides.state_code ?? sub.state_code ?? "").trim().toUpperCase()
   const shopType = overrides.shop_type || sub.shop_type
 
-  if (city.length < 2) return { error: "Enter the shop's city." }
+  if (!isPlausibleCity(city)) return { error: "Enter just the city, without a state or ZIP." }
   const state = US_STATES.find((s) => s.code === stateCode)
   if (!state) return { error: "Choose the shop's state." }
   if (!shopType || !dbTypeToShopType(shopType)) {
     return { error: `Choose a shop type (${SHOP_TYPES.map((t) => t.singular).join(", ")}).` }
   }
+
+  const zipText = (overrides.postal_code ?? sub.postal_code ?? "").trim()
+  const postalCode = parseZip(zipText)
+  if (zipText && !postalCode) return { error: "Enter a five-digit ZIP, or leave it blank." }
+  const street = (overrides.street ?? sub.street ?? "").trim().slice(0, 200) || null
 
   const shops = await loadShopsForDuplicateCheck()
   if (!overrides.allowDuplicate) {
@@ -111,11 +148,24 @@ export async function applySubmissionApproval(
   let slug = buildShopSlug(sub.name, city, stateCode)
   if (shops.some((s) => s.slug === slug)) slug = `${slug}-${id.slice(0, 6)}`
 
+  const offersFitting = overrides.offers_fitting ?? sub.offers_fitting ?? false
+  const listed = overrides.omitServices ? [] : parseServices(sub.details?.services)
+  const services = offersFitting ? [FITTING_SERVICE, ...listed] : listed
+  const hours = overrides.omitHours ? {} : cleanStoredHours(sub.details?.hours)
+  const workingHours = Object.keys(hours).length > 0 ? hours : null
+  const website = normalizeWebsite(sub.website)
+  // "email only" and similar aren't phone numbers — leave the field empty.
+  const phone = phoneDigits(sub.phone) ? sub.phone : null
+
+  // Before claiming the row: it's a network call. No street means no pin, ever
+  // (some shops ask not to be on the map).
+  const pin = street ? await geocodeAddress({ street, city, stateCode, postalCode }) : null
+
   const claimed = await transition("shop_submissions", id, "new", "approved")
   if (claimed.error) return { error: `Could not update submission: ${claimed.error}` }
   if (!claimed.won) return { error: NOT_PENDING }
 
-  const { error: insErr } = await supabase.from("shops").insert({
+  const { data: created, error: insErr } = await supabase.from("shops").insert({
     slug,
     status: "active",
     name: sub.name,
@@ -123,20 +173,42 @@ export async function applySubmissionApproval(
     city,
     state: state.name,
     state_code: stateCode,
-    website: normalizeWebsite(sub.website),
-    // "email only" and similar aren't phone numbers — leave the field empty.
-    phone: phoneDigits(sub.phone) ? sub.phone : null,
-    offers_fitting: sub.offers_fitting ?? false,
-  })
-  if (insErr) {
+    street,
+    postal_code: postalCode,
+    ...(pin ?? {}),
+    website,
+    phone,
+    offers_fitting: offersFitting,
+    services: services.join(" | ") || null,
+    services_array: services,
+    num_services: services.length,
+    working_hours: workingHours,
+  }).select("id").single()
+  if (insErr || !created) {
     await release("shop_submissions", id)
-    return { error: `Could not create listing: ${insErr.message}` }
+    return { error: `Could not create listing: ${insErr?.message ?? "no row returned"}` }
+  }
+
+  // The listing is live from here on: nothing below may undo the approval.
+  const { error: linkErr } = await supabase
+    .from("shop_submissions")
+    .update({ published_shop_id: created.id, published_at: new Date().toISOString() })
+    .eq("id", id)
+  if (linkErr) log.error("moderation", "submission not linked to its listing", { id, slug, error: linkErr })
+  try {
+    await recordSubmissionFacts(created.id, {
+      phone, website, street, services_array: services, working_hours: workingHours,
+      // An unticked box says nothing, so only a "yes" is worth recording.
+      offers_fitting: offersFitting || null,
+    })
+  } catch (e) {
+    log.error("moderation", "submission facts not recorded", { id, slug, error: e })
   }
 
   // The new listing, its index pages, and the pages that show site-wide counts
   // or every pin. Deliberately NOT every listing page (ISR write budget).
   revalidateShop(
-    { slug, city, state_code: stateCode, shop_type: shopType },
+    { slug, city, state_code: stateCode, shop_type: shopType, services: services.join(" | ") },
     ["/", "/directory", "/states", "/map"],
   )
   return { slug }
