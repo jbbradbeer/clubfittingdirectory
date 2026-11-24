@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { SHOP_TYPES } from "@/lib/shop-types"
 import { log } from "@/lib/logger"
+import { notifyNewSubmission } from "@/lib/email"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 import { US_STATE_CODES } from "@/lib/constants"
 import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
   if (name.length < 2)            errors.push("Shop name is required.")
   if (city.length < 2)            errors.push("City is required.")
   if (!US_STATE_CODES.has(stateCode)) errors.push("A valid US state is required.")
-  if (shopType && !VALID_SHOP_TYPES.has(shopType)) errors.push("Invalid shop type.")
+  if (!VALID_SHOP_TYPES.has(shopType)) errors.push("Choose a shop type.")
   if (!email)                     errors.push("Your email is required.")
   else if (!isValidEmail(email)) errors.push("Enter a valid email.")
 
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
       name,
       city,
       state_code: stateCode,
-      shop_type: shopType || null,
+      shop_type: shopType,
       website: website || null,
       phone: phone || null,
       offers_fitting: offersFitting,
@@ -72,6 +73,10 @@ export async function POST(request: Request) {
       { status: 500 },
     )
   }
+
+  // Best-effort: the submission is saved either way. (Returns false, never
+  // throws, so a mail outage can't turn a good submission into an error.)
+  await notifyNewSubmission({ name, city, stateCode, shopType, website, phone, notes, submitterEmail: email })
 
   return NextResponse.json({ ok: true })
 }

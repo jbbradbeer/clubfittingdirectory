@@ -8,10 +8,8 @@ import { revalidatePath } from "next/cache"
 import { ADMIN_COOKIE, ADMIN_SESSION_MS, tokenForPassword, isAdmin } from "@/lib/admin-auth"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { activateFeaturedShop, lapseFeaturedShop } from "@/lib/verified"
-import { sendClaimApprovedEmail, sendPaymentLinkEmail } from "@/lib/email"
-import { US_STATES } from "@/lib/constants"
-import { SHOP_TYPES } from "@/lib/shop-types"
-import { toCitySlug } from "@/lib/slugs"
+import { sendPaymentLinkEmail } from "@/lib/email"
+import { applyClaimApproval, applyRejection, applySubmissionApproval } from "@/lib/moderation/apply"
 import { isPlanKey } from "@/lib/plans"
 
 /* Mutating actions return { error } instead of throwing: they're invoked from
@@ -55,147 +53,48 @@ export async function logout() {
   redirect("/admin/login")
 }
 
-/* Build a URL slug the same way the rest of the site does:
-   {city-name}-{state} but for shops it's {name}-{city}-{state_code}. */
-function buildShopSlug(name: string, city: string, stateCode: string): string {
-  const part = (s: string) =>
-    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
-  return [part(name), part(city), stateCode.toLowerCase()].filter(Boolean).join("-")
-}
-
-/* ── Approve: promote a submission into the live shops table ── */
-export async function approveSubmission(formData: FormData) {
+/* ── Submissions & claims ──
+   Thin, admin-gated wrappers: the real work lives in lib/moderation/apply.ts. */
+export async function approveSubmission(formData: FormData): Promise<ActionResult> {
   if (!(await isAdmin())) redirect("/admin/login")
   const id = String(formData.get("id") ?? "")
   if (!id) return
-
-  const supabase = createAdminClient()
-
-  // Load the submission
-  const { data: sub, error: subErr } = await supabase
-    .from("shop_submissions")
-    .select("*")
-    .eq("id", id)
-    .single()
-  if (subErr || !sub) return { error: "Submission not found." }
-
-  const stateName = US_STATES.find((s) => s.code === sub.state_code)?.name ?? sub.state_code
-  let slug = buildShopSlug(sub.name, sub.city, sub.state_code)
-
-  // Avoid a unique-slug collision: append a short suffix if taken.
-  const { data: existing } = await supabase
-    .from("shops")
-    .select("slug")
-    .eq("slug", slug)
-    .limit(1)
-  if (existing && existing.length > 0) {
-    slug = `${slug}-${id.slice(0, 6)}`
+  const text = (key: string) => {
+    const v = formData.get(key)
+    return typeof v === "string" ? v : undefined
   }
-
-  // Validate shop_type and state_code before inserting
-  const validShopType = SHOP_TYPES.find((t) => t.dbType === sub.shop_type)
-  if (!validShopType) {
-    return { error: `Invalid shop_type "${sub.shop_type}". Must be one of: ${SHOP_TYPES.map((t) => t.dbType).join(", ")}.` }
-  }
-  const validState = US_STATES.find((s) => s.code === sub.state_code)
-  if (!validState) {
-    return { error: `Invalid state_code "${sub.state_code}". Must be a valid two-letter US state code.` }
-  }
-
-  // Insert into live shops as active
-  const { error: insErr } = await supabase.from("shops").insert({
-    slug,
-    status: "active",
-    name: sub.name,
-    shop_type: sub.shop_type,
-    city: sub.city,
-    state: stateName,
-    state_code: sub.state_code,
-    website: sub.website,
-    phone: sub.phone,
-    offers_fitting: sub.offers_fitting ?? false,
-  })
-  if (insErr) return { error: `Could not create listing: ${insErr.message}` }
-
-  // Mark submission approved
-  await supabase.from("shop_submissions").update({ review_status: "approved" }).eq("id", id)
-
-  // A newly-approved shop changes the exact pages it appears on AND the site-wide
-  // counts. Revalidate precisely those — the new listing, its city/state/category
-  // index pages, plus the count-driven aggregates (homepage stats, directory,
-  // states index). We deliberately do NOT touch every listing page.
-  revalidatePath("/admin", "layout")                                       // submissions queue
-  revalidatePath(`/listing/${slug}`)                             // the new shop's own page
-  revalidatePath(`/state/${sub.state_code.toLowerCase()}`)       // its state page
-  revalidatePath(`/city/${toCitySlug(sub.city, sub.state_code)}`) // its city page
-  revalidatePath(`/category/${validShopType.slug}`)              // its category page
-  revalidatePath("/")                                            // homepage total count
-  revalidatePath("/directory")                                   // directory shell
-  revalidatePath("/states")                                      // states index counts
-}
-
-/* ── Reject: mark a submission rejected (does not touch shops) ── */
-export async function rejectSubmission(formData: FormData) {
-  if (!(await isAdmin())) redirect("/admin/login")
-  const id = String(formData.get("id") ?? "")
-  if (!id) return
-  const supabase = createAdminClient()
-  await supabase.from("shop_submissions").update({ review_status: "rejected" }).eq("id", id)
-  revalidatePath("/admin", "layout")
-}
-
-/* ── Approve a claim: stamp the shop owner-claimed + capture owner_email.
-     Approval also grants the FREE Verified badge (badge logic keys off
-     claimed_at), so it flips public pages — revalidate the card surfaces.
-     The paid Featured tier is set separately when they buy. ── */
-export async function approveClaim(formData: FormData) {
-  if (!(await isAdmin())) redirect("/admin/login")
-  const id = String(formData.get("id") ?? "")
-  if (!id) return
-
-  const supabase = createAdminClient()
-  const { data: claim, error: claimErr } = await supabase
-    .from("shop_claims")
-    .select("id, shop_id, claimant_email")
-    .eq("id", id)
-    .single()
-  if (claimErr || !claim) return { error: "Claim not found." }
-
-  const { data: shop, error: shopErr } = await supabase
-    .from("shops")
-    .update({ claimed_at: new Date().toISOString(), owner_email: claim.claimant_email })
-    .eq("id", claim.shop_id)
-    .select("slug, name, city, state_code, shop_type")
-    .single()
-  if (shopErr) return { error: `Could not mark shop claimed: ${shopErr.message}` }
-
-  const { error: updErr } = await supabase
-    .from("shop_claims")
-    .update({ review_status: "approved" })
-    .eq("id", id)
-  if (updErr) return { error: `Could not update claim: ${updErr.message}` }
-
-  revalidatePath("/admin", "layout")
-  if (shop?.slug) {
-    revalidatePath(`/listing/${shop.slug}`) // swaps the claim link → "Owner-managed" + badge
-    // The free Verified badge just went live on this shop's cards — refresh
-    // every index page that renders them (same set approveSubmission uses).
-    if (shop.state_code) revalidatePath(`/state/${shop.state_code.toLowerCase()}`)
-    if (shop.city && shop.state_code) revalidatePath(`/city/${toCitySlug(shop.city, shop.state_code)}`)
-    const claimShopType = SHOP_TYPES.find((t) => t.dbType === shop.shop_type)
-    if (claimShopType) revalidatePath(`/category/${claimShopType.slug}`)
-    revalidatePath("/") // homepage carousel cards
-
-    // Best-effort upsell email: "you're approved, leads now forward to you" +
-    // the Verified pitch with the payment-page link (valid immediately — the
-    // pay page is gated on claimed_at, which was just stamped). Never fails
-    // the approval; the founder is cc'd so a silent miss is visible.
-    const sent = await sendClaimApprovedEmail({
-      shopName: shop.name ?? shop.slug,
-      slug: shop.slug,
-      ownerEmail: claim.claimant_email,
+  try {
+    const { error } = await applySubmissionApproval(id, {
+      city: text("city"),
+      state_code: text("state_code"),
+      shop_type: text("shop_type"),
+      allowDuplicate: text("allow_duplicate") === "1",
     })
-    if (!sent) log.warn("admin/actions", "claim approved email not sent", { slug: shop.slug })
+    if (error) return { error }
+  } catch (e) {
+    log.error("admin/actions", "approve submission failed", { id, error: e })
+    return { error: "Could not approve — please try again." }
+  }
+}
+
+export async function rejectSubmission(formData: FormData): Promise<ActionResult> {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  if (!id) return
+  const { error } = await applyRejection("shop_submissions", id)
+  if (error) return { error }
+}
+
+export async function approveClaim(formData: FormData): Promise<ActionResult> {
+  if (!(await isAdmin())) redirect("/admin/login")
+  const id = String(formData.get("id") ?? "")
+  if (!id) return
+  try {
+    const { error } = await applyClaimApproval(id)
+    if (error) return { error }
+  } catch (e) {
+    log.error("admin/actions", "approve claim failed", { id, error: e })
+    return { error: "Could not approve — please try again." }
   }
 }
 
@@ -237,17 +136,12 @@ export async function lapseFeatured(formData: FormData) {
 }
 
 /* ── Reject a claim (does not touch shops) ── */
-export async function rejectClaim(formData: FormData) {
+export async function rejectClaim(formData: FormData): Promise<ActionResult> {
   if (!(await isAdmin())) redirect("/admin/login")
   const id = String(formData.get("id") ?? "")
   if (!id) return
-  const supabase = createAdminClient()
-  const { error } = await supabase
-    .from("shop_claims")
-    .update({ review_status: "rejected" })
-    .eq("id", id)
-  if (error) return { error: `Could not reject claim: ${error.message}` }
-  revalidatePath("/admin", "layout")
+  const { error } = await applyRejection("shop_claims", id)
+  if (error) return { error }
 }
 
 /* ── Send the Stripe payment link to a claimed shop's owner.

@@ -85,10 +85,10 @@ export function SubmitShopForm() {
         </div>
 
         <div>
-          <label htmlFor="shop_type" className={labelClass}>Shop type</label>
+          <label htmlFor="shop_type" className={labelClass}>Shop type<Req /></label>
           <div className="relative">
-            <select id="shop_type" name="shop_type" defaultValue="" className={selectClass}>
-              <option value="">Not sure / other</option>
+            <select id="shop_type" name="shop_type" required defaultValue="" className={selectClass}>
+              <option value="" disabled>Choose the closest match</option>
               {SHOP_TYPES.map((t) => (
                 <option key={t.dbType} value={t.dbType}>{t.singular}</option>
               ))}

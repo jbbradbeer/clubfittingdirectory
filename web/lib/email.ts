@@ -446,6 +446,55 @@ export async function notifyUpdateRequest(args: {
   }
 }
 
+/** Founder-only alert for a new "Submit a Shop" entry. Best-effort. */
+export async function notifyNewSubmission(args: {
+  name: string
+  city: string
+  stateCode: string
+  shopType: string
+  website: string
+  phone: string
+  notes: string
+  submitterEmail: string
+}): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    log.warn("email", "RESEND_API_KEY not set — skipping submission alert (submission was still saved)")
+    return false
+  }
+
+  const html = `
+    <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;">
+      <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 16px;">New shop submission</p>
+      <table style="border-collapse:collapse;width:100%;">
+        ${row("Shop", args.name)}
+        ${row("Location", `${args.city}, ${args.stateCode}`)}
+        ${row("Type", args.shopType)}
+        ${row("Website", args.website)}
+        ${row("Phone", args.phone)}
+        ${row("Notes", args.notes)}
+        ${row("From", args.submitterEmail)}
+      </table>
+      <p style="margin-top:16px;font-size:13px;"><a href="${SITE_URL}/admin/submissions?status=new" style="color:#1B4332;">Review in admin →</a></p>
+    </div>`
+
+  try {
+    const resend = new Resend(apiKey)
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: NOTIFY_TO,
+      replyTo: args.submitterEmail,
+      subject: `New shop submission — ${args.name}`.replace(/[\r\n]+/g, " "),
+      html,
+    })
+    if (error) throw error
+    return true
+  } catch (e) {
+    log.error("email", "failed to send submission alert", { error: e })
+    return false
+  }
+}
+
 /* ── Owner portal ─────────────────────────────────────────── */
 
 /** Magic sign-in link for the owner portal. Sent to the address the owner typed
