@@ -1,10 +1,15 @@
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { sanitizeSearchTerm } from "@/lib/supabase/queries/shared"
-import { approveSubmission, rejectSubmission, approveClaim, rejectClaim, sendPaymentLink } from "@/app/admin/actions"
+import { approveClaim, rejectClaim, sendPaymentLink } from "@/app/admin/actions"
 import { ActionButton } from "@/components/admin/ActionButton"
 import { FilterBar } from "@/components/admin/FilterBar"
 import { Pagination } from "@/components/admin/Pagination"
+import { SubmissionReview } from "@/components/admin/SubmissionReview"
+import { loadShopsForDuplicateCheck } from "@/lib/moderation/apply"
+import { findDuplicates, type DuplicateMatch, type ExistingShop } from "@/lib/moderation/duplicates"
+import { normalizeWebsite } from "@/lib/moderation/normalize"
+import { log } from "@/lib/logger"
 
 interface Submission {
   id: string
@@ -100,6 +105,19 @@ export async function SubmissionsPanel({
   const claims = (claimsRes.data ?? []) as unknown as Claim[]
   const subs = (subsRes.data ?? []) as Submission[]
 
+  // Duplicate hints, only when something is waiting. A failed lookup must not
+  // take down the queue — approval re-checks for duplicates anyway.
+  let shops: ExistingShop[] = []
+  let dupCheckFailed = false
+  if (subs.some((s) => s.review_status === "new")) {
+    try {
+      shops = await loadShopsForDuplicateCheck()
+    } catch (e) {
+      dupCheckFailed = true
+      log.error("admin/submissions", "duplicate lookup failed", { error: e })
+    }
+  }
+
   return (
     <div>
       <FilterBar
@@ -140,7 +158,22 @@ export async function SubmissionsPanel({
         </p>
       ) : (
         <div className="space-y-4">
-          {subs.map((s) => <SubmissionCard key={s.id} s={s} pending={s.review_status === "new"} />)}
+          {dupCheckFailed && (
+            <p className="text-sm text-amber-700">
+              Duplicate hints couldn&apos;t load. Approving still checks for duplicates.
+            </p>
+          )}
+          {subs.map((s) => {
+            const pending = s.review_status === "new"
+            return (
+              <SubmissionCard
+                key={s.id}
+                s={s}
+                pending={pending}
+                duplicates={pending ? findDuplicates(s, shops).slice(0, 3) : []}
+              />
+            )
+          })}
         </div>
       )}
       <Pagination page={subPage} pageSize={PAGE_SIZE} total={subsRes.count ?? 0} paramName="spage" />
@@ -229,7 +262,17 @@ function ClaimCard({ c, pending }: { c: Claim; pending?: boolean }) {
   )
 }
 
-function SubmissionCard({ s, pending }: { s: Submission; pending?: boolean }) {
+function SubmissionCard({
+  s,
+  pending,
+  duplicates,
+}: {
+  s: Submission
+  pending: boolean
+  duplicates: DuplicateMatch[]
+}) {
+  // Only ever link to a real web address — the submitter typed this text.
+  const website = normalizeWebsite(s.website)
   return (
     <div className="bg-white border border-[var(--color-border)] rounded-2xl shadow-card p-5">
       <div className="flex items-start justify-between gap-4">
@@ -254,32 +297,51 @@ function SubmissionCard({ s, pending }: { s: Submission; pending?: boolean }) {
             {s.offers_fitting ? " · offers fitting" : ""}
           </p>
           <div className="mt-2 text-sm text-[var(--color-charcoal-light)] space-y-0.5">
-            {s.website && <p>🌐 {s.website}</p>}
+            {website ? (
+              <p>
+                🌐{" "}
+                <a href={website} target="_blank" rel="noopener noreferrer nofollow" className="text-[var(--color-forest)] hover:underline break-all">
+                  {s.website}
+                </a>
+              </p>
+            ) : (
+              s.website && <p className="break-all">🌐 {s.website}</p>
+            )}
             {s.phone && <p>📞 {s.phone}</p>}
             {s.submitter_email && <p>✉️ {s.submitter_email}</p>}
             {s.notes && <p className="italic">“{s.notes}”</p>}
           </div>
         </div>
-
-        {pending && (
-          <div className="flex flex-col gap-2 shrink-0">
-            <ActionButton
-              action={approveSubmission}
-              fields={{ id: s.id }}
-              className="px-4 py-1.5 text-sm font-semibold bg-[var(--color-forest)] text-white rounded-full hover:bg-[var(--color-forest-dark)] transition-colors cursor-pointer"
-            >
-              Approve
-            </ActionButton>
-            <ActionButton
-              action={rejectSubmission}
-              fields={{ id: s.id }}
-              className="px-4 py-1.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-charcoal)] rounded-full hover:bg-[var(--color-cream)] transition-colors cursor-pointer"
-            >
-              Reject
-            </ActionButton>
-          </div>
-        )}
       </div>
+
+      {duplicates.length > 0 && (
+        <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-900">
+          <p className="font-semibold">
+            {duplicates[0].likely ? "Probably already listed" : "Possibly related"}
+          </p>
+          <ul className="mt-1 space-y-0.5">
+            {duplicates.map((d) => (
+              <li key={d.shop.id}>
+                <Link href={`/listing/${d.shop.slug}`} className="underline">
+                  {d.shop.name}
+                </Link>
+                {d.shop.city ? `, ${d.shop.city} ${d.shop.state_code ?? ""}` : ""}
+                {d.shop.status !== "active" ? " (removed listing)" : ""} — {d.reasons.join(", ")}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {pending && (
+        <SubmissionReview
+          id={s.id}
+          city={s.city}
+          stateCode={s.state_code}
+          shopType={s.shop_type}
+          likelyDuplicate={duplicates.some((d) => d.likely)}
+        />
+      )}
     </div>
   )
 }

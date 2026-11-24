@@ -1,5 +1,29 @@
 # Codebase Bug Audit & Remediation Plan (2026-05-31)
 
+## Agent-run directory — approved 2026-11-24
+
+Plan: approvals agent first, then Google recovery, then revenue agents. Only auto-clear
+safe items; everything else goes to the founder. Every agent action logged and undoable.
+
+### PR 1 — unjam the queue
+- [x] `lib/moderation/apply.ts`: one approve/reject path; compare-and-set so double clicks can't create two listings; a second claim can't take over an owned shop.
+- [x] Fix Approve: reviewer can set city, state, shop type; form + API now require a shop type.
+- [x] Duplicate check (`lib/moderation/duplicates.ts`), tested against the 5 real historical misses.
+- [x] Claim messages copied to Update Requests on approval.
+- [x] Founder alert when a shop is submitted.
+- [x] Redirects for merged/renamed listings (`lib/listing-redirects.ts`).
+- [ ] Founder OK, deploy, then `scripts/cleanup_submissions_2026_11.py --commit`.
+- [ ] Founder reviews `tasks/review/possible-duplicates-2026-11.md`.
+
+### PR 2 — the agent (not started)
+- [ ] Migration 024, claim email confirmation, rules, website evidence, shadow mode, agent log + undo, daily digest, honest "by hand" copy.
+
+### Google recovery (not started)
+- [ ] Founder: Search Console Manual actions + Security issues, Crawl stats, Sitemaps screenshots.
+- Finding: impressions 339/day (2026-06-15) to 17 in 28 days; 1,306 discovered + 499 crawled, not indexed. Cause unconfirmed.
+
+Review: 80 tests, typecheck, lint, build pass; admin queue checked in a browser; cleanup verified as dry run only.
+
 ## Senior-engineer audit + fixes — 2026-09-28
 
 Branch `fix/audit-2026-09`. Three read-only audits (web app, DB/data layer, recurring
