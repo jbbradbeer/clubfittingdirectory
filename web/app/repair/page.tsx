@@ -13,7 +13,7 @@ import { buildItemListSchema } from "@/lib/structured-data"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { repairIntro, repairFaqs, LAST_UPDATED_LABEL } from "@/lib/seo-content"
+import { repairIntro, repairFaqs } from "@/lib/seo-content"
 
 /* ─────────────────────────────────────────────────────────
    /repair — service landing page for "golf club repair" search
@@ -47,7 +47,7 @@ export default async function RepairPage() {
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Club Repair" }]}
-        eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
+        eyebrow="Club Fitting Directory"
         title="Golf Club Repair"
         subtitle={`${shops.length} shops offering club repair across ${stateBreakdown.length} states.`}
       />

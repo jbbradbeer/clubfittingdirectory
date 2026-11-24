@@ -1,3 +1,4 @@
+import { hasReliableHours } from "@/lib/hours"
 import type { Shop } from "@/types/shop"
 import type { Guide } from "@/lib/guides/types"
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, SITE_AUTHOR, SITE_AUTHOR_TITLE } from "@/lib/constants"
@@ -132,7 +133,7 @@ export function buildLocalBusinessSchema(shop: Shop): Record<string, unknown> {
   }
 
   // Opening hours
-  const openingHours = parseOpeningHours(shop.working_hours)
+  const openingHours = hasReliableHours(shop.working_hours) ? parseOpeningHours(shop.working_hours) : []
   if (openingHours.length > 0) schema.openingHours = openingHours
 
   // ── Differentiating attributes (migration 017) — every property below maps

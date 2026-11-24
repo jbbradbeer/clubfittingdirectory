@@ -14,7 +14,7 @@ import { buildItemListSchema, buildCategoryBreadcrumbSchema } from "@/lib/struct
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { categoryIntro, categoryFaqs, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
+import { categoryIntro, categoryFaqs, DIRECTORY_YEAR } from "@/lib/seo-content"
 import { TopFittersTable } from "@/components/seo/TopFittersTable"
 
 interface PageProps {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // Year-stamped comparison format — the same treatment as state/city pages
     // (it's the format that wins both Google SERPs and AI citations).
     title: { absolute: `Top ${label} in the US for ${DIRECTORY_YEAR}` },
-    description: `Compare ${label.toLowerCase()} across the US — ratings, fitting prices, launch monitor tech, and independent vs chain. Updated ${LAST_UPDATED_LABEL}.`,
+    description: `Compare ${label.toLowerCase()} across the US — ratings, fitting prices, launch monitor tech, and independent vs chain.`,
     alternates: { canonical: `${SITE_URL}/category/${slug}` },
   }
 }
@@ -81,7 +81,7 @@ export default async function CategoryPage({ params }: PageProps) {
       {/* Hero */}
       <PageHeader
         breadcrumb={[{ label: "Home", href: "/" }, { label: label }]}
-        eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
+        eyebrow="Club Fitting Directory"
         title={label}
         subtitle={`${shops.length} listings across ${stateCount} states.`}
       />

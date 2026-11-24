@@ -2,7 +2,6 @@ import Link from "next/link"
 import type { Shop } from "@/types/shop"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { ownershipLabel, formatFittingPrice } from "@/lib/fitter-classification"
-import { LAST_UPDATED_LABEL } from "@/lib/seo-content"
 
 /* ─────────────────────────────────────────────────────────
    TOP FITTERS COMPARISON TABLE — the "citable answer" block
@@ -129,8 +128,7 @@ export function TopFittersTable({ shops, place, year, showCity = true, noun = "C
           Methodology: ranked by Google rating from the {shops.length} shops listed on this
           page, with ties broken by verified fitting details (published prices, launch
           monitor tech). Prices and launch monitor details come from each shop&apos;s own
-          website; &ldquo;—&rdquo; means the shop hasn&rsquo;t published it yet. Last updated{" "}
-          {LAST_UPDATED_LABEL}.
+          website; &ldquo;—&rdquo; means the shop hasn&rsquo;t published it yet.
         </p>
       </div>
     </section>

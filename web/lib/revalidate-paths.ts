@@ -10,6 +10,7 @@ import { SERVICE_FILTERS } from "@/lib/service-filters"
 
 export type ShopRow = {
   slug?: string | null
+  status?: string | null
   state_code?: string | null
   city?: string | null
   shop_type?: string | null
@@ -45,16 +46,24 @@ export function pathsForShop(row: ShopRow): string[] {
   return paths
 }
 
+/* Listings appear and disappear by INSERT/DELETE, but ALSO by a status change
+   (active ↔ inactive) or a rename. All of them change site-wide counts and the
+   sitemaps; a plain content edit changes neither. */
+export function listingSetChanged(type: string, record: ShopRow | null, oldRecord: ShopRow | null): boolean {
+  if (type === "INSERT" || type === "DELETE") return true
+  if (!record || !oldRecord) return false
+  return record.status !== oldRecord.status || record.slug !== oldRecord.slug
+}
+
 /* The national /map page renders every active shop's pin, so it must refresh
    whenever a shop is added/removed or its pin (coordinates) or label (name)
    changes. Anything else about the shop is invisible on the map. */
 export function mapNeedsRefresh(type: string, record: ShopRow | null, oldRecord: ShopRow | null): boolean {
-  if (type === "INSERT" || type === "DELETE") return true
+  if (listingSetChanged(type, record, oldRecord)) return true
   if (!record || !oldRecord) return false
   return (
     record.latitude !== oldRecord.latitude ||
     record.longitude !== oldRecord.longitude ||
-    record.name !== oldRecord.name ||
-    record.slug !== oldRecord.slug
+    record.name !== oldRecord.name
   )
 }

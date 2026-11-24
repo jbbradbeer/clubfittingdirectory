@@ -1,5 +1,6 @@
+import { CORE_FIELDS, countCore, type CoreCounts } from "@/lib/index-policy"
 import { cache } from "react"
-import { createStaticClient } from "@/lib/supabase/server"
+import { createListingSetClient, createStaticClient } from "@/lib/supabase/server"
 import { toCitySlug } from "@/lib/slugs"
 import type { Shop } from "@/types/shop"
 import { TOP_RATED_MIN_RATING, TOP_RATED_MIN_REVIEWS } from "@/lib/badges"
@@ -70,7 +71,7 @@ export const getShopBySlug = cache(async (slug: string): Promise<Shop | null> =>
 
 /* ── All slugs (for generateStaticParams) ── */
 export async function getAllShopSlugs(): Promise<{ slug: string; updated_at: string }[]> {
-  const supabase = createStaticClient()
+  const supabase = createListingSetClient()
   return fetchAllRows(() =>
     supabase
       .from("shops")
@@ -338,11 +339,24 @@ export async function getAllShopTypes(): Promise<string[]> {
    re-exported here so existing imports keep working. */
 export { toCitySlug } from "@/lib/slugs"
 
+/* ── Core counts for the Google index policy (lib/index-policy.ts) ──
+   Optionally narrowed to one state, so a city/state page only reads its own.
+   cache()'d per request. */
+export const getCoreCounts = cache(async (stateCode?: string): Promise<CoreCounts> => {
+  const supabase = (stateCode ? createStaticClient() : createListingSetClient())
+  const rows = await fetchAllRows<Parameters<typeof countCore>[0][number]>(() => {
+    let q = supabase.from("shops").select(CORE_FIELDS).eq("status", "active")
+    if (stateCode) q = q.eq("state_code", stateCode)
+    return q.order("id", { ascending: true }) as unknown as PagedQuery<Parameters<typeof countCore>[0][number]>
+  })
+  return countCore(rows)
+})
+
 /* ── All city slugs (for generateStaticParams on city page) ── */
 export async function getAllCitySlugs(): Promise<
   { citySlug: string; shopCount: number; indexable: boolean }[]
 > {
-  const supabase = createStaticClient()
+  const supabase = createListingSetClient()
   const data = await fetchAllRows<{
     city: string
     state_code: string

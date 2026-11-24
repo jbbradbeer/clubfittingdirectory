@@ -6,6 +6,7 @@ import {
   getAllCitySlugs,
   getCityLinksForState,
   getNearbyShopsByDistance,
+  getCoreCounts,
 } from "@/lib/supabase/queries/shops"
 import { ChipLink } from "@/components/ui/ChipLink"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -14,11 +15,12 @@ import { ListingGrid } from "@/components/directory/ListingGrid"
 import { LedgerList } from "@/components/directory/LedgerList"
 import { Button } from "@/components/ui/Button"
 import { SITE_URL } from "@/lib/constants"
+import { isCoreCity, robotsFor } from "@/lib/index-policy"
 import { buildCityBreadcrumbSchema, buildItemListSchema } from "@/lib/structured-data"
 import { JsonLd } from "@/components/seo/JsonLd"
 import { FaqSection } from "@/components/seo/FaqSection"
 import { RelatedGuides } from "@/components/seo/RelatedGuides"
-import { cityIntro, cityFaqs, expandCityName, DIRECTORY_YEAR, LAST_UPDATED_LABEL } from "@/lib/seo-content"
+import { cityIntro, cityFaqs, expandCityName, DIRECTORY_YEAR } from "@/lib/seo-content"
 import { TopFittersTable } from "@/components/seo/TopFittersTable"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import { shopTypeCountPhrase } from "@/lib/shop-types"
@@ -68,6 +70,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // only when we'd need it — multi-shop cities are already indexable.
   const nearby = shops.length < 2 ? await nearbyForCity(citySlug, shops) : []
   const totalFitters = shops.length + nearby.length
+  // Google-only rule on top of the all-engine gate below. A failed count leaves
+  // the page visible rather than hiding it because of a database blip.
+  const core = await getCoreCounts(result.stateCode).catch((e) =>
+    logQueryError("city generateMetadata getCoreCounts", e, undefined),
+  )
+  const googleCore = core ? isCoreCity(core.cities.get(citySlug) ?? 0) : true
   // "Top …" framing only when there's a real field to rank; a one-shop town
   // gets an honest year-stamped title instead.
   const title =
@@ -76,7 +84,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : `Golf Club Fitting in ${city}, ${state} (${DIRECTORY_YEAR})`
   return {
     title,
-    description: `Compare ${shops.length} golf club ${shops.length === 1 ? "fitter" : "fitters"} in ${city}, ${state} — ratings, fitting prices, and launch monitor tech. Updated ${LAST_UPDATED_LABEL}.`,
+    description: `Compare ${shops.length} golf club ${shops.length === 1 ? "fitter" : "fitters"} in ${city}, ${state} — ratings, fitting prices, and launch monitor tech.`,
     alternates: { canonical: `${SITE_URL}/city/${citySlug}` },
     // A lone-shop city page is thin and dilutes site quality in Google's eyes,
     // so we keep it noindexed — UNLESS the nearby-fitters module makes it a
@@ -84,7 +92,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // indexable as before. `follow` always keeps link equity flowing, and the
     // single shop still ranks via its own listing page regardless.
     ...(shops.length >= 2 || totalFitters >= 3
-      ? {}
+      ? robotsFor(googleCore)
       : { robots: { index: false, follow: true } }),
   }
 }
@@ -139,7 +147,7 @@ export default async function CityPage({ params }: PageProps) {
           { label: state, href: `/state/${stateCode.toLowerCase()}` },
           { label: city },
         ]}
-        eyebrow={`Club Fitting Directory · Updated ${LAST_UPDATED_LABEL}`}
+        eyebrow="Club Fitting Directory"
         title={
           shops.length >= 3
             ? `Top Golf Club Fitters in ${city}, ${stateCode} (${DIRECTORY_YEAR})`

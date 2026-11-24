@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import crypto from "node:crypto"
 import { rateLimitOk, rateLimitPeek, clientIp } from "@/lib/rate-limit"
+import { LISTING_SET_TAG } from "@/lib/supabase/server"
 import { log } from "@/lib/logger"
 import { pingIndexNow } from "@/lib/indexnow"
-import { pathsForShop, mapNeedsRefresh, type ShopRow } from "@/lib/revalidate-paths"
+import { pathsForShop, listingSetChanged, mapNeedsRefresh, type ShopRow } from "@/lib/revalidate-paths"
 
 /**
  * On-demand revalidation endpoint.
@@ -83,15 +84,16 @@ export async function POST(request: Request) {
   // moves city/state/type invalidates both its old and new index pages).
   const paths = new Set<string>([...pathsForShop(flat), ...(oldRecord ? pathsForShop(oldRecord) : [])])
 
-  // Inserts and deletes change the shop COUNT, so the site-wide aggregates need
+  // Inserts, deletes, and hiding/renaming a listing change the shop COUNT, so the site-wide aggregates need
   // refreshing too: homepage stats, the directory shell, the states index and
   // the sitemap. A plain content edit (UPDATE) does not touch counts, so we skip
   // these to keep the blast radius — and the write count — as small as possible.
-  if (type === "INSERT" || type === "DELETE") {
+  if (listingSetChanged(type, record, oldRecord)) {
     paths.add("/")
     paths.add("/directory")
     paths.add("/states")
     paths.add("/sitemap.xml")
+    paths.add("/sitemap-all.xml")
   }
   if (mapNeedsRefresh(type, record, oldRecord)) paths.add("/map")
 
@@ -113,6 +115,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, revalidated: [], note: "No identifiable shop in payload." })
   }
 
+  // Expire the cached "every shop" reads first, so the sitemaps rebuild from
+  // fresh data rather than a cached database response.
+  if (listingSetChanged(type, record, oldRecord)) revalidateTag(LISTING_SET_TAG, { expire: 0 })
   for (const p of paths) revalidatePath(p)
 
   // Nudge Bing/AI search to recrawl the refreshed pages (never throws).

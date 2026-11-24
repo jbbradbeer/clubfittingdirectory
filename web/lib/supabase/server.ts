@@ -40,3 +40,23 @@ export async function createClient() {
 export function createStaticClient() {
   return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 }
+
+/**
+ * Static client whose reads carry the LISTING_SET_TAG cache tag. Use ONLY for
+ * "list every shop" reads behind the sitemaps, llms.txt and
+ * generateStaticParams — never inside a listing/city/state page render: the tag
+ * would attach to that page and one hidden shop would rebuild all of them.
+ *
+ * Why it exists: revalidatePath("/sitemap.xml") rebuilt the file but could
+ * still reuse a cached database response, so hidden shops stayed listed.
+ */
+export const LISTING_SET_TAG = "listing-set"
+
+export function createListingSetClient() {
+  return createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: {
+      fetch: (input, init) =>
+        fetch(input, { ...init, next: { tags: [LISTING_SET_TAG], revalidate: 86400 } }),
+    },
+  })
+}
