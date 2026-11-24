@@ -26,6 +26,17 @@ Diagnosis: no manual action; domain registered 2026-06-01; ~1,900 templated page
 - [ ] Founder: resubmit sitemap; Request indexing on 10 pages; submit sitemap-all to Bing.
 - [ ] Check the 10 + 10 control pages at 2 and 6 weeks.
 
+### Listing corrections (2026-11-24)
+- [x] 22 listings corrected to "offers fitting" via the facts ledger (founder approved; evidence in `tasks/review/fitting-corrections-2026-11.csv`); all 22 live pages checked.
+- [ ] Founder to decide: Mulligan's Eagan, Sim City, Swing Science, Swing'em Again, Phil's Custom Golf (duplicate?).
+
+### Golfer request relay (PR open, not merged)
+- [x] Golfer confirmation, founder alert, one-tap send (no golfer contact details), owner forward on claim approval, reminders, outcomes, opt-out, honest form wording.
+- [ ] Founder runs migrations 024 + 025 (combined: RUN-IN-SUPABASE-2026-11-24.sql in the main folder) BEFORE merge (merging deploys).
+- [x] Owner corrections applied and live (Elevate price, All About Golf hours, Hawk's View founding year); Hawk's View request stays open for winter hours.
+- [ ] Merge; verify public key is locked out of fitting_requests and the live form saves; one real test email to the founder.
+- [ ] Email coverage: pilot `outreach/find_emails.py` (145 active shops have an address).
+
 ### PR 3 — approvals agent (not started)
 - [ ] Migration 024, claim email confirmation, rules, website evidence, shadow mode, agent log + undo, escalation email, honest "by hand" copy.
 

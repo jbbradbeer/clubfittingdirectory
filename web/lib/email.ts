@@ -2,6 +2,7 @@ import { Resend } from "resend"
 import { log } from "@/lib/logger"
 import { CAL_FOUNDING_CALL_URL, SITE_URL } from "@/lib/constants"
 import { FEATURED_PERKS } from "@/lib/plans"
+import type { ShopMessage } from "@/lib/leads/message"
 
 /**
  * Transactional email via Resend.
@@ -33,6 +34,8 @@ export type FittingLead = {
   preferredDate?: string | null
   preferredTime?: string | null
   notes?: string | null
+  /** Unclaimed shops: what we know about reaching them (founder alert only). */
+  relay?: { shopEmail: string | null; verified: boolean }
 }
 
 /* Escape user-typed text before embedding it in email HTML, so a visitor
@@ -87,8 +90,18 @@ export async function notifyNewFittingRequest(lead: FittingLead): Promise<boolea
       <p style="margin-top:20px;font-size:12px;color:#9b9b9b;">${
         lead.ownerEmail
           ? "This golfer found you on Club Fitting Directory — just hit reply to reach them directly."
-          : "Reply to this golfer directly, then relay the request to the shop."
+          : "The shop has NOT been told yet: this listing is unclaimed."
       }</p>
+      ${
+        lead.ownerEmail
+          ? ""
+          : `<p style="font-size:14px;color:#0a0a0a;line-height:1.6;">${
+              lead.relay?.shopEmail
+                ? `Shop email on file: <strong>${escapeHtml(lead.relay.shopEmail)}</strong> (${lead.relay.verified ? "verified" : "not verified"}).`
+                : "No shop email on file. Call the shop, or look up an address."
+            }</p>
+      <p><a href="${SITE_URL}/admin/leads?status=waiting" style="display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;">Review and send</a></p>`
+      }
     </div>`
 
   try {
@@ -493,6 +506,118 @@ export async function notifyNewSubmission(args: {
     log.error("email", "failed to send submission alert", { error: e })
     return false
   }
+}
+
+/* ── Golfer request relay (lib/leads/relay.ts is the only caller) ── */
+
+async function deliver(
+  what: string,
+  payload: { to: string; subject: string; html: string; text?: string },
+  idempotencyKey?: string,
+): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    log.warn("email", `RESEND_API_KEY not set — skipping ${what}`)
+    return false
+  }
+  try {
+    const { error } = await new Resend(apiKey).emails.send(
+      { from: FROM, replyTo: NOTIFY_TO, ...payload },
+      idempotencyKey ? { idempotencyKey } : undefined,
+    )
+    if (error) throw error
+    return true
+  } catch (e) {
+    log.error("email", `failed to send ${what}`, { error: e })
+    return false
+  }
+}
+
+const P = "font-size:14px;color:#0a0a0a;line-height:1.6;margin:0 0 16px;"
+const WRAP = "font-family:system-ui,-apple-system,Segoe UI,sans-serif;max-width:560px;margin:0 auto;"
+const BUTTON = "display:inline-block;background:#1B4332;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:999px;"
+
+/** The request, without golfer contact details, to an unverified shop. Replies
+ *  reach the founder. Renders exactly what the admin preview showed. */
+export async function sendShopRequest(args: {
+  to: string
+  leadId: string
+  message: ShopMessage
+}): Promise<boolean> {
+  const m = args.message
+  const html = `
+    <div style="${WRAP}">
+      <p style="${P}">${escapeHtml(m.intro)}</p>
+      <table style="border-collapse:collapse;width:100%;margin:0 0 16px;">
+        ${m.details.map((d) => row(d.label, d.value)).join("")}
+      </table>
+      <p style="${P}">${escapeHtml(m.reply)}</p>
+      <p style="${P}">${escapeHtml(m.claim)}</p>
+      <p style="margin:0 0 24px;"><a href="${escapeHtml(m.claimUrl)}" style="${BUTTON}">Claim your listing</a></p>
+      <p style="font-size:12px;color:#6b6b6b;line-height:1.5;">${escapeHtml(m.footer)}</p>
+    </div>`
+  const text = [
+    m.intro, "", ...m.details.map((d) => `${d.label}: ${d.value}`), "", m.reply, "", m.claim, m.claimUrl, "", m.footer,
+  ].join("\n")
+  // Same request + same address can't be delivered twice, even if a timeout
+  // made the first attempt look like a failure.
+  const key = `lead-shop-${args.leadId}-${args.to.toLowerCase()}`.slice(0, 256)
+  return deliver("shop request", { to: args.to, subject: m.subject, html, text }, key)
+}
+
+/** Tells the golfer what happens next. Contains nothing they typed. */
+export async function sendGolferConfirmation(args: {
+  to: string
+  shopName: string
+  shopSlug: string
+  shopPhone: string | null
+  shopWebsite: string | null
+  claimed: boolean
+}): Promise<boolean> {
+  const listing = SLUG_RE.test(args.shopSlug) ? `${SITE_URL}/listing/${args.shopSlug}` : SITE_URL
+  const next = args.claimed
+    ? "We're sending your request and contact details to the shop's owner, who can reply to you directly."
+    : "We'll pass your request on to the shop. The shop hasn't joined our directory yet, so we won't give them your contact details unless we verify its owner or you tell us it's OK."
+  const html = `
+    <div style="${WRAP}">
+      <p style="font-size:18px;font-weight:700;color:#1B4332;margin:0 0 16px;">We got your fitting request</p>
+      <p style="${P}">for <strong>${escapeHtml(args.shopName)}</strong>. This isn't a confirmed appointment yet.</p>
+      <p style="${P}">${next}</p>
+      <p style="${P}">Don't want to wait? Contact the shop directly:</p>
+      <table style="border-collapse:collapse;width:100%;margin:0 0 16px;">
+        ${row("Phone", args.shopPhone)}
+        ${row("Website", args.shopWebsite)}
+        ${row("Listing", listing)}
+      </table>
+      <p style="${P}">If you don't hear back within 3 business days, reply to this email and we'll help.</p>
+      <p style="font-size:12px;color:#6b6b6b;">Didn't make this request? You can ignore this email.</p>
+    </div>`
+  return deliver("golfer confirmation", {
+    to: args.to,
+    subject: `We got your fitting request for ${args.shopName}`.replace(/[\r\n]+/g, " "),
+    html,
+  })
+}
+
+/** One daily summary to the founder of requests that need a nudge. */
+export async function sendLeadReminders(
+  leads: { shopName: string | null; createdAt: string; kind: "unsent" | "quiet" }[],
+): Promise<boolean> {
+  const item = (l: (typeof leads)[number]) => `<li>${escapeHtml(l.shopName || "Unknown shop")}, asked ${l.createdAt.slice(0, 10)}</li>`
+  const block = (title: string, kind: "unsent" | "quiet") => {
+    const some = leads.filter((l) => l.kind === kind)
+    return some.length ? `<p style="${P}"><strong>${title}</strong></p><ul>${some.map(item).join("")}</ul>` : ""
+  }
+  return deliver("lead reminders", {
+    to: NOTIFY_TO,
+    subject: `${leads.length} golfer request${leads.length === 1 ? "" : "s"} waiting`,
+    html: `
+    <div style="${WRAP}">
+      ${block("The shop hasn't been told", "unsent")}
+      ${block("Sent to the shop, no result recorded", "quiet")}
+      <p><a href="${SITE_URL}/admin/leads?status=waiting" style="${BUTTON}">Open requests</a></p>
+    </div>`,
+  })
 }
 
 /* ── Owner portal ─────────────────────────────────────────── */

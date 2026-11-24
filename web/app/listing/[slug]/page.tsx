@@ -491,6 +491,7 @@ export default async function ListingPage({ params }: PageProps) {
                       shopId={shop.id}
                       shopName={shop.name}
                       shopSlug={shop.slug}
+                      claimed={Boolean(shop.claimed_at)}
                     />
                   )}
                   {shop.phone && (

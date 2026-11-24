@@ -1,4 +1,7 @@
 export const SITE_URL = "https://clubfittingdirectory.com"
+
+/** Postal address shown in emails that invite a shop to claim (CAN-SPAM). */
+export const MAILING_ADDRESS = "The Tuxedo Collective LLC, 2810 N Church St, PMB 883782, Wilmington, DE 19802-4447"
 export const SITE_NAME = "Club Fitting Directory"
 export const SITE_DESCRIPTION =
   "Find independent golf club fitting shops near you. Browse nearly 1,000 hand-vetted fitters, simulators, and retailers across all 50 US states."

@@ -28,11 +28,13 @@ type Props = {
   shopId: string
   shopName: string
   shopSlug: string
+  /** Verified owner on file: the request goes straight to them. */
+  claimed: boolean
   /** Optional override for the trigger button classes (to fit the contact card). */
   className?: string
 }
 
-export function RequestFittingButton({ shopId, shopName, shopSlug, className }: Props) {
+export function RequestFittingButton({ shopId, shopName, shopSlug, claimed, className }: Props) {
   const [open, setOpen] = useState(false)
   const { status, errorMsg, submit, reset } = useFormSubmit(
     "/api/request-fitting",
@@ -119,8 +121,10 @@ export function RequestFittingButton({ shopId, shopName, shopSlug, className }: 
                 <h2 className="font-display text-2xl text-[var(--color-charcoal)]">Request sent</h2>
                 <p className="mt-3 text-[var(--color-charcoal-light)] leading-relaxed">
                   Thanks{shopName ? `,` : ""}! We&apos;ve received your fitting request for{" "}
-                  <strong>{shopName}</strong> and will get it to the shop. They&apos;ll be in touch
-                  to confirm a time.
+                  <strong>{shopName}</strong>.{" "}
+                  {claimed
+                    ? "The owner will be in touch to confirm a time."
+                    : "We'll pass it on to the shop. If you'd rather not wait, call them directly."}
                 </p>
                 <div className="mt-6">
                   <Button type="button" variant="primary" onClick={() => setOpen(false)}>
@@ -135,8 +139,10 @@ export function RequestFittingButton({ shopId, shopName, shopSlug, className }: 
                     Request a Fitting
                   </h2>
                   <p className="mt-1 text-sm text-[var(--color-charcoal-light)]">
-                    at <strong>{shopName}</strong>. Tell us what you&apos;re after and the shop will
-                    reach out to confirm.
+                    at <strong>{shopName}</strong>.{" "}
+                    {claimed
+                      ? "Your request and contact details go straight to the shop's owner, who will reply to you."
+                      : "We'll pass your request on. The shop gets your contact details only once we verify its owner or you say it's OK."}
                   </p>
                 </div>
 
