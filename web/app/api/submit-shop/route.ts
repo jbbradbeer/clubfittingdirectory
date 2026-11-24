@@ -5,6 +5,7 @@ import { log } from "@/lib/logger"
 import { notifyNewSubmission } from "@/lib/email"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 import { US_STATE_CODES } from "@/lib/constants"
+import { describeHours, isPlausibleCity, parseHours, parseServices, parseZip } from "@/lib/submission-details"
 import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
 
 /**
@@ -38,12 +39,19 @@ export async function POST(request: Request) {
   const notes      = str(body.notes, 1000)
   const email      = str(body.submitter_email, 200)
   const offersFitting = body.offers_fitting === true
+  const street     = str(body.street, 200)
+  const zipText    = str(body.postal_code, 10)
+  const postalCode = parseZip(zipText)
+  const hours      = parseHours(body.hours)
+  const services   = parseServices(body.services)
 
   const errors: string[] = []
   if (name.length < 2)            errors.push("Shop name is required.")
   if (city.length < 2)            errors.push("City is required.")
+  else if (!isPlausibleCity(city)) errors.push("Enter just the city, without a state or ZIP.")
   if (!US_STATE_CODES.has(stateCode)) errors.push("A valid US state is required.")
   if (!VALID_SHOP_TYPES.has(shopType)) errors.push("Choose a shop type.")
+  if (zipText && !postalCode)     errors.push("Enter a five-digit ZIP, or leave it blank.")
   if (!email)                     errors.push("Your email is required.")
   else if (!isValidEmail(email)) errors.push("Enter a valid email.")
 
@@ -64,6 +72,9 @@ export async function POST(request: Request) {
       offers_fitting: offersFitting,
       notes: notes || null,
       submitter_email: email || null,
+      street: street || null,
+      postal_code: postalCode,
+      details: { hours, services },
     })
     if (error) throw error
   } catch (e) {
@@ -76,7 +87,10 @@ export async function POST(request: Request) {
 
   // Best-effort: the submission is saved either way. (Returns false, never
   // throws, so a mail outage can't turn a good submission into an error.)
-  await notifyNewSubmission({ name, city, stateCode, shopType, website, phone, notes, submitterEmail: email })
+  await notifyNewSubmission({
+    name, city, stateCode, shopType, website, phone, notes, submitterEmail: email,
+    street, postalCode, offersFitting, services: services.join(", "), hours: describeHours(hours),
+  })
 
   return NextResponse.json({ ok: true })
 }
