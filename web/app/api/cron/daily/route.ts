@@ -3,12 +3,13 @@ import crypto from "node:crypto"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { sweepExpiredFeatured } from "@/lib/verified"
 import { notifyNewFittingRequest } from "@/lib/email"
+import { forwardOpenLeads, sendDueReminders } from "@/lib/leads/relay"
 import { log } from "@/lib/logger"
 
 /**
  * Daily housekeeping — GET /api/cron/daily, scheduled in vercel.json.
  *
- * Three jobs that used to depend on a human remembering:
+ * Five jobs that used to depend on a human remembering:
  *   1. Lapse Featured shops whose verified_expires_at has passed (annual
  *      one-time payments never emit a Stripe cancellation, so without this
  *      the paid badge + top-of-list sort lasted forever).
@@ -17,6 +18,9 @@ import { log } from "@/lib/logger"
  *      this makes sure someone actually hears about it.
  *   3. Prune crawler_hits older than 90 days — the table is otherwise
  *      unbounded (scripts/crawler_report.py only needs recent counts).
+ *
+ *   4. Forward open requests to owners whose claim was approved (retry).
+ *   5. Remind the founder about requests nobody has passed on or resolved.
  *
  * SECURITY: Vercel Cron sends `Authorization: Bearer $CRON_SECRET`. Compared
  * constant-time; without CRON_SECRET set the route refuses to run at all.
@@ -66,6 +70,20 @@ export async function GET(request: Request) {
     report.leadsRenotified = "error"
   }
 
+  // ── Owner forwards + founder reminders ──
+  try {
+    report.leadsForwarded = await forwardOpenLeads()
+  } catch (e) {
+    log.error("cron/daily", "owner forward failed", { error: e })
+    report.leadsForwarded = "error"
+  }
+  try {
+    report.leadReminders = await sendDueReminders()
+  } catch (e) {
+    log.error("cron/daily", "lead reminders failed", { error: e })
+    report.leadReminders = "error"
+  }
+
   // ── 3. crawler_hits retention ──
   try {
     const supabase = createAdminClient()
@@ -109,10 +127,11 @@ async function retryUnnotifiedLeads(): Promise<number> {
     const shop = (Array.isArray(shopRel) ? shopRel[0] : shopRel) as
       | { name: string; slug: string; owner_email: string | null; claimed_at: string | null }
       | null
+    const ownerEmail = shop?.claimed_at && shop.owner_email ? shop.owner_email : null
     const ok = await notifyNewFittingRequest({
       shopName: shop?.name ?? lead.shop_name,
       shopSlug: shop?.slug ?? lead.shop_slug,
-      ownerEmail: shop?.claimed_at && shop.owner_email ? shop.owner_email : null,
+      ownerEmail,
       visitorName: lead.visitor_name,
       visitorEmail: lead.visitor_email,
       visitorPhone: lead.visitor_phone ?? "",
@@ -126,6 +145,7 @@ async function retryUnnotifiedLeads(): Promise<number> {
       .update({
         notify_attempts: (lead.notify_attempts ?? 0) + 1,
         ...(ok ? { notified_at: new Date().toISOString() } : {}),
+        ...(ok && ownerEmail ? { owner_forwarded_at: new Date().toISOString() } : {}),
       })
       .eq("id", lead.id)
     if (ok) sent++

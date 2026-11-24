@@ -49,6 +49,9 @@ vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }))
 const { email } = vi.hoisted(() => ({ email: vi.fn(async () => true) }))
 vi.mock("@/lib/email", () => ({ sendClaimApprovedEmail: email }))
 
+const { forward } = vi.hoisted(() => ({ forward: vi.fn(async () => 0) }))
+vi.mock("@/lib/leads/relay", () => ({ forwardOpenLeads: forward }))
+
 import { applyClaimApproval, applyRejection, applySubmissionApproval } from "@/lib/moderation/apply"
 
 const sub = (o: Row = {}): Row => ({
@@ -68,6 +71,7 @@ beforeEach(() => {
   for (const k of Object.keys(db)) delete db[k]
   failInsertInto = null
   email.mockClear()
+  forward.mockReset()
 })
 
 describe("applySubmissionApproval", () => {
@@ -130,6 +134,14 @@ describe("applyClaimApproval", () => {
     expect(db.shops[0].owner_email).toBe("todd@allaboutgolf.com")
     expect(db.listing_update_requests).toMatchObject([{ message: "Saturday 9 to 2", shop_id: "shop-1" }])
     expect(email).toHaveBeenCalledTimes(1)
+    expect(forward).toHaveBeenCalledWith("shop-1")
+  })
+  it("a failed lead forward never undoes the approval", async () => {
+    db.shop_claims = [claim()]
+    db.shops = [shop()]
+    forward.mockRejectedValue(new Error("down"))
+    expect((await applyClaimApproval("claim-1")).error).toBeUndefined()
+    expect(db.shop_claims[0].review_status).toBe("approved")
   })
   it("never takes over a shop that already has an owner", async () => {
     db.shop_claims = [claim({ claimant_email: "rival@gmail.com" })]
@@ -138,6 +150,7 @@ describe("applyClaimApproval", () => {
     expect(db.shops[0].owner_email).toBe("todd@allaboutgolf.com")
     expect(db.shop_claims[0].review_status).toBe("new")
     expect(email).not.toHaveBeenCalled()
+    expect(forward).not.toHaveBeenCalled()
   })
   it("does nothing for an inactive shop", async () => {
     db.shop_claims = [claim()]

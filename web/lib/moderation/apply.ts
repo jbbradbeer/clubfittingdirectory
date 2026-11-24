@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { fetchAllRows } from "@/lib/supabase/queries/shared"
 import { pathsForShop } from "@/lib/revalidate-paths"
 import { sendClaimApprovedEmail } from "@/lib/email"
+import { forwardOpenLeads } from "@/lib/leads/relay"
 import { log } from "@/lib/logger"
 import { US_STATES } from "@/lib/constants"
 import { dbTypeToShopType, SHOP_TYPES } from "@/lib/shop-types"
@@ -208,5 +209,13 @@ export async function applyClaimApproval(id: string): Promise<ApplyResult> {
     ownerEmail: claim.claimant_email,
   })
   if (!sent) log.warn("moderation", "claim approved email not sent", { slug: shop.slug })
+
+  // Send the new owner the golfers already waiting. Never fails the approval;
+  // the daily cron retries anything that didn't go.
+  try {
+    await forwardOpenLeads(claim.shop_id)
+  } catch (e) {
+    log.error("moderation", "open requests not forwarded", { slug: shop.slug, error: e })
+  }
   return { slug: shop.slug }
 }

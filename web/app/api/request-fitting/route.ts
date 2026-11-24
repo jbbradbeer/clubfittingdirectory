@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { notifyNewFittingRequest } from "@/lib/email"
+import { confirmToGolfer, knownShopEmails } from "@/lib/leads/relay"
 import { log } from "@/lib/logger"
 import { rateLimitOk, clientIp } from "@/lib/rate-limit"
 import { str, isValidEmail, parseJsonBody, invalidBodyResponse, honeypotTripped } from "@/lib/api/validation"
@@ -9,9 +10,10 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 /**
  * Public "Request a Fitting" endpoint — the booking engine's intake.
- * POST /api/request-fitting  → inserts a row into fitting_requests (RLS allows
- * anon INSERT only) and emails the founder the lead (best-effort; the save
- * always happens first so no lead is lost if email fails).
+ * POST /api/request-fitting  → saves to fitting_requests with the server key
+ * (the public key has no access to that table, migration 024), then best-effort:
+ * claimed shop → owner emailed; unclaimed → founder alerted to relay it; golfer
+ * gets a confirmation. The save always happens first so no lead is lost.
  */
 
 const VALID_FITTING_TYPES = new Set([
@@ -76,6 +78,8 @@ export async function POST(request: Request) {
     slug: string
     owner_email: string | null
     claimed_at: string | null
+    phone: string | null
+    website: string | null
   } | null = null
   if (shopSlug) {
     try {
@@ -87,7 +91,7 @@ export async function POST(request: Request) {
       // null and silently skipping the claimed owner.
       const { data, error } = await admin
         .from("shops")
-        .select("id,name,slug,owner_email,claimed_at")
+        .select("id,name,slug,owner_email,claimed_at,phone,website")
         .eq("slug", shopSlug)
         .eq("status", "active")
         .order("rating", { ascending: false, nullsFirst: false })
@@ -154,10 +158,21 @@ export async function POST(request: Request) {
   // to the owner with the founder cc'd; otherwise founder-only as before.
   // The outcome is RECORDED: notified_at stays NULL on failure so the daily
   // cron (app/api/cron/daily) retries instead of the lead sitting unseen. ──
+  const ownerEmail = dbShop?.claimed_at && dbShop.owner_email ? dbShop.owner_email : null
+  let relay: { shopEmail: string | null; verified: boolean } | undefined
+  if (dbShop && !ownerEmail) {
+    try {
+      const known = (await knownShopEmails([dbShop.id])).get(dbShop.id)
+      relay = { shopEmail: known?.email ?? null, verified: known?.verified ?? false }
+    } catch (e) {
+      log.warn("api/request-fitting", "shop email lookup failed", { error: e })
+    }
+  }
   const notified = await notifyNewFittingRequest({
+    relay,
     shopName: dbShop?.name ?? (shopName || null),
     shopSlug: dbShop?.slug ?? (shopSlug || null),
-    ownerEmail: dbShop?.claimed_at && dbShop.owner_email ? dbShop.owner_email : null,
+    ownerEmail,
     visitorName,
     visitorEmail,
     visitorPhone,
@@ -169,11 +184,32 @@ export async function POST(request: Request) {
   if (leadId) {
     await createAdminClient()
       .from("fitting_requests")
-      .update({ notify_attempts: 1, ...(notified ? { notified_at: new Date().toISOString() } : {}) })
+      .update({
+        notify_attempts: 1,
+        ...(notified ? { notified_at: new Date().toISOString() } : {}),
+        // Claimed shop: the owner has it, so it never needs relaying.
+        ...(notified && ownerEmail ? { owner_forwarded_at: new Date().toISOString() } : {}),
+      })
       .eq("id", leadId)
       .then(({ error }) => {
         if (error) log.warn("api/request-fitting", "could not record notification state", { error })
       })
+  }
+
+  // ── Tell the golfer what happens next (never blocks or fails the request) ──
+  if (leadId && dbShop) {
+    try {
+      await confirmToGolfer({
+        id: leadId,
+        visitorEmail,
+        shop: {
+          id: dbShop.id, name: dbShop.name, slug: dbShop.slug,
+          phone: dbShop.phone, website: dbShop.website, claimed: Boolean(ownerEmail),
+        },
+      })
+    } catch (e) {
+      log.error("api/request-fitting", "golfer confirmation failed (lead saved)", { error: e })
+    }
   }
 
   return NextResponse.json({ ok: true })
