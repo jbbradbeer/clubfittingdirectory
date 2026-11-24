@@ -29,6 +29,7 @@ import { FaqSection } from "@/components/seo/FaqSection"
 import { SITE_URL } from "@/lib/constants"
 import { isCoreListing, robotsFor } from "@/lib/index-policy"
 import { hasReliableHours } from "@/lib/hours"
+import { acceptsFittingRequests } from "@/lib/fitting-signal"
 import { logQueryError, rethrowQueryError } from "@/lib/utils"
 import type { Shop } from "@/types/shop"
 
@@ -483,12 +484,15 @@ export default async function ListingPage({ params }: PageProps) {
                   )}
                 </div>
                 <div className="mt-5 flex flex-col gap-2">
-                  {/* Primary CTA — the booking engine. Captures a fitting lead. */}
-                  <RequestFittingButton
-                    shopId={shop.id}
-                    shopName={shop.name}
-                    shopSlug={shop.slug}
-                  />
+                  {/* Primary CTA — the booking engine. Captures a fitting lead.
+                      Not shown when nothing says the shop does fittings. */}
+                  {acceptsFittingRequests(shop) && (
+                    <RequestFittingButton
+                      shopId={shop.id}
+                      shopName={shop.name}
+                      shopSlug={shop.slug}
+                    />
+                  )}
                   {shop.phone && (
                     <a
                       href={`tel:${shop.phone}`}
